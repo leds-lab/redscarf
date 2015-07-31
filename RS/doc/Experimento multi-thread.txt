@@ -1,0 +1,128 @@
+Configuração experimento:
+ - Rede 4x4 - canal de 32 bits
+ - Padrão de tráfego de todos os nodos:
+   * Distribuição Uniform
+   * Classe RT0
+   * Injeção constante
+   * Chaveamento Wormhole
+   * Número de pacotes por fluxo: 1000
+   * Deadline: 0
+   * Largura de banda requerida: 3200
+   * Tamanho da msg: 256 bits
+   
+ - 2 Experimentos
+   * Exp1: ParIS - XY - CB (WH) - RR - 4 - 0
+   * Exp2: ParIS - XY - CB (WH) - RR - 8 - 0
+   
+ - Frequência de operação: 100 -> 1 passo -10
+ 
+ ------- OBSERVAÇÃO: Este experimento gera 22 simulações.
+ 
+ ---- BrownPepper ----
+ Tempo total da simulação: 51 minutos e 57 segundos
+
+ ---- Red Scarf ----
+ Tempo total da simulação: 19 minutos e 29 segundos
+ 
+ --- PS: Experimentos realizados na Máquina Virtual LXQT64: com 4 threads atacadas para a máquina
+ CPU: Intel(R) Core(TM)2 Quad CPU Q9550 2.83GHz
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx lm constant_tsc rep_good nopl pni ssse3 lahf_lm
+bogomips        : 6131.71
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 36 bits physical, 48 bits virtual
+
+--------------------------------------------------------------------
+
+LXQT com 1 núcleo apenas ---- Red Scarf ----
+ Tempo total da simulação: 46 minutos e 35 segundos
+
+LXQT com 2 núcleo apenas ---- Red Scarf ----
+ Tempo total da simulação: 24 minutos e 13 segundos
+
+LXQT com 3 núcleo apenas ---- Red Scarf ----
+ Tempo total da simulação: 19 minutos e 47 segundos
+
+LXQT com 4 núcleo apenas ---- Red Scarf ----
+ Tempo total da simulação: 19 minutos e 8 segundos
+
+VM Linux Mint LiveCD - Red Scarf ----
+CPU: Intel(R) i7 4850HQ - 2.3GHz - 8 thread
+ Tempo total da simulação: 10 minutos
+
+------------------------------------------------------------------ 
+
+--- Experimentos realizados no virtualizador ESXi com Ubuntu 64-bit hóspede
+ 8 processadores 2,5GHz atribuídos a VM, RAM: 1024MB, Disco 17GB
+----
+
+VM Ubuntu64 - Server Leds - 1 thread - 2.33GHz --- BrownPepper ---
+ Tempo total da simulação: 55 minutos e 50 segundos
+
+ -----
+VM Ubuntu64 - Server Leds - 1 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 50 minutos e 19 segundos
+
+VM Ubuntu64 - Server Leds - 2 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 25 minutos e 28 segundos
+
+VM Ubuntu64 - Server Leds - 3 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 17 minutos e 33 segundos
+ 
+VM Ubuntu64 - Server Leds - 4 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 13 minutos e 37 segundos
+
+VM Ubuntu64 - Server Leds - 5 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 11 minutos e 34 segundos
+ 
+VM Ubuntu64 - Server Leds - 6 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação: 11 minutos e 8 segundos
+
+VM Ubuntu64 - Server Leds - 7 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 6 segundos
+
+VM Ubuntu64 - Server Leds - 8 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 21 segundos
+ 
+VM Ubuntu64 - Server Leds - 9 thread - 2.33GHz --- Red Scarf --- 
+ Tempo total da simulação: 10 minutos e 16 segundos
+ 
+VM Ubuntu64 - Server Leds - 10 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 21 segundos
+ 
+VM Ubuntu64 - Server Leds - 11 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  8 minutos e 56 segundos
+ 
+VM Ubuntu64 - Server Leds - 12 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 1 segundos
+ 
+VM Ubuntu64 - Server Leds - 13 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 20 segundos
+ 
+VM Ubuntu64 - Server Leds - 14 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  9 minutos e 44 segundos
+ 
+VM Ubuntu64 - Server Leds - 15 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  10 minutos e 14 segundos
+ 
+VM Ubuntu64 - Server Leds - 16 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  10 minutos e 40 segundos
+ 
+VM Ubuntu64 - Server Leds - 17 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  11 minutos e 12 segundos
+ 
+VM Ubuntu64 - Server Leds - 18 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  11 minutos e 39 segundos
+ 
+VM Ubuntu64 - Server Leds - 19 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  12 minutos e 17 segundos
+ 
+VM Ubuntu64 - Server Leds - 20 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  11 minutos e 8 segundos
+ 
+VM Ubuntu64 - Server Leds - 21 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  10 minutos e 52 segundos
+ 
+VM Ubuntu64 - Server Leds - 22 thread - 2.33GHz --- Red Scarf ---
+ Tempo total da simulação:  10 minutos e 47 segundos
+ 

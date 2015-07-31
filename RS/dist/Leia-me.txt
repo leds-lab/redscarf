@@ -1,0 +1,30 @@
+===============================================================================
+--> Localização: (raiz)/RS/dist
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Este diretório possui arquivos para distribuição do framework.
+===============================================================================
+
+===============================================================================
+| Neste diretório estão os arquivo de licença do framework, distribuição e
+| scripts para facilitar a execução em Linux e gerar instalador para Windows.
+===============================================================================
+
+===============================================================================
+| IMPORTANTE: Procure manter sempre atualizadas as informações destes arquivos,
+| a maioria delas serão úteis ao "usuário", então coloque-se no lugar do usuário
+| e pense o que pode ajudar no uso do framework.
+===============================================================================

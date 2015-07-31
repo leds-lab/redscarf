@@ -1,0 +1,74 @@
+===============================================================================
+--> Localização: (raiz)/RS
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Este é o diretório raiz da estrutura de diretórios do front-end do RedScarf.
+===============================================================================
+
+===============================================================================
+| Neste diretório estão somente o arquivo de projeto do Qt do front-end
+| (RS.pro) e os subdiretórios dos recursos da ferramenta. São eles:
+| -----------------------------------------------------------------------------
+| * bin          : Local onde o executável do front-end é gerado.
+|                  OBS: Este diretório possui o Back-end da
+|                  ferramenta e os arquivos de configuração do ambiente em
+|                  seus respectivos subdiretórios.
+| -----------------------------------------------------------------------------
+| * build        : Local para os arquivos resultantes do processo de
+|                  compilação, como: objetos(.o), códigos dos formulários
+|                  (arquivos ui_*.h gerados a partir dos arquivos .ui),
+|                  arquivos da meta compilação do Qt (moc_*.cpp) e fontes
+|                  de arquivos de recursos (gerados pelos arquivos .qrc).
+| -----------------------------------------------------------------------------
+| * dist         : Local para manter o registro de alterações (log de versões),
+|                  arquivos de configuração e scripts para gerar os
+|                  "instaladores" para as plataformas alvo.
+| -----------------------------------------------------------------------------
+| * doc          : Local para manter a documentação do projeto.
+| -----------------------------------------------------------------------------
+| * forms        : Local dos formulários gráficos do front-end (.ui).
+| -----------------------------------------------------------------------------
+| * include      : Local dos cabeçalhos de código-fonte (.h). Este diretório é
+|                  dividido em 3 subdiretórios: Model, View e Control, pois o
+|                  front-end foi dividido nas camadas do modelo MVC
+|                  Orientado a Objetos.
+| -----------------------------------------------------------------------------
+| * resources    : Local dos recursos do front-end (arquivo de recursos .qrc,
+|                  ícones, sons...).
+| -----------------------------------------------------------------------------
+| * src          : Local dos fontes do front-end (.cpp). Este diretório é
+|                  dividido em 3 subdiretórios: Model, View e Control, pois o
+|                  front-end foi dividido nas camadas do modelo MVC 
+|                  Orientado a Objetos.
+| -----------------------------------------------------------------------------
+| * translations : Local dos arquivos para traduzir o front-end.
+===============================================================================
+
+===============================================================================
+| OBS: Não adicione nada a este diretório, mantenha sempre organizada
+| a estrutura de diretórios e a cada recurso criado, coloque-o no local
+| adequado.
+===============================================================================
+| Durante a compilação, serão criados arquivos neste diretório, não é necessária
+| a remoção, mas cuide para não adicionar estes arquivos ao versionamento de 
+| código.
+===============================================================================
+| Para mais informações sobre cada diretório visualize o arquivo de descrição
+| dentro do diretório desejado ("Leia-me.txt").
+| OBS: Os diretórios de código-fonte, formulários e recursos da aplicação
+| não possuem "Leia-me" e os arquivos são acessíveis pela IDE Qt Creator ao 
+| abrir o projeto raiz do framework - RedScarf.pro
+===============================================================================

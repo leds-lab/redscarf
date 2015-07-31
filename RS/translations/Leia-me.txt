@@ -1,0 +1,58 @@
+===============================================================================
+--> Localização: (raiz)/RS/translations
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+
+===============================================================================
+| Este diretório contém os arquivos do front-end do RedScarf a serem traduzidos.
+===============================================================================
+
+===============================================================================
+| Neste diretório ficam os arquivos das traduções a serem realizadas.
+| Passos para realizar a tradução:
+| -----------------------------------------------------------------------------
+| 1-) Codifique as "Strings" nos códigos-fontes dentro do método trUtf8("....") ou
+|     nas variações disponíveis que permitem a tradução.
+|
+| 2-) Para criar/atualizar os arquivos de tradução, utilize a ferramenta do Qt
+|     "lupdate" no diretório do projeto ("(raiz)/RS").
+|     Os Arquivos de tradução (.ts) serão alocados aqui.
+|
+| 3-) Utilize a ferramenta "linguist" do Qt para traduzir as "Strings".
+|
+| 4-) Utilize a ferramenta "lrelease" (disponível no linguist) do Qt
+|     para gerar os arquivos traduzidos que serão utilizados pela aplicação.
+|
+| 5-) Coloque os arquivos gerados (.qm) traduzidos no diretório:
+|     "(raiz)/RS/bin/translations".
+|
+| 6-) Verifique se a tradução esta indicada no arquivo de configuração:
+|     "(raiz)/RS/bin/etc/config.ini". OBS: na indicação não use .qm
+|
+| 7-) Teste na aplicação!
+===============================================================================
+
+===============================================================================
+| OBS: A indicação da tradução no arquivo config.ini, deve ser feita na seção
+| "[AvailableLanguages]". Podem ser especificados mais de um arquivo para a mesma
+| tradução, desde que não sejam conflitantes (traduzam a mesma string do mesmo local).
+| Na seção [AvailableLanguages] dois atributos são definidos, são eles:
+| * n\Files: -> arquivos de tradução (.qm) sem a extensão. Separe com vírgulas.
+| * n\Language: -> Texto a ser apresentado na interface gráfica para seleção do
+|                  idioma. OBS: Use codificação UTF-8 para definir este texto.
+|
+| Não esqueça de incrementar o atributo "size" nesta seção se um novo idioma for
+| adicionado.
+===============================================================================

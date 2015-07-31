@@ -1,0 +1,44 @@
+-----------------
+RedScarf on Windows
+-----------------
+
+ Pre-requisites:
+  - MinGW
+  - SystemC compiled
+  - Wave (or other waveform viewer compatible with VCD file - value change dump)
+
+-----------------
+
+-----------------
+RedScarf on Mac
+-----------------
+
+ Pre-requisites:
+  - XCode
+  - Command Line Tools
+  - Activate developer mode on XCode
+  - SystemC compiled
+  - Scansion (or other waveform viewer compatible with VCD file - value change dump)
+
+-----------------
+
+-----------------
+RedScarf on Linux
+-----------------
+
+ Pre-requisites:
+  - Qt libraries >= 5.5 (libqt5core5, libqt5gui5, libqt5widgets5, libqt5opengl5, libqt5svg5, libqt5printsupport5)
+  - GCC (build-essential on Ubuntu-based distros)
+  - SystemC compiled
+  - GTKWave  (or other waveform viewer compatible with VCD file - value change dump)
+
+-----------------
+
+--------- SystemC ---------
+Build the SystemC library with:
+ ./configure
+ make 
+ make install
+ 
+On Windows with MinGW compiler is need MSYS feature for the "configure"
+and set the environment variable PATH (e.g. PATH=C:\MinGW\bin).

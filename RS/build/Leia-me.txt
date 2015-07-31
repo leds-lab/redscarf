@@ -1,0 +1,45 @@
+===============================================================================
+--> Localização: (raiz)/RS/build
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Este diretório comportará os arquivos gerados durante a compilação do
+| front-end.
+===============================================================================
+
+===============================================================================
+| Neste diretório serão gerados os subdiretórios:
+| -----------------------------------------------------------------------------
+| * moc_files: Comportará os códigos-fontes (.cpp) gerados dos meta objetos do
+|              front-end, que são definidos no Control e View.
+| -----------------------------------------------------------------------------
+| * objs     : Comportará os arquivos objetos (.o) da compilação do front-end.
+| -----------------------------------------------------------------------------
+| * res_files: Comportará os códigos-fontes (.cpp) dos arquivos de recursos do
+|              front-end. Esses fontes contém a serialização binária dos
+|              recursos multimídia do front-end (ícones, imagens, sons, ...) a
+|              serem embarcados no executável.
+| -----------------------------------------------------------------------------
+| * ui_files : Comportará os cabeçalhos fontes (.h) gerados a partir dos
+|              formulários gráficos (.ui).
+===============================================================================
+
+===============================================================================
+| OBS: Não é necessário alterar nenhum arquivo gerado, uma vez que
+| estes  são gerados durante o processo de compilação.
+| Porém, se alguma atualização no fonte do programa não tiver surtido efeito,
+| limpe (excluir) todos os subdiretórios, deste modo garantirá que os
+| arquivos serão (re)gerados na próxima compilação.
+===============================================================================

@@ -1,0 +1,58 @@
+===============================================================================
+--> Localização: (raiz)
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Este é o diretório raiz da estrutura de diretórios do framework RedScarf.
+===============================================================================
+
+===============================================================================
+| Neste diretório está somente o arquivo de projeto do Qt do framework RedScarf
+| (RedScarf.pro) e o diretório dos recursos do projeto.
+===============================================================================
+
+===============================================================================
+| Abra o arquivo RedScarf.pro na IDE Qt Creator.
+===============================================================================
+
+===============================================================================
+| Mais informações nos arquivos Leia-me dos subdiretórios!
+===============================================================================
+
+===============================================================================
+| IMPORTANTE: 
+| 1-) Se for versionar o código, procure manter concisa a estrutura de
+| diretórios (cada arquivo no lugar certo), por exemplo, NÃO coloque códigos- 
+| -fonte nos diretórios de documentação, a não ser que seja muito, mas muito
+| importante para a documentação.
+|
+| 2-) Não inclua arquivos irrelevantes no controle de versão, como arquivos para
+| a compilação e correta execução do framework (ex.: arquivos objetos - ".o",
+| bibliotecas [DLLs | SOs | DYLIBs], etc). Use o arquivo ".gitignore".
+|
+| 3-) Atualize os arquivos "Leia-me" e crie-os quando um novo diretório for 
+| necessário. Utilize o cabeçalho para informar os detalhes como a data da 
+| modificação/criação, o responsável pela mudança, detalhes e incremente a
+| revisão. OBS: Versão.Subversão.Revisão. A versão corresponde a versão da 
+| ferramenta. A subversão, a alguma alteração significativa como correções
+| críticas ou "feature" nova NA FERRAMENTA!
+| E a revisão corresponde a alterações que não foram supervisionadas pelo gestor
+| do projeto, como correções de bugs ou pequenos ajustes que ainda não fazem
+| parte da ferramenta.
+|
+| Cada arquivo de código-fonte também possui um cabeçalho para comentar as revisões.
+| No subdiretório "dist" utilize os arquivos: ChangeLog e NEWS para detalhar as
+| alterações realizadas.
+===============================================================================

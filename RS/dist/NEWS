@@ -1,0 +1,17 @@
+-------
+Reviews
+-------
+------------------------------------
+Version 1.0
+------------------------------------
+Initial release of RedScarf.
+Contains all the features designed for the first release
+ * All of the features implemented from BrownPepper
+ * Multithread execution of simulations
+ * Load and Save simulation results
+ * Graphic tool incorpored
+ * Waveform viewer tool configurable
+
+Produced by Eduardo Alves da Silva
+July 14th, 2015
+------------------------------------

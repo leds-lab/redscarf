@@ -1,0 +1,83 @@
+------------------------------------------------------------------------------|
+| Arquivo gerado em 16/07/2015
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 16/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Ver. 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Neste arquivo são listados os requisitos do framework.
+===============================================================================
+
+
+===============================================================================
+| O framework é dividido em front-end e back-end, os requisitos serão
+| classificados de acordo com estas duas subdivisões.
+===============================================================================
+
+===============================================================================
+| O front-end comporta a interface gráfica e as ferramentas de geração de código,
+| modelos de tráfego, gráficos e relatórios.
+|
+| Para a executar o front-end são necessárias as bibliotecas (DLLs, SOs ou DYLIBs)
+| do Qt, Qwt (http://sourceforge.net/projects/qwt/files/) e do compilador
+| (MinGW no Windows).
+| São elas (Qt 5 e Qwt 6.1.2):
+|---------------------------------------------------------------------------------|
+|          Windows          |          Linux          |           OS X            |
+|---------------------------|-------------------------|---------------------------|
+| platforms/qwindows.dll    | platforms/libqxcb.so    | platforms/libqcocoa.dylib |
+| icudt54.dll               | libicudata.so.54        | ---                       |
+| icuin54.dll               | libicui18n.so.54        | ---                       |
+| icuuc54.dll               | libicuuc.so.54          | ---                       |
+| libgcc_s_dw2-1.dll        | ---                     | ---                       |
+| libstdc++-6.dll           | ---                     | ---                       |
+| libwinpthread-1.dll       | ---                     | QtConcurrent.framework    |
+| Qt5Core.dll               | libQt5Core.so.5         | QtCore.framework          | 
+| Qt5Gui.dll                | libQt5Gui.so.5          | QtGui.framework           |
+| Qt5OpenGL.dll             | libQt5OpenGL.so.5       | QtOpenGL.framework        |
+| Qt5PrintSupport.dll       | libQt5PrintSupport.so.5 | QtPrintSupport.framework  |
+| Qt5Svg.dll                | libQt5Svg.so.5          | QtSvg.framework           |
+| Qt5Widgets.dll            | libQt5Widgets.so.5      | QtWidgets.framework       |
+| qwt.dll                   | libqwt.so.6             | qwt.framework             |
+| ---                       | libQt5DBus.so.5         | QtDBus.framework          |
+| ---                       | libQt5XcbQpa.so.5       | ---                       |
+|---------------------------------------------------------------------------------|
+| Para desenvolvimento, use o kit open-source do Qt (para Windows versão com
+| compilador MinGW).
+| Disponível em: http://www.qt.io/download/
+| E a biblioteca Qwt: http://sourceforge.net/projects/qwt/files/
+|
+| IMPORTANTE: No arquivo de projeto do front-end ("(raiz)/RS/RS.pro") é definido o
+| local da biblioteca Qwt na variável "QWT_PATH". Não esqueça de definir o local 
+| correto se não a compilação falhará.
+|
+| Para a simulação dos modelos do back-end é necessário um compilador compatível
+| com SystemC. E a biblioteca SystemC compilada.
+|
+| O front-end solicita o local da biblioteca SystemC na primeira execução.
+| Verifique se o local do SystemC possui os subdiretórios "lib-*" e "include".
+|
+| No Windows, o front-end solicita o local de instalação do compilador MinGW na
+| primeira execução. No Linux e OS X, garanta que o local dos executáveis do compilador
+| estarão definidos nas váriaveis de ambiente (executável "make" e "g++" acessíveis
+| via linha de comandos).
+===============================================================================
+
+===============================================================================
+| O back-end comporta os modelos SystemC simuláveis das arquiteturas de comunicação
+| e é necessário para a execução do framework por meio do front-end.
+|
+| Para a compilação e execução do back-end é necessário um compilador compatível
+| com SystemC. Sinta-se livre para contribuir com modelos de arquiteturas de 
+| comunicação para ampliar as capacidades do framework.
+|
+===============================================================================
+
+===============================================================================
+| Para mais detalhes entre em contato com o grupo de pesquisa.
+===============================================================================

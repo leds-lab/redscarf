@@ -1,0 +1,3640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>966</width>
+    <height>832</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RedScarf[*]</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/Icons.qrc">
+    <normaloff>:/icons/icons/RedScarf_icon.png</normaloff>:/icons/icons/RedScarf_icon.png</iconset>
+  </property>
+  <property name="statusTip">
+   <string>RedScarf</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_15">
+    <item>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="handleWidth">
+       <number>5</number>
+      </property>
+      <widget class="QTabWidget" name="tabs">
+       <property name="font">
+        <font>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="tabPosition">
+        <enum>QTabWidget::North</enum>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Triangular</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="systemConfiguration">
+        <attribute name="icon">
+         <iconset resource="../resources/Icons.qrc">
+          <normaloff>:/icons/icons/icon_tool.png</normaloff>:/icons/icons/icon_tool.png</iconset>
+        </attribute>
+        <attribute name="title">
+         <string>System Configuration</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0,0">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="systemSize">
+           <property name="statusTip">
+            <string>Configure the system size</string>
+           </property>
+           <property name="title">
+            <string>System Size</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <item>
+                 <widget class="QLabel" name="labelXSize">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of columns of the 2-D mesh network</string>
+                  </property>
+                  <property name="text">
+                   <string>X Size:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinInXSize</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInXSize">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of columns of the 2-D mesh network</string>
+                  </property>
+                  <property name="minimum">
+                   <number>2</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <item>
+                 <widget class="QLabel" name="labelYSize">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of rows of 2-D mesh network</string>
+                  </property>
+                  <property name="text">
+                   <string>Y Size:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinInYSize</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInYSize">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of rows of 2-D mesh network</string>
+                  </property>
+                  <property name="minimum">
+                   <number>2</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <widget class="QLabel" name="labelChannelWidth">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of bits in the data channel.</string>
+                  </property>
+                  <property name="text">
+                   <string>Channel Width:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinInChannelWidth</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInChannelWidth">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Number of bits in the data channel.</string>
+                  </property>
+                  <property name="minimum">
+                   <number>16</number>
+                  </property>
+                  <property name="maximum">
+                   <number>53</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>8</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="1" column="1">
+               <widget class="QSlider" name="verticalSlider">
+                <property name="minimum">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBelow</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QSlider" name="horizontalSlider">
+                <property name="minimum">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBelow</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QScrollArea" name="scrollArea">
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>596</width>
+                   <height>432</height>
+                  </rect>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_35">
+                  <item>
+                   <widget class="QGroupBox" name="nodes">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="statusTip">
+                     <string>Preview of the cores in network</string>
+                    </property>
+                    <property name="title">
+                     <string>Nodes</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout"/>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="lineDivisorSystemConfiguration">
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="trafficConfiguration">
+           <property name="statusTip">
+            <string>Configure the traffic paterns</string>
+           </property>
+           <property name="title">
+            <string>Traffic Configuration</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="labelSourceNode">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="statusTip">
+                 <string>Configure the source node of the traffic pattern</string>
+                </property>
+                <property name="text">
+                 <string>Source node:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <item>
+                 <widget class="QLabel" name="labelSourceNodeX">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>X coordinate of the source node.</string>
+                  </property>
+                  <property name="text">
+                   <string>X:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinInSrcNodeX</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInSrcNodeX">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>X coordinate of the source node.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <item>
+                 <widget class="QLabel" name="labelSourceNodeY">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Y coordinate of the source node.</string>
+                  </property>
+                  <property name="text">
+                   <string>Y:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinInSrcNodeY</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInSrcNodeY">
+                  <property name="font">
+                   <font>
+                    <italic>false</italic>
+                   </font>
+                  </property>
+                  <property name="statusTip">
+                   <string>Y coordinate of the source node.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="trafficPaterns">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Configure traffic patterns</string>
+              </property>
+              <property name="title">
+               <string>Traffic Paterns</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <layout class="QHBoxLayout" name="layoutTrafficPattern0">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetFixedSize</enum>
+                 </property>
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkInTrafficPattern0">
+                   <property name="statusTip">
+                    <string>Enable/Disable traffic pattern 0</string>
+                   </property>
+                   <property name="text">
+                    <string>Traffic pattern 0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonEditTrafficPattern0">
+                   <property name="statusTip">
+                    <string>Edit traffic patern 0</string>
+                   </property>
+                   <property name="text">
+                    <string>Edit</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="layoutTrafficPattern1">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetFixedSize</enum>
+                 </property>
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkInTrafficPattern1">
+                   <property name="statusTip">
+                    <string>Enable/Disable traffic pattern 1</string>
+                   </property>
+                   <property name="text">
+                    <string>Traffic pattern 1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonEditTrafficPattern1">
+                   <property name="statusTip">
+                    <string>Edit traffic patern 1</string>
+                   </property>
+                   <property name="text">
+                    <string>Edit</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="layoutTrafficPattern2">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetFixedSize</enum>
+                 </property>
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkInTrafficPattern2">
+                   <property name="statusTip">
+                    <string>Enable/Disable traffic pattern 2</string>
+                   </property>
+                   <property name="text">
+                    <string>Traffic pattern 2</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonEditTrafficPattern2">
+                   <property name="statusTip">
+                    <string>Edit traffic patern 2</string>
+                   </property>
+                   <property name="text">
+                    <string>Edit</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="layoutTrafficPattern3">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetFixedSize</enum>
+                 </property>
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="checkInTrafficPattern3">
+                   <property name="statusTip">
+                    <string>Enable/Disable traffic pattern 3</string>
+                   </property>
+                   <property name="text">
+                    <string>Traffic pattern 3</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonEditTrafficPattern3">
+                   <property name="statusTip">
+                    <string>Edit traffic patern 3</string>
+                   </property>
+                   <property name="text">
+                    <string>Edit</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="font">
+               <font>
+                <weight>50</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Preview options</string>
+              </property>
+              <property name="title">
+               <string>Preview</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="leftMargin">
+                <number>2</number>
+               </property>
+               <property name="topMargin">
+                <number>2</number>
+               </property>
+               <property name="rightMargin">
+                <number>2</number>
+               </property>
+               <property name="bottomMargin">
+                <number>2</number>
+               </property>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <property name="leftMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>10</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="buttonPreviewDefault">
+                   <property name="font">
+                    <font>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="statusTip">
+                    <string>Preview traffic configuration in default style</string>
+                   </property>
+                   <property name="text">
+                    <string>Preview
+Traffic
+Configuration</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_preview.png</normaloff>:/icons/icons/icon_preview.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonXmlViewer">
+                   <property name="font">
+                    <font>
+                     <weight>50</weight>
+                     <italic>false</italic>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="statusTip">
+                    <string>Preview traffic configuration in xml style (tree view)</string>
+                   </property>
+                   <property name="text">
+                    <string>XML View
+Traffic
+Configuration</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources/Icons.qrc">
+                     <normaloff>:/icons/icons/icon_preview_xml.png</normaloff>:/icons/icons/icon_preview_xml.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="systemSimulation">
+        <attribute name="icon">
+         <iconset resource="../resources/Icons.qrc">
+          <normaloff>:/icons/icons/Rede.png</normaloff>:/icons/icons/Rede.png</iconset>
+        </attribute>
+        <attribute name="title">
+         <string>System Simulation</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupBoxExperimentsConfiguration">
+           <property name="title">
+            <string>Experiments Configuration</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="3" column="2">
+             <widget class="QComboBox" name="comboInSwitchingExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="4">
+             <widget class="QComboBox" name="comboInArbiterTypeExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+              <property name="maximum">
+               <number>256</number>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="labelOutputBuffers">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Output buffers (flits):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboInRouterArchitectureExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define router architecture for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QCheckBox" name="checkInExperiment5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 5</string>
+              </property>
+              <property name="text">
+               <string>#5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="5">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QComboBox" name="comboInRouterArchitectureExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define router architecture for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="5">
+             <widget class="QPushButton" name="buttonCopyExp5">
+              <property name="statusTip">
+               <string>Copy configuration previous experiment active</string>
+              </property>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="labelInputBuffers">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Input buffers (flits):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelRoutingAlgorithm">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Routing algorithm:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QSpinBox" name="spinInInputBuffersExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QComboBox" name="comboInRouterArchitectureExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define router architecture for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="labelRouterArchitecture">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Router architecture:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QPushButton" name="buttonCopyExp2">
+              <property name="statusTip">
+               <string>Copy configuration previous experiment active</string>
+              </property>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="5">
+             <widget class="QComboBox" name="comboInRouterArchitectureExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define router architecture for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="5">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="labelConfiguration">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Configuration:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QComboBox" name="comboInArbiterTypeExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QCheckBox" name="checkInExperiment2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 2</string>
+              </property>
+              <property name="text">
+               <string>#2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QComboBox" name="comboInRouterArchitectureExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define router architecture for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QComboBox" name="comboInArbiterTypeExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QComboBox" name="comboInSwitchingExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="labelSwitching">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Flow control (Switching):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QCheckBox" name="checkInExperiment3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 3</string>
+              </property>
+              <property name="text">
+               <string>#3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QComboBox" name="comboInSwitchingExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QComboBox" name="comboInArbiterTypeExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <widget class="QPushButton" name="buttonDefaultExp3">
+              <property name="statusTip">
+               <string>Load default values for experiment 3</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="4">
+             <widget class="QSpinBox" name="spinInInputBuffersExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="4">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="comboInSwitchingExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QComboBox" name="comboInArbiterTypeExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="4">
+             <widget class="QPushButton" name="buttonCopyExp4">
+              <property name="statusTip">
+               <string>Copy configuration previous experiment active</string>
+              </property>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="labelArbiterType">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Arbiter type:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QComboBox" name="comboInSwitchingExp4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QSpinBox" name="spinInInputBuffersExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>1024</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QCheckBox" name="checkInExperiment4">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 4</string>
+              </property>
+              <property name="text">
+               <string>#4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QSpinBox" name="spinInInputBuffersExp2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="5">
+             <widget class="QPushButton" name="buttonDefaultExp5">
+              <property name="statusTip">
+               <string>Load default values for experiment 5</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QPushButton" name="buttonDefaultExp2">
+              <property name="statusTip">
+               <string>Load default values for experiment 2</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="4">
+             <widget class="QPushButton" name="buttonDefaultExp4">
+              <property name="statusTip">
+               <string>Load default values for experiment 4</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QPushButton" name="buttonCopyExp3">
+              <property name="statusTip">
+               <string>Copy configuration previous experiment active</string>
+              </property>
+              <property name="text">
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="5">
+             <widget class="QSpinBox" name="spinInInputBuffersExp5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QPushButton" name="buttonDefaultExp1">
+              <property name="statusTip">
+               <string>Load default values for experiment 1</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="3">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="labelConf1">
+              <property name="text">
+               <string>#1</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+           <zorder>labelConfiguration</zorder>
+           <zorder>labelRouterArchitecture</zorder>
+           <zorder>comboInRouterArchitectureExp1</zorder>
+           <zorder>comboInRouterArchitectureExp2</zorder>
+           <zorder>comboInRouterArchitectureExp3</zorder>
+           <zorder>comboInRouterArchitectureExp4</zorder>
+           <zorder>comboInRouterArchitectureExp5</zorder>
+           <zorder>labelRoutingAlgorithm</zorder>
+           <zorder>comboInRoutingAlgorithmExp1</zorder>
+           <zorder>comboInRoutingAlgorithmExp2</zorder>
+           <zorder>comboInRoutingAlgorithmExp3</zorder>
+           <zorder>comboInRoutingAlgorithmExp4</zorder>
+           <zorder>comboInRoutingAlgorithmExp5</zorder>
+           <zorder>labelSwitching</zorder>
+           <zorder>comboInSwitchingExp1</zorder>
+           <zorder>comboInSwitchingExp2</zorder>
+           <zorder>comboInSwitchingExp3</zorder>
+           <zorder>comboInSwitchingExp4</zorder>
+           <zorder>comboInSwitchingExp5</zorder>
+           <zorder>labelArbiterType</zorder>
+           <zorder>comboInArbiterTypeExp1</zorder>
+           <zorder>comboInArbiterTypeExp2</zorder>
+           <zorder>comboInArbiterTypeExp3</zorder>
+           <zorder>comboInArbiterTypeExp4</zorder>
+           <zorder>comboInArbiterTypeExp5</zorder>
+           <zorder>labelInputBuffers</zorder>
+           <zorder>spinInInputBuffersExp1</zorder>
+           <zorder>spinInInputBuffersExp2</zorder>
+           <zorder>spinInInputBuffersExp3</zorder>
+           <zorder>spinInInputBuffersExp4</zorder>
+           <zorder>spinInInputBuffersExp5</zorder>
+           <zorder>labelOutputBuffers</zorder>
+           <zorder>spinInOutputBuffersExp1</zorder>
+           <zorder>spinInOutputBuffersExp2</zorder>
+           <zorder>spinInOutputBuffersExp3</zorder>
+           <zorder>spinInOutputBuffersExp4</zorder>
+           <zorder>spinInOutputBuffersExp5</zorder>
+           <zorder>checkInExperiment2</zorder>
+           <zorder>checkInExperiment3</zorder>
+           <zorder>checkInExperiment4</zorder>
+           <zorder>checkInExperiment5</zorder>
+           <zorder>buttonDefaultExp1</zorder>
+           <zorder>buttonCopyExp2</zorder>
+           <zorder>buttonDefaultExp2</zorder>
+           <zorder>buttonCopyExp3</zorder>
+           <zorder>buttonDefaultExp3</zorder>
+           <zorder>buttonCopyExp4</zorder>
+           <zorder>buttonDefaultExp4</zorder>
+           <zorder>buttonCopyExp5</zorder>
+           <zorder>buttonDefaultExp5</zorder>
+           <zorder>labelConf1</zorder>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="lineDivisorSystemSimulation">
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_36">
+              <item>
+               <widget class="QLabel" name="labelSimulationStopMethod">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Simulation Stop Method:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboInSimulationStopMethod">
+                <property name="sizeAdjustPolicy">
+                 <enum>QComboBox::AdjustToContents</enum>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>When all the packets are delivered</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>After a specified simulated time:</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>After a specified number of cycles:</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxStopTimeNs">
+                <property name="suffix">
+                 <string> ns</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>10000000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxStopTimeCycles">
+                <property name="suffix">
+                 <string> cycles</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100000000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QLabel" name="labelVCDGenerationOptions">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>VCD generation options:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboInVCDGenerationOptions">
+                <property name="sizeAdjustPolicy">
+                 <enum>QComboBox::AdjustToContents</enum>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Do not generate VCD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Generate an empty VCD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Show clock only</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Show clock and data</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Show clock, data and flow control</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Show all the signals</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <item>
+               <widget class="QLabel" name="labelChannelFclkRange">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Channel Fclk range:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelFclkRange</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelFclkRange">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000001.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelMHz">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>MHz To</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelFclkRange_2</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelFclkRange_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000001.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelMHzStep">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>MHz, step=</string>
+                </property>
+                <property name="buddy">
+                 <cstring>comboInStep</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboInStep"/>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInStep">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="decimals">
+                 <number>2</number>
+                </property>
+                <property name="minimum">
+                 <double>-10000000.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="labelChannelTclklRange">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Channel Tclk range:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelTclkRange</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelTclkRange">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelNsTo">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>ns To</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelTclkRange_2</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelTclkRange_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelNs">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>ns</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::MinimumExpanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <widget class="QLabel" name="labelChannelBWRange">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Channel BW range:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelBWRange</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelBWRange">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <double>1000000000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelMbps1">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Mbps To</string>
+                </property>
+                <property name="buddy">
+                 <cstring>doubleSpinInChannelBWRange_2</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="doubleSpinInChannelBWRange_2">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <double>1000000000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelMbps2">
+                <property name="font">
+                 <font>
+                  <italic>false</italic>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Mbps (for HS flow control, divide by 4)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::MinimumExpanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>1</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBar">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximum">
+                 <number>0</number>
+                </property>
+                <property name="value">
+                 <number>-1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="buttonRunSimulation">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="statusTip">
+                 <string>Execute the simulation</string>
+                </property>
+                <property name="text">
+                 <string>Run</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resources/Icons.qrc">
+                  <normaloff>:/icons/icons/icon_play.png</normaloff>:/icons/icons/icon_play.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="buttonCancel">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Cancel</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resources/Icons.qrc">
+                  <normaloff>:/icons/icons/icon_stop.png</normaloff>:/icons/icons/icon_stop.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="performanceAnalysis">
+        <attribute name="icon">
+         <iconset resource="../resources/Icons.qrc">
+          <normaloff>:/icons/icons/plot_graphic_icon.png</normaloff>:/icons/icons/plot_graphic_icon.png</iconset>
+        </attribute>
+        <attribute name="title">
+         <string>Performance Analysis</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0,0">
+         <item>
+          <widget class="QGroupBox" name="groupBoxConfigurationAnalysis">
+           <property name="title">
+            <string>Configuration</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="labelInitPacketsAnalyze">
+                <property name="text">
+                 <string>Analyze packets from</string>
+                </property>
+                <property name="buddy">
+                 <cstring>spinBoxInitPacketsAnalyze</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxInitPacketsAnalyze">
+                <property name="correctionMode">
+                 <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                </property>
+                <property name="maximum">
+                 <number>99</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelToPackets">
+                <property name="text">
+                 <string>% to</string>
+                </property>
+                <property name="buddy">
+                 <cstring>spinBoxEndPacketsAnalyze</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxEndPacketsAnalyze">
+                <property name="correctionMode">
+                 <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelEndPacketAnalyze">
+                <property name="text">
+                 <string>% of the delivered packets</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="buttonRunAnalysis">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="statusTip">
+                 <string>Read log files and generate reports</string>
+                </property>
+                <property name="text">
+                 <string>Analyze</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../resources/Icons.qrc">
+                  <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <item>
+               <widget class="QLabel" name="labelFlowSelection">
+                <property name="text">
+                 <string>Flow selection:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="comboFlowSelection">
+                <property name="sizeAdjustPolicy">
+                 <enum>QComboBox::AdjustToContents</enum>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Analyze all the flows</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Analyze RT0 flows</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Analyze RT1 flows</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Analyze nRT0 flows</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Analyze nRT1 flows</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Analyze specified flow</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelFlowParameters">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Flow parameters:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayoutFlowParameters">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_17">
+                  <item>
+                   <widget class="QLabel" name="labelXSource">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>X Source:</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>spinBoxXSourceAnalyze</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBoxXSourceAnalyze">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_18">
+                  <item>
+                   <widget class="QLabel" name="labelYSource">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Y Source:</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>spinBoxYSourceAnalyze</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBoxYSourceAnalyze">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_21">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_20">
+                  <item>
+                   <widget class="QLabel" name="labelXDestination">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>X Destination:</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>spinBoxXDestinationAnalyze</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBoxXDestinationAnalyze">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_19">
+                  <item>
+                   <widget class="QLabel" name="labelYDestination">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Y Destination:</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>spinBoxYDestinationAnalyze</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBoxYDestinationAnalyze">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_23">
+                <item>
+                 <widget class="QLabel" name="labelTrafficPatternAnalyze">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Traffic Pattern:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinBoxTrafficPatternAnalyze</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinBoxTrafficPatternAnalyze">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="maximum">
+                   <number>3</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_3">
+           <property name="title">
+            <string>Analysis</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_33">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_14">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_32">
+                  <item>
+                   <widget class="QLabel" name="labelGraphic">
+                    <property name="text">
+                     <string>Graphic:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBoxYAxisGraphic">
+                    <property name="sizeAdjustPolicy">
+                     <enum>QComboBox::AdjustToContents</enum>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Average Latency (cycles)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Average Latency (ns)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Accepted Traffic (normalized)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Accepted Traffic (Mbps/n)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>% Met deadlines RT0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>% Met deadlines RT1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>% Met deadlines nRT0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>% Met deadlines nRT1</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="labelVersus">
+                    <property name="text">
+                     <string>X</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBoxXAxisGraphic">
+                    <property name="sizeAdjustPolicy">
+                     <enum>QComboBox::AdjustToContents</enum>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Fclk (MHz)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Offered Traffic (normalized)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Accepted Traffic (normalized)</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Accepted Traffic (Mbps/n)</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_9">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_31">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_12">
+                    <item>
+                     <widget class="QLabel" name="labelLegendGraphic">
+                      <property name="text">
+                       <string>Legend:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxRouterArchitecture">
+                      <property name="text">
+                       <string>Router Architecture</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxRoutingAlgorithm">
+                      <property name="text">
+                       <string>Routing Algorithm</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxFlowControl">
+                      <property name="text">
+                       <string>Flow Control (Switching)</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxArbiterType">
+                      <property name="text">
+                       <string>Arbiter Type</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxInputBuffersDepth">
+                      <property name="text">
+                       <string>Input Buffers Depth</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBoxOutputBuffersDepth">
+                      <property name="text">
+                       <string>Output Buffers Depth</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_34">
+                      <item>
+                       <widget class="QPushButton" name="buttonCheckUncheckAll">
+                        <property name="text">
+                         <string>Check/Uncheck All</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_10">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_4">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_10">
+                    <item>
+                     <widget class="QLabel" name="labelGraphicOptions">
+                      <property name="text">
+                       <string>Graphic Options:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_29">
+                      <item>
+                       <widget class="QLabel" name="labelLineWidth">
+                        <property name="text">
+                         <string>Line Width:</string>
+                        </property>
+                        <property name="buddy">
+                         <cstring>doubleSpinBoxLineWidth</cstring>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QDoubleSpinBox" name="doubleSpinBoxLineWidth">
+                        <property name="correctionMode">
+                         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                        </property>
+                        <property name="minimum">
+                         <double>0.010000000000000</double>
+                        </property>
+                        <property name="maximum">
+                         <double>5.000000000000000</double>
+                        </property>
+                        <property name="singleStep">
+                         <double>0.500000000000000</double>
+                        </property>
+                        <property name="value">
+                         <double>1.000000000000000</double>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_30">
+                      <item>
+                       <widget class="QLabel" name="labelPointSize">
+                        <property name="text">
+                         <string>Point Size:</string>
+                        </property>
+                        <property name="buddy">
+                         <cstring>doubleSpinBoxPointSize</cstring>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QDoubleSpinBox" name="doubleSpinBoxPointSize">
+                        <property name="correctionMode">
+                         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                        </property>
+                        <property name="minimum">
+                         <double>0.010000000000000</double>
+                        </property>
+                        <property name="maximum">
+                         <double>5.000000000000000</double>
+                        </property>
+                        <property name="singleStep">
+                         <double>0.500000000000000</double>
+                        </property>
+                        <property name="value">
+                         <double>1.000000000000000</double>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_24">
+                      <item>
+                       <widget class="QLabel" name="labelColorCurve1">
+                        <property name="text">
+                         <string>Curve #1:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QFrame" name="frameCurve1">
+                        <property name="minimumSize">
+                         <size>
+                          <width>64</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="toolButtonColorCurve1">
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="../resources/Icons.qrc">
+                          <normaloff>:/icons/icons/color_picker_icon.png</normaloff>:/icons/icons/color_picker_icon.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_25">
+                      <item>
+                       <widget class="QLabel" name="labelColorCurve2">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>Curve #2:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QFrame" name="frameCurve2">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>64</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="toolButtonColorCurve2">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="../resources/Icons.qrc">
+                          <normaloff>:/icons/icons/color_picker_icon.png</normaloff>:/icons/icons/color_picker_icon.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_26">
+                      <item>
+                       <widget class="QLabel" name="labelColorCurve3">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>Curve #3:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QFrame" name="frameCurve3">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>64</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="toolButtonColorCurve3">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="../resources/Icons.qrc">
+                          <normaloff>:/icons/icons/color_picker_icon.png</normaloff>:/icons/icons/color_picker_icon.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_27">
+                      <item>
+                       <widget class="QLabel" name="labelColorCurve4">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>Curve #4:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QFrame" name="frameCurve4">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>64</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="toolButtonColorCurve4">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="../resources/Icons.qrc">
+                          <normaloff>:/icons/icons/color_picker_icon.png</normaloff>:/icons/icons/color_picker_icon.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_28">
+                      <item>
+                       <widget class="QLabel" name="labelColorCurve5">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>Curve #5:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QFrame" name="frameCurve5">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>64</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>true</bool>
+                        </property>
+                        <property name="frameShape">
+                         <enum>QFrame::StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="toolButtonColorCurve5">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="../resources/Icons.qrc">
+                          <normaloff>:/icons/icons/color_picker_icon.png</normaloff>:/icons/icons/color_picker_icon.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_11">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QPushButton" name="buttonPlotGraphicSelected">
+                  <property name="text">
+                   <string>Plot Selected
+&amp;Graphic</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/Icons.qrc">
+                    <normaloff>:/icons/icons/plot_graphic_icon.png</normaloff>:/icons/icons/plot_graphic_icon.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>48</width>
+                    <height>48</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="buttonPlotLatencyDistribution">
+                  <property name="text">
+                   <string>Plot &amp;Latency
+Distribution</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/Icons.qrc">
+                    <normaloff>:/icons/icons/latency_distribution_icon.png</normaloff>:/icons/icons/latency_distribution_icon.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>48</width>
+                    <height>48</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="buttonPlotWaveform">
+                  <property name="text">
+                   <string>Plot &amp;Waveforms</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/Icons.qrc">
+                    <normaloff>:/icons/icons/waveform_icon.png</normaloff>:/icons/icons/waveform_icon.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>48</width>
+                    <height>48</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="buttonViewReport">
+                  <property name="text">
+                   <string>View &amp;Report</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources/Icons.qrc">
+                    <normaloff>:/icons/icons/report_icon.png</normaloff>:/icons/icons/report_icon.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>48</width>
+                    <height>48</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBoxConsole">
+       <property name="statusTip">
+        <string>Console output messages</string>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_37">
+        <item>
+         <widget class="QTextEdit" name="console">
+          <property name="cursor" stdset="0">
+           <cursorShape>IBeamCursor</cursorShape>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="undoRedoEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_16">
+          <item>
+           <widget class="QToolButton" name="toolButtonClearConsole">
+            <property name="icon">
+             <iconset resource="../resources/Icons.qrc">
+              <normaloff>:/icons/icons/icon_clear.png</normaloff>:/icons/icons/icon_clear.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>966</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="statusTip">
+     <string>File menu</string>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionLoadDefault"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveAsDefault"/>
+    <addaction name="actionClearAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="statusTip">
+      <string>Select the environment language</string>
+     </property>
+     <property name="title">
+      <string>Language</string>
+     </property>
+    </widget>
+    <addaction name="menuLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>Simulation</string>
+    </property>
+    <addaction name="actionLoadSimulation"/>
+    <addaction name="actionSaveSimulation"/>
+    <addaction name="separator"/>
+    <addaction name="actionGenerateCSV"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuSimulation"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="statusTip">
+    <string>Status bar</string>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/Rede.png</normaloff>:/icons/icons/Rede.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new system with default values and clear all the traffic patterns</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new system with default values and clear all the traffic patterns</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_open.png</normaloff>:/icons/icons/icon_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a system configuration file</string>
+   </property>
+   <property name="statusTip">
+    <string>Open a system configuration file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionLoadDefault">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_open_default.png</normaloff>:/icons/icons/icon_open_default.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Default</string>
+   </property>
+   <property name="toolTip">
+    <string>Load default system configuration including the network and traffic parameters</string>
+   </property>
+   <property name="statusTip">
+    <string>Load default parameters of configuration</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_save.png</normaloff>:/icons/icons/icon_save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save a system configuration including the network and traffic parameters</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the system configuration including the network and traffic parameters</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_saveAs.png</normaloff>:/icons/icons/icon_saveAs.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save As a system configuration including the network and traffic parameters</string>
+   </property>
+   <property name="statusTip">
+    <string>Save as a configuration file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAsDefault">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_save_default.png</normaloff>:/icons/icons/icon_save_default.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As Default</string>
+   </property>
+   <property name="toolTip">
+    <string>Save As Default a current system configuration including the network and traffic parameters</string>
+   </property>
+   <property name="statusTip">
+    <string>Save as default a configuration file</string>
+   </property>
+  </action>
+  <action name="actionClearAll">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_clear.png</normaloff>:/icons/icons/icon_clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear All Traffic Patterns</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear All the traffic patterns configured for the system</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear All the traffic patterns configured for the system</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_exit.png</normaloff>:/icons/icons/icon_exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit of the simulator</string>
+   </property>
+   <property name="statusTip">
+    <string>Exit of program</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/RedScarf_icon.png</normaloff>:/icons/icons/RedScarf_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>About application</string>
+   </property>
+   <property name="statusTip">
+    <string>About RedScarf</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/qt_icon.png</normaloff>:/icons/icons/qt_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+   <property name="statusTip">
+    <string>About Qt framework that was used to build this environment</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="actionPreview_Traffic_Configuration">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_preview.png</normaloff>:/icons/icons/icon_preview.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preview Traffic Configuration</string>
+   </property>
+   <property name="toolTip">
+    <string>Preview traffic configuration in default style</string>
+   </property>
+  </action>
+  <action name="actionXML_View_Traffic_Configuration">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_preview_xml.png</normaloff>:/icons/icons/icon_preview_xml.png</iconset>
+   </property>
+   <property name="text">
+    <string>XML View Traffic Configuration</string>
+   </property>
+   <property name="toolTip">
+    <string>Preview Traffic Configuration in XML Style (tree view)</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_tool.png</normaloff>:/icons/icons/icon_tool.png</iconset>
+   </property>
+   <property name="text">
+    <string>Options</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit RedScarf options</string>
+   </property>
+   <property name="statusTip">
+    <string>Edit RedScarf options</string>
+   </property>
+  </action>
+  <action name="actionSaveSimulation">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_save_simulation.png</normaloff>:/icons/icons/icon_save_simulation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Simulation</string>
+   </property>
+   <property name="toolTip">
+    <string>Save simulation</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the generated simulation results</string>
+   </property>
+  </action>
+  <action name="actionLoadSimulation">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_open_simulation.png</normaloff>:/icons/icons/icon_open_simulation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Simulation</string>
+   </property>
+   <property name="toolTip">
+    <string>Load previous simulation</string>
+   </property>
+   <property name="statusTip">
+    <string>Load previous generated simulation results</string>
+   </property>
+  </action>
+  <action name="actionGenerateCSV">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_csv.png</normaloff>:/icons/icons/icon_csv.png</iconset>
+   </property>
+   <property name="text">
+    <string>Generate CSV</string>
+   </property>
+   <property name="statusTip">
+    <string>Generate CSV simulation Report</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabs</tabstop>
+  <tabstop>spinInXSize</tabstop>
+  <tabstop>spinInYSize</tabstop>
+  <tabstop>spinInChannelWidth</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>verticalSlider</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>spinInSrcNodeX</tabstop>
+  <tabstop>spinInSrcNodeY</tabstop>
+  <tabstop>checkInTrafficPattern0</tabstop>
+  <tabstop>buttonEditTrafficPattern0</tabstop>
+  <tabstop>checkInTrafficPattern1</tabstop>
+  <tabstop>buttonEditTrafficPattern1</tabstop>
+  <tabstop>checkInTrafficPattern2</tabstop>
+  <tabstop>buttonEditTrafficPattern2</tabstop>
+  <tabstop>checkInTrafficPattern3</tabstop>
+  <tabstop>buttonEditTrafficPattern3</tabstop>
+  <tabstop>buttonPreviewDefault</tabstop>
+  <tabstop>buttonXmlViewer</tabstop>
+  <tabstop>comboInRouterArchitectureExp1</tabstop>
+  <tabstop>comboInRouterArchitectureExp2</tabstop>
+  <tabstop>comboInRouterArchitectureExp3</tabstop>
+  <tabstop>comboInRouterArchitectureExp4</tabstop>
+  <tabstop>comboInRouterArchitectureExp5</tabstop>
+  <tabstop>comboInRoutingAlgorithmExp1</tabstop>
+  <tabstop>comboInRoutingAlgorithmExp2</tabstop>
+  <tabstop>comboInRoutingAlgorithmExp3</tabstop>
+  <tabstop>comboInRoutingAlgorithmExp4</tabstop>
+  <tabstop>comboInRoutingAlgorithmExp5</tabstop>
+  <tabstop>comboInSwitchingExp1</tabstop>
+  <tabstop>comboInSwitchingExp2</tabstop>
+  <tabstop>comboInSwitchingExp3</tabstop>
+  <tabstop>comboInSwitchingExp4</tabstop>
+  <tabstop>comboInSwitchingExp5</tabstop>
+  <tabstop>comboInArbiterTypeExp1</tabstop>
+  <tabstop>comboInArbiterTypeExp2</tabstop>
+  <tabstop>comboInArbiterTypeExp3</tabstop>
+  <tabstop>comboInArbiterTypeExp4</tabstop>
+  <tabstop>comboInArbiterTypeExp5</tabstop>
+  <tabstop>spinInInputBuffersExp1</tabstop>
+  <tabstop>spinInInputBuffersExp2</tabstop>
+  <tabstop>spinInInputBuffersExp3</tabstop>
+  <tabstop>spinInInputBuffersExp4</tabstop>
+  <tabstop>spinInInputBuffersExp5</tabstop>
+  <tabstop>spinInOutputBuffersExp1</tabstop>
+  <tabstop>spinInOutputBuffersExp2</tabstop>
+  <tabstop>spinInOutputBuffersExp3</tabstop>
+  <tabstop>spinInOutputBuffersExp4</tabstop>
+  <tabstop>spinInOutputBuffersExp5</tabstop>
+  <tabstop>buttonDefaultExp1</tabstop>
+  <tabstop>checkInExperiment2</tabstop>
+  <tabstop>buttonDefaultExp2</tabstop>
+  <tabstop>buttonCopyExp2</tabstop>
+  <tabstop>checkInExperiment3</tabstop>
+  <tabstop>buttonDefaultExp3</tabstop>
+  <tabstop>buttonCopyExp3</tabstop>
+  <tabstop>checkInExperiment4</tabstop>
+  <tabstop>buttonDefaultExp4</tabstop>
+  <tabstop>buttonCopyExp4</tabstop>
+  <tabstop>checkInExperiment5</tabstop>
+  <tabstop>buttonDefaultExp5</tabstop>
+  <tabstop>buttonCopyExp5</tabstop>
+  <tabstop>comboInSimulationStopMethod</tabstop>
+  <tabstop>spinBoxStopTimeNs</tabstop>
+  <tabstop>spinBoxStopTimeCycles</tabstop>
+  <tabstop>comboInVCDGenerationOptions</tabstop>
+  <tabstop>doubleSpinInChannelFclkRange</tabstop>
+  <tabstop>doubleSpinInChannelFclkRange_2</tabstop>
+  <tabstop>comboInStep</tabstop>
+  <tabstop>doubleSpinInStep</tabstop>
+  <tabstop>doubleSpinInChannelTclkRange</tabstop>
+  <tabstop>doubleSpinInChannelTclkRange_2</tabstop>
+  <tabstop>doubleSpinInChannelBWRange</tabstop>
+  <tabstop>doubleSpinInChannelBWRange_2</tabstop>
+  <tabstop>buttonRunSimulation</tabstop>
+  <tabstop>buttonCancel</tabstop>
+  <tabstop>spinBoxInitPacketsAnalyze</tabstop>
+  <tabstop>spinBoxEndPacketsAnalyze</tabstop>
+  <tabstop>buttonRunAnalysis</tabstop>
+  <tabstop>comboFlowSelection</tabstop>
+  <tabstop>spinBoxXSourceAnalyze</tabstop>
+  <tabstop>spinBoxYSourceAnalyze</tabstop>
+  <tabstop>spinBoxXDestinationAnalyze</tabstop>
+  <tabstop>spinBoxYDestinationAnalyze</tabstop>
+  <tabstop>spinBoxTrafficPatternAnalyze</tabstop>
+  <tabstop>comboBoxYAxisGraphic</tabstop>
+  <tabstop>comboBoxXAxisGraphic</tabstop>
+  <tabstop>checkBoxRouterArchitecture</tabstop>
+  <tabstop>checkBoxRoutingAlgorithm</tabstop>
+  <tabstop>checkBoxFlowControl</tabstop>
+  <tabstop>checkBoxArbiterType</tabstop>
+  <tabstop>checkBoxInputBuffersDepth</tabstop>
+  <tabstop>checkBoxOutputBuffersDepth</tabstop>
+  <tabstop>buttonCheckUncheckAll</tabstop>
+  <tabstop>doubleSpinBoxLineWidth</tabstop>
+  <tabstop>doubleSpinBoxPointSize</tabstop>
+  <tabstop>toolButtonColorCurve1</tabstop>
+  <tabstop>toolButtonColorCurve2</tabstop>
+  <tabstop>toolButtonColorCurve3</tabstop>
+  <tabstop>toolButtonColorCurve4</tabstop>
+  <tabstop>toolButtonColorCurve5</tabstop>
+  <tabstop>buttonPlotGraphicSelected</tabstop>
+  <tabstop>buttonPlotLatencyDistribution</tabstop>
+  <tabstop>buttonPlotWaveform</tabstop>
+  <tabstop>buttonViewReport</tabstop>
+  <tabstop>console</tabstop>
+  <tabstop>toolButtonClearConsole</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../resources/Icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinInXSize</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>618</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinInXSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>618</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinInYSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>verticalSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>438</x>
+     <y>134</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>654</x>
+     <y>587</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>verticalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinInYSize</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>654</x>
+     <y>587</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>438</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

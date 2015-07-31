@@ -1,0 +1,81 @@
+------------------------------------------------------------------------------|
+| Generated on 15/07/2015
+| Author: Eduardo Alves da Silva
+| --------- Changes --------
+| Last update: 15/07/2015
+| By: Eduardo Alves da Silva
+| --------- Details --------
+| Ver. 1.0.0: File created
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| In this file the framework's requirements are listed.
+===============================================================================
+
+
+===============================================================================
+| The framework is divided in front-end and back-end, the requirements are
+| classified according with these two subdivisions.
+===============================================================================
+
+===============================================================================
+| The front-end has the graphical interface and the code generation tools,
+| traffic models, graphics and reports.
+|
+| To run the front-end, the libraries are needed (DLLs, SOs ou DYLIBs) of Qt,
+| Qwt (http://sourceforge.net/projects/qwt/files/) and from compiler
+| (MinGW on Windows).
+| They are (Qt 5 e Qwt 6.1.2):
+|---------------------------------------------------------------------------------|
+|          Windows          |          Linux          |           OS X            |
+|---------------------------|-------------------------|---------------------------|
+| platforms/qwindows.dll    | platforms/libqxcb.so    | platforms/libqcocoa.dylib |
+| icudt54.dll               | libicudata.so.54        | ---                       |
+| icuin54.dll               | libicui18n.so.54        | ---                       |
+| icuuc54.dll               | libicuuc.so.54          | ---                       |
+| libgcc_s_dw2-1.dll        | ---                     | ---                       |
+| libstdc++-6.dll           | ---                     | ---                       |
+| libwinpthread-1.dll       | ---                     | QtConcurrent.framework    |
+| Qt5Core.dll               | libQt5Core.so.5         | QtCore.framework          | 
+| Qt5Gui.dll                | libQt5Gui.so.5          | QtGui.framework           |
+| Qt5OpenGL.dll             | libQt5OpenGL.so.5       | QtOpenGL.framework        |
+| Qt5PrintSupport.dll       | libQt5PrintSupport.so.5 | QtPrintSupport.framework  |
+| Qt5Svg.dll                | libQt5Svg.so.5          | QtSvg.framework           |
+| Qt5Widgets.dll            | libQt5Widgets.so.5      | QtWidgets.framework       |
+| qwt.dll                   | libqwt.so.6             | qwt.framework             |
+| ---                       | libQt5DBus.so.5         | QtDBus.framework          |
+| ---                       | libQt5XcbQpa.so.5       | ---                       |
+|---------------------------------------------------------------------------------|
+| To developing, use the Qt open-source kit (for Windows version with MinGW
+| compiler).
+| Available on: http://www.qt.io/download/
+| And Qwt library: http://sourceforge.net/projects/qwt/files/
+|
+| IMPORTANT: In front-end project file ("(root)/RS/RS.pro") is defined the Qwt
+| library place at "QWT_PATH" variable. Don't forget to set the correct location
+| if not fail compilation.
+|
+| For the simulation of back-end models, a SystemC-compliant compiler is required.
+| And the SystemC library compiled.
+|
+| The front-end requests the SystemC place at first execution. Verify if the SystemC
+| place has the subdirs "lib-*" and "include".
+|
+| On Windows, the front-end requests the MinGW compiler installation folder at first
+| execution. On Linux and OS X, the compiler place must be defined at system
+| environment variables (executable "make" and "g++" acessible via command line).
+===============================================================================
+
+===============================================================================
+| The back-end has the SystemC models from communication architectures and they
+| are required to run the simulations by front-end.
+|
+| To compile and run the back-end is required a SystemC-compliant compiler.
+| Feel free to contribute with communication architectures models for expand
+| the framework capabilities.
+===============================================================================
+
+===============================================================================
+| For more details contact the research group.
+===============================================================================

@@ -1,0 +1,82 @@
+===============================================================================
+--> Localização: (raiz)/RS/bin
+===============================================================================
+------------------------------------------------------------------------------|
+| Arquivo gerado em 14/07/2015
+| Distribuição inicial
+| Versão 1.0.0
+| Autor: Eduardo Alves da Silva
+| -------- Alteração --------
+| Última modificação: 14/07/2015
+| Por: Eduardo Alves da Silva
+| -------- Detalhes --------
+| Versão: 1.0.0: Criação do arquivo
+|
+------------------------------------------------------------------------------|
+
+===============================================================================
+| Este diretório possui os arquivos de distribuição do RedScarf.
+===============================================================================
+
+===============================================================================
+| Neste diretório é gerado o executável do front-end (Windows: .exe & Linux: elf).
+| OBS: No OS X é criado o Bundle da aplicação e dentro do Bunlde fica o executável.
+|
+| Os subdiretórios de distribuição são: "etc", "system" e "translations".
+| Estes subdiretórios devem estar no mesmo diretório do executável do front-end,
+| pois a aplicação usa os arquivos contidos nos subdiretórios.
+| A seguir é apresentada a descrição do conteúdo de cada subdiretório.
+| -----------------------------------------------------------------------------
+| * etc          : Local que contém os arquivos de configuração do front-end.
+|                  Os arquivos deste diretório são:
+|                - config.ini: Possui as definições dos idiomas disponíveis,
+|                              número de threads da simulação e a configuração
+|                              dos diretórios do ambiente.
+|                - DefaultConfiguration.drsf: Arquivo no formato XML que contém
+|                              a parametrização padrão do ambiente.
+|                              OBS: Se este arquivo não existir ele é gerado na
+|                              primeira execução do front-end.
+|                - system.ini: Possui as definições dos modelos do back-end a
+|                              serem compilados, as definições de configuração dos
+|                              modelos no front-end e a possibilidade de uso de
+|                              arquivo de tráfego alternativo.
+| -----------------------------------------------------------------------------
+| * system       : Local que contém o back-end do ambiente, que são os modelos
+|                  SystemC (.h e .cpp) simuláveis dos componentes da NoC.
+| -----------------------------------------------------------------------------
+| * translations : Local dos arquivos das traduções do front-end.
+===============================================================================
+
+===============================================================================
+| IMPORTANTE: Nos subdiretórios "etc" e "system" o usuário deve possuir permissão
+| de escrita, pois os arquivos de configuração são atualizados pelo front-end e
+| os arquivos objetos da compilação do back-end são gerados no diretório dos modelos.
+===============================================================================
+
+===============================================================================
+| NOTA: Para usuários OS X, os subdiretórios devem ser alocados dentro do Bundle
+| da aplicação (o Bundle é o arquivo RedScarf.app, gerado na compilação do front-end).
+| O caminho para alocar os subdiretórios é:
+|     ->    "RedScarf.app/Contents/MacOS/"
+| Deste modo, os subdiretórios ficam no mesmo nível do executável no OS X.
+===============================================================================
+
+===============================================================================
+| OBS: Para distribuir o ferramenta, as bibliotecas do Qt e Qwt devem ser 
+| inclusas no pacote de distribuição.
+| * No Windows são as bibliotecas de vínculo dinâmico (.dll) que podem ser obtidas
+|   por meio da ferramenta "windeployqt"(copia dlls além das necessárias) do 
+|   Qt.
+|
+| * No Linux são os objetos compartilhados (.so) e podem ser resolvidos via 
+|   gerenciador de pacotes ("apt-get", "yum", ... ). Recomenda-se copiar a Qwt
+|   (pode não ser resolvida por alguns gerenciadores de pacotes e/ou causar
+|   conflitos de versões).
+|
+| * No OS X são as bibliotecas dinâmicas (.dylib) que podem ser incorporadas ao
+|   Bundle com a ferramenta "macdeployqt" (copia dylibs para dentro do Bundle)
+|   do framework Qt. Para gerar uma imagem de disco basta usar o argumento -dmg.
+|
+| Para mais detalhes sobre as dependências, olhe o arquivo "Requisitos.txt" na 
+| raiz do projeto.
+===============================================================================

@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////////////////
+// 
+// name         and2.h
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef __AND2_H__
+#define __AND2_H__
+
+#include <systemc.h>
+SC_MODULE(and2)
+{
+    // INTERFACE
+    sc_in<bool>   din0;
+    sc_in<bool>   din1;
+    sc_out<bool>  dout;
+
+    // Module's process
+    void p_and2() {
+        dout.write(din0.read() and din1.read());
+    }
+
+    SC_HAS_PROCESS(and2);
+
+    //////////////////////////////////////////////////////////////////////////////
+    and2(sc_module_name nm) : sc_module(nm)
+      //////////////////////////////////////////////////////////////////////////////
+    {
+        SC_METHOD(p_and2);
+        sensitive << din0 << din1;
+    }
+
+};
+#endif // __AND2_H__
