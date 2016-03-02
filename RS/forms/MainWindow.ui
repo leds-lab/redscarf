@@ -288,8 +288,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>596</width>
-                   <height>432</height>
+                   <width>593</width>
+                   <height>429</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_35">
@@ -3129,7 +3129,7 @@ Distribution</string>
      <x>0</x>
      <y>0</y>
      <width>966</width>
-     <height>26</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
