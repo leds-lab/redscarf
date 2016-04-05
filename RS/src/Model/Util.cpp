@@ -39,7 +39,16 @@
   #include <sys/stat.h>
 #endif
 
-#include <dirent.h>
+#ifdef __GNUC__
+    #include <dirent.h>
+#else
+    #include <direct.h>
+    #include <io.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <tchar.h>
+#endif
+
 #include <string>
 #include <stdio.h>
 
@@ -64,6 +73,7 @@ bool Util::folderExists(const char *path) {
         return false;
     }
 
+#ifdef __GNUC__
     DIR* pDir;
     bool exist = false;
 
@@ -75,6 +85,15 @@ bool Util::folderExists(const char *path) {
     }
 
     return exist;
+#else
+    if( _taccess_s( path, 0 ) == 0 ) {
+        struct _stat status;
+        _tstat( path, &status );
+        return (status.st_mode & S_IFDIR) != 0;
+    }
+
+    return false;
+#endif
 
 }
 
@@ -86,7 +105,11 @@ bool Util::createFolder(const char *path) throw(const char* ) {
     if(!folderExists(path)) {
         try {
 #ifdef OS_WIN
+    #ifdef __GNUC__
             mkdir(path);
+    #else
+            _mkdir(path);
+    #endif
 #else
             mkdir(path,0755);
 #endif

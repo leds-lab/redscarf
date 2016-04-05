@@ -38,7 +38,7 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <math.h>
+#include <cmath>
 #include <cstring>
 
 #ifdef DEBUG_POINTS_METHODS
@@ -784,7 +784,7 @@ void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficPara
                                 }
                                 break;
                             case 9: // LOCAL
-                                if( (abs(xDest-tp->getSourceNodeX()) + abs(yDest-tp->getSourceNodeY()) ) == 1) {
+                                if( (abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) ) ) == 1) {
                                     destOk = true;
                                 } else {
                                     destOk = false;
@@ -801,14 +801,14 @@ void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficPara
                             // Non-uniform distribution type 1: the number of packets to be sent decreases with
                             // the distance between the source and the destination nodes
                                 case 7 : // NON_UNIFORM_1
-                                    xy = abs(xDest-tp->getSourceNodeX()) + abs(yDest-tp->getSourceNodeY());
+                                    xy = abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) );
                                     pck2SendNonUniform = (unsigned long int) ( tp->getPackageToSend() / pow(2,xy-1));
                                     pck2Send = pck2SendNonUniform;
                                     break;
                             // Non-uniform distribution type 2: the number of packets to be sent to the nodes outside of the
                             // neighbourhood is the half of the number of packets to be sent to the neighbour nodes
                                 case 8: // NON_UNIFORM_2
-                                    xy = abs(xDest-tp->getSourceNodeX()) + abs(yDest-tp->getSourceNodeY());
+                                    xy = abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) );
                                     if (xy == 1) {
                                         pck2SendNonUniform = tp->getPackageToSend();
                                     } else {
@@ -862,7 +862,7 @@ void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficPara
                                     }
                                     break;
                                 case 9: // LOCAL
-                                    if ((abs(xDest-tp->getSourceNodeX())+abs(yDest-tp->getSourceNodeY())) == 1) {
+                                    if ((abs( long(xDest-tp->getSourceNodeX()))+abs(long(yDest-tp->getSourceNodeY()))) == 1) {
                                         destOk = true;
                                     } else {
                                         destOk = false;
@@ -975,7 +975,7 @@ void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficPara
                                         // Non-uniform distribution type 1: the number of packets to be sent decreases with
                                         // the distance between the source and the destination nodes
                                             case 7: // NON_UNIFORM_1 :
-                                                xy = abs(xDest-tp->getSourceNodeX()) + abs(yDest-tp->getSourceNodeY());
+                                                xy = abs(long(xDest-tp->getSourceNodeX())) + abs(long(yDest-tp->getSourceNodeY()));
                                                 pck2SendNonUnif = (unsigned long int) (tp->packageToSendArray[i] / pow(2,xy-1));
 
                                                 pck2Send = pck2SendNonUnif;
@@ -983,7 +983,7 @@ void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficPara
                                         // Non-uniform distribution type 2: the number of packets to be sent to the nodes outside of the
                                         // neighbourhood is the half of the number of packets to be sent to the neighbour nodes
                                             case 8: // NON_UNIFORM_2 :
-                                                xy = abs(xDest-tp->getSourceNodeX()) + abs(yDest-tp->getSourceNodeY());
+                                                xy = abs(long(xDest-tp->getSourceNodeX())) + abs(long(yDest-tp->getSourceNodeY()));
                                                 if (xy==1) {
                                                     pck2SendNonUnif = tp->packageToSendArray[i];
                                                 } else {

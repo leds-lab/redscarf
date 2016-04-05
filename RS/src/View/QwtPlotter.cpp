@@ -64,7 +64,7 @@ QwtPlotter::QwtPlotter(QWidget *parent) : Plotter(parent) {
     this->window = new QDialog(parent,Qt::Window);
     this->plotter = new QwtPlot(window);
     QVBoxLayout* layout = new QVBoxLayout(window);
-    QToolBar* toolBar = new QToolBar("QwtPlotter Tool Bar");
+    QToolBar* toolBar = new QToolBar("QwtPlotter Tool Bar",window);
     QStatusBar* statusBar = new QStatusBar(window);
 
     layout->addWidget(toolBar);
@@ -88,7 +88,8 @@ QwtPlotter::QwtPlotter(QWidget *parent) : Plotter(parent) {
     grid->setPen( QColor(Qt::black),0.0, Qt::DotLine );
     grid->attach(plotter);
 
-    PersonalQwtPlotPicker* picker = new PersonalQwtPlotPicker(plotter->xBottom,plotter->yLeft,QwtPicker::CrossRubberBand,QwtPicker::AlwaysOn,plotter->canvas());
+    PersonalQwtPlotPicker* picker = new PersonalQwtPlotPicker(plotter->xBottom,plotter->yLeft,
+                           QwtPicker::CrossRubberBand,QwtPicker::AlwaysOn,plotter->canvas());
     connect(picker,SIGNAL(mouseMoved(QString)),statusBar,SLOT(showMessage(QString)));
 
     new QwtPlotMagnifier(plotter->canvas());

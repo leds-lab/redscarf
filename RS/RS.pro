@@ -38,11 +38,14 @@
 QT       = core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # Qt 5
 
+
 # Template default for applications
 TEMPLATE = app
 
 # Folder binary destination
 DESTDIR = bin
+
+TARGET = RedScarf
 
 # Application version
 VERSION = 1.0
@@ -225,6 +228,9 @@ CONFIG(release, debug|release) {
     TARGET  = RedScarf
     CONFIG -= debug release
     CONFIG += release
+#    DEFINES += QT_NO_DEBUG_OUTPUT
+#    DEFINES -= QT_NO_WARNING_OUTPUT
+#    DEFINES += QT_NO_DEBUG
 }
 
 # Debug options. Active methods traceability
