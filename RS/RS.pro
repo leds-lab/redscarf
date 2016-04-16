@@ -163,13 +163,12 @@ CONFIG += thread
 QWT_PATH =
 isEmpty(QWT_PATH){
 # Show error message if QWT_PATH is no defined
-    error("QWT library path not defined in file RS.pro line 160")
+    error("QWT library path not defined in file RS.pro line 163")
 } else {
 # Show a message with QWT_PATH defined
     message(Qwt Path: $$QWT_PATH)
 }
 include($${QWT_PATH}/features/qwt.prf)
-
 
 #DEPENDPATH += $${QWT_PATH}/lib
 #mac {
@@ -228,9 +227,9 @@ CONFIG(release, debug|release) {
     TARGET  = RedScarf
     CONFIG -= debug release
     CONFIG += release
-#    DEFINES += QT_NO_DEBUG_OUTPUT
-#    DEFINES -= QT_NO_WARNING_OUTPUT
-#    DEFINES += QT_NO_DEBUG
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    DEFINES -= QT_NO_WARNING_OUTPUT
+    DEFINES += QT_NO_DEBUG
 }
 
 # Debug options. Active methods traceability
