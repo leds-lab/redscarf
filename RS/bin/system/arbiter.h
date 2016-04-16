@@ -24,12 +24,6 @@ By: Eduardo Alves da Silva
 #include "parameters.h"
 #include "ppe.h"
 #include "pg_rr.h"
-#include "pg_st.h"
-#include "pg_rt.h"
-#include "pg_rd_c_style.h"
-#include "pg_rd_lfsr_fibo4.h"
-#include "pg_rd_lfsr_fibo_var.h"
-#include "pg_rd_lfsr_galois8.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 SC_MODULE(arbiter)
@@ -79,62 +73,7 @@ SC_MODULE(arbiter)
             pg0->P(P_wire);
         }
 
-        if (ARBITER_TYPE == 1) { // Static (fixed) arbiter
-            /////////////////////////////////////////////
-            pg_st *pg0 = new pg_st("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
 
-        if (ARBITER_TYPE == 2) { // Rotating arbiter
-            /////////////////////////////////////////////
-            pg_rt *pg0 = new pg_rt("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
-
-        if (ARBITER_TYPE == 3) { // Random C-style arbiter
-            /////////////////////////////////////////////
-            pg_rd_c_style *pg0 = new pg_rd_c_style("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
-        if (ARBITER_TYPE == 4) { // Random LFSR Fibonacci 4-bit
-            /////////////////////////////////////////////
-            pg_rd_lfsr_fibo4 *pg0 = new pg_rd_lfsr_fibo4("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
-        if (ARBITER_TYPE == 5) { // Random LSFR Fibonacci variable order
-            /////////////////////////////////////////////
-            pg_rd_lfsr_fibo_var *pg0 = new pg_rd_lfsr_fibo_var("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
-        if (ARBITER_TYPE == 6) { // Random LFSR Galois 8-bit
-            /////////////////////////////////////////////
-            pg_rd_lfsr_galois8 *pg0 = new pg_rd_lfsr_galois8("pg",XID,YID,PORT_ID);
-            /////////////////////////////////////////////
-            pg0->clk(clk);
-            pg0->rst(rst);
-            pg0->G(G);
-            pg0->P(P_wire);
-        }
     }
 };
 

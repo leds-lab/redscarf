@@ -111,6 +111,8 @@ void MainWindow::configureWidgets() {
 
     // Desabilitando a barra de progresso da execuçao
     ui->progressBar->setVisible(false);
+    // Colocando a barra de progresso na barra de status
+    ui->statusBar->addWidget(ui->progressBar);
 
     // Desabilitando a opção de salvar a simulação que só fica disponível
     // após a execução de 1 experimento
@@ -129,6 +131,7 @@ void MainWindow::configureWidgets() {
     // Adicionando ações ao menu dos componentes de visualização
     // opcional na tela | Barra de Ferramentas e Console
     ui->menuView->addActions( createPopupMenu()->actions() );
+
 }
 
 void MainWindow::configureToolBar() {
@@ -738,6 +741,7 @@ void MainWindow::changeEvent(QEvent *event) {
         ui->doubleSpinInChannelBWRange_2->setValue( ui->doubleSpinInChannelBWRange_2->value() );
         ui->doubleSpinInChannelTclkRange->setValue( ui->doubleSpinInChannelTclkRange->value() );
         ui->doubleSpinInChannelTclkRange_2->setValue( ui->doubleSpinInChannelTclkRange_2->value() );
+        ui->toolBar->setWindowTitle( QApplication::translate("MainWindow", "Toolbar") );
     }
 
     QWidget::changeEvent(event);

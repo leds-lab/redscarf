@@ -756,7 +756,7 @@ bool GSoC::generateListNodes() {
                     case 0: // PARIS :
                         for(x=0;x<x_size;x++) {
                             for(y=0;y<y_size;y++) {
-                                fprintf(this->out,"\n-Core %u %u",x,y);
+                                fprintf(this->out,"\n-Core_%u_%u",x,y);
                                 fprintf(this->out,"\n@22");
                                 fprintf(this->out,"\nSystemC.L_%u_%u_in_data[%u:0]",x,y,flit_width-1);
 
@@ -784,7 +784,7 @@ bool GSoC::generateListNodes() {
                     case 3: // PARIS2_AG_AG :
                         for(y=0;y<y_size;y++) {
                             for(x=0;x<x_size;x++) {
-                                fprintf(this->out,"\n-Core %u %u",x,y);
+                                fprintf(this->out,"\n-Core_%u_%u",x,y);
                                 fprintf(this->out,"\n@22");
                                 fprintf(this->out,"\nSystemC.L_%u_%u_in_data[%u:0]",x,y,flit_width-1);
 

@@ -538,6 +538,7 @@ void Control::loadXMLStructure() {
                 // Ler Padrões de Tráfego
                 do {
                     token = xml->readNext();
+                    attributes = xml->attributes();
                     if( token == QXmlStreamReader::StartElement && xml->name() == "trafficPattern" ) {
                         unsigned int index = attributes.value("index").toString().toUInt();
                         TrafficParameters* tp = this->parseTrafficPattern(xml);
@@ -956,6 +957,10 @@ unsigned int Control::calcAmountExperimentsExecutions() {
     float fClkFirst = this->systemParameters->getfClkFirst();
     float fClkLast = this->systemParameters->getfClkLast();
     float fClkStep = this->systemParameters->getfClkStep();
+
+    if(fClkStep == 0) {
+        return 1u;
+    }
 
     switch(fClkStepType) {
         case 0: // INC

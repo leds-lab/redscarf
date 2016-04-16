@@ -78,7 +78,7 @@ unsigned int PacketInfo::getNumberOfRoutersInPath() {
     std::cout << "Model/Analysis/PacketInfo::getNumberOfRoutersInPath" << std::endl;
 #endif
 
-    return (abs(xDestination-xSource) + abs(yDestination-ySource) + 1);
+    return (abs( (long) (long) xDestination- (long)xSource) + abs( (long) yDestination- (long)ySource) + 1);
 
 }
 
@@ -86,7 +86,7 @@ unsigned int PacketInfo::getNumberOfLinksInPath() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/Analysis/PacketInfo::getNumberOfLinksInPath" << std::endl;
 #endif
-    return (abs(xDestination-xSource) + abs(yDestination-ySource) + 2);
+    return (abs((long) xDestination- (long)xSource) + abs((long)yDestination- (long)ySource) + 2);
 
 }
 
