@@ -928,7 +928,6 @@ bool Control::inputsOk() {
             this->mainWindow->printConsole(trUtf8("<font color=red>Step value (inc) must be different of 0</font>"));
             return false;
         }
-        // TODO Tratar fClkFirst == fClkLast AND fClkStep == 0
     } else if(fClkStepType == 1) {
         if ((fClkFirst <  fClkLast) && (fClkStep >  0)) {
             this->mainWindow->printConsole(trUtf8("<font color=red>If First_Fclk less than Last_Fclk, step value (exp) must be less than 0</font>"));
@@ -942,7 +941,6 @@ bool Control::inputsOk() {
             this->mainWindow->printConsole(trUtf8("<font color=red>Step value (exp) must be different of 0</font>"));
             return false;
         }
-        // TODO Tratar fClkFirst == fClkLast AND fClkStep == 0
     }
 
     return true;
@@ -960,9 +958,9 @@ unsigned int Control::calcAmountExperimentsExecutions() {
     float fClkLast = this->systemParameters->getfClkLast();
     float fClkStep = this->systemParameters->getfClkStep();
 
-    // TODO Remover daqui os testes com Q_ASSERT e qDebug
-    qDebug("fClkStep: %f",fClkStep);
-    Q_ASSERT( !(fClkStep == 0) );
+    if(fClkStep == 0) {
+        return 1u;
+    }
 
     switch(fClkStepType) {
         case 0: // INC
