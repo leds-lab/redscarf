@@ -29,8 +29,6 @@ unix {
 
 compile:HEADERS += \
     and2.h \
-    arb_ag.h \
-    arb_rr.h \
     arbiter.h \
     class_checker.h \
     fg.h \
@@ -55,14 +53,7 @@ compile:HEADERS += \
     parameters.h \
     paris.h \
     paris_2vc.h \
-    pg.h \
-    pg_rd_c_style.h \
-    pg_rd_lfsr_fibo_var.h \
-    pg_rd_lfsr_fibo4.h \
-    pg_rd_lfsr_galois8.h \
     pg_rr.h \
-    pg_rt.h \
-    pg_st.h \
     ppe.h \
     req_reg.h \
     req_reg_cs.h \
@@ -84,7 +75,6 @@ compile:HEADERS += \
     tg_2vc.h \
     tm_2vc.h \
     tm_single.h \
-    unboundedfifo.h \
     xin.h \
     xin_2vc.h \
     xin_ag.h \
@@ -94,7 +84,6 @@ compile:HEADERS += \
 
 
 compile:SOURCES += \
-    arb_ag.cpp \
     class_checker.cpp \
     fg.cpp \
     fg_2vc.cpp \
@@ -111,13 +100,7 @@ compile:SOURCES += \
     ofc_credit_vct.cpp \
     ofc_handshake.cpp \
     ows.cpp \
-    pg.cpp \
-    pg_rd_c_style.cpp \
-    pg_rd_lfsr_fibo_var.cpp \
-    pg_rd_lfsr_fibo4.cpp \
-    pg_rd_lfsr_galois8.cpp \
     pg_rr.cpp \
-    pg_rt.cpp \
     ppe.cpp \
     req_reg.cpp \
     req_reg_cs.cpp \
@@ -134,7 +117,6 @@ compile:SOURCES += \
     stopsim.cpp \
     t_probe.cpp \
     tm_2vc.cpp \
-    tm_single.cpp \
-    unboundedfifo.cpp
+    tm_single.cpp
 
 
