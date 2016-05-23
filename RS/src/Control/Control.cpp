@@ -265,6 +265,7 @@ void Control::startApp() {
 
     this->mainWindow->setWindowModified(false);
     this->mainWindow->show();
+
 }
 
 QString Control::dirSetup(QString selection,QString msgNotConfigured) {

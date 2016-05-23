@@ -112,7 +112,7 @@ void MainWindow::configureWidgets() {
     // Desabilitando a barra de progresso da execuçao
     ui->progressBar->setVisible(false);
     // Colocando a barra de progresso na barra de status
-    ui->statusBar->addWidget(ui->progressBar);
+    ui->statusBar->addPermanentWidget(ui->progressBar);
 
     // Desabilitando a opção de salvar a simulação que só fica disponível
     // após a execução de 1 experimento
@@ -1073,11 +1073,20 @@ void MainWindow::translate(QStringList filenames) {
 
 }
 
-void MainWindow::printConsole(QString msg) {
+void MainWindow::printConsole(QString msg, QColor color, Qt::Alignment alignment) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::printConsole" << std::endl;
 #endif
-    this->ui->console->append(msg);
+
+    QTextCursor cursor(ui->console->textCursor());
+    cursor.movePosition( QTextCursor::End );
+
+    QTextBlockFormat blockFormat = cursor.blockFormat();
+    blockFormat.setAlignment(alignment);
+    cursor.setBlockFormat(blockFormat);
+    cursor.insertHtml( QString("<font color=%1>%2</font>").arg(color.name()).arg(msg) );
+    cursor.insertBlock();
+
 }
 
 void MainWindow::sizeUpdate() {

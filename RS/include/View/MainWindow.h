@@ -140,7 +140,7 @@ signals:
     void viewReport(AnalysisOptions* aop);
 
 public slots:
-    void printConsole(QString msg);
+    void printConsole(QString msg,QColor color = Qt::black, Qt::Alignment alignment = Qt::AlignLeft);
     void translate(QStringList filename);
     void initConsole();
 

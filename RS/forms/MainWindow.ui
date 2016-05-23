@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>932</width>
-    <height>913</height>
+    <height>921</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="systemConfiguration">
         <attribute name="title">
@@ -285,7 +285,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>530</width>
-                   <height>521</height>
+                   <height>529</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_35">
@@ -3148,6 +3148,12 @@ distribution</string>
         <horstretch>1</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
       </property>
       <property name="maximum">
        <number>0</number>

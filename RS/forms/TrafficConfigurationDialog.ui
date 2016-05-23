@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>398</width>
-    <height>528</height>
+    <height>646</height>
    </rect>
   </property>
   <property name="locale">
@@ -51,7 +51,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="labelNodeAddress">
        <property name="text">
-        <string>Node Address: </string>
+        <string>Node address: </string>
        </property>
       </widget>
      </item>
@@ -173,7 +173,7 @@
           <string>Indicates the source node in position X and position Y in network</string>
          </property>
          <property name="text">
-          <string>Source Node:</string>
+          <string>Source node:</string>
          </property>
         </widget>
        </item>
@@ -196,7 +196,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="labelDestinationNode">
        <property name="text">
-        <string>Destination Node(s):</string>
+        <string>Destination node(s):</string>
        </property>
       </widget>
      </item>
@@ -393,7 +393,7 @@
      <item row="6" column="0">
       <widget class="QLabel" name="labelSwitchingTechnique">
        <property name="text">
-        <string>Switching Technique:</string>
+        <string>Switching technique:</string>
        </property>
       </widget>
      </item>

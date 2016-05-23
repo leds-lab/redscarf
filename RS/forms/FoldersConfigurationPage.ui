@@ -28,7 +28,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>SystemC Folder:</string>
+           <string>SystemC folder:</string>
           </property>
          </widget>
         </item>
@@ -71,7 +71,7 @@
            <item>
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>MinGW Folder:</string>
+              <string>MinGW folder:</string>
              </property>
             </widget>
            </item>
@@ -99,7 +99,7 @@
         <item>
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Waveform Tool:</string>
+           <string>Waveform tool:</string>
           </property>
          </widget>
         </item>
@@ -146,7 +146,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Work Folder:</string>
+           <string>Work folder:</string>
           </property>
          </widget>
         </item>
@@ -191,7 +191,7 @@
       </font>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Don't use white spaces in the folders&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Don't use blank spaces in the folders&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>

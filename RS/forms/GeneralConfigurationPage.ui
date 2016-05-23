@@ -64,7 +64,7 @@
         <item>
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Execution Threads:</string>
+           <string>Execution threads:</string>
           </property>
          </widget>
         </item>
