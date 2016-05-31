@@ -80,6 +80,7 @@ SOURCES +=  \
     src/Model/Analysis/PacketInfo.cpp \
     src/Model/Analysis/PerformanceAnalysis.cpp \
     src/Model/Analysis/TrafficAnalysis.cpp \
+    src/Model/Analysis/ReportReader.cpp \
     src/View/DefaultPreviewTrafficConfiguration.cpp \
     src/View/XMLPreviewTrafficConfiguration.cpp \
     src/View/AnalysisOptions.cpp \
@@ -128,6 +129,7 @@ HEADERS += \
     include/Model/Analysis/PacketInfo.h \
     include/Model/Analysis/PerformanceAnalysis.h \
     include/Model/Analysis/TrafficAnalysis.h \
+    include/Model/Analysis/ReportReader.h
     include/View/AnalysisOptions.h \
     include/View/DefaultPreviewTrafficConfiguration.h \
     include/View/XMLPreviewTrafficConfiguration.h \
@@ -152,7 +154,7 @@ HEADERS += \
     include/Control/ExternalWaveformViewer.h \
     include/Control/Control.h \
     include/Control/SimulationPerformer.h \
-    include/Main.h
+    include/Main.h \
 
 # Application configurations support
 CONFIG += qt
