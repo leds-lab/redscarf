@@ -36,6 +36,7 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
+#include <clocale>
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -51,6 +52,8 @@ PerformanceAnalysis::PerformanceAnalysis(unsigned int xSize, unsigned int ySize,
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/Analysis/PerformanceAnalysis" << std::endl;
 #endif
+
+    std::setlocale(LC_ALL, "en_US.UTF-8");
 
     this->packets = new std::vector<PacketInfo* >**[xSize];
 

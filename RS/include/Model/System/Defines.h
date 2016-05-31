@@ -39,7 +39,7 @@
 #define AGE_CLOCK_WIDTH     2
 #define AGE_WIDTH           3
 
-//#define PI                                      3.1415926535897932384626433832795029
+//#define PI                3.1415926535897932384626433832795029
 
 
 class DefaultValuesSystem {

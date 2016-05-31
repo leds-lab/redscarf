@@ -78,6 +78,7 @@
 #include "include/Model/Traffic/TrafficPatternDefines.h"
 #include "include/Model/Util.h"
 #include "include/Model/Analysis/DataReport.h"
+#include "include/Model/Analysis/ReportReader.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -1886,38 +1887,10 @@ void Control::viewGraphic(AnalysisOptions *aop) {
         return;
     } else {
 
-        int size = simulationFolders->size();
-        QStringList items;
-        for(int i = 0; i < size; i++) {
-            items.append(* simulationFolders->at(i) );
-        }
-
-        if( aop->isLatencyDistribution() ) {
-            if( items.size() > 1 ) {
-                GetSelectedItemsDialog* telaGet = new GetSelectedItemsDialog(items,mainWindow);
-                telaGet->setWindowTitle( trUtf8("Select items for latency distribution") );
-                if( telaGet->exec() == QDialog::Accepted ) {
-                    items = telaGet->getSelectedItems();
-                    if(items.isEmpty()) {
-                        this->mainWindow->printConsole(trUtf8("<font color=red>No selected items</font>"));
-                        delete telaGet;
-                        return;
-                    }
-                    delete telaGet;
-                } else {
-                    delete telaGet;
-                    return;
-                }
-            }
-        } else {
-            for( int i = 0; i < size; i++ ) {
-                QString item = items.at(i);
-                int lio = item.lastIndexOf("/");
-                QString diretorioExperimento = item.left( lio );
-                items.replace(i, diretorioExperimento);
-            }
-
-            items.removeDuplicates();
+        QVector<QList<DataReport *> *> *data = getReportData(aop);
+        if(data == NULL) {
+            mainWindow->printConsole( trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
+            return;
         }
 
         // Selected graphic
@@ -1925,13 +1898,181 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 #ifdef GNUPLOT
         plotter = new GnuPlotPlotter(this);
 #else
+//        plotter =  new CustomPlotter(mainWindow);
         plotter =  new QwtPlotter(mainWindow);
 #endif
         connect(plotter,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
         connect(plotter,SIGNAL(finished(int)),plotter,SLOT(deleteLater()));
-        plotter->viewGraphic(aop,items);
+        plotter->viewGraphic(data,aop,legends);
+
+        // Desaloca memoria dos dados
+        for( int i = 0; i < data->size(); i++ ) {
+            QList<DataReport *>* items = data->at(i);
+            for (int j = 0; j < items->size(); ++j) {
+                DataReport* d = items->at(j);
+                delete d;
+            }
+            items->clear();
+            delete items;
+        }
+        data->clear();
+        delete data;
     }
     delete aop;
+
+}
+
+QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::getReportData" << std::endl;
+#endif
+
+    // Obtém diretórios da simulação
+    int size = simulationFolders->size();
+    QStringList items;
+    for(int i = 0; i < size; i++) {
+        items.append(* simulationFolders->at(i) );
+    }
+
+    // Identifica quais diretórios devem ser analisados de acordo com o tipo de análise
+    if( aop->isLatencyDistribution() ) {
+        // Distribuição de latências
+        if( items.size() > 1 ) {
+            GetSelectedItemsDialog* telaGet = new GetSelectedItemsDialog(items,mainWindow);
+            telaGet->setWindowTitle( trUtf8("Select items for latency distribution") );
+            if( telaGet->exec() == QDialog::Accepted ) {
+                items = telaGet->getSelectedItems();
+                if(items.isEmpty()) {
+                    this->mainWindow->printConsole(trUtf8("<font color=red>No selected items</font>"));
+                    delete telaGet;
+                    return NULL;
+                }
+                delete telaGet;
+            } else {
+                delete telaGet;
+                return NULL;
+            }
+        }
+    } else {
+        // Relatório normal
+        for( int i = 0; i < size; i++ ) {
+            QString item = items.at(i);
+            int lio = item.lastIndexOf("/");
+            QString diretorioExperimento = item.left( lio );
+            items.replace(i, diretorioExperimento);
+        }
+
+        items.removeDuplicates();
+    }
+
+    size = items.size();
+    legends.clear();
+
+    QVector<QList<DataReport* >* >* dados = new QVector<QList<DataReport* >* >();
+
+    // Constroi as legendas
+    for( int i = 0; i < size; i++ ) {
+        QString dir = items.at(i);
+
+        QString legenda;
+        if( aop->isLatencyDistribution() ) {
+            int lio = dir.lastIndexOf("/");
+            QString diretorioExperimento = dir.left( lio );
+            legenda = aop->getLegend( diretorioExperimento );
+        } else {
+            legenda = aop->getLegend( dir );
+        }
+
+
+
+        if( legenda.isEmpty() ) {
+            if(aop->isLatencyDistribution()) {
+                legenda = QString("Histogram#%1").arg(i+1);
+            } else {
+                legenda = QString("Config#%1").arg(i+1);
+            }
+        }
+
+        if( legends.contains( legenda ) ) {
+            legenda += QString("#%1").arg(i+1);
+        }
+
+        if( aop->isLatencyDistribution() ) {
+            int lio = dir.lastIndexOf("/") + 1;
+            legenda += QString(" @ %1").arg( dir.mid(lio) );
+        }
+
+        legends.append(legenda);
+
+
+        // Identificando arquivo a ser lido
+        QString filename = dir+"/Results";
+        switch( aop->getFlowOp() ) {
+            case AnalysisOptions::AllFlows:
+                filename += "/summary";
+                break;
+            case AnalysisOptions::RT0:
+            case AnalysisOptions::RT1:
+            case AnalysisOptions::nRT0:
+            case AnalysisOptions::nRT1:
+                filename += QString("/class_%1").arg(aop->getFlowOp() - 1);
+                break;
+            case AnalysisOptions::Specified:
+                filename += QString("/flow_%1_%2_%3_%4_%5")
+                        .arg(aop->getXSrc())
+                        .arg(aop->getYSrc())
+                        .arg(aop->getXDest())
+                        .arg(aop->getYDest())
+                        .arg( aop->getTrafficPattern() );
+                break;
+
+        }
+        if(aop->isLatencyDistribution()) {
+            filename += "_latency_histogram";
+        }
+
+        // Normalizando String do arquivo a ser analisado
+        QByteArray byteArrayReport = filename.toUtf8();
+        const char* strFile = byteArrayReport.constData();
+
+        // Lendo arquivo
+        ReportReader* reader = new ReportReader();
+        std::list<DataReport* >* dataReport = NULL;
+        if( aop->isLatencyDistribution() ) {
+            dataReport = reader->readLatencyDistributionReport(strFile);
+        } else {
+            dataReport = reader->readReport(strFile);
+        }
+
+        delete reader;
+
+        QList<DataReport*>* data = NULL;
+        if(dataReport != NULL) {
+            data = new QList<DataReport *>( QList<DataReport *>::fromStdList(*dataReport) );
+        }
+
+        if( data == NULL ) {
+            for( int x = 0; x < size; x++ ) {
+                data = dados->at(x);
+                if( data != NULL ) {
+                    for( int z = 0; z < data->size(); z++ ) {
+                        DataReport* d = data->at(z);
+                        delete d;
+                    }
+
+                    data->clear();
+                    delete data;
+                }
+            }
+            dados->clear();
+            delete dados;
+            delete aop;
+            return NULL;
+        }
+
+        dados->append(data);
+    }
+    return dados;
 
 }
 
@@ -1945,188 +2086,18 @@ void Control::viewReport(AnalysisOptions *aop) {
         delete aop;
         return;
     } else {
-        int size = simulationFolders->size();
-        QStringList items;
-        for(int i = 0; i < size; i++) {
-            items.append(* simulationFolders->at(i) );
+        QVector<QList<DataReport* >* >* data = getReportData(aop);
+        if( data == NULL) {
+            this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
+        } else {
+            ReportDialog* repDial = new ReportDialog(legends,data,mainWindow);
+            connect(repDial,SIGNAL(rejected()),repDial,SLOT(deleteLater()));
+            repDial->setWindowModality(Qt::NonModal);
+            repDial->show();
         }
 
-        for( int i = 0; i < size; i++ ) {
-            QString item = items.at(i);
-            int lio = item.lastIndexOf("/");
-            QString diretorioExperimento = item.left( lio );
-            items.replace(i, diretorioExperimento);
-        }
-
-        items.removeDuplicates();
-
-        size = items.size();
-        QStringList legendas;
-        QVector<QList<DataReport* >* >* dados = new QVector<QList<DataReport* >* >();
-        for( int i = 0; i < size; i++ ) {
-            QString dir = items.at(i);
-            QString legenda = aop->getLegend( dir );
-            if( legenda.isEmpty() ) {
-                legenda = QString("Config#%1").arg(i+1);
-            }
-
-            if( legendas.contains( legenda ) ) {
-                legenda += QString("#%1").arg(i+1);
-            }
-            legendas.append(legenda);
-
-            QString filename = dir+"/Results";
-            switch( aop->getFlowOp() ) {
-                case AnalysisOptions::AllFlows:
-                    filename += "/summary";
-                    break;
-                case AnalysisOptions::RT0:
-                case AnalysisOptions::RT1:
-                case AnalysisOptions::nRT0:
-                case AnalysisOptions::nRT1:
-                    filename += QString("/class_%1").arg(aop->getFlowOp() - 1);
-                    break;
-                case AnalysisOptions::Specified:
-                    filename += QString("/flow_%1_%2_%3_%4_%5")
-                            .arg(aop->getXSrc())
-                            .arg(aop->getYSrc())
-                            .arg(aop->getXDest())
-                            .arg(aop->getYDest())
-                            .arg( aop->getTrafficPattern() );
-                    break;
-
-            }
-
-            QByteArray byteArrayReport = filename.toUtf8();
-            const char* strFile = byteArrayReport.constData();
-
-            QList<DataReport*>* data = Control::readReport(strFile);
-            if( data == NULL ) {
-                this->mainWindow->printConsole(QString("<font color=red>Report file %1 unavailable or this flow is null (no packet was transfered)</font>").arg(strFile));
-                for( int x = 0; x < size; x++ ) {
-                    data = dados->at(x);
-                    if( data != NULL ) {
-                        for( int z = 0; z < data->size(); z++ ) {
-                            DataReport* d = data->at(z);
-                            delete d;
-                        }
-
-                        data->clear();
-                        delete data;
-                    }
-                }
-                dados->clear();
-                delete dados;
-                delete aop;
-                return;
-            }
-
-            dados->append(data);
-        }
-
-        ReportDialog* repDial = new ReportDialog(legendas,dados,mainWindow);
-        connect(repDial,SIGNAL(rejected()),repDial,SLOT(deleteLater()));
-        repDial->setWindowModality(Qt::NonModal);
-        repDial->show();
     }
     delete aop;
-}
-
-
-///////////////////////////// Static /////////////////////////////
-QList<DataReport*>* Control::readReport(const char *file) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::readReport" << std::endl;
-#endif
-    QFile* arquivo = new QFile(QString(file));
-
-    if( !arquivo->open(QIODevice::ReadOnly | QIODevice::Text) ) {
-        delete arquivo;
-        return NULL;
-    } else {
-        QTextStream str(&*arquivo);
-        QString linha;
-
-        QList<DataReport*>* listaDados = new QList<DataReport*>();
-
-        do {
-            linha = str.readLine();
-            if( linha.isNull() ) {
-                break;
-            }
-            QStringList params = linha.split("\t");
-            if(params.size() == 19) {
-                DataReport* data = new DataReport;
-                data->fClk                  = params.at(0).toFloat();
-                data->accNbOfPck            = params.at(1).toULong();
-                data->avgRequiredBwNorm     = params.at(2).toFloat();
-                data->acceptedTrafficFlits  = params.at(3).toFloat();
-                data->idealAvgLatency       = params.at(4).toFloat();
-                data->avgLatencyCycles      = params.at(5).toFloat();
-                data->stdevLatency          = params.at(6).toFloat();
-                data->minLatency            = params.at(7).toFloat();
-                data->maxLatency            = params.at(8).toFloat();
-                data->avgRequiredBwBps      = params.at(9).toFloat();
-                data->acceptedTrafficBps    = params.at(10).toFloat();
-                data->idealAvgLatencyNs     = params.at(11).toFloat();
-                data->avgLatencyNs          = params.at(12).toFloat();
-                data->minLatencyNs          = params.at(13).toFloat();
-                data->maxLatencyNs          = params.at(14).toFloat();
-                data->metDeadlinesPer0      = params.at(15).toFloat();
-                data->metDeadlinesPer1      = params.at(16).toFloat();
-                data->metDeadlinesPer2      = params.at(17).toFloat();
-                data->metDeadlinesPer3      = params.at(18).toFloat();
-                listaDados->append(data);
-            }
-
-
-        } while(!linha.isNull());
-        arquivo->close();
-        delete arquivo;
-        return listaDados;
-
-    }
-}
-
-///////////////////////////// Static /////////////////////////////
-QList<DataReport*>* Control::readLatencyDistributionReport(const char *file) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::readLatencyDistributionReport" << std::endl;
-#endif
-
-    FILE* fpIn;
-
-    if( (fpIn = fopen(file,"rt")) == NULL ) {
-        return NULL;
-    } else {
-        int scanResult = 0,scanRes;
-        QList<DataReport*>* listaDados = new QList<DataReport*>();
-        long unsigned int accNbOfPck,x;
-        float fClk;
-        char buffer[64];
-        do {
-            DataReport* data = new DataReport;
-            scanResult = fscanf(fpIn,"%[^\n]\n",buffer);
-            scanRes = sscanf(buffer,"%lu\t%lu\t%f",
-                                &accNbOfPck,
-                                &x,
-                                &fClk);
-            data->fClk       = x;
-            data->accNbOfPck = accNbOfPck;
-
-            if(scanRes == 3) {
-                listaDados->append(data);
-            } else {
-                delete data;
-            }
-        } while (scanResult != EOF);
-        if( listaDados->isEmpty() ) {
-            delete listaDados;
-            listaDados = NULL;
-        }
-        fclose(fpIn);
-        return listaDados;
-    }
 }
 
 void Control::editOptions() {
@@ -2373,84 +2344,12 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     std::cout << "Control/Control::generateCSVSimulationReport" << std::endl;
 #endif
 
-    int size = simulationFolders->size();
-    QStringList items;
-    for(int i = 0; i < size; i++) {
-        items.append(* simulationFolders->at(i) );
-    }
+    QVector<QList<DataReport* >* >* data = getReportData(aop);
 
-    for( int i = 0; i < size; i++ ) {
-        QString item = items.at(i);
-        int lio = item.lastIndexOf("/");
-        QString diretorioExperimento = item.left( lio );
-        items.replace(i, diretorioExperimento);
-    }
-
-    items.removeDuplicates();
-
-    size = items.size();
-    QStringList legendas;
-    QVector<QList<DataReport* >* >* dados = new QVector<QList<DataReport* >* >();
-    for( int i = 0; i < size; i++ ) {
-        QString dir = items.at(i);
-        QString legenda = aop->getLegend( dir );
-        if( legenda.isEmpty() ) {
-            legenda = QString("Config#%1").arg(i+1);
-        }
-
-        if( legendas.contains( legenda ) ) {
-            legenda += QString("#%1").arg(i+1);
-        }
-        legendas.append(legenda);
-
-        QString filename = dir+"/Results";
-        switch( aop->getFlowOp() ) {
-            case AnalysisOptions::AllFlows:
-                filename += "/summary";
-                break;
-            case AnalysisOptions::RT0:
-            case AnalysisOptions::RT1:
-            case AnalysisOptions::nRT0:
-            case AnalysisOptions::nRT1:
-                filename += QString("/class_%1").arg(aop->getFlowOp() - 1);
-                break;
-            case AnalysisOptions::Specified:
-                filename += QString("/flow_%1_%2_%3_%4_%5")
-                        .arg(aop->getXSrc())
-                        .arg(aop->getYSrc())
-                        .arg(aop->getXDest())
-                        .arg(aop->getYDest())
-                        .arg( aop->getTrafficPattern() );
-                break;
-
-        }
-
-        QByteArray byteArrayReport = filename.toUtf8();
-        const char* strFile = byteArrayReport.constData();
-
-        QList<DataReport*>* data = Control::readReport(strFile);
-        if( data == NULL ) {
-            this->mainWindow->printConsole(QString("<font color=red>Report file %1 unavailable or this flow is null (no packet was transfered)."
-                                                      "</br >Therefore can not generate the CSV report.</font>").arg(strFile));
-            for( int x = 0; x < size; x++ ) {
-                data = dados->at(x);
-                if( data != NULL ) {
-                    for( int z = 0; z < data->size(); z++ ) {
-                        DataReport* d = data->at(z);
-                        delete d;
-                    }
-
-                    data->clear();
-                    delete data;
-                }
-            }
-            dados->clear();
-            delete dados;
-            delete aop;
-            return;
-        }
-
-        dados->append(data);
+    if(data == NULL) {
+        this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)."
+                                                              "</br >Therefore can not generate the CSV report.</font>"));
+        return;
     }
 
     QString filename = mainWindow->dialogSaveFile(trUtf8("Save a CSV report file"),
@@ -2482,15 +2381,15 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
                << separator << separator << separator << separator << separator << separator
                << separator << separator << "\n";
             // Varrer e escrever CSV
-            for( int x = 0; x < dados->size(); x++ ) {
-                QList<DataReport* >* listData = dados->at(x);
+            for( int x = 0; x < data->size(); x++ ) {
+                QList<DataReport* >* listData = data->at(x);
                 if( listData != NULL ) {
                     // Legenda
                     ts << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << "\n";
-                    ts << separator << trUtf8("Experiment: ") << separator << legendas.at(x)
+                    ts << separator << trUtf8("Experiment: ") << separator << legends.at(x)
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
@@ -2552,8 +2451,8 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     }
 
     // Desalocando memória
-    for( int x = 0; x < dados->size(); x++ ) {
-        QList<DataReport* >* listData = dados->at(x);
+    for( int x = 0; x < data->size(); x++ ) {
+        QList<DataReport* >* listData = data->at(x);
         if( listData != NULL ) {
             for( int z = 0; z < listData->size(); z++ ) {
                 DataReport* d = listData->at(z);
@@ -2563,8 +2462,8 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
             delete listData;
         }
     }
-    dados->clear();
-    delete dados;
+    data->clear();
+    delete data;
 
     delete aop;
 

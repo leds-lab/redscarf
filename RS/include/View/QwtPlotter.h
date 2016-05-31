@@ -50,7 +50,7 @@ public:
     explicit QwtPlotter(QWidget *parent = 0);
     ~QwtPlotter();
 
-    void viewGraphic(AnalysisOptions* aop, QStringList dirs);
+    void viewGraphic(QVector<QList<DataReport *>*>* data, AnalysisOptions* aop, QStringList legends);
 
 private slots:
     void exportPlot();

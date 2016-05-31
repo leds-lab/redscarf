@@ -36,6 +36,7 @@
 #include <QObject>
 
 class AnalysisOptions;
+class DataReport;
 
 class Plotter : public QObject {
     Q_OBJECT
@@ -43,7 +44,7 @@ class Plotter : public QObject {
 public:
     explicit Plotter(QObject *parent = 0);
 
-    virtual void viewGraphic(AnalysisOptions* aop,QStringList dirs) = 0;
+    virtual void viewGraphic(QVector<QList<DataReport *>* >* data,AnalysisOptions* aop,QStringList legends) = 0;
 
 signals:
     void finished(int);

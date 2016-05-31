@@ -31,4 +31,34 @@
 
 #include "include/Model/Analysis/DataReport.h"
 
+#include <iostream>
+
 DataReport::DataReport() {}
+
+void DataReport::debugGeneral() {
+
+    std::cout << "FCLK: "                   << fClk
+              << "\navgRequiredBwNorm   : " << avgRequiredBwNorm
+              << "\nacceptedTrafficFlits: " << acceptedTrafficFlits
+              << "\nidealAvgLatency     : " << idealAvgLatency
+              << "\navgLatencyCycles    : " << avgLatencyCycles
+              << "\nstdevLatency        : " << stdevLatency
+              << "\nminLatency          : " << minLatency
+              << "\nmaxLatency          : " << maxLatency
+              << "\navgRequiredBwBps    : " << avgRequiredBwBps
+              << "\nacceptedTrafficBps  : " << acceptedTrafficBps
+              << "\nidealAvgLatencyNs   : " << idealAvgLatencyNs
+              << "\navgLatencyNs        : " << avgLatencyNs
+              << "\nminLatencyNs        : " << minLatencyNs
+              << "\nmaxLatencyNs        : " << maxLatencyNs
+              << "\nmetDeadlinesPer0    : " << metDeadlinesPer0
+              << "\nmetDeadlinesPer1    : " << metDeadlinesPer1
+              << "\nmetDeadlinesPer2    : " << metDeadlinesPer2
+              << "\nmetDeadlinesPer3    : " << metDeadlinesPer3;
+}
+
+void DataReport::debugHistogram() {
+
+    std::cout << "Latency Cycle: " << latencyCycle << ", Packet Count: " << packetCount << ", Pckt Percent: " << packetPercentage;
+
+}

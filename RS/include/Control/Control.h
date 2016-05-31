@@ -94,6 +94,7 @@ private:
     enum FinishCode{ Success = 0,ExecuteFailed, BuildFailed, InputsError, Cancel};
 
     QList<QString*>* simulationFolders;
+    QStringList legends;
 
     QElapsedTimer* timer;
 
@@ -119,11 +120,9 @@ private:
 
     void finishSimulation(FinishCode code);
 
+    QVector<QList<DataReport* >* >* getReportData(AnalysisOptions* aop);
 
 public:
-    static QList<DataReport *> * readReport(const char* file);
-    // Data in attributes accNbOfPck and fClk of DataReport objects
-    static QList<DataReport *> * readLatencyDistributionReport(const char* file);
 
     explicit Control(QObject *parent = 0);
 

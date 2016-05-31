@@ -50,6 +50,7 @@
 #include "include/View/AnalysisOptions.h"
 #include "include/View/PersonalQwtPlotPicker.h"
 #include "include/Model/Analysis/DataReport.h"
+#include "include/Model/Analysis/ReportReader.h"
 #include "include/Control/Control.h"
 
 #ifdef DEBUG_POINTS_METHODS
@@ -98,7 +99,7 @@ QwtPlotter::QwtPlotter(QWidget *parent) : Plotter(parent) {
 
 }
 
-void QwtPlotter::viewGraphic(AnalysisOptions *aop, QStringList dirs) {
+void QwtPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOptions *aop, QStringList legends) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/QwtPlotter::viewGraphic" << std::endl;
 #endif
@@ -109,86 +110,16 @@ void QwtPlotter::viewGraphic(AnalysisOptions *aop, QStringList dirs) {
 
     srand(time_t(NULL));
 
-    QStringList legendas;
-    int size = dirs.size();
-    for( int i = 0; i < size; i++ ) {
-        QString dir = dirs.at(i);
-
-        QString legenda;
-        if( aop->isLatencyDistribution() ) {
-            int lio = dir.lastIndexOf("/");
-            QString diretorioExperimento = dir.left( lio );
-            legenda = aop->getLegend( diretorioExperimento );
-        } else {
-            legenda = aop->getLegend( dir );
-        }
-
-        if( legenda.isEmpty() ) {
-            if(aop->isLatencyDistribution()) {
-                legenda = QString("Curve#%1").arg(i+1);
-            } else {
-                legenda = QString("Config#%1").arg(i+1);
-            }
-        }
-
-        if( legendas.contains( legenda ) ) {
-            legenda += QString("#%1").arg(i+1);
-        }
-
-        if( aop->isLatencyDistribution() ) {
-            int lio = dir.lastIndexOf("/") + 1;
-            legenda += QString(" @ %1").arg( dir.mid(lio) );
-        }
-
-        legendas.append(legenda);
-
-        QString filename = dir+"/Results";
-        switch( aop->getFlowOp() ) {
-            case AnalysisOptions::AllFlows:
-                filename += "/summary";
-                break;
-            case AnalysisOptions::RT0:
-            case AnalysisOptions::RT1:
-            case AnalysisOptions::nRT0:
-            case AnalysisOptions::nRT1:
-                filename += QString("/class_%1").arg(aop->getFlowOp() - 1);
-                break;
-            case AnalysisOptions::Specified:
-                filename += QString("/flow_%1_%2_%3_%4_%5")
-                        .arg(aop->getXSrc())
-                        .arg(aop->getYSrc())
-                        .arg(aop->getXDest())
-                        .arg(aop->getYDest())
-                        .arg( aop->getTrafficPattern() );
-                break;
-
-        }
-        if(aop->isLatencyDistribution()) {
-            filename += "_latency_histogram";
-        }
-
-        QByteArray byteArrayReport = filename.toUtf8();
-        const char* strFile = byteArrayReport.constData();
-        QList<DataReport*>* data = NULL;
-        if( aop->isLatencyDistribution() ) {
-            data = Control::readLatencyDistributionReport(strFile);
-        } else {
-            data = Control::readReport( strFile );
-        }
-
-        if( data == NULL ) {
-            emit sendMessage(trUtf8("<font color=red>Report file %1 unavailable or this flow is null (no packet was transfered)</font>").arg(filename));
-            return;
-        }
+    for(int i = 0; i < data->size(); i++) {
+        QList<DataReport *>* d = data->at(i);
 
         // Start define curves
-        int countData = data->size();
+        int countData = d->size();
         QPolygonF points;
         for( int x = 0; x < countData; x++ ) {
-            DataReport* dr = data->at(x);
+            DataReport* dr = d->at(x);
             if( aop->isLatencyDistribution() ) {
-            // Desconsiderar os nomes dos atributos utilizados, pois foram os utilizados na leitura da distribuição de latência
-                points.append( QPointF( dr->accNbOfPck, dr->fClk ) );
+                points.append( QPointF( dr->latencyCycle, dr->packetCount ) );
             } else {
 
                 QPointF ponto;
@@ -234,11 +165,10 @@ void QwtPlotter::viewGraphic(AnalysisOptions *aop, QStringList dirs) {
                         ponto.setY(dr->metDeadlinesPer3);
                         break;
                 }
+
                 points.append( ponto );
 
             }
-            delete dr;
-
         }
 
         // Define point style - 5 options
@@ -272,12 +202,14 @@ void QwtPlotter::viewGraphic(AnalysisOptions *aop, QStringList dirs) {
 
         }
 
+
         // Define curve
         QColor cor = QColor( aop->getColor(i) );
         QwtPlotCurve *curve = new QwtPlotCurve;
-        curve->setTitle( legenda );
+        curve->setTitle( legends.at(i) );
         curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
         curve->setSamples( points );
+
 
         // Define point
         float pointSize = aop->getPointSize() * 6;
@@ -296,9 +228,8 @@ void QwtPlotter::viewGraphic(AnalysisOptions *aop, QStringList dirs) {
         curve->attach( plotter );
         // end
 
-        data->clear();
-        delete data;
     }
+
 
     QList<QwtLegendLabel*> objList = plotter->findChildren<QwtLegendLabel*>();
     for( int i = 0; i < objList.size(); i++ ) {

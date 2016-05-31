@@ -1087,6 +1087,9 @@ void MainWindow::printConsole(QString msg, QColor color, Qt::Alignment alignment
     cursor.insertHtml( QString("<font color=%1>%2</font>").arg(color.name()).arg(msg) );
     cursor.insertBlock();
 
+    cursor.movePosition( QTextCursor::End );
+    ui->console->setTextCursor(cursor);
+
 }
 
 void MainWindow::sizeUpdate() {

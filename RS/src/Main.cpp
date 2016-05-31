@@ -75,7 +75,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Init: main" << std::endl;
 #endif
 
-
     RedScarfApp app(argc,argv);
     return app.executeApp();
 

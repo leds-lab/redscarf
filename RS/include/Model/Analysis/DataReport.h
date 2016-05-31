@@ -41,6 +41,8 @@
 
 class DataReport {
 public:
+
+    // Attributes for general report
     float fClk;
     long unsigned int accNbOfPck;
     float avgRequiredBwNorm;
@@ -60,9 +62,15 @@ public:
     float metDeadlinesPer1;
     float metDeadlinesPer2;
     float metDeadlinesPer3;
-
+    // Attributes for latency histogram
+    long unsigned int latencyCycle;
+    long unsigned int packetCount;
+    float packetPercentage;
 
     DataReport();
+
+    void debugGeneral();
+    void debugHistogram();
 
 };
 
