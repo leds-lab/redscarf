@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * Control.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014-2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,6 +26,10 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+*    ||      - ||      - Sérgio Vargas Junior        |      ||
+* ----------------------------------------------------------------------------
 *
 */
 
@@ -46,6 +50,7 @@
 
 // Control
 #include "include/Control/Control.h"
+#include "include/Control/XmlConfigParser.h"
 #include "include/Control/Builder.h"
 #include "include/Control/SimulationPerformer.h"
 #include "include/Control/ThreadManager.h"
@@ -93,9 +98,9 @@ Control::Control(QObject *parent) :
 
     this->mainWindow = (MainWindow* ) parent;
 
-    this->systemParameters          = new SystemParameters();
+    this->systemParameters      = new SystemParameters();
     this->trafficPatternManager = new TrafficPatternManager();
-    this->experimentManager   = new ExperimentManager();
+    this->experimentManager     = new ExperimentManager();
     experimentManager->insertExperiment(1, new Experiment());
 
     this->exes = new QList<SimulationPerformer *>();
@@ -309,9 +314,21 @@ bool Control::loadConfiguration() {
         this->configFile = NULL;
         return false;
     }
+
     /// Carregar
-    this->loadXMLStructure();
+    XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
+    parser->loadXML(configFile);
+
+    this->mainWindow->updateView( this->systemParameters->getXSize(),
+            this->systemParameters->getYSize(),
+            this->systemParameters->getDataWidth(),
+            this->experimentManager,parser->getStopOption(),
+            parser->getStopTime_ns(),parser->getStopTime_cycles(),parser->getVcdOption(),
+            parser->getFClk1(),parser->getFClk2(),parser->getFClkStepType(), parser->getFClkStep() );
+    delete parser;
+
     this->mainWindow->printConsole(trUtf8("Configuration file successfuly loaded"));
+
     configFile->close();
 
     return true;
@@ -343,8 +360,12 @@ bool Control::saveConfiguration() {
         return false;
     }
     /// Salvar
-    this->saveXMLStructure();
+    XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
+    parser->saveXML(configFile);
+    delete parser;
+
     this->mainWindow->printConsole(trUtf8("Configuration file successfully saved"));
+    this->configFile->close();
     return true;
 }
 
@@ -377,468 +398,6 @@ bool Control::clearTrafficPatterns() {
     }
     this->mainWindow->printConsole(trUtf8("Traffic patterns clean"));
     return true;
-}
-
-TrafficParameters* Control::parseTrafficPattern(QXmlStreamReader *xml) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::parseTrafficPattern" << std::endl;
-#endif
-
-    TrafficPatternDefines* dpt = TrafficPatternDefines::getInstance();
-
-    TrafficParameters* tp = new TrafficParameters();
-
-    QXmlStreamAttributes attributes;
-
-    // Spatial Distribution
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setSpatialDistribution( dpt->getKeySpatialDistribution( attributes.value("type").toString().toStdString() ) );
-    if( dpt->findSpatialDistribution( tp->getSpatialDistribution() ).compare( "Specified Address" ) == 0 ) {
-        tp->setDestinationNodeX( attributes.value("xDestination").toString().toUInt() );
-        tp->setDestinationNodeY( attributes.value("yDestination").toString().toUInt() );
-    }
-
-    // Traffic Class
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setTrafficClass( dpt->getKeyTrafficClass( attributes.value("class").toString().toStdString() ) );
-
-    // Type injection
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    unsigned int typeInjection = dpt->getKeyTypeInjection( attributes.value("type").toString().toStdString() );
-    tp->setInjectionType( typeInjection );
-
-    // Switching Technique
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setSwitchingTechnique( dpt->getKeySwitchingTechnique( attributes.value("technique").toString().toStdString() ) );
-
-    // Package To Send
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setPackageToSend( attributes.value("value").toString().toULong() );
-
-    // Deadline
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setDeadline( attributes.value("value").toString().toULong() );
-
-    // Required Bandwidth
-    xml->readNextStartElement();
-    attributes = xml->attributes();
-    xml->skipCurrentElement();
-    tp->setRequiredBandwidth( attributes.value("value").toString().toFloat() );
-
-    if(typeInjection == 0 || typeInjection == 1 || typeInjection == 4 || typeInjection == 5) {
-        // Message Size
-        xml->readNextStartElement();
-        attributes = xml->attributes();
-        xml->skipCurrentElement();
-        tp->setMessageSize( attributes.value("value").toString().toUInt() );
-    } else if(typeInjection == 2) {
-        // Idle time
-        xml->readNextStartElement();
-        attributes = xml->attributes();
-        xml->skipCurrentElement();
-        tp->setIdleTime( attributes.value("value").toString().toUInt() );
-    }
-    if(typeInjection == 3 || typeInjection == 5) {
-        // Interval time
-        xml->readNextStartElement();
-        attributes = xml->attributes();
-        xml->skipCurrentElement();
-        tp->setIntervalTime( attributes.value("value").toString().toUInt() );
-    }
-
-    if(typeInjection != 0) {
-        // Function Probability
-        xml->readNextStartElement();
-        attributes = xml->attributes();
-        xml->skipCurrentElement();
-        unsigned int funcProb = dpt->getKeyFunctionProbability( attributes.value("type").toString().toStdString() );
-        tp->setProbabilityFunction( funcProb );
-        if(funcProb == 0) {
-            // Required Bandwidth
-            xml->readNextStartElement();
-            attributes = xml->attributes();
-            xml->skipCurrentElement();
-            tp->setRequiredBandwidthStdDeviation( attributes.value("value").toString().toFloat() );
-        } else if(funcProb == 2) {
-            // Pareto Alfa On
-            xml->readNextStartElement();
-            attributes = xml->attributes();
-            xml->skipCurrentElement();
-            tp->setAlfaOn( attributes.value("value").toString().toFloat() );
-            // Alfa Off
-            xml->readNextStartElement();
-            attributes = xml->attributes();
-            xml->skipCurrentElement();
-            tp->setAlfaOff( attributes.value("value").toString().toFloat() );
-        }
-    }
-    return tp;
-}
-
-void Control::loadXMLStructure() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::loadXMLStructure" << std::endl;
-#endif
-
-    QXmlStreamReader* xml = new QXmlStreamReader(configFile);
-
-    this->trafficPatternManager->clear();
-
-    SystemDefines* def = SystemDefines::getInstance();
-
-    int fClkStepType = DefaultValuesSystem::DEFAULT_FCLK_STEP_TYPE,
-            stopOption = DefaultValuesSystem::DEFAULT_STOP_OPTION,
-            stopTime_ns = DefaultValuesSystem::DEFAULT_STOP_TIME_NS,
-            stopTime_cycles = DefaultValuesSystem::DEFAULT_STOP_TIME_CYCLES,
-            vcdOption = DefaultValuesSystem::DEFAULT_VCD_OPTION;
-    double fClk1 = DefaultValuesSystem::DEFAULT_FCLK_FIRST,
-            fClk2 = DefaultValuesSystem::DEFAULT_FCLK_LAST,
-            fClkStep = DefaultValuesSystem::DEFAULT_FCLK_STEP_VALUE;
-    while (!xml->atEnd() && !xml->hasError()) {
-        // Lendo elementos
-        QXmlStreamReader::TokenType token = xml->readNext();
-
-        // Se for o início do documento segue para próximo token
-        if( token == QXmlStreamReader::StartDocument ) {
-            continue;
-        }
-
-        // Verifica o início de um elemento
-        if(token == QXmlStreamReader::StartElement) {
-            // Se for o elemento raiz segue para o próximo token
-            QStringRef name = xml->name();
-            if( name == APPLICATION_NAME ) {
-                continue;
-            }
-
-            QXmlStreamAttributes attributes = xml->attributes();
-            // systemSize
-            if( name == "systemSize" ) {
-                this->systemParameters->setXSize( attributes.value("xSize").toString().toUInt() );
-                this->systemParameters->setYSize( attributes.value("ySize").toString().toUInt() );
-                this->systemParameters->setDataWidth( attributes.value("channelWidth").toString().toUInt() );
-                continue;
-            }
-
-            // sourceNode
-            if( name == "sourceNode" ) {
-                unsigned int xSrc = attributes.value("x").toString().toUInt();
-                unsigned int ySrc = attributes.value("y").toString().toUInt();
-                Node* nodo = new Node(xSrc,ySrc);
-                // Ler Padrões de Tráfego
-                do {
-                    token = xml->readNext();
-                    attributes = xml->attributes();
-                    if( token == QXmlStreamReader::StartElement && xml->name() == "trafficPattern" ) {
-                        unsigned int index = attributes.value("index").toString().toUInt();
-                        TrafficParameters* tp = this->parseTrafficPattern(xml);
-                        tp->setSourceNodeX( xSrc );
-                        tp->setSourceNodeY( ySrc );
-                        nodo->setTrafficPattern(tp,index);
-                    }
-                } while( !(token == QXmlStreamReader::EndElement && xml->name() == "sourceNode" ) );
-
-                this->trafficPatternManager->insertNode(nodo);
-            }
-
-            // Experiment
-            if( name == "experiment" ) {
-                Experiment* experiment = new Experiment;
-                experiment->setActive( (attributes.value("active").toString() == "true" ? true : false) );
-                unsigned int option = def->getKeyArbiterTypes( attributes.value("arbiterType").toString().toStdString() );
-                experiment->setArbiterType( option == SystemDefines::ERROR ? 0 : option );
-                option = def->getKeyFlowControls( attributes.value("flowControl").toString().toStdString() );
-                experiment->setFlowControl( option == SystemDefines::ERROR ? 0 : option );
-                experiment->setInputBufferSize( attributes.value("inputBuffers").toString().toUInt() );
-                experiment->setOutputBufferSize( attributes.value("outputBuffers").toString().toUInt() );
-                option = def->getKeyRouterArchitectures( attributes.value("routerArchitecture").toString().toStdString() );
-                experiment->setRouterArchitecture( option == SystemDefines::ERROR ? 0 : option );
-                option = def->getKeyRoutingAlgorithms( attributes.value("routingAlgorithm").toString().toStdString() );
-                experiment->setRoutingAlgorithm( option == SystemDefines::ERROR ? 0 : option );
-
-                this->experimentManager->insertExperiment(attributes.value("index").toString().toUInt(),experiment);
-            }
-
-            // Stop option
-            if( name == "stopOption" ) {
-                stopOption = attributes.value("option").toString().toInt();
-                stopTime_ns = attributes.value("stopTime_ns").toString().toInt();
-                stopTime_cycles = attributes.value("stopTime_cycles").toString().toInt();
-            }
-
-            // VCD Option
-            if( name == "vcdOption" ) {
-                vcdOption = attributes.value("index").toString().toInt();
-            }
-
-            // FClk
-            if( name == "fClk" ) {
-                fClk1 = attributes.value("start").toString().toDouble();
-                fClk2 = attributes.value("end").toString().toDouble();
-                fClkStepType = attributes.value("stepTypeIndex").toString().toInt();
-                fClkStep = attributes.value("step").toString().toDouble();
-            }
-
-        }
-
-    }
-
-    this->mainWindow->updateView( this->systemParameters->getXSize(),
-            this->systemParameters->getYSize(),
-            this->systemParameters->getDataWidth(),
-            this->experimentManager,stopOption,
-            stopTime_ns,stopTime_cycles,vcdOption,
-            fClk1,fClk2,fClkStepType, fClkStep );
-
-    delete xml;
-}
-
-void Control::writeTrafficParametersInNode(QXmlStreamWriter *xml, TrafficParameters *tp) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::writeTrafficParametersInNode" << std::endl;
-#endif
-
-    TrafficPatternDefines* dpt = TrafficPatternDefines::getInstance();
-
-    // Início da escrita do elemento da Distribuição espacial - spatialDistribution
-    xml->writeStartElement("spatialDistribution");
-    std::string dist = dpt->findSpatialDistribution(tp->getSpatialDistribution());
-    xml->writeAttribute("type",QString::fromStdString(dist));
-    if( dist.compare("Specified Address") == 0 ) {
-        xml->writeAttribute("xDestination",QString::number(tp->getDestinationNodeX()));
-        xml->writeAttribute("yDestination",QString::number(tp->getDestinationNodeY()));
-    }
-    xml->writeEndElement();
-    // Fim da escrita do elemento da Distribuição espacial - spatialDistribution
-
-    // Início da escrita do elemento da classe de tráfego - trafficClass
-    xml->writeStartElement("trafficClass");
-    xml->writeAttribute( "class", QString::fromStdString(dpt->findTrafficClass(tp->getTrafficClass())));
-    xml->writeEndElement();
-    // Fim da escrita do elemento da classe de tráfego - trafficClass
-
-    unsigned int typeInjec = tp->getInjectionType();
-    // Início da escrita do elemento tipo de injeção - typeInjection
-    xml->writeStartElement("typeInjection");
-    xml->writeAttribute("type",QString::fromStdString(dpt->findTypeInjection(typeInjec)));
-    xml->writeEndElement();
-    // Fim da escrita do elemento tipo de injeção - typeInjection
-
-    // Início da escrita do elemento técnica de chaveamento - switchingTechnique
-    xml->writeStartElement("switchingTechnique");
-    xml->writeAttribute("technique",QString::fromStdString(dpt->findSwitchingTechnique(tp->getSwitchingTechnique())));
-    xml->writeEndElement();
-    // Fim da escrita do elemento técnica de chaveamento - switchingTechnique
-
-    // Início da escrita do elemento número de pacotes por fluxo - numberPacketsPerFlow
-    xml->writeStartElement("numberPacketsPerFlow");
-    xml->writeAttribute("value",QString::number(tp->getPackageToSend()));
-    xml->writeEndElement();
-    // Fim da escrita do elemento número de pacotes por fluxo - numberPacketsPerFlow
-
-    // Início da escrita do elemento deadline
-    xml->writeStartElement("deadline");
-    xml->writeAttribute("value",QString::number(tp->getDeadline()));
-    xml->writeEndElement();
-    // Fim da escrita do elemento deadline
-
-    // Início - requiredBandwidth
-    xml->writeStartElement("requiredBandwidth");
-    xml->writeAttribute("value",QString::number(tp->getRequiredBandwidth(),'f',2));
-    xml->writeEndElement();
-    // Fim - requiredBandwidth
-
-    // Filtros
-    if(typeInjec == 0 || typeInjec == 1 || typeInjec == 4 || typeInjec == 5) {
-        // Início - messageSize
-        xml->writeStartElement("messageSize");
-        xml->writeAttribute("value",QString::number(tp->getMessageSize()));
-        xml->writeEndElement();
-        // Fim - messageSize
-    } else if(typeInjec == 2) {
-        // Início - idleTime
-        xml->writeStartElement("idleTime");
-        xml->writeAttribute("value",QString::number(tp->getIdleTime()));
-        xml->writeEndElement();
-        // Fim - idleTime
-    }
-    if(typeInjec == 3 || typeInjec == 5) {
-        // Início - messageInterval
-        xml->writeStartElement("messageInterval");
-        xml->writeAttribute("value",QString::number(tp->getIntervalTime()));
-        xml->writeEndElement();
-        // Fim - messageInterval
-    }
-
-    if(typeInjec != 0) {
-        // Início - functionProbability
-        unsigned int funcProb = tp->getProbabilityFunction();
-        xml->writeStartElement("functionProbability");
-        xml->writeAttribute("type",QString::fromStdString(dpt->findFunctionProbability(funcProb)));
-        xml->writeEndElement();
-        // Fim - functionProbability
-        if(funcProb == 0) {
-            // Início - standardDeviation
-            xml->writeStartElement("standardDeviation");
-            xml->writeAttribute("value",QString::number(tp->getRequiredBandwidthStdDeviation(),'f',2));
-            xml->writeEndElement();
-            // Fim - standardDeviation
-        } else if(funcProb == 2) {
-            // Início - paretoAlfaOn
-            xml->writeStartElement("paretoAlfaOn");
-            xml->writeAttribute("value",QString::number(tp->getAlfaOn(),'f',2));
-            xml->writeEndElement();
-            // Fim - paretoAlfaOn
-            // Início - paretoAlfaOff
-            xml->writeStartElement("paretoAlfaOff");
-            xml->writeAttribute("value",QString::number(tp->getAlfaOff(),'f',2));
-            xml->writeEndElement();
-            // Fim - paretoAlfaOff
-        }
-    }
-}
-
-void Control::saveXMLStructure() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::saveXMLStructure" << std::endl;
-#endif
-
-    unsigned int xSize = this->systemParameters->getXSize();
-    unsigned int ySize = this->systemParameters->getYSize();
-
-    QXmlStreamWriter* xml = new QXmlStreamWriter(configFile);
-
-    xml->setAutoFormatting(true);
-
-    // Início da escrita no documento
-    xml->writeStartDocument();
-    xml->writeDTD( QString("<!DOCTYPE %1>").arg(APPLICATION_NAME) );
-    // Início da escrita do elemento raiz - Nome da Aplicação
-    xml->writeStartElement(APPLICATION_NAME);
-    xml->writeAttribute("version","1.0");
-    // Início escrita da tag do sistema - systemSize
-    xml->writeStartElement("systemSize");
-    xml->writeAttribute("xSize",QString::number(xSize));
-    xml->writeAttribute("ySize",QString::number(ySize));
-    xml->writeAttribute("channelWidth",QString::number(systemParameters->getDataWidth()));
-    xml->writeComment(QString("Sistem size range in %1: x= 2 <-> 10; y= 2 <-> 10 channelWidth= 16 <-> 56")
-                      .arg(APPLICATION_NAME));
-    xml->writeEndElement();
-    // Fim escrita da tag do sistema - systemSize
-
-    for( unsigned int x = 0; x < xSize; x++ ) {
-        for( unsigned int y = 0; y < ySize; y++ ) {
-            Node* nodo = this->trafficPatternManager->getNode(x,y);
-            if( nodo != NULL ) {
-                bool semPadroes = true;
-                // Verifica se há padrão de tráfego ativo para este nodo
-                for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
-                    if( nodo->isPatternActive(i) ) {
-                        semPadroes = false;
-                    }
-                }
-                // Se não houver padrao ativo passa para próximo nodo
-                if(semPadroes) {
-                    continue;
-                }
-
-                // Início da escrita do elemento fonte - sourceNode
-                xml->writeStartElement("sourceNode");
-                xml->writeAttribute("x",QString::number(x));
-                xml->writeAttribute("y",QString::number(y));
-                for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
-                    if( nodo->isPatternActive(i) ) {
-                        TrafficParameters* tp = nodo->getTrafficPattern(i);
-                        // Início da escrita do elemento padrão de tráfego - trafficPattern
-                        xml->writeStartElement("trafficPattern");
-                        xml->writeAttribute("index",QString::number(i));
-                        this->writeTrafficParametersInNode(xml,tp);
-                        xml->writeEndElement();
-                        // Fim da escrita do elemento padrão de tráfego - trafficPattern
-                    }
-                }
-                xml->writeEndElement();
-                // Fim da escrite do elemento fonte - sourceNode
-            }
-        }
-    }
-
-    SystemDefines* defSys = SystemDefines::getInstance();
-    // Salvar a configuração dos experimentos na Aba de Simulação do Sistema
-    for( unsigned int i = 1u; i <= 5u; i++ ) {
-        Experiment* exp = this->experimentManager->getExperiment(i);
-        if( exp != NULL ) {
-            xml->writeStartElement("experiment");
-            xml->writeAttribute( "index", QString::number(i) );
-            xml->writeAttribute( "active", (exp->isActive() ? "true":"false" ) );
-            xml->writeAttribute( "routerArchitecture",QString::fromStdString(defSys->findRouterArchitectures( exp->getRouterArchitecture() )) );
-            xml->writeAttribute( "routingAlgorithm", QString::fromStdString(defSys->findRoutingAlgorithms( exp->getRoutingAlgorithm() )) );
-            xml->writeAttribute( "flowControl", QString::fromStdString(defSys->findFlowControls( exp->getFlowControl() )) );
-            xml->writeAttribute( "arbiterType", QString::fromStdString(defSys->findArbiterTypes( exp->getArbiterType() )) );
-            xml->writeAttribute( "inputBuffers", QString::number( exp->getInputBufferSize() ) );
-            xml->writeAttribute( "outputBuffers", QString::number( exp->getOutputBufferSize() ) );
-            xml->writeEndElement();
-        }
-    }
-
-    // Stop option
-    xml->writeStartElement("stopOption");
-    xml->writeAttribute("option",QString::number(systemParameters->getStopOption()));
-    xml->writeAttribute("stopTime_ns",QString::number(systemParameters->getStopTime_ns()));
-    xml->writeAttribute("stopTime_cycles",QString::number(systemParameters->getStopTime_cycles()));
-    xml->writeEndElement();
-
-    // VCD Option
-    xml->writeStartElement("vcdOption");
-    xml->writeAttribute( "index",QString::number(systemParameters->getVcdOption()) );
-    xml->writeEndElement();
-
-    // FClk Config
-    xml->writeStartElement("fClk");
-    xml->writeAttribute("start", QString::number(systemParameters->getfClkFirst()) );
-    xml->writeAttribute("end", QString::number(systemParameters->getfClkLast()));
-    xml->writeAttribute("stepTypeIndex",QString::number(systemParameters->getfClkStepType()));
-    xml->writeAttribute("step",QString::number(systemParameters->getfClkStep()));
-    xml->writeEndElement();
-    // Fim FClk config
-
-    xml->writeEndElement();
-    // Fim da escrita do elemento raiz - Nome da Aplicação
-
-    xml->writeComment(QString("Traffic pattern range in %1: 0 <-> 3").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Spatial Distribution in %1: Specified Address, Bit-reversal, Perfect Shuffle, Butterfly, Matrix Transpose, Complement, Uniform, Non-uniform 1 (1, 1/2, 1/4,...), Non-uniform 2 (1, 1/2), Local").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Traffic Class in %1: RT0-Signalling , RT1-Audio/Video, nRT0-Read/Write, nRT1-Block Transfer").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Type injection in %1: Constante Injection, Variable idle time - Fix message size, Variable message size - Fix idle time, Variable message size - Fix message inter-arrival, Variable message interarrival - Fix message size, Variable burst size - Fix message interarrival").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Switching Technique in %1: Wormhole Switching, Circuit Switching").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Number packets per flow range in %1: 0 - 1000000").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Deadline range in %1: 0 - 100000000").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Required Bandwidth range in %1: 0,00 - 530000,00").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Message size range in %1: 0 - 100000").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Idle time range in %1: 0 - 100000").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Message Interval range in %1: 0 - 100000").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Function Probability in %1: Normal, Exponential, Pareto").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Std. deviation range in %1: 0 - 100").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Pareto Alfa On range in %1: 0,0 - 100,0").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Pareto Alfa Off range in %1: 0,0 - 100,0").arg(APPLICATION_NAME));
-
-    xml->writeEndDocument();
-    // Fim da escrita no documento
-
-    configFile->close();
-    delete xml;
-
 }
 
 bool Control::inputsOk() {
@@ -1905,7 +1464,7 @@ void Control::viewGraphic(AnalysisOptions *aop) {
         connect(plotter,SIGNAL(finished(int)),plotter,SLOT(deleteLater()));
         plotter->viewGraphic(data,aop,legends);
 
-        // Desaloca memoria dos dados
+        // Deallocating data memory
         for( int i = 0; i < data->size(); i++ ) {
             QList<DataReport *>* items = data->at(i);
             for (int j = 0; j < items->size(); ++j) {
@@ -1927,85 +1486,85 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
     std::cout << "Control/Control::getReportData" << std::endl;
 #endif
 
-    // Obtém diretórios da simulação
     int size = simulationFolders->size();
-    QStringList items;
+    // Get simulation folders
+    QStringList folders;
     for(int i = 0; i < size; i++) {
-        items.append(* simulationFolders->at(i) );
+        folders.append(* simulationFolders->at(i) );
     }
 
-    // Identifica quais diretórios devem ser analisados de acordo com o tipo de análise
+    // Identifying what directories must be analyzed according with analysis type
     if( aop->isLatencyDistribution() ) {
-        // Distribuição de latências
-        if( items.size() > 1 ) {
-            GetSelectedItemsDialog* telaGet = new GetSelectedItemsDialog(items,mainWindow);
-            telaGet->setWindowTitle( trUtf8("Select items for latency distribution") );
-            if( telaGet->exec() == QDialog::Accepted ) {
-                items = telaGet->getSelectedItems();
-                if(items.isEmpty()) {
+        // Latency distribution (Histogram)
+        if( folders.size() > 1 ) {
+            GetSelectedItemsDialog* selectHistogramItemsWindow = new GetSelectedItemsDialog(folders,mainWindow);
+            selectHistogramItemsWindow->setWindowTitle( trUtf8("Select items for latency distribution") );
+            if( selectHistogramItemsWindow->exec() == QDialog::Accepted ) {
+                folders = selectHistogramItemsWindow->getSelectedItems();
+                if(folders.isEmpty()) {
                     this->mainWindow->printConsole(trUtf8("<font color=red>No selected items</font>"));
-                    delete telaGet;
+                    delete selectHistogramItemsWindow;
                     return NULL;
                 }
-                delete telaGet;
+                delete selectHistogramItemsWindow;
             } else {
-                delete telaGet;
+                delete selectHistogramItemsWindow;
                 return NULL;
             }
         }
     } else {
-        // Relatório normal
+        // Normal report
         for( int i = 0; i < size; i++ ) {
-            QString item = items.at(i);
-            int lio = item.lastIndexOf("/");
-            QString diretorioExperimento = item.left( lio );
-            items.replace(i, diretorioExperimento);
+            QString folder = folders.at(i);
+            int lio = folder.lastIndexOf("/");
+            QString expFolder = folder.left( lio );
+            folders.replace(i, expFolder);
         }
 
-        items.removeDuplicates();
+        folders.removeDuplicates();
     }
 
-    size = items.size();
+    size = folders.size();
     legends.clear();
 
     QVector<QList<DataReport* >* >* dados = new QVector<QList<DataReport* >* >();
 
-    // Constroi as legendas
     for( int i = 0; i < size; i++ ) {
-        QString dir = items.at(i);
+        // Building legends
+        QString dir = folders.at(i);
 
-        QString legenda;
+        QString legend;
         if( aop->isLatencyDistribution() ) {
             int lio = dir.lastIndexOf("/");
-            QString diretorioExperimento = dir.left( lio );
-            legenda = aop->getLegend( diretorioExperimento );
+            QString expFolder = dir.left( lio );
+            legend = aop->getLegend( expFolder );
         } else {
-            legenda = aop->getLegend( dir );
+            legend = aop->getLegend( dir );
         }
 
 
 
-        if( legenda.isEmpty() ) {
+        if( legend.isEmpty() ) {
             if(aop->isLatencyDistribution()) {
-                legenda = QString("Histogram#%1").arg(i+1);
+                legend = QString("Histogram#%1").arg(i+1);
             } else {
-                legenda = QString("Config#%1").arg(i+1);
+                legend = QString("Config#%1").arg(i+1);
             }
         }
 
-        if( legends.contains( legenda ) ) {
-            legenda += QString("#%1").arg(i+1);
+        if( legends.contains( legend ) ) {
+            legend += QString("#%1").arg(i+1);
         }
 
         if( aop->isLatencyDistribution() ) {
             int lio = dir.lastIndexOf("/") + 1;
-            legenda += QString(" @ %1").arg( dir.mid(lio) );
+            legend += QString(" @ %1").arg( dir.mid(lio) );
         }
 
-        legends.append(legenda);
+        legends.append(legend);
 
 
-        // Identificando arquivo a ser lido
+        // Identifying file to be read
         QString filename = dir+"/Results";
         switch( aop->getFlowOp() ) {
             case AnalysisOptions::AllFlows:
@@ -2031,11 +1590,11 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
             filename += "_latency_histogram";
         }
 
-        // Normalizando String do arquivo a ser analisado
+        // Normalizing filename to be read
         QByteArray byteArrayReport = filename.toUtf8();
         const char* strFile = byteArrayReport.constData();
 
-        // Lendo arquivo
+        // Reading report file
         ReportReader* reader = new ReportReader();
         std::list<DataReport* >* dataReport = NULL;
         if( aop->isLatencyDistribution() ) {
@@ -2048,10 +1607,12 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
 
         QList<DataReport*>* data = NULL;
         if(dataReport != NULL) {
+            // Converting C stl standard list to QList
             data = new QList<DataReport *>( QList<DataReport *>::fromStdList(*dataReport) );
         }
 
         if( data == NULL ) {
+            // Deallocating data already read
             for( int x = 0; x < size; x++ ) {
                 data = dados->at(x);
                 if( data != NULL ) {

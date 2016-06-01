@@ -93,6 +93,7 @@ private:
     ThreadManager* threadManager;
     enum FinishCode{ Success = 0,ExecuteFailed, BuildFailed, InputsError, Cancel};
 
+    // Dirs and legends of experiments performed
     QList<QString*>* simulationFolders;
     QStringList legends;
 
@@ -105,11 +106,6 @@ private:
     bool saveAsConfiguration();
     bool loadConfiguration();
     bool clearTrafficPatterns();
-
-    void loadXMLStructure();
-    void saveXMLStructure();
-    TrafficParameters* parseTrafficPattern(QXmlStreamReader* xml);
-    void writeTrafficParametersInNode(QXmlStreamWriter* xml,TrafficParameters* tp);
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 

@@ -65,7 +65,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Version 1.0</string>
+          <string>Version 1.1</string>
          </property>
         </widget>
        </item>
@@ -120,7 +120,7 @@
            <item>
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using Qt framework) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.&lt;/p&gt;&lt;p&gt;&lt;b&gt; &amp;#169; 2014 LEDS - Univali. All rights reserved.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using Qt framework) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.&lt;/p&gt;&lt;p&gt;&lt;b&gt; &amp;#169; 2014 - 2016 LEDS - Univali. All rights reserved.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -148,8 +148,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>55</width>
-            <height>16</height>
+            <width>98</width>
+            <height>28</height>
            </rect>
           </property>
          </widget>

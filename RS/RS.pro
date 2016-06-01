@@ -104,6 +104,7 @@ SOURCES +=  \
     src/Control/ExternalWaveformViewer.cpp \
     src/Control/Control.cpp \
     src/Control/SimulationPerformer.cpp \
+    src/Control/XmlConfigParser.cpp \
     src/Main.cpp
 
 # Application Headers files
@@ -154,6 +155,7 @@ HEADERS += \
     include/Control/ExternalWaveformViewer.h \
     include/Control/Control.h \
     include/Control/SimulationPerformer.h \
+    include/Control/XmlConfigParser.h \
     include/Main.h
 
 # Application configurations support

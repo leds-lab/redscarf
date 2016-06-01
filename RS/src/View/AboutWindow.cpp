@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * AboutWindow.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,6 +26,10 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+*    ||      - ||      - Sérgio Vargas Junior        |      ||
+* ----------------------------------------------------------------------------
 *
 */
 
@@ -68,15 +72,19 @@ void AboutWindow::addAuthors() {
     std::cout << "View/AboutWindow::addAuthors" << std::endl;
 #endif
 
-    QStringList autor1;
-    autor1 << trUtf8("<b>Maintener and Developer</b>") << "Cesar Albenes Zeferino" << "zeferino@univali.br";
+    QStringList author1;
+    author1 << trUtf8("<b>Maintener & Developer</b>") << "Cesar Albenes Zeferino" << "zeferino@univali.br";
 
-    QStringList autor2;
-    autor2 << trUtf8("<b>Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
+    QStringList author2;
+    author2 << trUtf8("<b>Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
+
+    QStringList author3;
+    author3 << trUtf8("<b>Developer & Documentation</b>") << "Sérgio Vargas Junior" << "@edu.univali.br";
 
 
-    authors.insert(0,autor1);
-    authors.insert(1,autor2);
+    authors.insert(0,author1);
+    authors.insert(1,author2);
+    authors.insert(2,author3);
 
 }
 
