@@ -48,12 +48,12 @@ float MathFunction::fNormal(float x, float avg, float var) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/MathFunction::fNormal" << std::endl;
 #endif
-    return exp( (-pow((x-avg),2))/(2*pow(var,2)) )/ (var*sqrt(2*PI));
+    return (float) exp( (-pow((x-avg),2))/(2*pow(var,2)) ) / (float)(var*sqrt(2*PI));
 }
 
 float MathFunction::fExponential(float x, float avg) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/MathFunction::fExponential" << std::endl;
 #endif
-    return exp((-x)/avg)/avg;
+    return (float) exp((-x)/avg)/avg;
 }

@@ -26,7 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
-*    ||      - ||      - Sérgio Vargas Junior        |      ||
+*    ||      - ||      - Sérgio Vargas Júnior        |      ||
 * ----------------------------------------------------------------------------
 *
 */

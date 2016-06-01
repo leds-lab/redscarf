@@ -128,7 +128,7 @@ int TrafficModelGenerator::functionProbability(TrafficParameters *tp) {
     unsigned long int pckInserted = 0, temp = 0, pck2Fix = 0;
 
     unsigned long int pck2Send = tp->getPackageToSend();
-    float requiredBwStdDev = tp->getRequiredBandwidthStdDeviation() / 100.0;
+    float requiredBwStdDev = tp->getRequiredBandwidthStdDeviation() / 100.0f;
 
     unsigned int probFunction = tp->getProbabilityFunction();
 
@@ -136,12 +136,12 @@ int TrafficModelGenerator::functionProbability(TrafficParameters *tp) {
     for( pckInserted = 0, i = 0; i < 100; i++ ) {
         switch( probFunction ) {
             case 0:{ // NORMAL
-                pck2SendArray[i] = (unsigned long int) roundf( (0.01 * (float) pck2Send *
+                pck2SendArray[i] = (unsigned long int) roundf( (0.01f * (float) pck2Send *
                         MathFunction::fNormal(requiredBwArray[i],requiredBw,requiredBwStdDev)) );
                 break;
             }
             case 1: // EXPONENTIAL
-                pck2SendArray[i] = (unsigned long int) roundf( (0.01 * pck2Send *
+                pck2SendArray[i] = (unsigned long int) roundf( (0.01f * pck2Send *
                         MathFunction::fExponential(requiredBwArray[i],requiredBw)) );
                 break;
         }
@@ -158,11 +158,11 @@ int TrafficModelGenerator::functionProbability(TrafficParameters *tp) {
             if(pck2Fix > 0) {
                 switch(probFunction) {
                     case 0: // NORMAL
-                        temp = (unsigned long int) roundf((0.01 * pck2Fix *
+                        temp = (unsigned long int) roundf((0.01f * pck2Fix *
                                 MathFunction::fNormal(requiredBwArray[i],requiredBw,requiredBwStdDev)));
                         break;
                     case 1: // EXPONENTIAL
-                        temp = (unsigned long int) roundf((0.01 * pck2Fix *
+                        temp = (unsigned long int) roundf((0.01f * pck2Fix *
                                 MathFunction::fExponential(requiredBwArray[i],requiredBw)));
                         break;
                 }
@@ -217,7 +217,7 @@ void TrafficModelGenerator::removeZeroPayloadPacket(TrafficParameters *tp) {
     for( i = 0; i < tp->getNumberRates(); i++) {
         switch (tp->getInjectionType()) {
             case 2: // Variable message size - Fix idle time
-                temp = (1.0/tp->requiredBandwidthArray[i]-1.0);
+                temp = (1.0f/tp->requiredBandwidthArray[i]-1.0f);
                 tp->setPayloadLength( (unsigned int) (tp->getIdleTime() / (numberCyclesPerFlit * (temp)))-1 );
                 break;
             case 3: // Variable message size - Fix message inter-arrival
@@ -244,7 +244,7 @@ unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned i
 // If application requires a bandwidth greater than the channel bandwidth it is considered
 // that 100% of the channel bandwidth is required (none idle cycle is inserted)
 
-    float tmp = (float) ( channelBw / requiredBw ) - 1.0;
+    float tmp = (float) ( channelBw / requiredBw ) - 1.0f;
 
     if( tmp < 0 ) {
         tmp = 0;
@@ -261,7 +261,7 @@ unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnIdle(unsigned i
 
     float tmp;
 
-    tmp = (float) (channelBw / requiredBw) - 1.0;
+    tmp = (float) (channelBw / requiredBw) - 1.0f;
 
     if(tmp < 0) {
         tmp = 0;
@@ -280,7 +280,7 @@ unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnInterArrival(un
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::calculatePayloadLengthBasedOnInterArrival" << std::endl;
 #endif
-    return (unsigned int) (iat / numberCyclesPerFlit) * (requiredBw/channelBw);
+    return (unsigned int) (iat / numberCyclesPerFlit) * (unsigned int) (requiredBw/channelBw);
 
 }
 
@@ -461,7 +461,7 @@ void TrafficModelGenerator::generateVariableRate() throw (const char*) {
                         if( tp->getInjectionType() != 0 /*CONSTANT*/  ) {
                             // It fills required_bw_array
                             for(unsigned int i = 0; i < 100; i++) {
-                                this->requiredBwArray[i] = ((float)i+1)/100.0; // required_bw_array[i+1] + 0.01
+                                this->requiredBwArray[i] = ((float)i+1)/100.0f; // required_bw_array[i+1] + 0.01
                             }
 
                             // It fills pck_2send_array by using a probability function

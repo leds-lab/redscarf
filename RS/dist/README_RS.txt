@@ -5,7 +5,7 @@
 ////      Univali - University of Vale do Itajai              ////
 ////                   Brazil - Santa Catarina                ////
 //// Mainteiner: Cesar Albenes Zeferino {zeferino@univali.br} ////
-////   Copyright(C) 2015 LEDS-Univali. All rights reserved.   ////
+////Copyright(C) 2014 - 2016 LEDS-Univali. All rights reserved////
 //////////////////////////////////////////////////////////////////
 
 

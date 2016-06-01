@@ -9,7 +9,7 @@ July 14th, 2015
 -------------- First refactoring --------------
 Version 1.1
 Released by Eduardo Alves da Silva & 
-            Sérgio Vargas Junior
+            Sérgio Vargas Júnior
 First refactoring on RedScarf
 - The class Control was refactored.
 - The class XmlConfigParser was created.
@@ -18,7 +18,6 @@ duplicate code in: Control::viewReport,
 Control::generateCSVSimulationReport and
 QwtPlotter::viewGraphic was removed.
 - The class ReportReader was created.
-- 
 
-May 30th, 2016
+May 31th, 2016
 -----------------------------------------------

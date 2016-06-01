@@ -28,7 +28,7 @@
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
-*    ||      - ||      - Sérgio Vargas Junior        |      ||
+*    ||      - ||      - Sérgio Vargas Júnior        |      ||
 * ----------------------------------------------------------------------------
 *
 */
@@ -76,10 +76,10 @@ void AboutWindow::addAuthors() {
     author1 << trUtf8("<b>Maintener & Developer</b>") << "Cesar Albenes Zeferino" << "zeferino@univali.br";
 
     QStringList author2;
-    author2 << trUtf8("<b>Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
+    author2 << trUtf8("<b>Main Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
 
     QStringList author3;
-    author3 << trUtf8("<b>Developer & Documentation</b>") << "Sérgio Vargas Junior" << "@edu.univali.br";
+    author3 << trUtf8("<b>Developer & Documentation</b>") << "Sérgio Vargas Júnior" << "sergiovargas@edu.univali.br";
 
 
     authors.insert(0,author1);

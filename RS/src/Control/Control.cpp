@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * Control.cpp
-* Copyright (C) 2014-2016 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -28,7 +28,7 @@
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
-*    ||      - ||      - Sérgio Vargas Junior        |      ||
+*    ||      - ||      - Sérgio Vargas Júnior        |      ||
 * ----------------------------------------------------------------------------
 *
 */
