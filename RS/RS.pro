@@ -36,7 +36,7 @@
 
 # Qt Modules
 QT       = core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # Qt 5
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport # Qt 5
 
 
 # Template default for applications
@@ -93,9 +93,9 @@ SOURCES +=  \
     src/View/ReportDialog.cpp \
     src/View/TrafficConfigurationDialog.cpp \
     src/View/MainWindow.cpp \
+    src/View/Plotter.cpp \
+    src/View/CustomPlotter.cpp \
     src/Control/Builder.cpp \
-    src/Control/GnuPlotPlotter.cpp \
-    src/Control/Plotter.cpp \
     src/Control/ThreadManager.cpp \
     src/Control/WaveformViewer.cpp \
     src/Control/Analyzer.cpp \
@@ -105,7 +105,8 @@ SOURCES +=  \
     src/Control/Control.cpp \
     src/Control/SimulationPerformer.cpp \
     src/Control/XmlConfigParser.cpp \
-    src/Main.cpp
+    src/Main.cpp \
+    src/View/qcustomplot.cpp
 
 # Application Headers files
 HEADERS += \
@@ -144,9 +145,9 @@ HEADERS += \
     include/View/PreviewDialog.h \
     include/View/TrafficConfigurationDialog.h \
     include/View/MainWindow.h \
+    include/View/Plotter.h \
+    include/View/CustomPlotter.h \
     include/Control/Builder.h \
-    include/Control/GnuPlotPlotter.h \
-    include/Control/Plotter.h \
     include/Control/ThreadManager.h \
     include/Control/WaveformViewer.h \
     include/Control/Analyzer.h \
@@ -156,7 +157,8 @@ HEADERS += \
     include/Control/Control.h \
     include/Control/SimulationPerformer.h \
     include/Control/XmlConfigParser.h \
-    include/Main.h
+    include/Main.h \
+    include/View/qcustomplot.h
 
 # Application configurations support
 CONFIG += qt
@@ -167,7 +169,7 @@ CONFIG += thread
 QWT_PATH =
 isEmpty(QWT_PATH){
 # Show error message if QWT_PATH is no defined
-    error("QWT library path not defined in file RS.pro line 163")
+    error("QWT library path not defined in file RS.pro line 169")
 } else {
 # Show a message with QWT_PATH defined
     message(Qwt Path: $$QWT_PATH)
@@ -190,7 +192,8 @@ FORMS  += \
     forms/TrafficConfigurationDialog.ui \
     forms/FoldersConfigurationPage.ui \
     forms/GeneralConfigurationPage.ui \
-    forms/MainWindow.ui
+    forms/MainWindow.ui \
+    forms/Plotter.ui
 
 # Application resources files (.qrc)
 RESOURCES += resources/Icons.qrc

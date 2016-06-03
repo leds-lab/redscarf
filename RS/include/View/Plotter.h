@@ -1,6 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
-* GnuPlotPlotter.h
+* Plotter.h
 * Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
@@ -30,24 +30,34 @@
 */
 
 
-#ifndef GNUPLOTPLOTTER_H
-#define GNUPLOTPLOTTER_H
+#ifndef PLOTTER_H
+#define PLOTTER_H
 
-#include "include/Control/Plotter.h"
+#include <QMainWindow>
 
-#include <QProcess>
+class AnalysisOptions;
+class DataReport;
 
-class GnuPlotPlotter : public Plotter {
+namespace Ui {
+    class Plotter;
+}
+
+class Plotter : public QMainWindow {
     Q_OBJECT
-private:
-    static unsigned int XCOL[4];
-    static unsigned int YCOL[8];
+protected:
+    Ui::Plotter* ui;
 
 public:
-    GnuPlotPlotter(QObject* parent);
+    explicit Plotter(QWidget *parent = 0);
 
-    void viewGraphic(AnalysisOptions* aop, QStringList dir);
+    virtual void viewGraphic(QVector<QList<DataReport *>* >* data,AnalysisOptions* aop,QStringList legends) = 0;
+
+    virtual void exportGraphic(QImage image) = 0;
+
+signals:
+    void finished(int);
+    void sendMessage(QString);
 
 };
 
-#endif // GNUPLOTPLOTTER_H
+#endif // PLOTTER_H

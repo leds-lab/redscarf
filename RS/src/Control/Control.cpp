@@ -56,8 +56,6 @@
 #include "include/Control/ThreadManager.h"
 #include "include/Control/WaveformViewer.h"
 #include "include/Control/ExternalWaveformViewer.h"
-#include "include/Control/Plotter.h"
-#include "include/Control/GnuPlotPlotter.h"
 #include "include/Control/Analyzer.h"
 #include "include/Control/EnvironmentConfiguration.h"
 #include "include/Control/FolderCompressor.h"
@@ -72,6 +70,7 @@
 #include "include/View/GetSelectedItemsDialog.h"
 #include "include/View/ConfigDialog.h"
 #include "include/View/QwtPlotter.h"
+#include "include/View/CustomPlotter.h"
 #include <QInputDialog>
 
 // Model
@@ -1457,8 +1456,8 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 #ifdef GNUPLOT
         plotter = new GnuPlotPlotter(this);
 #else
-//        plotter =  new CustomPlotter(mainWindow);
-        plotter =  new QwtPlotter(mainWindow);
+        plotter =  new CustomPlotter(mainWindow);
+//        plotter =  new QwtPlotter(mainWindow);
 #endif
         connect(plotter,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
         connect(plotter,SIGNAL(finished(int)),plotter,SLOT(deleteLater()));

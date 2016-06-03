@@ -33,7 +33,7 @@
 #define QWTPLOTTER_H
 
 #include <QMainWindow>
-#include "include/Control/Plotter.h"
+#include "include/View/Plotter.h"
 #include <QVariant>
 
 class QwtPlot;

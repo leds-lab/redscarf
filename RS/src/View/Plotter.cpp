@@ -29,16 +29,21 @@
 *
 */
 
-#include "include/Control/Plotter.h"
+#include "include/View/Plotter.h"
 #include "include/View/AnalysisOptions.h"
+
+#include "ui_Plotter.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif
 
-Plotter::Plotter(QObject *parent) : QObject(parent)
-{
+Plotter::Plotter(QWidget *parent) : QMainWindow(parent),ui(new Ui::Plotter) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Constructor Class Control/WaveformViewer" << std::endl;
+    std::cout << "Constructor Class Control/Plotter" << std::endl;
 #endif
+    ui->setupUi(this);
+
 }
+
+
