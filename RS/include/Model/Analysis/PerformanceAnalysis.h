@@ -108,14 +108,14 @@ private:
     float             accRequiredBw;		//! Accumulated bandwidth required by all the packets
     float             avgRequiredBw;		//! Avergage bandwidth required by all the packets
     unsigned long int accNbOfPck;           //! Sum of all the number of packets
-    unsigned long int simulatedTimeCycles;  //! Total simulation time in cycles
-    unsigned long int simulatedTimeNs;      //! Total simulation time in ns
+    unsigned long long simulatedTimeCycles; //! Total simulation time in cycles
+    unsigned long long simulatedTimeNs;     //! Total simulation time in ns
     unsigned long int accNbOfFlits;         //! Accumulated number of flits
-    unsigned long int startCycle;			//! First cycle of a packet
-    unsigned long int endCycle;             //! Last  cycle of a packet
-    unsigned long int smallestStartCycle;   //! First cycle of simulation (considering only the packets to be analized) - Alternative 1: when there is no previous processing
-    unsigned long int smallestEndCycle;     //! First cycle of simulation (considering only the packets to be analized) - Alternative 2: when a packet is created after a processing
-    unsigned long int biggestEndCycle;      //! Last  cycle of simulation (considering only the packets to be analized)
+    unsigned long long startCycle;			//! First cycle of a packet
+    unsigned long long endCycle;            //! Last  cycle of a packet
+    unsigned long long smallestStartCycle;  //! First cycle of simulation (considering only the packets to be analized) - Alternative 1: when there is no previous processing
+    unsigned long long smallestEndCycle;    //! First cycle of simulation (considering only the packets to be analized) - Alternative 2: when a packet is created after a processing
+    unsigned long long biggestEndCycle;     //! Last  cycle of simulation (considering only the packets to be analized)
 
     // Variables to collect data for perfomance analysis of individual flows
     unsigned long int*** flowAccNbOfPck;

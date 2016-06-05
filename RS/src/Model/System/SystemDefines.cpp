@@ -108,7 +108,7 @@ unsigned int SystemDefines::size(const std::map<unsigned int, std::string> &m) c
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/SystemConfiguration/SystemDefines::size" << std::endl;
 #endif
-    return m.size();
+    return (unsigned int) m.size();
 }
 
 bool SystemDefines::keyExist(const std::map<unsigned int, std::string> &m, unsigned int key) const {

@@ -89,7 +89,7 @@ protected:
 public:
     TrafficModelGenerator(SystemParameters* sp, Experiment* exp, TrafficPatternManager *gpt);
 
-    void generateTraffic(const char* diretorio) throw (const char* );
+    virtual void generateTraffic(const char* diretorio) throw (const char* );
 
     virtual ~TrafficModelGenerator();
 

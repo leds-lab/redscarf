@@ -120,7 +120,7 @@ public:
      * at the destination and packet creation at source, less one.
      * \return Packet latency in cycles
      */
-    virtual inline unsigned long int getLatency() { return this->getCycleReceivedTrailer() - this->getCycleCreationPacket() + 1; }
+    virtual inline unsigned long int getLatency() { return (unsigned long int)(this->getCycleReceivedTrailer() - this->getCycleCreationPacket() + 1); }
 
     /*!
      * \brief getNumberOfRoutersInPath Method to get the number of routers in path

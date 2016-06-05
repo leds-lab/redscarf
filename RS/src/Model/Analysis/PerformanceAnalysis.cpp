@@ -195,7 +195,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
     unsigned int      ySource = 0;
     unsigned int      flowId = 0;
     unsigned int      trafficClass = 0;
-    unsigned long long deadline = 0;
+    unsigned long     deadline = 0;
     unsigned long long cycleCreationPacket = 0;
     unsigned long long cycleReceivedHeader = 0;
     unsigned long long cycleReceivedTrailer = 0;
@@ -364,7 +364,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
     unsigned int totalNbOfPckRcvd = 0;
     for( x = 0; x < xSize; x++ ) {
         for( y = 0; y < ySize; y++) {
-            totalNbOfPckRcvd += this->packets[x][y]->size();
+            totalNbOfPckRcvd += (unsigned int) this->packets[x][y]->size();
         }
     }
 
@@ -380,7 +380,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
     unsigned long int latency = 0;
     for( x = 0; x < xSize; x++ ) {
         for( y = 0; y < ySize; y++ ) {
-            unsigned int nbOfPacketsReceived = this->packets[x][y]->size();
+            unsigned int nbOfPacketsReceived = (unsigned int) this->packets[x][y]->size();
             for( i = 0; i < nbOfPacketsReceived; i++) {
                 PacketInfo* pckInf = this->packets[x][y]->at(i);
                 unsigned int trafficClass = pckInf->getTrafficClass();
@@ -390,7 +390,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
 
                     // Accumulated required BW
                     accRequiredBw += pckInf->getRequiredBandwidth();
-                    classAccRequiredBw[trafficClass] += pckInf->getRequiredBandwidth();
+                    classAccRequiredBw[trafficClass] += (unsigned long) pckInf->getRequiredBandwidth();
 
                     // Packet latency in cycles
                     latency = pckInf->getLatency();
@@ -463,13 +463,13 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
     else
         simulatedTimeCycles = biggestEndCycle - smallestEndCycle;// + 1;// - smallestStartCycle + 1;
 
-    simulatedTimeNs     = simulatedTimeCycles * tClk;
+    simulatedTimeNs     = simulatedTimeCycles * (unsigned long) tClk;
 
     // It calculates the accepted traffic
     acceptedTrafficFlits = (float) accNbOfFlits/(float)(xSize*ySize)/(float)simulatedTimeCycles;
 //    qDebug() << QString("Simulated time cycles: %1").arg(simulatedTimeCycles);
     sprintf(str,"%.4f",acceptedTrafficFlits);
-    float tmpFloat = atof(str);
+    float tmpFloat = (float) atof(str);
     acceptedTrafficBps = (float) (tmpFloat*(dataWidth*fClk));
 
     // It calculates the average latency
@@ -481,7 +481,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
         // It calculates the accepted traffic for the current class
         classAcceptedTrafficFlits[trafficClass] = (float) classAccNbOfFlits[trafficClass]/(float)(xSize*ySize)/(float)simulatedTimeCycles;
         sprintf(str,"%.4f",classAcceptedTrafficFlits[trafficClass]);
-        tmpFloat = atof(str);
+        tmpFloat = (float) atof(str);
         classAcceptedTrafficBps[trafficClass] = (float) (tmpFloat*(dataWidth*fClk));
 
         // It calculates the average latency for the current class
@@ -494,7 +494,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
     //////////////////////////////////////////////////////////////////////////////
     for( x = 0; x < xSize; x++ ) {
         for( y = 0; y < ySize; y++ ) {
-            unsigned int nbOfPacketsReceived = this->packets[x][y]->size();
+            unsigned int nbOfPacketsReceived = (unsigned int) this->packets[x][y]->size();
             for( i = 0; i < nbOfPacketsReceived; i++) {
                 PacketInfo* pckInf = this->packets[x][y]->at(i);
                 if( (pckInf->getReceivedPacketId() > ((unsigned long int)(lower * nbOfPacketsReceived)))
@@ -521,7 +521,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
 
     // It initializes the counters
     // Global latency range counters
-    latencyRngInc = (unsigned long int) roundf( ((float) maxLatency - minLatency ) / 100.0 );
+    latencyRngInc = (unsigned long int) roundf( ((float) maxLatency - minLatency ) / 100.0f );
 
     if( latencyRngInc < 1 ) {
         latencyRngInc = 1;
@@ -541,7 +541,8 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
 
     // Global latency range counters for each traffic class
     for( unsigned int trafficClass = 0; trafficClass < MAX_CLASSES; trafficClass++ ) {
-        classLatencyRngInc[trafficClass] = (unsigned long int) roundf( ((float) classMaxLatency[trafficClass] - classMinLatency[trafficClass]) / 100.0 );
+        classLatencyRngInc[trafficClass] = (unsigned long int) roundf( ((float) classMaxLatency[trafficClass]
+                                                                  - classMinLatency[trafficClass]) / 100.0f );
 
         if( classLatencyRngInc[trafficClass] < 1 ) {
             classLatencyRngInc[trafficClass] = 1;
@@ -550,14 +551,15 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
         classLatencyRngPcks[trafficClass][0] = 0;
 
         for( i = 1; i < 100; i++ ) {
-            classLatencyRng[trafficClass][i] = classLatencyRng[trafficClass][i-1] + classLatencyRngInc[trafficClass];
+            classLatencyRng[trafficClass][i] = classLatencyRng[trafficClass][i-1]
+                    + classLatencyRngInc[trafficClass];
             classLatencyRngPcks[trafficClass][i] = 0;
         }
     }
 
     for( x = 0; x < xSize; x++ ) {
         for( y = 0; y < ySize; y++ ) {
-            unsigned int nbOfPacketsReceived = this->packets[x][y]->size();
+            unsigned int nbOfPacketsReceived = (unsigned int) this->packets[x][y]->size();
             for( i = 0; i < nbOfPacketsReceived; i++) {
                 PacketInfo* pckInf = this->packets[x][y]->at(i);
                 unsigned int trafficClass = pckInf->getTrafficClass();
@@ -597,7 +599,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
         }
     }
 
-    idealAverageLatency = idealAccLatency / accNbOfPck;
+    idealAverageLatency = (float) idealAccLatency / (float) accNbOfPck;
 
     for( unsigned int i = 0; i < MAX_CLASSES; i++ ) {
         if( accPckWithDeadline[i] > 0 ) {
@@ -664,7 +666,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeIndividualFlows() {
             /// FLOW's 1st SCAN: It determines the average latency and the accepted traffic
             ///
             //////////////////////////////////////////////////////////////////////////////
-            unsigned int nbOfPacketsReceived = this->packets[x][y]->size();
+            unsigned int nbOfPacketsReceived = (unsigned int) this->packets[x][y]->size();
             unsigned long int latency = 0;
             for( i = 0; i < nbOfPacketsReceived; i++ ) {
                 PacketInfo* pckInf = this->packets[x][y]->at(i);
@@ -676,7 +678,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeIndividualFlows() {
                 if( (pckInf->getReceivedPacketId() > ((unsigned long int)(lower*nbOfPacketsReceived)))
                   &&(pckInf->getReceivedPacketId() <= ((unsigned long int)(upper*nbOfPacketsReceived))) ) {
 
-                    flowAccRequiredBw[xSrc][ySrc][flowId] += pckInf->getRequiredBandwidth();
+                    flowAccRequiredBw[xSrc][ySrc][flowId] += (unsigned long) pckInf->getRequiredBandwidth();
 
                     // Packet latency in cycles
                     latency = pckInf->getLatency();
@@ -731,7 +733,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeIndividualFlows() {
 
             // It calculates the target metrics of this scan
             simulatedTimeCycles = biggestEndCycle - smallestStartCycle + 1;
-            simulatedTimeNs     = simulatedTimeCycles * tClk;
+            simulatedTimeNs     = simulatedTimeCycles * (unsigned long) tClk;
 
             for (xSrc = 0; xSrc < xSize; xSrc++) {
                 for (ySrc = 0; ySrc < ySize; ySrc++) {
