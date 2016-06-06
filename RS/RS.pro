@@ -165,9 +165,10 @@ CONFIG += thread
 
 # Qwt graphics root folder
 QWT_PATH =
+QWT_PATH.linenum = $$_LINE_
 isEmpty(QWT_PATH){
 # Show error message if QWT_PATH is no defined
-    error("QWT library path not defined in file RS.pro line 163")
+    error(QWT library path not defined in file RS.pro. Please define the path above of line $${QWT_PATH.linenum} )
 } else {
 # Show a message with QWT_PATH defined
     message(Qwt Path: $$QWT_PATH)
