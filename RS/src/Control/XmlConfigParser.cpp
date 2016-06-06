@@ -44,6 +44,11 @@
 #include "include/Model/Traffic/TrafficPatternDefines.h"
 #include "include/Control/Control.h"
 
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
+
+
 XmlConfigParser::XmlConfigParser(SystemParameters *sp, TrafficPatternManager *tpm, ExperimentManager *em) :
         systemParameters(sp),trafficPatternManager(tpm),expManager(em) {
 #ifdef DEBUG_POINTS_METHODS

@@ -1441,8 +1441,6 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 
     if( !analysisOk ) {
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible plot graphic because there is not analysis results</font>") );
-        delete aop;
-        return;
     } else {
 
         QVector<QList<DataReport *> *> *data = getReportData(aop);
@@ -1612,6 +1610,7 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
 
         if( data == NULL ) {
             // Deallocating data already read
+            size = dados->size();
             for( int x = 0; x < size; x++ ) {
                 data = dados->at(x);
                 if( data != NULL ) {
@@ -1626,7 +1625,6 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
             }
             dados->clear();
             delete dados;
-            delete aop;
             return NULL;
         }
 
@@ -1643,8 +1641,6 @@ void Control::viewReport(AnalysisOptions *aop) {
 
     if( !analysisOk ) {
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible show report because there is not analysis results</font>") );
-        delete aop;
-        return;
     } else {
         QVector<QList<DataReport* >* >* data = getReportData(aop);
         if( data == NULL) {
@@ -1655,7 +1651,6 @@ void Control::viewReport(AnalysisOptions *aop) {
             repDial->setWindowModality(Qt::NonModal);
             repDial->show();
         }
-
     }
     delete aop;
 }
@@ -1909,6 +1904,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     if(data == NULL) {
         this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)."
                                                               "</br >Therefore can not generate the CSV report.</font>"));
+        delete aop;
         return;
     }
 
