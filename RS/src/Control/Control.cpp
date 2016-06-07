@@ -1612,6 +1612,7 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
         }
 
         if( data == NULL ) {
+            size = dados->size();
             // Deallocating data already read
             for( int x = 0; x < size; x++ ) {
                 data = dados->at(x);
@@ -1644,12 +1645,11 @@ void Control::viewReport(AnalysisOptions *aop) {
 
     if( !analysisOk ) {
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible show report because there is not analysis results</font>") );
-        delete aop;
-        return;
     } else {
         QVector<QList<DataReport* >* >* data = getReportData(aop);
         if( data == NULL) {
             this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
+            return;
         } else {
             ReportDialog* repDial = new ReportDialog(legends,data,mainWindow);
             connect(repDial,SIGNAL(rejected()),repDial,SLOT(deleteLater()));

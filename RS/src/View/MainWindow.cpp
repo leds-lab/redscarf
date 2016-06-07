@@ -601,7 +601,7 @@ void MainWindow::initConsole() {
     cursor.insertHtml(trUtf8("<b><font size=4>__/_/_/_/<font color=red> RedScarf </font>\\_\\_\\_\\__</font></b>"));
     cursor.insertHtml(trUtf8("<br /><font color=black>The <i>bagual</i> NoC Simulator</font>"));
     cursor.insertHtml(trUtf8("<br /><img src=\":/icons/icons/apresentacao.png\" />"));
-    cursor.insertHtml(trUtf8("<br />All rights reserved &#169; 2014 LEDS - University of Vale do Itajaí<br/>- Laboratory of Embedded and Distributed Systems"));
+    cursor.insertHtml(trUtf8("<br />All rights reserved &#169; 2014 - 2016 LEDS - University of Vale do Itajaí<br/>- Laboratory of Embedded and Distributed Systems"));
     cursor.setBlockFormat(headFormat);
 
     cursor.insertBlock();

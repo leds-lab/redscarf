@@ -38,6 +38,11 @@
 #include <cstdlib>
 #include <clocale>
 
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
+
+
 ReportReader::ReportReader() {}
 
 std::list<DataReport *>* ReportReader::readReport(const char *file) {
