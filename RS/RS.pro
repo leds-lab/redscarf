@@ -240,7 +240,7 @@ CONFIG(release, debug|release) {
 # Debug options. Active methods traceability
 debug {
     CONFIG  += warn_on
-    DEFINES += DEBUG_POINTS_METHODS
+#    DEFINES += DEBUG_POINTS_METHODS
 
     message(Qt version: $$[QT_VERSION])
     message(Qt is installed in $$[QT_INSTALL_PREFIX])

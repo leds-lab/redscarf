@@ -46,6 +46,7 @@
 #include <QElapsedTimer>
 #include <QTextStream>
 #include <QSettings>
+#include <QDateTime>
 #include <math.h>
 
 // Control
@@ -1704,6 +1705,7 @@ void Control::loadSimulationResults() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::loadSimulationResults" << std::endl;
 #endif
+    // TODO: Refatorar e criar classe para tratar apenas do arquivamento e carregamento de simulações realizadas
 
     if( this->mainWindow->isWindowModified() ) {
         switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
@@ -1727,8 +1729,14 @@ void Control::loadSimulationResults() {
         return;
     }
 
+    // Get date and time
+    QDateTime dateTime = QDateTime::currentDateTime();
+    // Get a string with date and time in ISO format
+    QString dateTimeDir = dateTime.toString(Qt::ISODate);
+    dateTimeDir.replace(':','-');
+    workDirSimulationLoaded = conf->getWorkFolder() + "/SimulationsLoaded/@" + dateTimeDir + "/";
     FolderCompressor* fc = new FolderCompressor( FolderCompressor::Decompress,
-                        filename, conf->getWorkFolder() + "/SimulationsLoaded");
+                        filename, workDirSimulationLoaded );
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
 
 
@@ -1834,11 +1842,11 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
     this->mainWindow->printConsole( (success ? successMsg : failureMsg) );
 
     if( opType == 2 ) { // Decompress operation
-        QString workDir = conf->getWorkFolder() + "/SimulationsLoaded/";
+
         if( configFile ) {
             delete configFile;
         }
-        configFile = new QFile( workDir + RESULT_SIMLATION_SETUP_FILENAME );
+        configFile = new QFile( workDirSimulationLoaded + RESULT_SIMLATION_SETUP_FILENAME );
 
         bool recoverFolders = true;
 
@@ -1851,7 +1859,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         delete configFile;
         configFile = NULL;
 
-        QFile* tmp = new QFile( workDir + RESULT_SIMULATION_DIRS_FILENAME );
+        QFile* tmp = new QFile( workDirSimulationLoaded + RESULT_SIMULATION_DIRS_FILENAME );
 
         if( !tmp->open(QIODevice::ReadOnly | QIODevice::Text) ) {
             this->mainWindow->printConsole(trUtf8("<font color=red>It is not possible load results.</font>"));
@@ -1885,7 +1893,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
             }
             simulationFolders = new QList<QString*>();
             for( int i = 0; i < dirs.size(); i++ ) {
-                QString* dir = new QString( workDir + dirs.at(i) );
+                QString* dir = new QString( workDirSimulationLoaded + dirs.at(i) );
                 simulationFolders->append( dir );
             }
         }

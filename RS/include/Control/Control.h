@@ -100,6 +100,7 @@ private:
     // Dirs and legends of experiments performed
     QList<QString*>* simulationFolders;
     QStringList legends;
+    QString workDirSimulationLoaded;
 
     QElapsedTimer* timer;
 
