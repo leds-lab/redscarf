@@ -106,7 +106,8 @@ SOURCES +=  \
     src/Control/SimulationPerformer.cpp \
     src/Control/XmlConfigParser.cpp \
     src/Main.cpp \
-    src/View/qcustomplot.cpp
+    src/View/qcustomplot.cpp \
+    src/View/CustomPlotZoom.cpp
 
 # Application Headers files
 HEADERS += \
@@ -158,7 +159,8 @@ HEADERS += \
     include/Control/SimulationPerformer.h \
     include/Control/XmlConfigParser.h \
     include/Main.h \
-    include/View/qcustomplot.h
+    include/View/qcustomplot.h \
+    include/View/CustomPlotZoom.h
 
 # Application configurations support
 CONFIG += qt

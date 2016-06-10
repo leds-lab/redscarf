@@ -34,6 +34,7 @@
 #define PLOTTER_H
 
 #include <QMainWindow>
+#include "ui_Plotter.h"
 
 class AnalysisOptions;
 class DataReport;
@@ -52,7 +53,7 @@ public:
 
     virtual void viewGraphic(QVector<QList<DataReport *>* >* data,AnalysisOptions* aop,QStringList legends) = 0;
 
-    virtual void exportGraphic(QImage image) = 0;
+//    virtual void exportGraphic(QImage image) = 0;
 
 signals:
     void finished(int);

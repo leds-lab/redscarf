@@ -4,16 +4,21 @@
 #include "include/View/Plotter.h"
 
 class QDialog;
-class QCustomPlot;
+class CustomPlotZoom;
 
 class CustomPlotter : public Plotter {
+    Q_OBJECT
 private:
-    QCustomPlot *plotter;
+    CustomPlotZoom *plotter;
 
 public:
     CustomPlotter(QWidget *parent = 0);
     void viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOptions *aop, QStringList legends);
-    void exportGraphic(QImage image);
+
+private slots:
+    void enableGraph(bool toggled);
+    void updateCoordinate(QMouseEvent *event);
+    void exportGraph();
 };
 
 #endif // CUSTOMPLOTTER_H

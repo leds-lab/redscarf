@@ -32,8 +32,6 @@
 #include "include/View/Plotter.h"
 #include "include/View/AnalysisOptions.h"
 
-#include "ui_Plotter.h"
-
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif

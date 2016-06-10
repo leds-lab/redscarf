@@ -1,16 +1,30 @@
 #include "include/View/CustomPlotter.h"
-#include "include/View/qcustomplot.h"
+#include "include/View/CustomPlotZoom.h"
 #include "include/View/AnalysisOptions.h"
 #include "include/Model/Analysis/DataReport.h"
 
+//#include "ui_Plotter.h"
+
+#include <QCheckBox>
+
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
+
 CustomPlotter::CustomPlotter(QWidget* parent) : Plotter(parent) {
 
-    this->plotter = new QCustomPlot(this);
+    this->plotter = new CustomPlotZoom(this);
+    this->ui->plotWidget->layout()->addWidget(plotter);
 
-    this->setCentralWidget(plotter);
+    plotter->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    plotter->setAutoAddPlottableToLegend(true);
+    plotter->legend->setVisible(true);
+    plotter->setZoomMode(true);
 
-    //GUI
+    connect(plotter,SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(updateCoordinate(QMouseEvent*)));
 
+    QAction *exportGraph = this->ui->menubar->addAction(trUtf8("Export graph"));
+    connect(exportGraph,SIGNAL(triggered(bool)),this,SLOT(exportGraph()));
 }
 
 void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOptions *aop, QStringList legends) {
@@ -18,13 +32,22 @@ void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOp
     std::cout << "View/QwtPlotter::viewGraphic" << std::endl;
 #endif
 
-//    plotter->setTitle( aop->getTitle() );
-//    plotter->setAxisTitle( QwtPlot::yLeft, aop->getYAxisLabel() );
-//    plotter->setAxisTitle( QwtPlot::xBottom, aop->getXAxisLabel() );
+    plotter->plotLayout()->insertRow(0);
+    plotter->plotLayout()->addElement(0, 0, new QCPPlotTitle(plotter, aop->getTitle()));
+    plotter->xAxis->setLabel(aop->getXAxisLabel());
+    plotter->yAxis->setLabel(aop->getYAxisLabel());
+
     srand(time_t(NULL));
 
     for(int i = 0; i < data->size(); i++) {
         QList<DataReport *>* d = data->at(i);
+
+        QCheckBox* checkBox = new QCheckBox(legends.at(i));
+        checkBox->setProperty("index",i);
+        checkBox->setChecked(true);
+        QVBoxLayout* layout = dynamic_cast<QVBoxLayout*>(this->ui->legend->layout());
+        layout->insertWidget(i, checkBox);
+        connect(checkBox,SIGNAL(toggled(bool)),this,SLOT(enableGraph(bool)));
 
         // Start define curves
         int countData = d->size();
@@ -84,31 +107,31 @@ void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOp
         // Define point style - 5 options
         // Define line style - 5 options
         QCPScatterStyle::ScatterShape shape;
-        Qt::PenStyle lineStyle;
+        Qt::PenStyle penStyle;
         switch( i%5 ) {
             case 0:
                 shape = QCPScatterStyle::ssCircle;
-                lineStyle = Qt::SolidLine;
+                penStyle = Qt::SolidLine;
                 break;
             case 1:
                 shape = QCPScatterStyle::ssSquare;
-                lineStyle = Qt::DashLine;
+                penStyle = Qt::DashLine;
                 break;
             case 2:
                 shape = QCPScatterStyle::ssCross;
-                lineStyle = Qt::DotLine;
+                penStyle = Qt::DotLine;
                 break;
             case 3:
                 shape = QCPScatterStyle::ssTriangle;
-                lineStyle = Qt::DashDotLine;
+                penStyle = Qt::DashDotLine;
                 break;
             case 4:
                 shape = QCPScatterStyle::ssPlus;
-                lineStyle = Qt::DashDotDotLine;
+                penStyle = Qt::DashDotDotLine;
                 break;
             default:
                 shape = QCPScatterStyle::ssDiamond;
-                lineStyle = Qt::SolidLine;
+                penStyle = Qt::SolidLine;
 
         }
 
@@ -117,41 +140,72 @@ void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOp
         QColor cor = QColor( aop->getColor(i) );
         plotter->addGraph();
         plotter->graph(i)->setData(xAxis,yAxis);
-        plotter->graph(i)->setName(legends.at(i)); //verificar se name corresponde mesmo ao setTitle
-//        curve->setTitle( legends.at(i) );
+        plotter->graph(i)->setName(legends.at(i));
         plotter->graph(i)->setAntialiased(true); //verificar se é necessário
-
+        plotter->rescaleAxes();
 
         // Define point
         QCPScatterStyle scatterStyle = QCPScatterStyle(shape,cor,aop->getPointSize() * 6);
         plotter->graph(i)->setScatterStyle(scatterStyle);
-//        curve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
-//        curve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
-//        curve->setLegendIconSize( QSize(20,20) );
-        QPen pen = QPen(QBrush(cor), aop->getLineWidth(), lineStyle);
+        QPen pen = QPen(QBrush(cor), aop->getLineWidth(), penStyle);
         plotter->graph(i)->setPen(pen);
-        plotter->graph(i)->rescaleAxes();
 
-//        if( aop->isLatencyDistribution() ) {
-//           curve->setStyle( QwtPlotCurve::Sticks );
-//        }
+        if( aop->isLatencyDistribution() ) {
+            plotter->graph(i)->setLineStyle(QCPGraph::lsImpulse);
+        }
         // end
 
     }
 
-
-//    QList<QwtLegendLabel*> objList = plotter->findChildren<QwtLegendLabel*>();
-//    for( int i = 0; i < objList.size(); i++ ) {
-//        QwtLegendLabel* legLabel = objList.at(i);
-//        legLabel->setChecked(true);
-//    }
-
-//    new QwtPlotZoomer( plotter->canvas() );
     plotter->replot();
     this->show();
 
 }
 
-void CustomPlotter::exportGraphic(QImage image){
+void CustomPlotter::enableGraph(bool toggled) {
 
+    int index = sender()->property("index").toInt();
+
+    plotter->graph(index)->setVisible(toggled);
+    plotter->legend->clearItems();
+
+    for( int i = 0; i < plotter->graphCount(); i++ ) {
+        if(plotter->graph(i)->visible()){
+            plotter->graph(i)->addToLegend();
+        }
+    }
+
+    if(plotter->legend->itemCount() == 0){
+        plotter->legend->setVisible(false);
+    }else{
+        plotter->legend->setVisible(true);
+    }
+
+    plotter->replot();
+    this->show();
+}
+
+void CustomPlotter::updateCoordinate(QMouseEvent *event){
+
+    double x = plotter->xAxis->pixelToCoord(event->pos().x());
+    double y = plotter->yAxis->pixelToCoord(event->pos().y());
+
+    this->ui->statusbar->showMessage(QString("%1 , %2").arg(x).arg(y));
+}
+
+void CustomPlotter::exportGraph(){
+
+    QString selectedFilter;
+    QString fileName = QFileDialog::getSaveFileName(this,trUtf8("Export graph"), QDir::homePath(),trUtf8("PNG image (*.png);;JPG image (*.jpg);;PDF document (*.pdf)"),&selectedFilter);
+
+    if(fileName.isEmpty()) {
+        return;
+    }
+    if(selectedFilter.endsWith("(*.png)")){
+        plotter->savePng(fileName);
+    }else if(selectedFilter.endsWith("(*.jpg)")){
+        plotter->saveJpg(fileName);
+    }else if(selectedFilter.endsWith("(*.pdf)")){
+        plotter->savePdf(fileName);
+    }
 }
