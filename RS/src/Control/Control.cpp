@@ -57,8 +57,6 @@
 #include "include/Control/ThreadManager.h"
 #include "include/Control/WaveformViewer.h"
 #include "include/Control/ExternalWaveformViewer.h"
-#include "include/Control/Plotter.h"
-#include "include/Control/GnuPlotPlotter.h"
 #include "include/Control/Analyzer.h"
 #include "include/Control/EnvironmentConfiguration.h"
 #include "include/Control/FolderCompressor.h"
@@ -73,6 +71,7 @@
 #include "include/View/GetSelectedItemsDialog.h"
 #include "include/View/ConfigDialog.h"
 #include "include/View/QwtPlotter.h"
+#include "include/View/CustomPlotter.h"
 #include <QInputDialog>
 
 // Model
@@ -1443,8 +1442,6 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 
     if( !analysisOk ) {
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible plot graphic because there is not analysis results</font>") );
-        delete aop;
-        return;
     } else {
 
         QVector<QList<DataReport *> *> *data = getReportData(aop);
@@ -1458,8 +1455,8 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 #ifdef GNUPLOT
         plotter = new GnuPlotPlotter(this);
 #else
-//        plotter =  new CustomPlotter(mainWindow);
-        plotter =  new QwtPlotter(mainWindow);
+        plotter =  new CustomPlotter(mainWindow);
+//        plotter =  new QwtPlotter(mainWindow);
 #endif
         connect(plotter,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
         connect(plotter,SIGNAL(finished(int)),plotter,SLOT(deleteLater()));
@@ -1615,6 +1612,7 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
         if( data == NULL ) {
             size = dados->size();
             // Deallocating data already read
+            size = dados->size();
             for( int x = 0; x < size; x++ ) {
                 data = dados->at(x);
                 if( data != NULL ) {
@@ -1629,7 +1627,6 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
             }
             dados->clear();
             delete dados;
-            delete aop;
             return NULL;
         }
 
@@ -1657,7 +1654,6 @@ void Control::viewReport(AnalysisOptions *aop) {
             repDial->setWindowModality(Qt::NonModal);
             repDial->show();
         }
-
     }
     delete aop;
 }
@@ -1918,6 +1914,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     if(data == NULL) {
         this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)."
                                                               "</br >Therefore can not generate the CSV report.</font>"));
+        delete aop;
         return;
     }
 
