@@ -18,7 +18,11 @@ public:
 private slots:
     void enableGraph(bool toggled);
     void updateCoordinate(QMouseEvent *event);
-    void exportGraph();
+    void setFontSize(int size);
+    void changeLegendPosition(int);
+    void exportGraphic();
+    void copyGraphic();
+
 };
 
 #endif // CUSTOMPLOTTER_H

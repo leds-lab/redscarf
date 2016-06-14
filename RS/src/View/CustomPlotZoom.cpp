@@ -54,6 +54,15 @@ void CustomPlotZoom::mouseReleaseEvent(QMouseEvent * event)
 
         if(zoomRect.width() * zoomRect.height() < 100) {
             this->rescaleAxes(true);
+
+            QCPRange range = xAxis->range();
+            double unit = (range.upper - range.lower)*0.1;
+            xAxis->setRange(range.lower - unit, range.upper + unit);
+
+            range = yAxis->range();
+            unit = (range.upper - range.lower)*0.1;
+            yAxis->setRange(range.lower - unit, range.upper + unit);
+
         } else {
             xAxis->setRange(x1, x2);
             yAxis->setRange(y1, y2);

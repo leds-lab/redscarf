@@ -53,7 +53,8 @@ public:
 
     virtual void viewGraphic(QVector<QList<DataReport *>* >* data,AnalysisOptions* aop,QStringList legends) = 0;
 
-//    virtual void exportGraphic(QImage image) = 0;
+protected slots:
+    virtual void exportGraphic() = 0;
 
 signals:
     void finished(int);

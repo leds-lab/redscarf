@@ -3,8 +3,6 @@
 #include "include/View/AnalysisOptions.h"
 #include "include/Model/Analysis/DataReport.h"
 
-//#include "ui_Plotter.h"
-
 #include <QCheckBox>
 
 #ifdef DEBUG_POINTS_METHODS
@@ -12,28 +10,45 @@
 #endif
 
 CustomPlotter::CustomPlotter(QWidget* parent) : Plotter(parent) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Constructor CustomPlotter" << std::endl;
+#endif
 
     this->plotter = new CustomPlotZoom(this);
     this->ui->plotWidget->layout()->addWidget(plotter);
+    this->setWindowFlags(Qt::Window);
 
     plotter->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     plotter->setAutoAddPlottableToLegend(true);
     plotter->legend->setVisible(true);
     plotter->setZoomMode(true);
 
-    connect(plotter,SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(updateCoordinate(QMouseEvent*)));
+    setFontSize(ui->spinAxesFontSize->value());
 
-    QAction *exportGraph = this->ui->menubar->addAction(trUtf8("Export graph"));
-    connect(exportGraph,SIGNAL(triggered(bool)),this,SLOT(exportGraph()));
+    QAction* actionCopy = new QAction(trUtf8("Copy"),this);
+    actionCopy->setShortcut( QKeySequence::Copy );
+    QIcon icon = QIcon( QStringLiteral(":/icons/icons/icon_copy.png") );
+    actionCopy->setIcon( icon );
+    this->ui->menuFile->insertAction(ui->actionExit,actionCopy);
+    this->ui->toolBar->addAction(actionCopy);
+
+    this->ui->menuFile->insertSeparator(ui->actionExit);
+
+    connect(plotter,SIGNAL(mouseMove(QMouseEvent*)),this,SLOT(updateCoordinate(QMouseEvent*)));
+    connect(ui->spinAxesFontSize,SIGNAL(valueChanged(int)),this,SLOT(setFontSize(int)));
+    connect(ui->comboLegendPosition,SIGNAL(currentIndexChanged(int)),this,SLOT(changeLegendPosition(int)));
+    connect(ui->actionExport,SIGNAL(triggered()),this,SLOT(exportGraphic()));
+    connect(actionCopy,SIGNAL(triggered()),this,SLOT(copyGraphic()));
+
 }
 
 void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOptions *aop, QStringList legends) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/QwtPlotter::viewGraphic" << std::endl;
+    std::cout << "View/CustomPlotter::viewGraphic" << std::endl;
 #endif
 
-    plotter->plotLayout()->insertRow(0);
-    plotter->plotLayout()->addElement(0, 0, new QCPPlotTitle(plotter, aop->getTitle()));
+//    plotter->plotLayout()->insertRow(0);
+//    plotter->plotLayout()->addElement(0, 0, new QCPPlotTitle(plotter, aop->getTitle()));
     plotter->xAxis->setLabel(aop->getXAxisLabel());
     plotter->yAxis->setLabel(aop->getYAxisLabel());
 
@@ -157,12 +172,25 @@ void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOp
 
     }
 
+    QCPRange range;
+    double unit;
+    range = plotter->xAxis->range();
+    unit = (range.upper - range.lower)*0.1;
+    plotter->xAxis->setRange(range.lower - unit, range.upper + unit);
+
+    range = plotter->yAxis->range();
+    unit = (range.upper - range.lower)*0.1;
+    plotter->yAxis->setRange(range.lower - unit, range.upper + unit);
+
     plotter->replot();
     this->show();
 
 }
 
 void CustomPlotter::enableGraph(bool toggled) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/CustomPlotter::enableGraph" << std::endl;
+#endif
 
     int index = sender()->property("index").toInt();
 
@@ -186,6 +214,9 @@ void CustomPlotter::enableGraph(bool toggled) {
 }
 
 void CustomPlotter::updateCoordinate(QMouseEvent *event){
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/CustomPlotter::updateCoordinate" << std::endl;
+#endif
 
     double x = plotter->xAxis->pixelToCoord(event->pos().x());
     double y = plotter->yAxis->pixelToCoord(event->pos().y());
@@ -193,7 +224,10 @@ void CustomPlotter::updateCoordinate(QMouseEvent *event){
     this->ui->statusbar->showMessage(QString("%1 , %2").arg(x).arg(y));
 }
 
-void CustomPlotter::exportGraph(){
+void CustomPlotter::exportGraphic(){
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/CustomPlotter::exportGraphic" << std::endl;
+#endif
 
     QString selectedFilter;
     QString fileName = QFileDialog::getSaveFileName(this,trUtf8("Export graph"), QDir::homePath(),trUtf8("PNG image (*.png);;JPG image (*.jpg);;PDF document (*.pdf)"),&selectedFilter);
@@ -208,4 +242,46 @@ void CustomPlotter::exportGraph(){
     }else if(selectedFilter.endsWith("(*.pdf)")){
         plotter->savePdf(fileName);
     }
+}
+
+void CustomPlotter::changeLegendPosition(int comboIndex) {
+
+    switch(comboIndex) {
+        case 0: // Upper-left
+            plotter->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
+            break;
+        case 1: // Upper-right
+            plotter->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
+            break;
+        case 2: // Bottom-left
+            plotter->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignLeft);
+            break;
+        case 3: // Bottom-right
+            plotter->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignRight);
+            break;
+    }
+    plotter->replot();
+}
+
+void CustomPlotter::setFontSize(int size){
+
+    QFont fonte = this->font();
+    fonte.setPointSize(size);
+
+    plotter->legend->setFont( fonte );
+    plotter->xAxis->setTickLabelFont( fonte );
+    plotter->yAxis->setTickLabelFont( fonte );
+
+    fonte.setBold(true);
+    plotter->xAxis->setLabelFont( fonte );
+    plotter->yAxis->setLabelFont( fonte );
+
+    plotter->replot();
+
+}
+
+void CustomPlotter::copyGraphic(){
+
+    QApplication::clipboard()->setPixmap(plotter->toPixmap());
+
 }
