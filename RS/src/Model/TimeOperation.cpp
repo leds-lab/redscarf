@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
-* Main.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* TimeOperation.cpp
+* Copyright (C) 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -25,69 +25,53 @@
 * ------------------------------ Reviews -------------------------------------
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
-* 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+* ----------------------------------------------------------------------------
 *
 */
 
-#include <QFileOpenEvent>
-#include "include/Main.h"
+
+#include "include/Model/TimeOperation.h"
+
+#include <cstdio>
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif
 
-RedScarfApp::RedScarfApp(int& argc, char** argv) : QApplication(argc,argv) {
+TimeOperation::TimeOperation() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Constructor class Main" << std::endl;
+    std::cout << "Constructor Class Model/TimeOperation" << std::endl;
 #endif
-
-    setApplicationName(APPLICATION_NAME);
-    setOrganizationName("LEDS");
-
-    ctrl = new Control(&tp);
 
 }
 
-int RedScarfApp::executeApp() {
+char* TimeOperation::formatTime(unsigned long long timeMilis) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Main::executeApp" << std::endl;
+    std::cout << "Model/TimeOperation::formatTime" << std::endl;
 #endif
 
-//    app.setFont(fontApp);
-//    QFont fontApp = app.font();
-//    fontApp.setPointSize( 12 );
-    ctrl->startApp();
+    unsigned long long tempo = timeMilis / 1000;
+    unsigned int	hours, mins, secs;
+    char* str = new char[256];
 
-    return exec();
-}
+    hours = (unsigned int)( tempo/3600);
+    mins  = (unsigned int)((tempo - hours*3600)/60);
+    secs  = (unsigned int)( tempo - hours*3600 - mins*60);
 
-#ifdef Q_OS_MAC
-bool RedScarfApp::event(QEvent *event) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Main::event" << std::endl;
-#endif
-
-    switch(event->type()) {
-        case QEvent::FileOpen: {
-            QString fileToOpen = static_cast<QFileOpenEvent* >(event)->file();
-            ctrl->macOpenFile(fileToOpen);
-            break;
+    if (hours) {
+        //		sprintf(str," %d hour, %d min and %d sec (i.e. %llu seconds) ",hours, mins, secs, total_sec);
+        sprintf(str," %d h, %d m and %d s ",hours, mins, secs);
+    } else {
+        if (mins) {
+            sprintf(str," %d m and %d s ",mins, secs);
+        } else {
+            if(secs) {
+                sprintf(str," %d s ",secs);
+            } else {
+                sprintf(str," %llu ms ",timeMilis);
+            }
         }
-        default:
-            break;
     }
-    return QApplication::event(event);
-
-}
-#endif
-
-int main(int argc, char *argv[]) {
-
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Init: main" << std::endl;
-#endif
-
-    RedScarfApp app(argc,argv);
-    return app.executeApp();
-
+    return str;
 }

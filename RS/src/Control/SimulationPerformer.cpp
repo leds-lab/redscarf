@@ -30,7 +30,7 @@
 */
 
 #include "include/Control/SimulationPerformer.h"
-#include "include/Model/Util.h"
+#include "include/Model/TimeOperation.h"
 #include <QElapsedTimer>
 #include <QFile>
 #include <QTextStream>
@@ -82,7 +82,7 @@ void SimulationPerformer::execute() {
         emit this->unsuccessfullyExecution();
     } else {
         if( executor->exitStatus() == QProcess::NormalExit ) {
-            char* tempo = Util::formatTime( qlonglong(timer.elapsed()) );
+            char* tempo = TimeOperation::formatTime( qulonglong(timer.elapsed()) );
             QString temp = workSystem.left( workSystem.lastIndexOf("/") );
             temp = workSystem.mid( temp.lastIndexOf("/") + 5 );
             temp.replace("/"," @ ");

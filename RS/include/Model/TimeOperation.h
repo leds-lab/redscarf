@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
-* PersonalQwtPlotPicker.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* TimeOperation.h
+* Copyright (C) 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -25,17 +25,21 @@
 * ------------------------------ Reviews -------------------------------------
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
-* 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+* ----------------------------------------------------------------------------
 *
 */
 
-#include "include/View/PersonalQwtPlotPicker.h"
+#ifndef TIMEOPERATION_H
+#define TIMEOPERATION_H
 
-PersonalQwtPlotPicker::PersonalQwtPlotPicker(int xAxis, int yAxis, RubberBand rubberBand, DisplayMode trackerMode, QWidget* canvas)
-    :QwtPlotPicker(xAxis, yAxis, rubberBand, trackerMode, canvas) { }
 
-QwtText PersonalQwtPlotPicker::trackerTextF(const QPointF& pos) const {
-    emit mouseMoved(pos);
-    emit mouseMoved( QString("X: %1, Y: %2").arg(pos.x()).arg(pos.y()) );
-    return QwtText();
-}
+class TimeOperation {
+
+    TimeOperation();
+public:
+    static char* formatTime(unsigned long long timeMilis);
+
+};
+
+#endif // TIMEOPERATION_H

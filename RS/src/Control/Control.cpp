@@ -70,7 +70,6 @@
 #include "include/View/ReportDialog.h"
 #include "include/View/GetSelectedItemsDialog.h"
 #include "include/View/ConfigDialog.h"
-#include "include/View/QwtPlotter.h"
 #include "include/View/CustomPlotter.h"
 #include <QInputDialog>
 
@@ -81,7 +80,7 @@
 #include "include/Model/System/SystemDefines.h"
 #include "include/Model/Traffic/TrafficPatternManager.h"
 #include "include/Model/Traffic/TrafficPatternDefines.h"
-#include "include/Model/Util.h"
+#include "include/Model/TimeOperation.h"
 #include "include/Model/Analysis/DataReport.h"
 #include "include/Model/Analysis/ReportReader.h"
 
@@ -1256,7 +1255,7 @@ void Control::finishSimulation(FinishCode code) {
             mainWindow->printConsole(trUtf8("<font color=red>Inputs error</font>"));
             break;
         case Control::Success: {
-            char* tempo = Util::formatTime( qlonglong(timer->elapsed()) );
+            char* tempo = TimeOperation::formatTime( qlonglong(timer->elapsed()) );
             mainWindow->printConsole(trUtf8("<font color=blue><br />All the simulations were run in %1</font>").arg(tempo));
             delete this->threadManager;
             threadManager = NULL;
@@ -1434,7 +1433,6 @@ void Control::viewWaveform() {
 
 }
 
-//#define GNUPLOT
 void Control::viewGraphic(AnalysisOptions *aop) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::viewGraphic" << std::endl;
@@ -1452,12 +1450,8 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 
         // Selected graphic
         Plotter* plotter = NULL;
-#ifdef GNUPLOT
-        plotter = new GnuPlotPlotter(this);
-#else
         plotter =  new CustomPlotter(mainWindow);
-//        plotter =  new QwtPlotter(mainWindow);
-#endif
+
         connect(plotter,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
         connect(plotter,SIGNAL(finished(int)),plotter,SLOT(deleteLater()));
         plotter->viewGraphic(data,aop,legends);

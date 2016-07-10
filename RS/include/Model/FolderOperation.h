@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
-* Util.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* FolderOperation.h
+* Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,23 +26,26 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+* ----------------------------------------------------------------------------
+
 *
 */
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef FOLDEROPERATION_H
+#define FOLDEROPERATION_H
 
-class Util {
+class FolderOperation {
 private:
-    Util();
+    FolderOperation();
 
     static bool folderExists(const char* path);
 
 public:
 
     static bool createFolder(const char* path) throw(const char* );
-    static char* formatTime(unsigned long long timeMilis);
 
 };
 
-#endif // UTIL_H
+#endif // FOLDEROPERATION_H

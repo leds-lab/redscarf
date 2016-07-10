@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
-* Util.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* FolderOperation.cpp
+* Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,10 +26,14 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+* ----------------------------------------------------------------------------
+
 *
 */
 
-#include "include/Model/Util.h"
+#include "include/Model/FolderOperation.h"
 
 #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
   #define OS_WIN
@@ -56,17 +60,17 @@
     #include <iostream>
 #endif
 
-Util::Util() {
+FolderOperation::FolderOperation() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Constructor Class Model/Util" << std::endl;
+    std::cout << "Constructor Class Model/FolderOperation" << std::endl;
 #endif
 
 }
 
 
-bool Util::folderExists(const char *path) {
+bool FolderOperation::folderExists(const char *path) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/Util::folderExists" << std::endl;
+    std::cout << "Model/FolderOperation::folderExists" << std::endl;
 #endif
 
     if(path == NULL) {
@@ -97,9 +101,9 @@ bool Util::folderExists(const char *path) {
 
 }
 
-bool Util::createFolder(const char *path) throw(const char* ) {
+bool FolderOperation::createFolder(const char *path) throw(const char* ) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/Util::createFolder" << std::endl;
+    std::cout << "Model/FolderOperation::createFolder" << std::endl;
 #endif
 
     if(!folderExists(path)) {
@@ -122,34 +126,4 @@ bool Util::createFolder(const char *path) throw(const char* ) {
     }
     return false;
 
-}
-
-char* Util::formatTime(unsigned long long timeMilis) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/Util::formatTime" << std::endl;
-#endif
-
-    unsigned long long tempo = timeMilis / 1000;
-    unsigned int	hours, mins, secs;
-    char* str = new char[256];
-
-    hours = (unsigned int)( tempo/3600);
-    mins  = (unsigned int)((tempo - hours*3600)/60);
-    secs  = (unsigned int)( tempo - hours*3600 - mins*60);
-
-    if (hours) {
-        //		sprintf(str," %d hour, %d min and %d sec (i.e. %llu seconds) ",hours, mins, secs, total_sec);
-        sprintf(str," %d h, %d m and %d s ",hours, mins, secs);
-    } else {
-        if (mins) {
-            sprintf(str," %d m and %d s ",mins, secs);
-        } else {
-            if(secs) {
-                sprintf(str," %d s ",secs);
-            } else {
-                sprintf(str," %llu ms ",timeMilis);
-            }
-        }
-    }
-    return str;
 }

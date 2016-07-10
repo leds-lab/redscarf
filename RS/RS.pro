@@ -5,7 +5,7 @@
 #-------------------------------------------------
 #
 # RS.pro
-# Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+# Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 # Laboratory of Embedded and Distributed Systems
 # University of Vale do Itajaí
 #
@@ -30,7 +30,9 @@
 # Date       - Version - Author                      | Description
 # ----------------------------------------------------------------------------
 # 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-#
+# ----------------------------------------------------------------------------
+# 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+# ----------------------------------------------------------------------------
 #
 
 
@@ -48,7 +50,7 @@ DESTDIR = bin
 TARGET = RedScarf
 
 # Application version
-VERSION = 1.0
+VERSION = 1.1
 
 
 # Folders for compiled files (include pre-compiled)
@@ -60,7 +62,6 @@ OBJECTS_DIR = $$_PRO_FILE_PWD_/build/objs        # C++ object files (.o)
 
 # Application Sources files
 SOURCES +=  \
-    src/Model/Util.cpp \
     src/Model/Traffic/MathFunction.cpp \
     src/Model/Traffic/Node.cpp \
     src/Model/Traffic/TrafficModelGenerator.cpp \
@@ -84,8 +85,6 @@ SOURCES +=  \
     src/View/DefaultPreviewTrafficConfiguration.cpp \
     src/View/XMLPreviewTrafficConfiguration.cpp \
     src/View/AnalysisOptions.cpp \
-    src/View/QwtPlotter.cpp \
-    src/View/PersonalQwtPlotPicker.cpp \
     src/View/ConfigDialog.cpp \
     src/View/Pages.cpp \
     src/View/AboutWindow.cpp \
@@ -107,11 +106,12 @@ SOURCES +=  \
     src/Control/XmlConfigParser.cpp \
     src/Main.cpp \
     src/View/qcustomplot.cpp \
-    src/View/CustomPlotZoom.cpp
+    src/View/CustomPlotZoom.cpp \
+    src/Model/FolderOperation.cpp \
+    src/Model/TimeOperation.cpp
 
 # Application Headers files
 HEADERS += \
-    include/Model/Util.h \
     include/Model/Traffic/MathFunction.h \
     include/Model/Traffic/Node.h \
     include/Model/Traffic/TrafficModelGenerator.h \
@@ -136,8 +136,6 @@ HEADERS += \
     include/View/AnalysisOptions.h \
     include/View/DefaultPreviewTrafficConfiguration.h \
     include/View/XMLPreviewTrafficConfiguration.h \
-    include/View/QwtPlotter.h \
-    include/View/PersonalQwtPlotPicker.h \
     include/View/ConfigDialog.h \
     include/View/Pages.h \
     include/View/AboutWindow.h \
@@ -160,33 +158,14 @@ HEADERS += \
     include/Control/XmlConfigParser.h \
     include/Main.h \
     include/View/qcustomplot.h \
-    include/View/CustomPlotZoom.h
+    include/View/CustomPlotZoom.h \
+    include/Model/FolderOperation.h \
+    include/Model/TimeOperation.h
 
 # Application configurations support
 CONFIG += qt
 CONFIG += exceptions
 CONFIG += thread
-
-# Qwt graphics root folder
-QWT_PATH =
-QWT_PATH.linenum = $$_LINE_
-isEmpty(QWT_PATH){
-# Show error message if QWT_PATH is no defined
-    error(QWT library path not defined in file RS.pro. Please define the path above of line $${QWT_PATH.linenum} )
-} else {
-# Show a message with QWT_PATH defined
-    message(Qwt Path: $$QWT_PATH)
-}
-include($${QWT_PATH}/features/qwt.prf)
-
-#DEPENDPATH += $${QWT_PATH}/lib
-#mac {
-#    INCLUDEPATH += $${QWT_PATH}/lib/qwt.framework/Headers/
-#    LIBS += -F$${QWT_PATH}/lib -framework qwt
-#} else {
-#    INCLUDEPATH += $${QWT_PATH}/include
-#    LIBS += -L$${QWT_PATH}/lib -lqwt
-#}
 
 # Graphics forms (.ui)
 FORMS  += \
@@ -204,7 +183,7 @@ RESOURCES += resources/Icons.qrc
 # OS X specific settings
 mac {
     ICON = resources/icons/RedScarf_icon.icns
-    FRAMEWORK_HEADERS.version = "1.0"
+    FRAMEWORK_HEADERS.version = $$[VERSION]
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 }
 
@@ -213,7 +192,7 @@ win32 {
     QMAKE_TARGET_COMPANY = "LEDS - Laboratory of Embedded and Distributed Systems"
     QMAKE_TARGET_PRODUCT = RedScarf
     QMAKE_TARGET_DESCRIPTION = "Network-on-Chip Simulator"
-    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2015 LEDS - Univali"
+    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2014 - 2016 LEDS - Univali"
     RC_ICONS = resources/icons/RedScarf_icon.ico
 }
 

@@ -30,7 +30,7 @@
 */
 
 #include "include/Model/System/GSoC.h"
-#include "include/Model/Util.h"
+#include "include/Model/FolderOperation.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -843,7 +843,7 @@ void GSoC::generateSoC() throw (const char *){
 #endif
 
     try {
-        Util::createFolder("system");
+        FolderOperation::createFolder("system");
     } catch(const char* problem) {
         throw problem;
     }

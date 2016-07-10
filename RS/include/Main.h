@@ -63,15 +63,8 @@ public:
      * \param argc Arguments counter of command line
      * \param argv Arguments of command line
      */
-    explicit RedScarfApp(int &argc,char ** argv)
-        : QApplication(argc,argv) {
+    explicit RedScarfApp(int &argc,char ** argv);
 
-        setApplicationName(APPLICATION_NAME);
-        setOrganizationName("LEDS");
-
-        ctrl = new Control(&tp);
-
-    }
     /*!
      * \brief executeApp Start application and return
      * end state

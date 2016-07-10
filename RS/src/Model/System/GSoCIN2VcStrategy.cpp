@@ -272,7 +272,7 @@ void GSoCIN2VcStrategy::generateNoc() throw(const char* ) {
 #endif
 
     try {
-        Util::createFolder("system");
+        FolderOperation::createFolder("system");
     } catch(const char* ex) {
         throw ex;
     }

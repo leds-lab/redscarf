@@ -239,7 +239,7 @@ void GSoCINStrategy::generateNoc() throw(const char* ) {
 
     // Cria o diretrio dos arquivos a serem gerados
     try {
-        Util::createFolder("system");
+        FolderOperation::createFolder("system");
     } catch(const char* e) {
         throw e;
     }
