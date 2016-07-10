@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>Plotter</class>
  <widget class="QMainWindow" name="Plotter">
-  <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -125,8 +122,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>116</width>
-            <height>203</height>
+            <width>104</width>
+            <height>231</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -171,7 +168,7 @@
      <x>0</x>
      <y>0</y>
      <width>536</width>
-     <height>28</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
