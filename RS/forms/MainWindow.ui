@@ -284,8 +284,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>530</width>
-                   <height>529</height>
+                   <width>559</width>
+                   <height>469</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_35">
@@ -3171,7 +3171,7 @@ distribution</string>
      <x>0</x>
      <y>0</y>
      <width>932</width>
-     <height>28</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -3527,6 +3527,10 @@ distribution</string>
   <tabstop>buttonEditTrafficPattern3</tabstop>
   <tabstop>buttonPreviewDefault</tabstop>
   <tabstop>buttonXmlViewer</tabstop>
+  <tabstop>checkInExperiment2</tabstop>
+  <tabstop>checkInExperiment3</tabstop>
+  <tabstop>checkInExperiment4</tabstop>
+  <tabstop>checkInExperiment5</tabstop>
   <tabstop>comboInRouterArchitectureExp1</tabstop>
   <tabstop>comboInRouterArchitectureExp2</tabstop>
   <tabstop>comboInRouterArchitectureExp3</tabstop>
@@ -3558,27 +3562,26 @@ distribution</string>
   <tabstop>spinInOutputBuffersExp4</tabstop>
   <tabstop>spinInOutputBuffersExp5</tabstop>
   <tabstop>buttonDefaultExp1</tabstop>
-  <tabstop>checkInExperiment2</tabstop>
   <tabstop>buttonDefaultExp2</tabstop>
-  <tabstop>buttonCopyExp2</tabstop>
-  <tabstop>checkInExperiment3</tabstop>
   <tabstop>buttonDefaultExp3</tabstop>
-  <tabstop>buttonCopyExp3</tabstop>
-  <tabstop>checkInExperiment4</tabstop>
   <tabstop>buttonDefaultExp4</tabstop>
-  <tabstop>buttonCopyExp4</tabstop>
-  <tabstop>checkInExperiment5</tabstop>
   <tabstop>buttonDefaultExp5</tabstop>
+  <tabstop>buttonCopyExp2</tabstop>
+  <tabstop>buttonCopyExp3</tabstop>
+  <tabstop>buttonCopyExp4</tabstop>
   <tabstop>buttonCopyExp5</tabstop>
   <tabstop>comboInSimulationStopMethod</tabstop>
   <tabstop>spinBoxStopTimeNs</tabstop>
   <tabstop>spinBoxStopTimeCycles</tabstop>
   <tabstop>comboInVCDGenerationOptions</tabstop>
   <tabstop>doubleSpinInChannelFclkRange</tabstop>
+  <tabstop>doubleSpinInChannelFclkRange_2</tabstop>
   <tabstop>comboInStep</tabstop>
   <tabstop>doubleSpinInStep</tabstop>
   <tabstop>doubleSpinInChannelTclkRange</tabstop>
+  <tabstop>doubleSpinInChannelTclkRange_2</tabstop>
   <tabstop>doubleSpinInChannelBWRange</tabstop>
+  <tabstop>doubleSpinInChannelBWRange_2</tabstop>
   <tabstop>buttonRunSimulation</tabstop>
   <tabstop>buttonCancel</tabstop>
   <tabstop>spinBoxInitPacketsAnalyze</tabstop>
