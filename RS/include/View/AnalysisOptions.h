@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end refactoring
 *
 */
 
-#ifndef ANALYSISOPTIONS_H
-#define ANALYSISOPTIONS_H
+#ifndef __ANALYSISOPTIONS_H__
+#define __ANALYSISOPTIONS_H__
 
 #include <QString>
 #include <QColor>
@@ -42,16 +43,17 @@ public:
     enum FlowOptions { AllFlows=0, RT0, RT1, nRT0, nRT1,Specified };
 
     AnalysisOptions();
-    AnalysisOptions(bool routerArchitecture,bool routingAlgorithm,bool flowControl,
-            bool arbiterType,bool inputBuffers,bool outputBuffers,float lineWidth,
+    AnalysisOptions(bool topology,bool routingAlgorithm,bool flowControl,
+            bool arbiterType,bool vcOp,bool inputBuffers,bool outputBuffers,float lineWidth,
             float pointSize,int xSrc,int ySrc,int xDest,int yDest,int trafficPattern,
             QString xAxisLabel,QString yAxisLabel,int xAxis,int yAxis,QString title,
             FlowOptions flowOp,QColor* color[5],bool latencyDistribution);
 
-    inline void setRouterArchitecture(bool check) { this->routerArchitecture = check; }
+    inline void setTopology(bool check) { this->topology = check; }
     inline void setRoutingAlgorithm(bool check) { this->routingAlgorithm = check; }
     inline void setFlowControl(bool check) { this->flowControl = check; }
     inline void setArbiterType(bool check) { this->arbiterType = check; }
+    inline void setVcOp(bool check) { this->vcOp = check; }
     inline void setInputBuffers(bool check) { this->inputBuffers = check; }
     inline void setOutputBuffers(bool check) { this->outputBuffers = check; }
     inline void setLatencyDistribution(bool check) { this->latencyDistribution = check; }
@@ -70,24 +72,25 @@ public:
     inline void setXAxis(int x) {this->xAxis = x;}
     inline void setYAxis(int y) {this->yAxis = y;}
 
-    inline bool isRouterArchitecture() { return this->routerArchitecture; }
-    inline bool isRoutingAlgorithm() { return this->routingAlgorithm; }
-    inline bool isFlowControl() { return this->flowControl; }
-    inline bool isArbiterType() { return this->arbiterType; }
-    inline bool isInputBuffers() { return this->inputBuffers; }
-    inline bool isOutputBuffers() { return this->outputBuffers; }
-    inline bool isLatencyDistribution() { return this->latencyDistribution; }
-    inline float getLineWidth() { return this->lineWidth; }
-    inline float getPointSize() { return this->pointSize; }
-    inline int getXSrc() { return this->xSrc; }
-    inline int getYSrc() { return this->ySrc; }
-    inline int getXDest() { return this->xDest; }
-    inline int getYDest() { return this->yDest; }
-    inline int getTrafficPattern() { return this->trafficPattern; }
-    inline QString getXAxisLabel() { return this->xAxisLabel; }
-    inline QString getYAxisLabel() { return this->yAxisLabel; }
-    inline FlowOptions getFlowOp() { return this->flowOp; }
-    inline QString getTitle() { return this->title; }
+    inline bool isTopology() const { return this->topology; }
+    inline bool isRoutingAlgorithm() const { return this->routingAlgorithm; }
+    inline bool isFlowControl() const { return this->flowControl; }
+    inline bool isArbiterType() const { return this->arbiterType; }
+    inline bool isVcOp() const { return this->vcOp; }
+    inline bool isInputBuffers() const { return this->inputBuffers; }
+    inline bool isOutputBuffers() const { return this->outputBuffers; }
+    inline bool isLatencyDistribution() const { return this->latencyDistribution; }
+    inline float getLineWidth() const { return this->lineWidth; }
+    inline float getPointSize() const { return this->pointSize; }
+    inline int getXSrc() const { return this->xSrc; }
+    inline int getYSrc() const { return this->ySrc; }
+    inline int getXDest() const { return this->xDest; }
+    inline int getYDest() const { return this->yDest; }
+    inline int getTrafficPattern() const { return this->trafficPattern; }
+    inline QString getXAxisLabel() const { return this->xAxisLabel; }
+    inline QString getYAxisLabel() const { return this->yAxisLabel; }
+    inline FlowOptions getFlowOp() const { return this->flowOp; }
+    inline QString getTitle() const { return this->title; }
     QColor getColor(int index);
     inline int getXAxis() {return this->xAxis;}
     inline int getYAxis() {return this->yAxis;}
@@ -96,10 +99,11 @@ public:
     static QStringList getVisibleStrings(const QStringList dirs);
 
 private:
-    bool routerArchitecture;
+    bool topology;
     bool routingAlgorithm;
     bool flowControl;
     bool arbiterType;
+    bool vcOp;
     bool inputBuffers;
     bool outputBuffers;
     bool latencyDistribution;

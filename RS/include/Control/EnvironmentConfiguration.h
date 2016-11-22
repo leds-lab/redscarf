@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef ENVIRONMENTCONFIGURATION_H
-#define ENVIRONMENTCONFIGURATION_H
+#ifndef __ENVIRONMENTCONFIGURATION_H__
+#define __ENVIRONMENTCONFIGURATION_H__
 
 #include <QObject>
 #include <QMap>
@@ -40,7 +41,7 @@
  * \brief The EnvironmentConfiguration class contains the main options
  * to environment setup.
  *
- * The options configurable are SystemC folder, MinGW folder (in Windows)
+ * The options configurable are Simulator location, plugins folder, waveform tool
  * and environment language.
  *
  * This class also is responsible by load language options available.
@@ -51,8 +52,8 @@ class EnvironmentConfiguration : public QObject {
     Q_OBJECT
 
 private:
-    QString systemCFolder;
-    QString minGWFolder;
+    QString simulatorLocation;
+    QString pluginsFolders;
     QString waveformTool;
     QString workFolder;
     QPair<QString,QStringList> language;
@@ -74,15 +75,15 @@ public:
     explicit EnvironmentConfiguration(QObject *parent = 0,bool loadConf = false);
 
     /*!
-     * \brief getSystemCFolder Get a string with absolute path of SystemC root folder.
-     * \return SystemC root folder.
+     * \brief getSimulatorLocation Get a string with absolute path of simulator location.
+     * \return Simulator location.
      */
-    inline QString getSystemCFolder() const { return this->systemCFolder; }
+    inline QString getSimulatorLocation() const { return this->simulatorLocation; }
     /*!
      * \brief getMinGWFolder Get a string with absolute path of MinGW root folder (only Windows)
      * \return MinGW root folder
      */
-    inline QString getMinGWFolder() const { return this->minGWFolder; }
+    inline QString getPluginsFolder() const { return this->pluginsFolders; }
     /*!
      * \brief getWaveformTool Get a string with absolute path of Waveform tool executable
      * \return Path of executable Waveform tool
@@ -125,15 +126,15 @@ public:
     QStringList getLanguageNames() const;
 
     /*!
-     * \brief setSystemCFolder Set the SystemC root folder
-     * \param folder SystemC root folder
+     * \brief setSimulatorLocation Set the simulator location
+     * \param location New simulator location
      */
-    inline void setSystemCFolder(const QString folder) { this->systemCFolder = folder; }
+    inline void setSimulatorLocation(const QString location) { this->simulatorLocation = location; }
     /*!
      * \brief setMinGWFolder Set the MinGW root folder (only Windows)
      * \param folder MinGW folder
      */
-    inline void setMinGWFolder( const QString folder ) { this->minGWFolder = folder; }
+    inline void setPluginsFolder( const QString folder ) { this->pluginsFolders = folder; }
     /*!
      * \brief setWaveformTool Set the path for WaveformTool executable
      * \param executablePath Executable path

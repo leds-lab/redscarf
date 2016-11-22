@@ -60,14 +60,11 @@ void ExternalWaveformViewer::viewWaveform(QString dir) {
     connect(externalWaveformViewer,SIGNAL(readyRead()),this,SLOT(readReady()));
     connect(externalWaveformViewer,SIGNAL(error(QProcess::ProcessError)),this,SLOT(erroOnExecute(QProcess::ProcessError)));
     // "-a ../list_nodes.sav"  -- argumento para gtkwave
-    QString command = QString("%1 %2/waves.vcd ").arg(toolExe).arg(dir);//.arg(args);
+    QString command = QString("%1 %2/snocs_wave.vcd ").arg(toolExe).arg(dir);//.arg(args);
     for( int i = 0; i < args.size(); i++) {
         command += QString("%1 ").arg(args.at(i));
     }
     externalWaveformViewer->start(command);
-
-//    args.append(QString("%1/waves.vcd").arg(dir));
-//    externalWaveformViewer->start(toolExe,args);
 }
 
 void ExternalWaveformViewer::erroOnExecute(QProcess::ProcessError error) {

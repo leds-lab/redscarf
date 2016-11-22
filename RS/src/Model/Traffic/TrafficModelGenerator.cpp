@@ -45,6 +45,8 @@
     #include <iostream>
 #endif
 
+#define COORDINATE_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
+
 TrafficModelGenerator::TrafficModelGenerator(SystemParameters *sp, Experiment *exp, TrafficPatternManager *gpt) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/TrafficModelGenerator" << std::endl;
@@ -1134,9 +1136,10 @@ void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio
         throw buffer;
     }
 
-    for( unsigned int x = 0; x < sp->getXSize(); x++ ) {
-        for( unsigned int y = 0; y < sp->getYSize(); y++ ) {
-            fprintf(arquivo,"tg_%u_%u\n",x,y);
+    for( unsigned int y = 0; y < sp->getYSize(); y++ ) {
+        for( unsigned int x = 0; x < sp->getXSize(); x++ ) {
+            unsigned int id = COORDINATE_TO_ID(x,y,sp->getXSize());
+            fprintf(arquivo,"tg_%u\n",id);
             Node* no = gpt->getNode(x,y);
             if( no != NULL ) {
                 fprintf(arquivo,"%u\n",no->getNumberFlows());
@@ -1150,21 +1153,22 @@ void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio
     }
     fprintf(arquivo,"\n\n// Parameters");
     fprintf(arquivo,"\n 0  type");
-    fprintf(arquivo,"\n 1  x_dest");
-    fprintf(arquivo,"\n 2  y_dest");
-    fprintf(arquivo,"\n 3  flow_id");
-    fprintf(arquivo,"\n 4  traffic_class");
-    fprintf(arquivo,"\n 5  switching_type");
-    fprintf(arquivo,"\n 6  pck_2send");
-    fprintf(arquivo,"\n 7  deadline");
-    fprintf(arquivo,"\n 8  required_bw");
-    fprintf(arquivo,"\n 9  payload_length");
-    fprintf(arquivo,"\n10  idle_cycles");
-    fprintf(arquivo,"\n11  iat");
-    fprintf(arquivo,"\n12  burst_size");
-    fprintf(arquivo,"\n13  last_payload_length");
-    fprintf(arquivo,"\n14  alfa_on");
-    fprintf(arquivo,"\n15  alfa_off");
+//    fprintf(arquivo,"\n 1  x_dest");
+//    fprintf(arquivo,"\n 2  y_dest");
+    fprintf(arquivo,"\n 1  destination");
+    fprintf(arquivo,"\n 2  flow_id");
+    fprintf(arquivo,"\n 3  traffic_class");
+    fprintf(arquivo,"\n 4  switching_type");
+    fprintf(arquivo,"\n 5  pck_2send");
+    fprintf(arquivo,"\n 6  deadline");
+    fprintf(arquivo,"\n 7  required_bw");
+    fprintf(arquivo,"\n 8  payload_length");
+    fprintf(arquivo,"\n 9  idle_cycles");
+    fprintf(arquivo,"\n10  iat");
+    fprintf(arquivo,"\n11  burst_size");
+    fprintf(arquivo,"\n12  last_payload_length");
+    fprintf(arquivo,"\n13  alfa_on");
+    fprintf(arquivo,"\n14  alfa_off");
 
     fclose(arquivo);
 }
@@ -1176,10 +1180,13 @@ void TrafficModelGenerator::writeFlow(TrafficParameters *tp, unsigned int type, 
 
     char str[512];
 
-    sprintf(str,"%u  %u  %u  %u  %u  %u  %lu  %lu  %.4f  %u  %u  %u  %u  %u  %.2f  %.2f  \n",
+    unsigned int id = COORDINATE_TO_ID(tp->getDestinationNodeX(),tp->getDestinationNodeY(),sp->getXSize());
+
+    sprintf(str,"%u  %u  %u  %u  %u  %lu  %lu  %.4f  %u  %u  %u  %u  %u  %.2f  %.2f  \n",
             type,                       // Type = 0 when not pareto distribution, TypeOfInjection when pareto distribution
-            tp->getDestinationNodeX(),  // x_dest
-            tp->getDestinationNodeY(),  // y_dest
+//            tp->getDestinationNodeX(),  // x_dest
+//            tp->getDestinationNodeY(),  // y_dest
+            id,
             this->numTrafficPatter,     // flow_id
             tp->getTrafficClass(),      // traffic_class
             tp->getSwitchingTechnique(),// switching_type

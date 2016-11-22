@@ -27,6 +27,7 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
 *
 */
@@ -344,13 +345,18 @@ void XmlConfigParser::saveXML(QFile *file) {
     for( unsigned int i = 1u; i <= 5u; i++ ) {
         Experiment* exp = this->expManager->getExperiment(i);
         if( exp != NULL ) {
+            SystemDefines::Topology topology = defSys->findTopology( exp->getTopology() );
+            SystemDefines::Routing routing = defSys->findRoutingAlgorithm( topology.getTopology() );
+            SystemDefines::FlowControl flowControl = defSys->findFlowControl( exp->getFlowControl() );
+            SystemDefines::PriorityGenerator pg = defSys->findArbiterPG( exp->getArbiterType() );
             xml->writeStartElement("experiment");
             xml->writeAttribute( "index", QString::number(i) );
             xml->writeAttribute( "active", (exp->isActive() ? "true":"false" ) );
-            xml->writeAttribute( "routerArchitecture",QString::fromStdString(defSys->findRouterArchitectures( exp->getRouterArchitecture() )) );
-            xml->writeAttribute( "routingAlgorithm", QString::fromStdString(defSys->findRoutingAlgorithms( exp->getRoutingAlgorithm() )) );
-            xml->writeAttribute( "flowControl", QString::fromStdString(defSys->findFlowControls( exp->getFlowControl() )) );
-            xml->writeAttribute( "arbiterType", QString::fromStdString(defSys->findArbiterTypes( exp->getArbiterType() )) );
+            xml->writeAttribute( "topology", topology.getTopology() );
+            xml->writeAttribute( "routingAlgorithm", routing.getRoutingAlgorithm(exp->getRoutingAlgorithm()) );
+            xml->writeAttribute( "flowControl", flowControl.getFlowControl() );
+            xml->writeAttribute( "arbiterType", pg.getPG() );
+            xml->writeAttribute( "vcOption",defSys->findVcOption( exp->getVCOption() ) );
             xml->writeAttribute( "inputBuffers", QString::number( exp->getInputBufferSize() ) );
             xml->writeAttribute( "outputBuffers", QString::number( exp->getOutputBufferSize() ) );
             xml->writeEndElement();
@@ -474,16 +480,18 @@ void XmlConfigParser::loadXML(QFile *file) {
             if( name == "experiment" ) {
                 Experiment* experiment = new Experiment;
                 experiment->setActive( (attributes.value("active").toString() == "true" ? true : false) );
-                unsigned int option = def->getKeyArbiterTypes( attributes.value("arbiterType").toString().toStdString() );
+                unsigned int option = def->getKeyArbiterPG(attributes.value("arbiterType").toString());
                 experiment->setArbiterType( option == SystemDefines::ERROR ? 0 : option );
-                option = def->getKeyFlowControls( attributes.value("flowControl").toString().toStdString() );
+                option = def->getKeyFlowControl(attributes.value("flowControl").toString());
                 experiment->setFlowControl( option == SystemDefines::ERROR ? 0 : option );
                 experiment->setInputBufferSize( attributes.value("inputBuffers").toString().toUInt() );
                 experiment->setOutputBufferSize( attributes.value("outputBuffers").toString().toUInt() );
-                option = def->getKeyRouterArchitectures( attributes.value("routerArchitecture").toString().toStdString() );
-                experiment->setRouterArchitecture( option == SystemDefines::ERROR ? 0 : option );
-                option = def->getKeyRoutingAlgorithms( attributes.value("routingAlgorithm").toString().toStdString() );
+                option = def->getKeyVcOption( attributes.value("vcOption").toString() );
+                experiment->setVCOptions( option == SystemDefines::ERROR ? 0 : option );
+                option = def->getKeyRoutingAlgorithm(attributes.value("routingAlgorithm").toString()).second;
                 experiment->setRoutingAlgorithm( option == SystemDefines::ERROR ? 0 : option );
+                option = def->getKeyTopology( attributes.value("topology").toString() );
+                experiment->setTopology( option == SystemDefines::ERROR ? 0 : option );
 
                 this->expManager->insertExperiment(attributes.value("index").toString().toUInt(),experiment);
             }

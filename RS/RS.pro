@@ -50,7 +50,7 @@ DESTDIR = bin
 TARGET = RedScarf
 
 # Application version
-VERSION = 1.1
+VERSION = 2.0
 
 
 # Folders for compiled files (include pre-compiled)
@@ -70,10 +70,6 @@ SOURCES +=  \
     src/Model/Traffic/TrafficPatternManager.cpp \
     src/Model/System/Defines.cpp \
     src/Model/System/Experiment.cpp \
-    src/Model/System/GSoC.cpp \
-    src/Model/System/GSoCIN2VcStrategy.cpp \
-    src/Model/System/GSoCINStrategy.cpp \
-    src/Model/System/SoCINGenerationStrategy.cpp \
     src/Model/System/SystemParameters.cpp \
     src/Model/System/SystemDefines.cpp \
     src/Model/System/ExperimentManager.cpp \
@@ -94,7 +90,6 @@ SOURCES +=  \
     src/View/MainWindow.cpp \
     src/View/Plotter.cpp \
     src/View/CustomPlotter.cpp \
-    src/Control/Builder.cpp \
     src/Control/ThreadManager.cpp \
     src/Control/WaveformViewer.cpp \
     src/Control/Analyzer.cpp \
@@ -120,11 +115,6 @@ HEADERS += \
     include/Model/Traffic/TrafficPatternManager.h \
     include/Model/System/Defines.h \
     include/Model/System/Experiment.h \
-    include/Model/System/GNoC.h \
-    include/Model/System/GSoC.h \
-    include/Model/System/GSoCIN2VcStrategy.h \
-    include/Model/System/GSoCINStrategy.h \
-    include/Model/System/SoCINGenerationStrategy.h \
     include/Model/System/SystemParameters.h \
     include/Model/System/SystemDefines.h \
     include/Model/System/ExperimentManager.h \
@@ -146,7 +136,6 @@ HEADERS += \
     include/View/MainWindow.h \
     include/View/Plotter.h \
     include/View/CustomPlotter.h \
-    include/Control/Builder.h \
     include/Control/ThreadManager.h \
     include/Control/WaveformViewer.h \
     include/Control/Analyzer.h \
@@ -166,6 +155,7 @@ HEADERS += \
 CONFIG += qt
 CONFIG += exceptions
 CONFIG += thread
+CONFIG += c++11
 
 # Graphics forms (.ui)
 FORMS  += \
@@ -224,7 +214,7 @@ CONFIG(release, debug|release) {
 # Debug options. Active methods traceability
 debug {
     CONFIG  += warn_on
-#    DEFINES += DEBUG_POINTS_METHODS
+    DEFINES += DEBUG_POINTS_METHODS
 
     message(Qt version: $$[QT_VERSION])
     message(Qt is installed in $$[QT_INSTALL_PREFIX])

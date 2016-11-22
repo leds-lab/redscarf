@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef EXPERIMENT_H
-#define EXPERIMENT_H
+#ifndef __EXPERIMENT_H__
+#define __EXPERIMENT_H__
 
 #include <sstream>
 
@@ -40,10 +41,11 @@ private:
 
     bool active;
 
-    unsigned int routerArchitecture;    // Router Architecture
+    unsigned int topology;              // Topology
     unsigned int routingAlgorithm;      // Routing Algorithm
     unsigned int flowControl;           // Flow Control ( Switching )
     unsigned int arbiterType;           // Arbiter type
+    unsigned int virtualChannelsOption; // Router Architecture
     unsigned int inputBufferSize;       // Depth of the input buffers
     unsigned int outputBufferSize;      // Depth of the output buffers
 
@@ -52,19 +54,21 @@ public:
 
     // Seters
     inline void setActive            (bool state              ) { this->active             = state      ; }
-    inline void setRouterArchitecture(unsigned int router     ) { this->routerArchitecture = router     ; }
+    inline void setTopology          (unsigned int topology   ) { this->topology           = topology   ; }
     inline void setRoutingAlgorithm  (unsigned int algorithm  ) { this->routingAlgorithm   = algorithm  ; }
     inline void setFlowControl       (unsigned int flowControl) { this->flowControl        = flowControl; }
     inline void setArbiterType       (unsigned int arbiter    ) { this->arbiterType        = arbiter    ; }
+    inline void setVCOptions         (unsigned int vcOp       ) { this->virtualChannelsOption = vcOp    ; }
     inline void setInputBufferSize   (unsigned int inputSize  ) { this->inputBufferSize    = inputSize  ; }
     inline void setOutputBufferSize  (unsigned int outputSize ) { this->outputBufferSize   = outputSize ; }
 
     // Geters
     inline bool         isActive             () const { return this->active            ; }
-    inline unsigned int getRouterArchitecture() const { return this->routerArchitecture; }
+    inline unsigned int getTopology          () const { return this->topology          ; }
     inline unsigned int getRoutingAlgorithm  () const { return this->routingAlgorithm  ; }
     inline unsigned int getFlowControl       () const { return this->flowControl       ; }
     inline unsigned int getArbiterType       () const { return this->arbiterType       ; }
+    inline unsigned int getVCOption          () const { return this->virtualChannelsOption; }
     inline unsigned int getInputBufferSize   () const { return this->inputBufferSize   ; }
     inline unsigned int getOutputBufferSize  () const { return this->outputBufferSize  ; }
 

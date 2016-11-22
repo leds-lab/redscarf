@@ -29,13 +29,14 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
 *
 */
 
 
-#ifndef CONTROL_H
-#define CONTROL_H
+#ifndef __CONTROL_H__
+#define __CONTROL_H__
 
 #include <QObject>
 
@@ -50,7 +51,6 @@ class TrafficParameters;
 class ExperimentManager;
 class DataReport;
 // Control
-class Builder;
 class SimulationPerformer;
 class ThreadManager;
 class EnvironmentConfiguration;
@@ -68,6 +68,7 @@ QT_END_NAMESPACE
 const QString DEFAULT_CONFIGURATION_FILE = "etc/DefaultConfiguration.drsf";
 const QString APPLICATION_NAME = "RedScarf";
 const QString WORK_DIR = "RedScarf_workspace";
+const QString SIMULATOR_CONF_FILE = "simconf.conf";
 const QString RESULT_SIMLATION_SETUP_FILENAME = "Configuration.rsf";
 const QString RESULT_SIMULATION_DIRS_FILENAME = "SimulationFolders.dir";
 
@@ -90,15 +91,13 @@ private:
     // Control
     QFile* configFile;
     EnvironmentConfiguration* conf;
-    Builder* builder;
-    bool buildSuccessfully;
 
     QList<SimulationPerformer *>* exes;
     ThreadManager* threadManager;
-    enum FinishCode{ Success = 0,ExecuteFailed, BuildFailed, InputsError, Cancel};
+    enum FinishCode{ Success = 0,ExecuteFailed, InputsError, Cancel};
 
     // Dirs and legends of experiments performed
-    QList<QString*>* simulationFolders;
+    QList<QString>* simulationFolders;
     QStringList legends;
     QString workDirSimulationLoaded;
 
@@ -204,6 +203,7 @@ private slots:
     void applyTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
     void applyAndReplicateTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
     void previewTrafficConfiguration(int typePreview);
+    void generateTrafficConfigurationFile();
 
     // System simulation
     void experimentStateChanged(int numExperiment,bool state);
@@ -216,10 +216,7 @@ private slots:
     void fClkLastUpdated(double newValue);
     void fClkStepUpdated(double newValue);
     void fClkStepTypeUpdated(int newValue);
-    void runBuilder();
-    void buildUnsuccessfull();
-    void finishBuilding();
-    void receiveDirsExecution(QList<QString*>* dirs);
+    void runSimulations();
     void cancelSimulation();
     void removeExe(QObject*);
     void finishExecution();
@@ -232,7 +229,6 @@ private slots:
     void viewGraphic(AnalysisOptions* aop);
     void viewReport(AnalysisOptions* aop);
     void analysisEnd(bool success);
-
 
     // Environment Options
     void applySettings(EnvironmentConfiguration*, QString languageName);

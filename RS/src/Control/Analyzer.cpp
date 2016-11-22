@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -39,7 +40,7 @@
     #include <iostream>
 #endif
 
-Analyzer::Analyzer(QList<QString*>* analysisFolders, unsigned int xSize,
+Analyzer::Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
                    unsigned int ySize, unsigned int dataWidth, float lower,
                    float upper, QObject* parent)
     : QObject(parent) {
@@ -69,19 +70,19 @@ void Analyzer::analyze() {
 
     for (int i = 0; i < analysisFolders->size(); i++) {
         bool falhaAnalise;
-        QString* diretorioAnalise = analysisFolders->at(i);
-        int lio = diretorioAnalise->lastIndexOf("/");
-        QString diretorioExperimento = diretorioAnalise->left(lio);
+        QString diretorioAnalise = analysisFolders->at(i);
+        int lio = diretorioAnalise.lastIndexOf("/");
+        QString diretorioExperimento = diretorioAnalise.left(lio);
         QDir dirResultados = QDir(diretorioExperimento + "/Results");
         if (!dirResultados.exists()) {
             dirResultados.mkpath(".");
         }
-        QDir dirAnalise = QDir((*diretorioAnalise) + "/Results");
+        QDir dirAnalise = QDir(diretorioAnalise + "/Results");
         if (!dirAnalise.exists()) {
             dirAnalise.mkpath(".");
         }
         // Obtendo dados a partir do diretorio de analise
-        float fClk = diretorioAnalise->mid(lio + 1, diretorioAnalise->size() - lio - 4).toFloat();
+        float fClk = diretorioAnalise.mid(lio + 1, diretorioAnalise.size() - lio - 4).toFloat();
         float tClk = (1.0 / fClk) * 1000.0;
         unsigned long channelBw = fClk * dataWidth;
         QString auxiliarExperimento = diretorioExperimento.right(
@@ -90,13 +91,12 @@ void Analyzer::analyze() {
         // profundidade dos buffers de saída
         QStringList configuracao = auxiliarExperimento.split("_");
         unsigned int flowControlType =
-                SystemDefines::getInstance()->getKeyFlowControls(
-                    configuracao.at(3).toStdString());
+                SystemDefines::getInstance()->getKeyFlowControl(configuracao.at(3));
         auxiliarExperimento = configuracao.at(6);
         auxiliarExperimento.remove(0, 3);
         unsigned int fifoOutDepth = auxiliarExperimento.toUInt();
 
-        QByteArray byteArrayAnalise = diretorioAnalise->toUtf8();
+        QByteArray byteArrayAnalise = diretorioAnalise.toUtf8();
         QByteArray byteArrayResultado = dirResultados.absolutePath().toUtf8();
         const char* analise = byteArrayAnalise.constData();
         const char* resultado = byteArrayResultado.constData();
@@ -107,7 +107,7 @@ void Analyzer::analyze() {
                     fifoOutDepth, flowControlType, analise, resultado);
         TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
         falhaAnalise = true;
-        QString dirAnalyzed = diretorioAnalise->mid( diretorioExperimento.lastIndexOf("/") + 5 );
+        QString dirAnalyzed = diretorioAnalise.mid( diretorioExperimento.lastIndexOf("/") + 5 );
         dirAnalyzed.replace("_"," ");
         dirAnalyzed.replace("/"," @ ");
         switch (resultAnalysis) {

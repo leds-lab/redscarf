@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -65,9 +66,9 @@ void EnvironmentConfiguration::readSetup() {
     this->threadNumber = settings.value("Threads", QThread::idealThreadCount() ).toUInt();
     settings.endGroup();
 
-    settings.beginGroup("Folders");
-    this->systemCFolder = settings.value("SystemC","").toString();
-    this->minGWFolder = settings.value("MinGW","").toString();
+    settings.beginGroup("Dirs");
+    this->simulatorLocation = settings.value("Simulator","SNoCS").toString();
+    this->pluginsFolders = settings.value("Plugins","./plugins").toString();
     this->workFolder = settings.value("Work",QDir::homePath()+"/"+WORK_DIR).toString();
     this->waveformTool = settings.value("WaveformTool","").toString();
     settings.endGroup();
@@ -93,7 +94,7 @@ void EnvironmentConfiguration::readSetup() {
 
 void EnvironmentConfiguration::writeSetup() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/EnvironmentConfiguration::writeConfigurations" << std::endl;
+    std::cout << "Control/EnvironmentConfiguration::writeSetup" << std::endl;
 #endif
 
     QSettings settings(qApp->applicationDirPath()+"/etc/config.ini",QSettings::IniFormat);
@@ -102,9 +103,9 @@ void EnvironmentConfiguration::writeSetup() {
     settings.setValue("Threads", this->threadNumber);
     settings.endGroup();
 
-    settings.beginGroup("Folders");
-    settings.setValue("SystemC",this->systemCFolder);
-    settings.setValue("MinGW",this->minGWFolder);
+    settings.beginGroup("Dirs");
+    settings.setValue("Simulator",this->simulatorLocation);
+    settings.setValue("Plugins",this->pluginsFolders);
     settings.setValue("Work",this->workFolder);
     settings.setValue("WaveformTool",this->waveformTool);
     settings.endGroup();

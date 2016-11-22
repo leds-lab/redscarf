@@ -65,8 +65,8 @@ ConfigDialog::ConfigDialog(EnvironmentConfiguration *envConf, QWidget* parent) :
     pagesWidget->addWidget(new GeneralConfigurationPage( envConf->getLanguageNames(),
                                                          envConf->getLanguageNameSelected(),
                                                          envConf->getThreadNumber(),this) );
-    pagesWidget->addWidget(new FoldersConfigurationPage(envConf->getSystemCFolder(),
-                                                        envConf->getMinGWFolder(),
+    pagesWidget->addWidget(new FoldersConfigurationPage(envConf->getSimulatorLocation(),
+                                                        envConf->getPluginsFolder(),
                                                         envConf->getWorkFolder(),
                                                         envConf->getWaveformTool(),this) );
 
@@ -178,8 +178,8 @@ void ConfigDialog::okButtonClicked() {
         // Get Folders Configuration options
         FoldersConfigurationPage* fcp = dynamic_cast<FoldersConfigurationPage*>(page);
         if( fcp ) {
-            env->setSystemCFolder( fcp->getSystemCFolder() );
-            env->setMinGWFolder( fcp->getMinGWFolder() );
+            env->setSimulatorLocation( fcp->getSimulatorLocation() );
+            env->setPluginsFolder( fcp->getPluginsFolder() );
             env->setWorkFolder( fcp->getWorkFolder() );
             env->setWaveformTool( fcp->getWaveformTool() );
             continue;

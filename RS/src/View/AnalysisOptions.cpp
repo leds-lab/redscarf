@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end refactoring
 *
 */
 
@@ -42,7 +43,7 @@ AnalysisOptions::AnalysisOptions() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor class View/GraphicOptions" << std::endl;
 #endif
-    routerArchitecture = false;
+    vcOp = false;
     routingAlgorithm = false;
     flowControl = false;
     arbiterType = false;
@@ -68,8 +69,8 @@ AnalysisOptions::AnalysisOptions() {
     srand( time(NULL) );
 }
 
-AnalysisOptions::AnalysisOptions(bool routerArchitecture, bool routingAlgorithm,
-        bool flowControl, bool arbiterType, bool inputBuffers, bool outputBuffers,
+AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
+        bool flowControl, bool arbiterType, bool vcOp, bool inputBuffers, bool outputBuffers,
         float lineWidth, float pointSize, int xSrc, int ySrc, int xDest, int yDest,
         int trafficPattern, QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis,
         QString title, FlowOptions flowOp, QColor *color[5], bool latencyDistribution) {
@@ -77,10 +78,11 @@ AnalysisOptions::AnalysisOptions(bool routerArchitecture, bool routingAlgorithm,
     std::cout << "Constructor class View/AnalysisOptions" << std::endl;
 #endif
 
-    this->routerArchitecture = routerArchitecture;
+    this->topology = topology;
     this->routingAlgorithm = routingAlgorithm;
     this->flowControl = flowControl;
     this->arbiterType = arbiterType;
+    this->vcOp = vcOp;
     this->inputBuffers = inputBuffers;
     this->outputBuffers = outputBuffers;
     this->latencyDistribution = latencyDistribution;
@@ -142,12 +144,13 @@ QString AnalysisOptions::getLegend(QString dir) const {
     QString diretorioExperimento = dir.mid( lio+1 );
     QStringList config = diretorioExperimento.split("_");
 
-    legend += ( this->routerArchitecture ? config.at(1) : "" );
+    legend += ( this->topology           ? config.at(1)     : "" );
     legend += ( this->routingAlgorithm   ? " "+config.at(2) : "" );
     legend += ( this->flowControl        ? " "+config.at(3) : "" );
     legend += ( this->arbiterType        ? " "+config.at(4) : "" );
-    legend += ( this->inputBuffers       ? " "+config.at(5) : "" );
-    legend += ( this->outputBuffers      ? " "+config.at(6) : "" );
+    legend += ( this->vcOp               ? " "+config.at(5) : "" );
+    legend += ( this->inputBuffers       ? " "+config.at(6) : "" );
+    legend += ( this->outputBuffers      ? " "+config.at(7) : "" );
 
     if (legend.startsWith(" ")) {
         legend.remove(0,1);

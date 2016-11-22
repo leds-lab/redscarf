@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef __MAINWINDOW_H__
+#define __MAINWINDOW_H__
 
 #include <QMainWindow>
 
@@ -118,6 +119,7 @@ signals:
     void trafficPatternUpdate(unsigned int posX,unsigned int posY, unsigned int trafficPattern, bool state);
     void buttonEditClicked(unsigned int posX,unsigned int posY,unsigned int trafficNum);
     void previewTrafficConfiguration(int typePreview);
+    void generateTcf();
 
     // System simulation
     void experimentStateChanged(int numExperimento,bool state);
@@ -168,21 +170,22 @@ private slots:
     void nodeSelectedUpdated(unsigned int posX,unsigned int posY);
 
     // Tab System Simulation
-    void stateChangedExperiment();
+    void experimentChangeState();
     void loadDefaultValuesExperiment();
-    void routerArchitectureChanged(int);
-    void routingAlgorithmChanged(int);
-    void flowControlChanged(int);
-    void arbiterTypeChanged(int);
-    void inputBuffersChanged(int);
-    void outputBuffersChanged(int);
+    void topologyChange(int);
+    void routingAlgorithmChange(int);
+    void flowControlChange(int);
+    void arbiterTypeChange(int);
+    void vcOptionChange(int);
+    void inputBuffersChange(int);
+    void outputBuffersChange(int);
     void copyPreviousExperimentActive();
-    void stopOptionUpdated(int);
-    void vcdOptionUpdated(int);
-    void fClkFirstUpdated(double);
-    void fClkLastUpdated(double);
-    void fClkStepUpdated(double);
-    void fClkStepTypeUpdated(int);
+    void stopOptionUpdate(int);
+    void vcdOptionUpdate(int);
+    void fClkFirstUpdate(double);
+    void fClkLastUpdate(double);
+    void fClkStepUpdate(double);
+    void fClkStepTypeUpdate(int);
     void run();
 
     // Tab Performance Analysis

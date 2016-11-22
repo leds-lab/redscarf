@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -87,7 +88,7 @@ GeneralConfigurationPage::~GeneralConfigurationPage() {
 ///------------------------------------------------------------------------------
 
 ////////////////////////// FoldersConfigurationPage //////////////////////////
-FoldersConfigurationPage::FoldersConfigurationPage(QString systemc,QString mingw,QString work,
+FoldersConfigurationPage::FoldersConfigurationPage(QString simulator,QString plugins,QString work,
                                                    QString waveformTool, QWidget *parent)
             :QWidget(parent), ui(new Ui::FoldersConfigurationPage) {
 #ifdef DEBUG_POINTS_METHODS
@@ -96,23 +97,31 @@ FoldersConfigurationPage::FoldersConfigurationPage(QString systemc,QString mingw
     ui->setupUi(this);
 
     QCompleter* folderCompleter = new QCompleter(this);
-    folderCompleter->setModel( new QDirModel(folderCompleter) );
-    ui->lineEditSystemCFolder->setCompleter( folderCompleter );
-    ui->lineEditMinGWFolder->setCompleter( folderCompleter );
+    QDirModel* dirModel = new QDirModel(this);
+    dirModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
+    folderCompleter->setModel( dirModel );
+
+    QCompleter* executableCompleter = new QCompleter(this);
+    QDirModel* exeModel = new QDirModel(this);
+    executableCompleter->setModel( exeModel );
+
+    ui->inSimulator->setCompleter( executableCompleter );
+    ui->inPlugins->setCompleter( folderCompleter );
     ui->lineEditWorkFolder->setCompleter( folderCompleter );
-    ui->lineEditWaveformTool->setCompleter(folderCompleter);
+
+    ui->lineEditWaveformTool->setCompleter(executableCompleter);
 
 #ifdef Q_OS_UNIX
     ui->widgetMinGWOption->setEnabled(false);
 #endif
 
-    ui->lineEditMinGWFolder->setText( mingw );
-    ui->lineEditSystemCFolder->setText( systemc );
+    ui->inSimulator->setText( simulator );
+    ui->inPlugins->setText( plugins );
     ui->lineEditWorkFolder->setText( work );
     ui->lineEditWaveformTool->setText(waveformTool);
 
-    connect(ui->toolSystemCFolderSelect,SIGNAL(clicked()),this,SLOT(selectSystemCDir()));
-    connect(ui->toolMinGWFolderSelect,SIGNAL(clicked()),this,SLOT(selectMinGWDir()));
+    connect(ui->toolSimulatorSelect,SIGNAL(clicked()),this,SLOT(selectSimulator()));
+    connect(ui->toolPluginsFolder,SIGNAL(clicked()),this,SLOT(selectPluginsFolder()));
     connect(ui->toolButtonWorkFolder,SIGNAL(clicked()),this,SLOT(selectWorkDir()));
     connect(ui->toolWaveformToolSelect,SIGNAL(clicked()),this,SLOT(selectWaveformTool()));
 }
@@ -124,21 +133,21 @@ FoldersConfigurationPage::~FoldersConfigurationPage() {
     delete ui;
 }
 
-void FoldersConfigurationPage::selectSystemCDir() {
+void FoldersConfigurationPage::selectSimulator() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/FoldersConfigurationPage::selectSystemCDir (Pages.h)" << std::endl;
+    std::cout << "View/FoldersConfigurationPage::selectSimulator (Pages.h)" << std::endl;
 #endif
 
-    ui->lineEditSystemCFolder->setText(QFileDialog::getExistingDirectory(this,trUtf8("Select the SystemC folder")));
+    ui->inSimulator->setText( QFileDialog::getOpenFileName(this,trUtf8("Select the Simulator")) );
 
 }
 
-void FoldersConfigurationPage::selectMinGWDir() {
+void FoldersConfigurationPage::selectPluginsFolder() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/FoldersConfigurationPage::selectMinGWDir (Pages.h)" << std::endl;
 #endif
 
-    ui->lineEditMinGWFolder->setText(QFileDialog::getExistingDirectory(this,trUtf8("Select the MinGW folder")));
+    ui->inPlugins->setText( QFileDialog::getExistingDirectory(this,trUtf8("Select the Plugins folder")) );
 
 }
 
@@ -161,11 +170,11 @@ void FoldersConfigurationPage::selectWorkDir() {
 
 }
 
-const QString FoldersConfigurationPage::getMinGWFolder() {
+const QString FoldersConfigurationPage::getPluginsFolder() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/FoldersConfigurationPage::getMinGWFolder (Pages.h)" << std::endl;
+    std::cout << "View/FoldersConfigurationPage::getPluginsFolder (Pages.h)" << std::endl;
 #endif
-    return ui->lineEditMinGWFolder->text();
+    return ui->inPlugins->text();
 }
 
 const QString FoldersConfigurationPage::getWaveformTool() {
@@ -175,11 +184,11 @@ const QString FoldersConfigurationPage::getWaveformTool() {
     return this->ui->lineEditWaveformTool->text();
 }
 
-const QString FoldersConfigurationPage::getSystemCFolder() {
+const QString FoldersConfigurationPage::getSimulatorLocation() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/FoldersConfigurationPage::getSystemCFolder (Pages.h)" << std::endl;
+    std::cout << "View/FoldersConfigurationPage::getSimulationLocation (Pages.h)" << std::endl;
 #endif
-    return ui->lineEditSystemCFolder->text();
+    return ui->inSimulator->text();
 }
 
 const QString FoldersConfigurationPage::getWorkFolder() {

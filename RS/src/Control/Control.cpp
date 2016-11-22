@@ -29,6 +29,7 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
 *
 */
@@ -52,7 +53,6 @@
 // Control
 #include "include/Control/Control.h"
 #include "include/Control/XmlConfigParser.h"
-#include "include/Control/Builder.h"
 #include "include/Control/SimulationPerformer.h"
 #include "include/Control/ThreadManager.h"
 #include "include/Control/WaveformViewer.h"
@@ -80,6 +80,7 @@
 #include "include/Model/System/SystemDefines.h"
 #include "include/Model/Traffic/TrafficPatternManager.h"
 #include "include/Model/Traffic/TrafficPatternDefines.h"
+#include "include/Model/Traffic/TrafficModelGenerator.h"
 #include "include/Model/TimeOperation.h"
 #include "include/Model/Analysis/DataReport.h"
 #include "include/Model/Analysis/ReportReader.h"
@@ -87,6 +88,8 @@
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif
+
+#include <QDebug>
 
 Control::Control(QObject *parent) :
     QObject(parent) {
@@ -108,7 +111,6 @@ Control::Control(QObject *parent) :
     this->configFile = NULL;
     this->conf = new EnvironmentConfiguration(this,true);
 
-    this->builder = NULL;
     this->simulationFolders = NULL;
     this->threadManager = NULL;
 
@@ -124,6 +126,7 @@ Control::~Control() {
         SimulationPerformer* exe = exes->at(i);
         if( exe != NULL ) {
             exe->cancel();
+            delete exe;
         }
     }
     exes->clear();
@@ -140,14 +143,9 @@ Control::~Control() {
         delete threadManager;
     }
     if(simulationFolders != NULL) {
-        for(int i = 0; i < simulationFolders->size(); i++) {
-            QString* dir = simulationFolders->at(i);
-            delete dir;
-        }
         simulationFolders->clear();
         delete simulationFolders;
     }
-
     SystemDefines* defSis = SystemDefines::getInstance();
     delete defSis;
     TrafficPatternDefines* defPTr = TrafficPatternDefines::getInstance();
@@ -179,6 +177,7 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(trafficPatternUpdate(uint,uint,uint,bool)),this,SLOT(trafficPatternStatusChanged(uint,uint,uint,bool)));
     connect(this->mainWindow,SIGNAL(buttonEditClicked(uint,uint,uint)),this,SLOT(editTrafficPattern(uint,uint,uint)));
     connect(this->mainWindow,SIGNAL(previewTrafficConfiguration(int)),this,SLOT(previewTrafficConfiguration(int)));
+    connect(this->mainWindow,&MainWindow::generateTcf,this,&Control::generateTrafficConfigurationFile);
 
     connect(this->mainWindow,SIGNAL(experimentStateChanged(int,bool)),this,SLOT(experimentStateChanged(int,bool)));
     connect(this->mainWindow,SIGNAL(configurationExperimentChanged(int,int,int)),this,SLOT(configurationExperimentChanged(int,int,int)));
@@ -192,7 +191,8 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(fClkStepChanged(double)),this,SLOT(fClkStepUpdated(double)));
     connect(this->mainWindow,SIGNAL(fClkStepTypeChanged(int)),this,SLOT(fClkStepTypeUpdated(int)));
 
-    connect(this->mainWindow,SIGNAL(runSimulation()),this,SLOT(runBuilder()));
+    connect(this->mainWindow,&MainWindow::runSimulation,this,&Control::runSimulations);
+
     connect(this->mainWindow,SIGNAL(cancel()),this,SLOT(cancelSimulation()));
 
     connect(this->mainWindow,SIGNAL(generateAnalysis(float,float)),this,SLOT(generateAnalysis(float,float)));
@@ -254,19 +254,23 @@ void Control::startApp() {
     this->mainWindow->clearConsole();
     this->mainWindow->initConsole();
 
-    if( conf->getSystemCFolder().isEmpty() ) {
-        conf->setSystemCFolder( this->dirSetup(
-                trUtf8("Select SystemC library folder"),
-                trUtf8("SystemC folder not configured\nThe simulator is not run!")) );
+    if( conf->getSimulatorLocation().isEmpty() ) {
+        QString simulatorLocation = this->mainWindow->dialogLoadFile(trUtf8("Select Simulator executable"),"");
+        simulatorLocation = simulatorLocation.trimmed();
+        if(simulatorLocation.isEmpty()) {
+            this->mainWindow->printConsole(trUtf8("Simulator executable not configured\n"
+                                                  "The simulation wouldn't run!"),Qt::red);
+        } else {
+            conf->setSimulatorLocation( simulatorLocation );
+        }
+    }
 
+    if( conf->getPluginsFolder().isEmpty() ) {
+        conf->setPluginsFolder( this->dirSetup(
+            trUtf8("Select simulator plugins folder"),
+            trUtf8("Plugins folder not configured."
+                   "\nMaybe the simulator wouldn't run!")) );
     }
-#ifndef Q_OS_UNIX
-    if( conf->getMinGWFolder().isEmpty() ) {
-        conf->setMinGWFolder( this->dirSetup(
-            trUtf8("Select MinGW compiler folder"),
-            trUtf8("MinGW folder not configured\nThe simulator is not run!")) );
-    }
-#endif
 
     this->mainWindow->setWindowModified(false);
     this->mainWindow->show();
@@ -398,6 +402,13 @@ bool Control::clearTrafficPatterns() {
     this->mainWindow->printConsole(trUtf8("Traffic patterns clean"));
     return true;
 }
+
+/**
+ * @brief Verify if:
+ *  (1) There are some traffic pattern configured and active;
+ *  (2) There are some identical experiment configuration;
+ *  (3) The system parameters are Ok
+ */
 
 bool Control::inputsOk() {
 #ifdef DEBUG_POINTS_METHODS
@@ -948,8 +959,8 @@ void Control::configurationExperimentChanged(int opCode, int numExperiment, int 
         return;
     }
     switch(opCode) {
-        case 1: // Router architecture changed
-            exp->setRouterArchitecture( quint32(newValue) );
+        case 1: // Virtual channels option changed
+            exp->setVCOptions( quint32(newValue) );
             break;
         case 2: // Routing algorithm changed
             exp->setRoutingAlgorithm( quint32(newValue) );
@@ -965,6 +976,9 @@ void Control::configurationExperimentChanged(int opCode, int numExperiment, int 
             break;
         case 6: // Output Buffers changed
             exp->setOutputBufferSize(newValue);
+            break;
+        case 7: // Topology changed
+            exp->setTopology(newValue);
             break;
     }
 
@@ -1061,148 +1075,6 @@ void Control::copySystemParameters() {
 
 }
 
-void Control::runBuilder() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::runBuilder" << std::endl;
-#endif
-
-    /** Verifica se:
-     *  (1) Há algum padrão de tráfico ativo;
-     *  (2) Existe experimento repetido;
-     *  (3) os parâmetros do sistema estão OK
-     */
-    if( !inputsOk() ) {
-        finishSimulation( Control::InputsError );
-        return;
-    }
-
-    this->mainWindow->printConsole(trUtf8("<font color='green'>Building simulator(s)</font>"));
-
-    unsigned int numExecucoesExperimento = this->calcAmountExperimentsExecutions();
-
-#ifndef Q_OS_UNIX // Para plataforma windows é necessário o diretório do compilador
-    builder = new Builder(systemParameters,experimentManager,
-                          trafficPatternManager,numExecucoesExperimento,
-                          conf->getWorkFolder(),conf->getSystemCFolder(),conf->getMinGWFolder());
-#else
-    builder = new Builder(systemParameters,experimentManager,
-                          trafficPatternManager,numExecucoesExperimento,
-                          conf->getWorkFolder(),conf->getSystemCFolder());
-#endif
-
-    this->copySystemParameters();
-
-    QThread* threadConstrucao = new QThread(this);
-    threadConstrucao->setObjectName("Builder");
-    connect(threadConstrucao,SIGNAL(started()),builder,SLOT(execute()));
-    connect(threadConstrucao,SIGNAL(finished()),builder,SLOT(deleteLater()));
-    connect(threadConstrucao,SIGNAL(finished()),threadConstrucao,SLOT(deleteLater()));
-    connect(builder,SIGNAL(finished()),threadConstrucao,SLOT(quit()));
-    connect(builder,SIGNAL(finished()),builder,SLOT(deleteLater()));
-    connect(builder,SIGNAL(finished()),this,SLOT(finishBuilding()));
-    connect(builder,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
-    connect(builder,SIGNAL(unsuccessful()),this,SLOT(buildUnsuccessfull()));
-    connect(builder,SIGNAL(sendDirs(QList<QString*>*)),this,SLOT(receiveDirsExecution(QList<QString*>*)));
-    builder->moveToThread(threadConstrucao);
-    buildSuccessfully = true;
-    analysisOk = false;
-    // Iniciar a construção dos simuladores
-    this->mainWindow->setLimitsProgressBar(0,0);
-    this->mainWindow->setActionSaveSimulationEnabled(false);
-    this->mainWindow->setActionGenerateCSVEnabled(false);
-    threadConstrucao->start();
-
-}
-
-void Control::buildUnsuccessfull() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::buildUnsuccessfull" << std::endl;
-#endif
-    buildSuccessfully = false;
-}
-
-void Control::receiveDirsExecution(QList<QString *> *dirs) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::receiveDirsExecution" << std::endl;
-#endif
-
-    if(simulationFolders != NULL) {
-        for(int i = 0; i < simulationFolders->size(); i++) {
-            QString* dir = simulationFolders->at(i);
-            delete dir;
-        }
-        simulationFolders->clear();
-        delete simulationFolders;
-    }
-
-    this->simulationFolders = dirs;
-}
-
-void Control::finishBuilding() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::finishBuilding" << std::endl;
-#endif
-
-    this->builder = NULL;
-    // Final da construção dos simuladores
-    if( buildSuccessfully ) {
-        unsigned int numExperimentos = 0;
-        for(unsigned int i = 0; i < 5; i++) {
-            Experiment* exp = this->experimentManager->getExperiment(i);
-            if(exp != NULL) {
-                if(exp->isActive()) {
-                    numExperimentos++;
-                }
-            }
-        }
-
-        unsigned int numExecucoes = simulationFolders->size();
-        this->mainWindow->setLimitsProgressBar( 0,numExecucoes );
-
-        this->mainWindow->printConsole( trUtf8("- Number of simulations to be run: %1").arg(numExecucoes) );
-
-        /// Gerenciador de threads da execução -- o primeiro parâmetro é o número de threads para serem executadas paralelamente
-        threadManager = new ThreadManager( (int) conf->getThreadNumber() , this );
-
-        connect(threadManager,SIGNAL(allFinished()),this,SLOT(finishExecution()));
-        connect(threadManager,SIGNAL(threadFinished(int)),this,SLOT(updateStatusExecution(int)));
-
-        for(unsigned int i = 0; i < numExecucoes; i++) {
-            QString* diretorio = simulationFolders->at(i);
-            int indiceUltimoDiretorio = diretorio->lastIndexOf("/")+1;                              // - MHz == -3 chars
-            int FClk = diretorio->mid( indiceUltimoDiretorio, diretorio->size() - indiceUltimoDiretorio - 3  ).toInt();
-            float TClk = (1.0/ (float) FClk) * 1000.0;
-#ifdef Q_OS_WIN32
-            SimulationPerformer* exeSystem = new SimulationPerformer(TClk,*diretorio,conf->getMinGWFolder());
-#else
-            SimulationPerformer* exeSystem = new SimulationPerformer(TClk,*diretorio);
-#endif
-            exeSystem->setObjectName(QString("Execution%1").arg(i));
-            QThread* threadExecucao = new QThread(this);
-            threadExecucao->setObjectName(QString("Execution%1").arg(*diretorio));
-            connect(threadExecucao,SIGNAL(started()),exeSystem,SLOT(execute()));
-            connect(threadExecucao,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
-            connect(exeSystem,SIGNAL(destroyed(QObject*)),this,SLOT(removeExe(QObject*)));
-            connect(exeSystem,SIGNAL(finished()),threadExecucao,SLOT(quit()));
-            connect(exeSystem,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
-/// Dividir simuladores
-            connect(exeSystem,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
-/// Feedback individual para o usuário
-            connect(exeSystem,SIGNAL(unsuccessfullyExecution()),this,SLOT(executeUnsuccessful()));
-
-            exeSystem->moveToThread(threadExecucao);
-
-            threadManager->addPool( threadExecucao );
-            this->exes->append( exeSystem );
-        }
-        timer->start();
-        threadManager->runThreads();
-    } else {
-        this->finishSimulation(Control::BuildFailed);
-    }
-
-}
-
 void Control::updateStatusExecution(int status) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::updateStatusExecution" << std::endl;
@@ -1234,21 +1106,14 @@ void Control::finishSimulation(FinishCode code) {
 #endif
 
     switch (code) {
-        case Control::BuildFailed :
-            mainWindow->printConsole( trUtf8("<font color=red>Build Failed</font>") );
-            break;
         case Control::ExecuteFailed :
             mainWindow->printConsole(trUtf8("<font color=red>Execute Failed</font>"));
-            delete this->threadManager;
             if(simulationFolders != NULL) {
-                for(int i = 0; i < simulationFolders->size(); i++) {
-                    QString* dir = simulationFolders->at(i);
-                    delete dir;
-                }
                 simulationFolders->clear();
                 delete simulationFolders;
                 simulationFolders = NULL;
             }
+            delete this->threadManager;
             threadManager = NULL;
             break;
         case Control::InputsError :
@@ -1279,7 +1144,7 @@ void Control::finishSimulation(FinishCode code) {
     this->exes->clear();
     this->mainWindow->enableRun();
     if( code == Control::Success ) {
-        this->mainWindow->runAnalysis(); // Run analysis after simulation
+//        this->mainWindow->runAnalysis(); // Run analysis after simulation
     }
 
 }
@@ -1288,17 +1153,7 @@ void Control::cancelSimulation() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::cancelSimulation" << std::endl;
 #endif
-
-    if( builder ) {
-        // Se tiver no processo de construção do simulador, cancela a construção
-        builder->cancel();
-        builder->thread()->quit();
-    } else {
-        // Se não, é pq esta na simulação. Cancela portanto a simulação
-        finishSimulation( Control::Cancel );
-    }
-
-
+    finishSimulation( Control::Cancel );
 }
 
 void Control::removeExe(QObject *obj) {
@@ -1314,8 +1169,7 @@ void Control::generateAnalysis(float lower, float upper) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::generateAnalysis" << std::endl;
 #endif
-    // Ainda não há resultados de simulações
-    if(simulationFolders == NULL) {
+    if(simulationFolders == NULL) { // No simulation results
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible generate analysis because there is no system simulation results</font>") );
         return;
     }
@@ -1323,7 +1177,7 @@ void Control::generateAnalysis(float lower, float upper) {
     int size = simulationFolders->size();
     QStringList items;
     for(int i = 0; i < size; i++) {
-        items.append(* simulationFolders->at(i) );
+        items.append( simulationFolders->at(i) );
     }
 
     for( int i = 0; i < size; i++ ) {
@@ -1384,7 +1238,6 @@ void Control::analysisEnd(bool success) {
     QApplication::beep();
     QApplication::alert(mainWindow);
     QApplication::restoreOverrideCursor();
-
 }
 
 void Control::viewWaveform() {
@@ -1404,11 +1257,11 @@ void Control::viewWaveform() {
             QString item;
             bool ok = true;
             if( size == 1 ) {
-                item = *simulationFolders->at(0);
+                item = simulationFolders->at(0);
             } else {
                 QStringList dirs;
                 for(int i = 0; i < size; i++) {
-                    dirs.append(* simulationFolders->at(i) );
+                    dirs.append( simulationFolders->at(i) );
                 }
                 QStringList items = AnalysisOptions::getVisibleStrings(dirs);
                 item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
@@ -1482,7 +1335,7 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
     // Get simulation folders
     QStringList folders;
     for(int i = 0; i < size; i++) {
-        folders.append(* simulationFolders->at(i) );
+        folders.append( simulationFolders->at(i) );
     }
 
     // Identifying what directories must be analyzed according with analysis type
@@ -1682,8 +1535,8 @@ void Control::applySettings(EnvironmentConfiguration *env,QString languageName) 
 #endif
 
     conf->setLanguageSelected( languageName );
-    conf->setMinGWFolder( env->getMinGWFolder() );
-    conf->setSystemCFolder( env->getSystemCFolder() );
+    conf->setPluginsFolder( env->getPluginsFolder() );
+    conf->setSimulatorLocation( env->getSimulatorLocation() );
     conf->setThreadNumber( env->getThreadNumber() );
     conf->setWorkFolder( env->getWorkFolder() );
     conf->setWaveformTool(env->getWaveformTool());
@@ -1729,7 +1582,6 @@ void Control::loadSimulationResults() {
                         filename, workDirSimulationLoaded );
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
 
-
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(trUtf8("<b>Wait . . .</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
@@ -1743,11 +1595,11 @@ void Control::saveSimulationResults() {
     std::cout << "Control/Control::saveSimulationResults" << std::endl;
 #endif
 
-    if( this->simulationFolders == NULL ) {
-        return; // Não há resultado válido
+    if( this->simulationFolders == NULL ) { // There are no simulation results
+        return;
     }
 
-    QString dir0 = *this->simulationFolders->at(0);
+    QString dir0 = this->simulationFolders->at(0);
     // Up 2 level in directory tree
     dir0 = dir0.left( dir0.lastIndexOf("/") );
     dir0 = dir0.left( dir0.lastIndexOf("/") );
@@ -1786,7 +1638,7 @@ void Control::saveSimulationResults() {
     QTextStream ts(*&tmp);
     int dirsSize = this->simulationFolders->size();
     for( int i = 0; i < dirsSize; i++) {
-        QString dir = *simulationFolders->at(i);
+        QString dir = simulationFolders->at(i);
         dir.remove( workDir );
         ts << dir;
         ts << "\n";
@@ -1873,17 +1725,13 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
             dirs.removeLast();
 
             if(simulationFolders != NULL) {
-                for(int i = 0; i < simulationFolders->size(); i++) {
-                    QString* dir = simulationFolders->at(i);
-                    delete dir;
-                }
                 simulationFolders->clear();
                 delete simulationFolders;
                 simulationFolders = NULL;
             }
-            simulationFolders = new QList<QString*>();
+            simulationFolders = new QList<QString>();
             for( int i = 0; i < dirs.size(); i++ ) {
-                QString* dir = new QString( workDirSimulationLoaded + dirs.at(i) );
+                QString dir = QString( workDirSimulationLoaded + dirs.at(i) );
                 simulationFolders->append( dir );
             }
         }
@@ -2026,5 +1874,300 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     delete data;
 
     delete aop;
+}
+
+void Control::generateTrafficConfigurationFile() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::generateCSVSimulationReport" << std::endl;
+#endif
+
+    QString outDir = this->mainWindow->selectSystemFolder(trUtf8("Select the output dir to traffic conf"));
+
+    if(outDir.isEmpty()) {
+        return;
+    }
+
+    Experiment* e = experimentManager->getExperiment(1);
+    TrafficModelGenerator* tmg = new TrafficModelGenerator(systemParameters,e,trafficPatternManager);
+
+    tmg->generateTraffic( outDir.toStdString().c_str() );
+
+    this->mainWindow->printConsole("Traffic File Generated",Qt::blue);
+
+    delete tmg;
+}
+
+void Control::runSimulations() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::runSimulations" << std::endl;
+#endif
+
+    if( !inputsOk() ) {
+        finishSimulation( Control::InputsError );
+        return;
+    }
+
+    if( simulationFolders != NULL ) {
+        simulationFolders->clear();
+        delete simulationFolders;
+        simulationFolders = NULL;
+    }
+
+    this->simulationFolders = new QList<QString>();
+
+    // Get date and time
+    QDateTime dateTime = QDateTime::currentDateTime();
+    // Get a string with date and time in ISO format
+    QString dateTimeDir = dateTime.toString(Qt::ISODate);
+    dateTimeDir.replace(':','-');
+    // To manipulate the folders that will be used
+    QDir dirWork = QDir(conf->getWorkFolder() + "/" + dateTimeDir);
+    // Criar diretório de trabalho
+    if(!dirWork.exists()) {
+        dirWork.mkpath(".");
+        this->mainWindow->printConsole(trUtf8("- Work directory created"));
+    }
+
+    threadManager = new ThreadManager( (int) conf->getThreadNumber() , this );
+
+    connect(threadManager,SIGNAL(allFinished()),this,SLOT(finishExecution()));
+    connect(threadManager,SIGNAL(threadFinished(int)),this,SLOT(updateStatusExecution(int)));
+
+    int numberOfExperiments = 0;
+    unsigned int runCountPerExperiment = this->calcAmountExperimentsExecutions();
+
+    QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
+    settings.beginGroup("Traffic_Parameters");
+    bool useDefault = settings.value("useDefault",true).toBool();
+    QString alternativeFile = settings.value("alternative",QString()).toString();
+    settings.endGroup();
+
+    settings.beginGroup("Input_Buffers");
+    QString memPlugin = settings.value("plugin").toString();
+    settings.endGroup();
+
+
+    SystemDefines* def = SystemDefines::getInstance();
+
+    // For each experiment - create a folder
+    for( unsigned int i = 1; i <= 5; i++ ) {
+        float fClk = this->systemParameters->getfClkFirst();
+        float fClkPrevious = fClk;
+        Experiment* experiment = this->experimentManager->getExperiment(i);
+        if(experiment != NULL) {
+            if(experiment->isActive()) {
+                numberOfExperiments++;
+
+                SystemDefines::Topology topology = def->findTopology(experiment->getTopology());
+                SystemDefines::Routing routing = def->findRoutingAlgorithm(topology.getTopology());
+                SystemDefines::FlowControl flowControl = def->findFlowControl(experiment->getFlowControl());
+                SystemDefines::PriorityGenerator pg = def->findArbiterPG(experiment->getArbiterType());
+                QString vcOption = def->findVcOption(experiment->getVCOption());
+                QString strRouting = routing.getRoutingAlgorithm( experiment->getRoutingAlgorithm() );
+
+                QString dirGenerated = QString("dir_%1_%2_%3_%4_VC%5_IN%6_OUT%7")
+                        .arg( topology.getTopology() )
+                        .arg( strRouting )
+                        .arg( flowControl.getFlowControl() )
+                        .arg( pg.getPG() )
+                        .arg( vcOption )
+                        .arg(experiment->getInputBufferSize())
+                        .arg(experiment->getOutputBufferSize());
+                QString dirExperiment = dirWork.absolutePath() + "/" + dirGenerated;
+                dirWork.mkdir( dirExperiment );
+
+                /*
+                 * Generate stopsim.par on work dir (dir to set of experiments - root experiments dir)
+                 */
+                QFile* stopSimPar = new QFile( dirWork.absolutePath()+"/stopsim.par");
+                if(!stopSimPar->open(QIODevice::WriteOnly)) {
+                    this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                                                        .arg(stopSimPar->fileName()),Qt::red);
+                    return;
+                }
+
+                switch(systemParameters->getStopOption()) {
+                    case 0:
+                        systemParameters->setStopTime_ns(0);
+                        systemParameters->setStopTime_cycles(0);
+                        break;
+                    case 1:
+                        systemParameters->setStopTime_cycles( (unsigned long int) systemParameters->getStopTime_ns()/systemParameters->getTClk() );
+                        break;
+                    case 2:
+                        systemParameters->setStopTime_ns( (unsigned long int) systemParameters->getStopTime_cycles()*systemParameters->getTClk());
+                        break;
+                }
+                QString stopSimParContent = QString("%1\t%2")
+                        .arg(systemParameters->getStopTime_cycles())
+                        .arg(systemParameters->getStopTime_ns());
+                stopSimPar->write(stopSimParContent.toUtf8());
+                stopSimPar->close();
+                delete stopSimPar;
+                /*
+                 * End stopsim.par
+                 */
+
+                int aux = 0;
+                SystemParameters* sp = new SystemParameters(*systemParameters);
+                for(unsigned int x = 0; x < runCountPerExperiment; x++) {
+                    /*
+                     * Generate Traffic conf file on simulation dir (root_experiment_dir/experiment/fClk/)
+                     */
+                    QDir dirSimulation = QDir( dirExperiment );
+                    QString dirFreqOp = QString("%1MHz").arg(fClk);
+                    dirSimulation.mkdir(dirFreqOp);
+                    dirSimulation.cd(dirFreqOp);
+                    QString strDirSimul = dirSimulation.absolutePath();
+                    this->simulationFolders->append(strDirSimul);
+                    TrafficModelGenerator* trafficGen =
+                            new TrafficModelGenerator(sp,experiment,this->trafficPatternManager);
+                    try {
+                        if( useDefault ) {
+                            trafficGen->generateTraffic( strDirSimul.toStdString().c_str() );
+                        } else {
+                            QFile::copy(alternativeFile,strDirSimul+"/traffic.tcf");
+                        }
+                        delete trafficGen;
+                    } catch (const char* exception) {
+                        this->mainWindow->printConsole(trUtf8("Error in generate traffic model: %1")
+                                                       .arg(QString::fromStdString(exception)),Qt::red);
+                        delete trafficGen;
+                        delete sp;
+                        return;
+                    }
+                    /*
+                     * End generate traffic.tcf
+                     */
+
+                    /*
+                     * Generate simconf.conf - file with specified plugins
+                     */
+                    QFile* simConf = new QFile( strDirSimul+"/"+SIMULATOR_CONF_FILE);
+                    if(!simConf->open(QIODevice::WriteOnly)) {
+                        this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                                                            .arg(simConf->fileName()),Qt::red);
+                        return;
+                    }
+
+
+                    QString simConfContent =
+                            QString("noc = %1\n"
+                                    "router = %2\n"
+                                    "routing = %3\n"
+                                    "flowcontrol = %4\n"
+                                    "memory = %5\n"
+                                    "prioritygenerator = %6")
+                            .arg(topology.getNoCPlugin())
+                            .arg(topology.getRouterPlugin())
+                            .arg(routing.getRoutingPlugin(experiment->getRoutingAlgorithm()))
+                            .arg(flowControl.getPlugin())
+                            .arg(memPlugin)
+                            .arg(pg.getPlugin());
+
+                    simConf->write(simConfContent.toUtf8());
+                    simConf->close();
+                    delete simConf;
+                    /*
+                     * End simconf.conf
+                     */
+
+                    /*
+                     * Setup arguments to the simulator executable (passing through command-line arguments)
+                     */
+                    float TClk = (1.0/ (float) fClk) * 1000.0;
+                    QStringList args;
+                    args.append(QString("%1").arg(TClk));
+                    args.append(QString("%1").arg(strDirSimul));
+                    args.append( conf->getPluginsFolder() );
+                    args.append("-xsize");
+                    args.append(QString::number(systemParameters->getXSize()));
+                    args.append("-ysize");
+                    args.append(QString::number(systemParameters->getYSize()));
+                    args.append("-datawidth");
+                    args.append(QString::number(systemParameters->getDataWidth()));
+                    args.append("-fifoin");
+                    args.append(QString::number(experiment->getInputBufferSize()));
+                    args.append("-fifoout");
+                    args.append(QString::number(experiment->getOutputBufferSize()));
+                    if( experiment->getVCOption() > 0 ) {
+                        args.append( "-vc" );
+                        args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
+                    }
+
+                    if( systemParameters->getVcdOption() ) {
+                        args.append("-trace");
+                    }
+                    /*
+                     * End setup command-line arguments
+                     */
+
+
+                    /*
+                     * Generate a simulation performer (that run the simulator) and its separated thread
+                     */
+                    SimulationPerformer* exeSystem = new SimulationPerformer(TClk,strDirSimul,
+                                                                             conf->getSimulatorLocation(),
+                                                                             args);
+
+                    exeSystem->setObjectName(QString("Execution%1").arg(x));
+                    QThread* threadExecucao = new QThread(this);
+                    threadExecucao->setObjectName(QString("Execution%1").arg(strDirSimul));
+                    connect(threadExecucao,SIGNAL(started()),exeSystem,SLOT(execute()));
+                    connect(threadExecucao,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
+                    connect(exeSystem,SIGNAL(destroyed(QObject*)),this,SLOT(removeExe(QObject*)));
+                    connect(exeSystem,SIGNAL(finished()),threadExecucao,SLOT(quit()));
+                    connect(exeSystem,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
+        /// Dividir simuladores
+                    connect(exeSystem,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
+        /// Feedback individual para o usuário
+                    connect(exeSystem,SIGNAL(unsuccessfullyExecution()),this,SLOT(executeUnsuccessful()));
+                    exeSystem->moveToThread(threadExecucao);
+
+                    threadManager->addPool( threadExecucao );
+                    this->exes->append( exeSystem );
+                    /*
+                     * End generate simulation performer
+                     */
+
+
+                    /*
+                     * Calculating
+                     */
+                    if( sp->getfClkStepType() == 0 ) {
+                        fClk += sp->getfClkStep();
+                        if( (sp->getfClkFirst() > sp->getfClkLast() )
+                                && (fClk < sp->getfClkLast()) ) {
+                            fClk = sp->getfClkLast();
+                        }
+                        if( (sp->getfClkFirst() < sp->getfClkLast())
+                                && (fClk > sp->getfClkLast()) ) {
+                            fClk = sp->getfClkLast();
+                        }
+                    } else {
+                        do {
+                            fClkPrevious = fClk;
+                            int tmp = (unsigned int) (sp->getfClkFirst()
+                                                      / ( exp(aux*sp->getfClkStep()) )*10 );
+                            fClk = ((float) tmp) / 10.0;
+                            aux++;
+                        } while (fClk == fClkPrevious);
+                    } // if(getfClkStepType == 0)
+                    sp->setTClk( (1.0/fClk)*1000.0 );
+                    sp->setChannelBandwidth( fClk * sp->getDataWidth() );
+
+                } // for(unsigned int x = 0; x < runCountPerExperiment; x++)
+                delete sp;
+            } // if(experiment->isActive())
+        } // if(experiment != NULL)
+    } // for( unsigned int i = 1; i <= 5; i++ )
+
+    unsigned int nExp = runCountPerExperiment*numberOfExperiments;
+    this->mainWindow->setLimitsProgressBar( 0, nExp);
+
+    this->mainWindow->printConsole( trUtf8("- Number of simulations to be run: %1").arg(nExp) );
+
+    timer->start();
+    threadManager->runThreads();
 
 }

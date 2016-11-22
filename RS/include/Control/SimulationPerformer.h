@@ -26,12 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
 
-#ifndef SIMULATIONPERFORMER_H
-#define SIMULATIONPERFORMER_H
+#ifndef __SIMULATIONPERFORMER_H__
+#define __SIMULATIONPERFORMER_H__
 
 #include <QProcess>
 
@@ -39,11 +39,14 @@ class SimulationPerformer : public QObject {
     Q_OBJECT
 private:
     QProcess* executor;
-    QString compilerDir;
+    QString simulator;
+    QStringList args;
     float TClk;
 
 public:
-    explicit SimulationPerformer(float TClk,QString diretorio,QString compilerDir = QString(),QObject* parent = 0);
+    explicit SimulationPerformer(float TClk, QString diretorio,
+                                 QString simulator, QStringList args,
+                                 QObject* parent = 0);
     ~SimulationPerformer();
     
 signals:

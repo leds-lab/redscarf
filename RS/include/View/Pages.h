@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef PAGES_H
-#define PAGES_H
+#ifndef __PAGES_H__
+#define __PAGES_H__
 
 #include <QWidget>
 
@@ -62,11 +63,11 @@ class FoldersConfigurationPage : public QWidget {
 private:
     Ui::FoldersConfigurationPage* ui;
 public:
-    explicit FoldersConfigurationPage(QString systemc, QString mingw,
+    explicit FoldersConfigurationPage(QString simulator, QString plugins,
             QString work, QString waveformTool, QWidget* parent = 0);
 
-    const QString getSystemCFolder();
-    const QString getMinGWFolder();
+    const QString getSimulatorLocation();
+    const QString getPluginsFolder();
     const QString getWorkFolder();
     const QString getWaveformTool();
 
@@ -74,8 +75,8 @@ public:
 
 
 private slots:
-    void selectSystemCDir();
-    void selectMinGWDir();
+    void selectSimulator();
+    void selectPluginsFolder();
     void selectWorkDir();
     void selectWaveformTool();
 

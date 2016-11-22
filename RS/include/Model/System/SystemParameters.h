@@ -43,7 +43,7 @@ private:
     unsigned int        ageWidth;                   // Width of the header's age field
     unsigned int        ageClockWidth;              // Width of aging counter
     unsigned int        dataWidth;                  // Width of the data channel
-    // rib_width of gnoc.h
+
     unsigned int        destinationAddressWidth;    // Width of the destination address
     unsigned int        phitWidth;                  // Width of the flit
 

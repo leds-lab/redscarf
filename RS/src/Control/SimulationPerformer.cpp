@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -39,14 +40,15 @@
     #include <iostream>
 #endif
 
-SimulationPerformer::SimulationPerformer(float TClk, QString diretorio, QString compilerDir, QObject *parent) :
+SimulationPerformer::SimulationPerformer(float TClk, QString diretorio, QString simulator, QStringList args, QObject *parent) :
     QObject(parent) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Control/SimulationPerformer" << std::endl;
 #endif
 
     this->TClk = TClk;
-    this->compilerDir = compilerDir;
+    this->simulator = simulator;
+    this->args = args;
     this->executor = new QProcess(this);
     this->executor->setWorkingDirectory( diretorio );
     this->executor->setProcessChannelMode(QProcess::MergedChannels);
@@ -64,44 +66,41 @@ void SimulationPerformer::execute() {
     std::cout << "Control/SimulationPerformer::execute" << std::endl;
 #endif
 
-#ifdef Q_OS_WIN32
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("PATH",env.value("Path") + ";"+compilerDir+"\\bin");
-    executor->setProcessEnvironment(env);
-#endif
-
     QElapsedTimer timer;
     QString workSystem = this->executor->workingDirectory();
-    QString localSystem = workSystem.left( workSystem.lastIndexOf("/") );
     timer.start();
-    executor->start(localSystem+"/system.x",QStringList() << "." << QString::number(this->TClk) );
-    executor->deleteLater();
+    executor->start(simulator,args);
 
     if(!executor->waitForFinished(-1)) {
         emit this->sendMessage( trUtf8("<font color=red><br />Failed execution on:</font> %1").arg(workSystem) );
         emit this->unsuccessfullyExecution();
     } else {
         if( executor->exitStatus() == QProcess::NormalExit ) {
-            char* tempo = TimeOperation::formatTime( qulonglong(timer.elapsed()) );
-            QString temp = workSystem.left( workSystem.lastIndexOf("/") );
-            temp = workSystem.mid( temp.lastIndexOf("/") + 5 );
-            temp.replace("/"," @ ");
-            temp.replace("_"," ");
-            emit sendMessage(trUtf8("<font color=green><br />Configuration %1</font>")
-                             .arg(temp));
-            emit sendMessage(trUtf8("<font color=black>- Simulation time: %1</font>")
-                             .arg(tempo));
-            delete[] tempo;
-            unsigned long long simulatedTimeCycles = 0;
-            QFile stopOut(workSystem+"/stopsim.out");
-            if(stopOut.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-                QTextStream ts(&stopOut);
-                ts >> simulatedTimeCycles;
-                emit sendMessage( trUtf8("<font color=black>- Simulated  time: %1 cycles = %2 us</font>")
-                                  .arg(simulatedTimeCycles)
-                                  .arg(QString::number(simulatedTimeCycles * this->TClk/1000,'f',2)) );
+            if(executor->exitCode() != 0) {
+                emit sendMessage(trUtf8("<font color=red><br />Simulator exited with error code: %1</font>").arg(executor->exitCode()));
+                emit unsuccessfullyExecution();
+            } else {
+                char* tempo = TimeOperation::formatTime( qulonglong(timer.elapsed()) );
+                QString temp = workSystem.left( workSystem.lastIndexOf("/") );
+                temp = workSystem.mid( temp.lastIndexOf("/") + 5 );
+                temp.replace("/"," @ ");
+                temp.replace("_"," ");
+                emit sendMessage(trUtf8("<font color=green><br />Configuration %1</font>")
+                                 .arg(temp));
+                emit sendMessage(trUtf8("<font color=black>- Simulation time: %1</font>")
+                                 .arg(tempo));
+                delete[] tempo;
+                unsigned long long simulatedTimeCycles = 0;
+                QFile stopOut(workSystem+"/stopsim.out");
+                if(stopOut.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+                    QTextStream ts(&stopOut);
+                    ts >> simulatedTimeCycles;
+                    emit sendMessage( trUtf8("<font color=black>- Simulated  time: %1 cycles = %2 us</font>")
+                                      .arg(simulatedTimeCycles)
+                                      .arg(QString::number(simulatedTimeCycles * this->TClk/1000,'f',2)) );
 
-                stopOut.close();
+                    stopOut.close();
+                }
             }
         }
     }

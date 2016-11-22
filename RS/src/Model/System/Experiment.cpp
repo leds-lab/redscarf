@@ -26,7 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 22/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
 #include "include/Model/System/Experiment.h"
@@ -46,20 +46,22 @@ Experiment::Experiment(bool defaultValues){
 
     if(defaultValues) {
         this->active = true;
-        this->arbiterType = DefaultValuesSystem::DEFAULT_ARBITER_TYPE;
+        this->topology = DefaultValuesSystem::DEFAULT_TOPOLOGY;
+        this->routingAlgorithm = DefaultValuesSystem::DEFAULT_ROUTING_TYPE;
         this->flowControl = DefaultValuesSystem::DEFAULT_FC_TYPE;
+        this->arbiterType = DefaultValuesSystem::DEFAULT_ARBITER_TYPE;
+        this->virtualChannelsOption = DefaultValuesSystem::DEFAULT_VC_OPTION;
         this->inputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH;
         this->outputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH;
-        this->routerArchitecture = DefaultValuesSystem::DEFAULT_ROUTER_TYPE;
-        this->routingAlgorithm = DefaultValuesSystem::DEFAULT_ROUTING_TYPE;
     } else {
         this->active = false;
-        this->arbiterType = 0;
+        this->topology = 0;
+        this->routingAlgorithm = 0;
         this->flowControl = 0;
+        this->arbiterType = 0;
+        this->virtualChannelsOption = 0;
         this->inputBufferSize = 0;
         this->outputBufferSize = 0;
-        this->routerArchitecture = 0;
-        this->routingAlgorithm = 0;
     }
 }
 
@@ -72,8 +74,8 @@ std::string Experiment::toString() const {
     std::string str = "";
 
     // Assembly string
-    valueToString << this->routerArchitecture;
-    str += "Router architecture: "+valueToString.str()+"\n";
+    valueToString << this->topology;
+    str += "Topology: "+valueToString.str()+"\n";
 
     valueToString.str("");
     valueToString << this->routingAlgorithm;
@@ -86,6 +88,10 @@ std::string Experiment::toString() const {
     valueToString.str("");
     valueToString << this->arbiterType;
     str += "Arbiter type: "+valueToString.str()+"\n";
+
+    valueToString.str("");
+    valueToString << this->virtualChannelsOption;
+    str += "Virtual channels: "+valueToString.str()+"\n";
 
     valueToString.str("");
     valueToString << this->inputBufferSize;
@@ -107,10 +113,11 @@ bool Experiment::equals(Experiment *exp) const {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/SystemConfiguration/Experiment::equals" << std::endl;
 #endif
-    if( this->routerArchitecture == exp->routerArchitecture &&
+    if( this->topology           == exp->topology           &&
         this->routingAlgorithm   == exp->routingAlgorithm   &&
         this->flowControl        == exp->flowControl        &&
         this->arbiterType        == exp->arbiterType        &&
+        this->virtualChannelsOption == exp->virtualChannelsOption &&
         this->inputBufferSize    == exp->inputBufferSize    &&
         this->outputBufferSize   == exp->outputBufferSize ) {
 

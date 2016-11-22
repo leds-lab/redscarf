@@ -26,11 +26,12 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef ANALYZER_H
-#define ANALYZER_H
+#ifndef __ANALYZER_H__
+#define __ANALYZER_H__
 
 #include <QObject>
 /*!
@@ -48,7 +49,7 @@ private:
     /*!
      * \brief analysisFolders List with contains all directories for analysis
      */
-    QList<QString *> *analysisFolders;
+    QList<QString> *analysisFolders;
     unsigned int xSize;
     unsigned int ySize;
     float lower;
@@ -66,7 +67,7 @@ public:
      * \param upper End percentual of the all packets transfered that it should be considered
      * \param parent QObject parent of this Analyzer
      */
-    explicit Analyzer(QList<QString *> *analysisFolders, unsigned int xSize,
+    explicit Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
                       unsigned int ySize, unsigned int dataWidth, float lower,
                       float upper, QObject *parent = 0);
     ~Analyzer();

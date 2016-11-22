@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 22/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -59,13 +60,15 @@
     #include <iostream>
 #endif
 
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class View/MainWindow" << std::endl;
 #endif
-    ui->setupUi(this); // Configura o uso do formulário da tela
+    ui->setupUi(this); // Setup the mainwindown graphical form
 
-//    this->centralizarTela(); // Desativado - o gerenciador de janelas do SO posiciona no local mais adequado
+    // Center the window on the center - disabled - the OS manager define the most adequated position
+//    this->centralizarTela();
     this->configureToolBar();
     this->insertComboItens();
     this->setProperties();
@@ -84,27 +87,12 @@ MainWindow::~MainWindow() {
         delete this->graphLineColors[i];
     }
     delete ui;
-
 }
 
 void MainWindow::configureWidgets() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::configureWidgets" << std::endl;
 #endif
-    // Desabilitando botoes "Edit" da configuração dos padrões de tráfico
-    ui->buttonEditTrafficPattern0->setDisabled(true);
-    ui->buttonEditTrafficPattern1->setDisabled(true);
-    ui->buttonEditTrafficPattern2->setDisabled(true);
-    ui->buttonEditTrafficPattern3->setDisabled(true);
-
-    // Desabilitando widgets dos experimentos (pois por default são habilitados na inicialização)
-    QGridLayout* layout = (QGridLayout* ) ui->groupBoxExperimentsConfiguration->layout();
-    for(int i = 1; i < 9; i++) {
-        for(int x = 2; x < 6; x++) {
-            layout->itemAtPosition(i,x)->widget()->setEnabled(false);
-        }
-    }
-
     // Desabilitando o spin de stop time da simulação, por padrão a opção de parada é até entregar todos os pacotes
     ui->spinBoxStopTimeNs->setVisible(false);
     ui->spinBoxStopTimeCycles->setVisible(false);
@@ -166,7 +154,7 @@ void MainWindow::loadDefaultValues() {
     ui->spinBoxStopTimeCycles->setValue( qint32(DefaultValuesSystem::DEFAULT_STOP_TIME_CYCLES) );
     ui->comboInSimulationStopMethod->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_STOP_OPTION) );
 
-    ui->comboInVCDGenerationOptions->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_VCD_OPTION));
+    ui->comboInGenerateVCD->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_VCD_OPTION));
     ui->doubleSpinInChannelFclkRange->setValue(qint32(DefaultValuesSystem::DEFAULT_FCLK_FIRST));
     ui->doubleSpinInChannelFclkRange_2->setValue(qint32(DefaultValuesSystem::DEFAULT_FCLK_LAST));
     ui->comboInStep->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FCLK_STEP_TYPE));
@@ -176,39 +164,46 @@ void MainWindow::loadDefaultValues() {
     ui->doubleSpinInChannelBWRange->setValue(qint32(DefaultValuesSystem::DEFAULT_CHANNEL_BW));
     ui->doubleSpinInChannelBWRange_2->setValue(qint32(DefaultValuesSystem::DEFAULT_CHANNEL_BW));
 
-    ui->comboInRouterArchitectureExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+    ui->comboInTopologyExp1->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+    ui->comboInTopologyExp2->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+    ui->comboInTopologyExp3->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+    ui->comboInTopologyExp4->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+    ui->comboInTopologyExp5->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+
     ui->comboInRoutingAlgorithmExp1->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInSwitchingExp1->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInArbiterTypeExp1->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-
-    ui->comboInRouterArchitectureExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
     ui->comboInRoutingAlgorithmExp2->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInSwitchingExp2->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInArbiterTypeExp2->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->spinInInputBuffersExp2->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-
-    ui->comboInRouterArchitectureExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
     ui->comboInRoutingAlgorithmExp3->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInSwitchingExp3->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInArbiterTypeExp3->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->spinInInputBuffersExp3->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-
-    ui->comboInRouterArchitectureExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
     ui->comboInRoutingAlgorithmExp4->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInSwitchingExp4->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInArbiterTypeExp4->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->spinInInputBuffersExp4->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-
-    ui->comboInRouterArchitectureExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
     ui->comboInRoutingAlgorithmExp5->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
+
+    ui->comboInSwitchingExp1->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
+    ui->comboInSwitchingExp2->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
+    ui->comboInSwitchingExp3->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
+    ui->comboInSwitchingExp4->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
     ui->comboInSwitchingExp5->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
+
+    ui->comboInArbiterTypeExp1->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+    ui->comboInArbiterTypeExp2->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+    ui->comboInArbiterTypeExp3->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+    ui->comboInArbiterTypeExp4->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
     ui->comboInArbiterTypeExp5->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+
+    ui->comboInVCExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+    ui->comboInVCExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+    ui->comboInVCExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+    ui->comboInVCExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+    ui->comboInVCExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+
+    ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
+    ui->spinInInputBuffersExp2->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
+    ui->spinInInputBuffersExp3->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
+    ui->spinInInputBuffersExp4->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
     ui->spinInInputBuffersExp5->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
+
+    ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+    ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+    ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+    ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
     ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
 
     this->graphLineColors[0] = new QColor( Qt::red );
@@ -341,11 +336,13 @@ void MainWindow::establishConnections() {
     connect(ui->actionPreview_Traffic_Configuration,SIGNAL(triggered()),this,SLOT(previewTrafficConfigurationClicked()));
     connect(ui->actionXML_View_Traffic_Configuration,SIGNAL(triggered()),this,SLOT(previewTrafficConfigurationClicked()));
 
+    connect(ui->buttonGenerateTcf,&QPushButton::clicked,this,&MainWindow::generateTcf);
+
     // System Simulation
-    connect(ui->checkInExperiment2,SIGNAL(stateChanged(int)),this,SLOT(stateChangedExperiment()));
-    connect(ui->checkInExperiment3,SIGNAL(stateChanged(int)),this,SLOT(stateChangedExperiment()));
-    connect(ui->checkInExperiment4,SIGNAL(stateChanged(int)),this,SLOT(stateChangedExperiment()));
-    connect(ui->checkInExperiment5,SIGNAL(stateChanged(int)),this,SLOT(stateChangedExperiment()));
+    connect(ui->checkInExperiment2,SIGNAL(stateChanged(int)),this,SLOT(experimentChangeState()));
+    connect(ui->checkInExperiment3,SIGNAL(stateChanged(int)),this,SLOT(experimentChangeState()));
+    connect(ui->checkInExperiment4,SIGNAL(stateChanged(int)),this,SLOT(experimentChangeState()));
+    connect(ui->checkInExperiment5,SIGNAL(stateChanged(int)),this,SLOT(experimentChangeState()));
 
     connect(ui->buttonDefaultExp1,SIGNAL(clicked()),this,SLOT(loadDefaultValuesExperiment()));
     connect(ui->buttonDefaultExp2,SIGNAL(clicked()),this,SLOT(loadDefaultValuesExperiment()));
@@ -358,51 +355,65 @@ void MainWindow::establishConnections() {
     connect(ui->buttonCopyExp4,SIGNAL(clicked()),this,SLOT(copyPreviousExperimentActive()));
     connect(ui->buttonCopyExp5,SIGNAL(clicked()),this,SLOT(copyPreviousExperimentActive()));
 
-    connect(ui->comboInRouterArchitectureExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(routerArchitectureChanged(int)));
-    connect(ui->comboInRouterArchitectureExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(routerArchitectureChanged(int)));
-    connect(ui->comboInRouterArchitectureExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(routerArchitectureChanged(int)));
-    connect(ui->comboInRouterArchitectureExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(routerArchitectureChanged(int)));
-    connect(ui->comboInRouterArchitectureExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(routerArchitectureChanged(int)));
+    // Qt 4 approach
+    // connect(ui->comboInTopologyExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(topologyChange(int)));
+    // Qt 5 approach - static_cast is needed because overloaded signal "currentIndexChanged(int|QString)" of combo box
+    connect(ui->comboInTopologyExp1,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this,&MainWindow::topologyChange);
+    connect(ui->comboInTopologyExp2,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this,&MainWindow::topologyChange);
+    connect(ui->comboInTopologyExp3,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this,&MainWindow::topologyChange);
+    connect(ui->comboInTopologyExp4,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this,&MainWindow::topologyChange);
+    connect(ui->comboInTopologyExp5,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this,&MainWindow::topologyChange);
 
-    connect(ui->comboInRoutingAlgorithmExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChanged(int)));
-    connect(ui->comboInRoutingAlgorithmExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChanged(int)));
-    connect(ui->comboInRoutingAlgorithmExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChanged(int)));
-    connect(ui->comboInRoutingAlgorithmExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChanged(int)));
-    connect(ui->comboInRoutingAlgorithmExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChanged(int)));
+    connect(ui->comboInRoutingAlgorithmExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
+    connect(ui->comboInRoutingAlgorithmExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
+    connect(ui->comboInRoutingAlgorithmExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
+    connect(ui->comboInRoutingAlgorithmExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
+    connect(ui->comboInRoutingAlgorithmExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
 
-    connect(ui->comboInSwitchingExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChanged(int)));
-    connect(ui->comboInSwitchingExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChanged(int)));
-    connect(ui->comboInSwitchingExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChanged(int)));
-    connect(ui->comboInSwitchingExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChanged(int)));
-    connect(ui->comboInSwitchingExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChanged(int)));
+    connect(ui->comboInSwitchingExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
+    connect(ui->comboInSwitchingExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
+    connect(ui->comboInSwitchingExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
+    connect(ui->comboInSwitchingExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
+    connect(ui->comboInSwitchingExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
 
-    connect(ui->comboInArbiterTypeExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChanged(int)));
-    connect(ui->comboInArbiterTypeExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChanged(int)));
-    connect(ui->comboInArbiterTypeExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChanged(int)));
-    connect(ui->comboInArbiterTypeExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChanged(int)));
-    connect(ui->comboInArbiterTypeExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChanged(int)));
+    connect(ui->comboInArbiterTypeExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
+    connect(ui->comboInArbiterTypeExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
+    connect(ui->comboInArbiterTypeExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
+    connect(ui->comboInArbiterTypeExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
+    connect(ui->comboInArbiterTypeExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
 
-    connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChanged(int)));
-    connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChanged(int)));
-    connect(ui->spinInInputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChanged(int)));
-    connect(ui->spinInInputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChanged(int)));
-    connect(ui->spinInInputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChanged(int)));
+    connect(ui->comboInVCExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
+    connect(ui->comboInVCExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
+    connect(ui->comboInVCExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
+    connect(ui->comboInVCExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
+    connect(ui->comboInVCExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
 
-    connect(ui->spinInOutputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChanged(int)));
-    connect(ui->spinInOutputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChanged(int)));
-    connect(ui->spinInOutputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChanged(int)));
-    connect(ui->spinInOutputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChanged(int)));
-    connect(ui->spinInOutputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChanged(int)));
+    connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
+    connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
+    connect(ui->spinInInputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
+    connect(ui->spinInInputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
+    connect(ui->spinInInputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
 
-    connect(ui->comboInSimulationStopMethod,SIGNAL(currentIndexChanged(int)),this,SLOT(stopOptionUpdated(int)));
+    connect(ui->spinInOutputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+    connect(ui->spinInOutputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+    connect(ui->spinInOutputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+    connect(ui->spinInOutputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+    connect(ui->spinInOutputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+
+    connect(ui->comboInSimulationStopMethod,SIGNAL(currentIndexChanged(int)),this,SLOT(stopOptionUpdate(int)));
     connect(ui->spinBoxStopTimeNs,SIGNAL(valueChanged(int)),this,SIGNAL(stopTimeNsChanged(int)));
     connect(ui->spinBoxStopTimeCycles,SIGNAL(valueChanged(int)),this,SIGNAL(stopTimeCyclesChanged(int)));
-    connect(ui->comboInVCDGenerationOptions,SIGNAL(currentIndexChanged(int)),this,SLOT(vcdOptionUpdated(int)));
+    connect(ui->comboInGenerateVCD,SIGNAL(currentIndexChanged(int)),this,SLOT(vcdOptionUpdate(int)));
 
-    connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(fClkFirstUpdated(double)));
-    connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(fClkLastUpdated(double)));
-    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(fClkStepUpdated(double)));
-    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(fClkStepTypeUpdated(int)));
+    connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(fClkFirstUpdate(double)));
+    connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(fClkLastUpdate(double)));
+    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(fClkStepUpdate(double)));
+    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(fClkStepTypeUpdate(int)));
 
     connect(ui->buttonCancel,SIGNAL(clicked()),this,SIGNAL(cancel()));
     connect(ui->buttonRunSimulation,SIGNAL(clicked()),this,SLOT(run()));
@@ -535,33 +546,59 @@ void MainWindow::insertComboItens() {
     std::cout << "View/MainWindow::insertComboItens" << std::endl;
 #endif
 
+    unsigned int i; // Loop iterator
     SystemDefines* def = SystemDefines::getInstance();
-    unsigned int qtdRouterArchitectures = def->sizeRouterArchitectures();
-    for(unsigned int i = 0; i < qtdRouterArchitectures; i++) {
-        std::string routerArc = def->findRouterArchitectures(i);
-        QString rArc = QString::fromStdString(routerArc);
-        ui->comboInRouterArchitectureExp1->insertItem(qint32(i),rArc);
-        ui->comboInRouterArchitectureExp2->insertItem(qint32(i),rArc);
-        ui->comboInRouterArchitectureExp3->insertItem(qint32(i),rArc);
-        ui->comboInRouterArchitectureExp4->insertItem(qint32(i),rArc);
-        ui->comboInRouterArchitectureExp5->insertItem(qint32(i),rArc);
+
+    unsigned int topologyCount = def->sizeTopologies();
+    for( i = 0; i < topologyCount; i++ ) {
+        SystemDefines::Topology topology = def->findTopology(i);
+        ui->comboInTopologyExp1->insertItem(qint32(i),topology.getTopology());
+        ui->comboInTopologyExp2->insertItem(qint32(i),topology.getTopology());
+        ui->comboInTopologyExp3->insertItem(qint32(i),topology.getTopology());
+        ui->comboInTopologyExp4->insertItem(qint32(i),topology.getTopology());
+        ui->comboInTopologyExp5->insertItem(qint32(i),topology.getTopology());
     }
 
-    unsigned int qtdRoutingAlgorithms = def->sizeRoutingAlgorithms();
-    for(unsigned int i = 0; i < qtdRoutingAlgorithms; i++) {
-        std::string routingAlg = def->findRoutingAlgorithms(i);
-        QString rAlg = QString::fromStdString(routingAlg);
-        ui->comboInRoutingAlgorithmExp1->insertItem(qint32(i),rAlg);
-        ui->comboInRoutingAlgorithmExp2->insertItem(qint32(i),rAlg);
-        ui->comboInRoutingAlgorithmExp3->insertItem(qint32(i),rAlg);
-        ui->comboInRoutingAlgorithmExp4->insertItem(qint32(i),rAlg);
-        ui->comboInRoutingAlgorithmExp5->insertItem(qint32(i),rAlg);
+    QString selectedTopologyExp1 = ui->comboInTopologyExp1->currentText();
+    QString selectedTopologyExp2 = ui->comboInTopologyExp2->currentText();
+    QString selectedTopologyExp3 = ui->comboInTopologyExp3->currentText();
+    QString selectedTopologyExp4 = ui->comboInTopologyExp4->currentText();
+    QString selectedTopologyExp5 = ui->comboInTopologyExp5->currentText();
+
+    SystemDefines::Routing rAlg1 = def->findRoutingAlgorithm(selectedTopologyExp1);
+    for( int x = 0; x < rAlg1.algorithmsCount(); x++ ) {
+        QString alg = rAlg1.getRoutingAlgorithm(x);
+        ui->comboInRoutingAlgorithmExp1->insertItem(qint32(x),alg);
+    }
+
+    SystemDefines::Routing rAlg2 = def->findRoutingAlgorithm(selectedTopologyExp2);
+    for( int x = 0; x < rAlg2.algorithmsCount(); x++ ) {
+        QString alg = rAlg2.getRoutingAlgorithm(x);
+        ui->comboInRoutingAlgorithmExp2->insertItem(qint32(x),alg);
+    }
+
+    SystemDefines::Routing rAlg3 = def->findRoutingAlgorithm(selectedTopologyExp3);
+    for( int x = 0; x < rAlg3.algorithmsCount(); x++ ) {
+        QString alg = rAlg3.getRoutingAlgorithm(x);
+        ui->comboInRoutingAlgorithmExp3->insertItem(qint32(x),alg);
+    }
+
+    SystemDefines::Routing rAlg4 = def->findRoutingAlgorithm(selectedTopologyExp4);
+    for( int x = 0; x < rAlg4.algorithmsCount(); x++ ) {
+        QString alg = rAlg4.getRoutingAlgorithm(x);
+        ui->comboInRoutingAlgorithmExp4->insertItem(qint32(x),alg);
+    }
+
+    SystemDefines::Routing rAlg5 = def->findRoutingAlgorithm(selectedTopologyExp5);
+    for( int x = 0; x < rAlg5.algorithmsCount(); x++ ) {
+        QString alg = rAlg5.getRoutingAlgorithm(x);
+        ui->comboInRoutingAlgorithmExp5->insertItem(qint32(x),alg);
     }
 
     unsigned int qtdFlowControls = def->sizeFlowControls();
-    for(unsigned int i = 0; i < qtdFlowControls; i++) {
-        std::string flowCtrl = def->findFlowControls(i);
-        QString fCtrl = QString::fromStdString(flowCtrl);
+    for( i = 0; i < qtdFlowControls; i++) {
+        SystemDefines::FlowControl flowCtrl = def->findFlowControl(i);
+        QString fCtrl = flowCtrl.getFlowControl();
         ui->comboInSwitchingExp1->insertItem(qint32(i),fCtrl);
         ui->comboInSwitchingExp2->insertItem(qint32(i),fCtrl);
         ui->comboInSwitchingExp3->insertItem(qint32(i),fCtrl);
@@ -570,15 +607,25 @@ void MainWindow::insertComboItens() {
 
     }
 
-    unsigned int qtdArbiterTypes = def->sizeArbiterTypes();
-    for(unsigned int i = 0; i < qtdArbiterTypes; i++) {
-        std::string arbiterType = def->findArbiterTypes(i);
-        QString arbType = QString::fromStdString(arbiterType);
+    unsigned int qtdArbiterTypes = def->sizeArbiterPGs();
+    for( i = 0; i < qtdArbiterTypes; i++) {
+        SystemDefines::PriorityGenerator priorityGenerator = def->findArbiterPG(i);
+        QString arbType = priorityGenerator.getPG();
         ui->comboInArbiterTypeExp1->insertItem(qint32(i),arbType);
         ui->comboInArbiterTypeExp2->insertItem(qint32(i),arbType);
         ui->comboInArbiterTypeExp3->insertItem(qint32(i),arbType);
         ui->comboInArbiterTypeExp4->insertItem(qint32(i),arbType);
         ui->comboInArbiterTypeExp5->insertItem(qint32(i),arbType);
+    }
+
+    unsigned int vcOptionsSize = def->sizeVcOptions();
+    for( i = 0; i < vcOptionsSize; i++) {
+        QString vcOp = def->findVcOption(i);
+        ui->comboInVCExp1->insertItem(qint32(i),vcOp);
+        ui->comboInVCExp2->insertItem(qint32(i),vcOp);
+        ui->comboInVCExp3->insertItem(qint32(i),vcOp);
+        ui->comboInVCExp4->insertItem(qint32(i),vcOp);
+        ui->comboInVCExp5->insertItem(qint32(i),vcOp);
     }
 
     QStringList stepType;
@@ -723,13 +770,13 @@ void MainWindow::changeEvent(QEvent *event) {
 
     if(event->type() == QEvent::LanguageChange) {
         int stopOption = ui->comboInSimulationStopMethod->currentIndex();
-        int vcdIndex = ui->comboInVCDGenerationOptions->currentIndex();
+        int vcdIndex = ui->comboInGenerateVCD->currentIndex();
         int flowSel = ui->comboFlowSelection->currentIndex();
         int xAnalysis = ui->comboBoxXAxisGraphic->currentIndex();
         int yAnalysis = ui->comboBoxYAxisGraphic->currentIndex();
         bool windowMod = this->isWindowModified();
         ui->retranslateUi(this);
-        ui->comboInVCDGenerationOptions->setCurrentIndex( vcdIndex );
+        ui->comboInGenerateVCD->setCurrentIndex( vcdIndex );
         ui->comboBoxXAxisGraphic->setCurrentIndex(xAnalysis);
         ui->comboBoxYAxisGraphic->setCurrentIndex(yAnalysis);
         ui->comboFlowSelection->setCurrentIndex(flowSel);
@@ -767,7 +814,7 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
     ui->spinBoxStopTimeNs->setValue( stopTime_ns );
     ui->comboInSimulationStopMethod->setCurrentIndex( stopOption );
 
-    ui->comboInVCDGenerationOptions->setCurrentIndex( vcdOption );
+    ui->comboInGenerateVCD->setCurrentIndex( vcdOption );
     ui->doubleSpinInChannelFclkRange->setValue(fClkFirst);
     ui->doubleSpinInChannelFclkRange_2->setValue(fClkLast);
     ui->comboInStep->setCurrentIndex(fClkStepType);
@@ -780,19 +827,20 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
 
             switch (i) {
                 case 1:
-                    ui->comboInRouterArchitectureExp1->setCurrentIndex(experiment->getRouterArchitecture());
+                    ui->comboInTopologyExp1->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp1->setCurrentIndex( experiment->getRoutingAlgorithm() );
                     ui->comboInSwitchingExp1->setCurrentIndex( experiment->getFlowControl() );
                     ui->comboInArbiterTypeExp1->setCurrentIndex( experiment->getArbiterType() );
+                    ui->comboInVCExp1->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp1->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp1->setValue( experiment->getOutputBufferSize() );
                     break;
                 case 2:
-
-                    ui->comboInRouterArchitectureExp2->setCurrentIndex(experiment->getRouterArchitecture());
+                    ui->comboInTopologyExp2->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp2->setCurrentIndex( experiment->getRoutingAlgorithm() );
                     ui->comboInSwitchingExp2->setCurrentIndex( experiment->getFlowControl() );
                     ui->comboInArbiterTypeExp2->setCurrentIndex( experiment->getArbiterType() );
+                    ui->comboInVCExp2->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp2->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp2->setValue( experiment->getOutputBufferSize() );
 
@@ -800,10 +848,11 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
 
                     break;
                 case 3:
-                    ui->comboInRouterArchitectureExp3->setCurrentIndex(experiment->getRouterArchitecture());
+                    ui->comboInTopologyExp3->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp3->setCurrentIndex( experiment->getRoutingAlgorithm() );
                     ui->comboInSwitchingExp3->setCurrentIndex( experiment->getFlowControl() );
                     ui->comboInArbiterTypeExp3->setCurrentIndex( experiment->getArbiterType() );
+                    ui->comboInVCExp3->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp3->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp3->setValue( experiment->getOutputBufferSize() );
 
@@ -811,10 +860,11 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
 
                     break;
                 case 4:
-                    ui->comboInRouterArchitectureExp4->setCurrentIndex(experiment->getRouterArchitecture());
+                    ui->comboInTopologyExp4->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp4->setCurrentIndex( experiment->getRoutingAlgorithm() );
                     ui->comboInSwitchingExp4->setCurrentIndex( experiment->getFlowControl() );
                     ui->comboInArbiterTypeExp4->setCurrentIndex( experiment->getArbiterType() );
+                    ui->comboInVCExp4->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp4->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp4->setValue( experiment->getOutputBufferSize() );
 
@@ -822,10 +872,11 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
 
                     break;
                 case 5:
-                    ui->comboInRouterArchitectureExp5->setCurrentIndex(experiment->getRouterArchitecture());
+                    ui->comboInTopologyExp5->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp5->setCurrentIndex( experiment->getRoutingAlgorithm() );
                     ui->comboInSwitchingExp5->setCurrentIndex( experiment->getFlowControl() );
                     ui->comboInArbiterTypeExp5->setCurrentIndex( experiment->getArbiterType() );
+                    ui->comboInVCExp5->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp5->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp5->setValue( experiment->getOutputBufferSize() );
 
@@ -874,10 +925,11 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
 #endif
 
     // Legend parameters
-    bool routerArch  = ui->checkBoxRouterArchitecture->isChecked();
+    bool topology    = ui->checkBoxTopology->isChecked();
     bool routingAlg  = ui->checkBoxRoutingAlgorithm->isChecked();
     bool flowControl = ui->checkBoxFlowControl->isChecked();
     bool arbiterType = ui->checkBoxArbiterType->isChecked();
+    bool vcOp        = ui->checkBoxVcOption->isChecked();
     bool inBuffers   = ui->checkBoxInputBuffersDepth->isChecked();
     bool outBuffers  = ui->checkBoxOutputBuffersDepth->isChecked();
 
@@ -919,9 +971,10 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
     } else if(opcaoAnalise == Report) {
         title = trUtf8("Report");
     }
-    AnalysisOptions* gop = new AnalysisOptions(routerArch,routingAlg,flowControl,arbiterType,inBuffers,
-            outBuffers,lineWidth,pointSize,xSrc,ySrc,xDest,yDest,trfPtr,xLabel,
-            yLabel,xAxis,yAxis,title,flowOps,graphLineColors,latencyDistribution);
+    AnalysisOptions* gop = new AnalysisOptions(topology,routingAlg,flowControl,
+            arbiterType,vcOp,inBuffers,outBuffers,lineWidth,pointSize,xSrc,ySrc,
+            xDest,yDest,trfPtr,xLabel,yLabel,xAxis,yAxis,title,flowOps,
+            graphLineColors,latencyDistribution);
 
     return gop;
 }
@@ -968,16 +1021,18 @@ void MainWindow::buttonCheckUncheckAllClicked() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::buttonCheckUncheckAllClicked" << std::endl;
 #endif
-    QCheckBox* checks[6];
-    checks[0] = ui->checkBoxRouterArchitecture;
+    const int nCHECKS = 7;
+    QCheckBox* checks[nCHECKS];
+    checks[0] = ui->checkBoxTopology;
     checks[1] = ui->checkBoxRoutingAlgorithm;
     checks[2] = ui->checkBoxFlowControl;
     checks[3] = ui->checkBoxArbiterType;
-    checks[4] = ui->checkBoxInputBuffersDepth;
-    checks[5] = ui->checkBoxOutputBuffersDepth;
+    checks[4] = ui->checkBoxVcOption;
+    checks[5] = ui->checkBoxInputBuffersDepth;
+    checks[6] = ui->checkBoxOutputBuffersDepth;
 
     bool checkeds = false;
-    for( int i = 0; i < 6; i++ ) {
+    for( int i = 0; i < nCHECKS; i++ ) {
         if( checks[i]->isChecked() ) {
             checkeds = true;
             break;
@@ -985,11 +1040,11 @@ void MainWindow::buttonCheckUncheckAllClicked() {
     }
 
     if( checkeds ) {
-        for( int i = 0; i < 6; i++ ) {
+        for( int i = 0; i < nCHECKS; i++ ) {
             checks[i]->setChecked( false );
         }
     } else {
-        for( int i = 0; i < 6; i++ ) {
+        for( int i = 0; i < nCHECKS; i++ ) {
             checks[i]->setChecked( true );
         }
     }
@@ -1250,7 +1305,7 @@ void MainWindow::previewTrafficConfigurationClicked() {
 
 }
 
-void MainWindow::stateChangedExperiment() {
+void MainWindow::experimentChangeState() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::stateChangedExperiment" << std::endl;
 #endif
@@ -1262,8 +1317,14 @@ void MainWindow::stateChangedExperiment() {
 
     QGridLayout* layout = (QGridLayout* ) ui->groupBoxExperimentsConfiguration->layout();
 
-    for(int i = 1; i < 9; i++) {
-        layout->itemAtPosition(i,numExp)->widget()->setEnabled(checked);
+    for(int i = 1; i < 10; i++) {
+        QLayoutItem* item = layout->itemAtPosition(i,numExp);
+        if(item == NULL) {
+            this->printConsole(trUtf8("Problem in layout of experiment modified!\n"
+                                      "Contact the development team to fix."));
+        } else {
+            item->widget()->setEnabled(checked);
+        }
     }
 
     switch( numExp ) {
@@ -1293,9 +1354,88 @@ void MainWindow::stateChangedExperiment() {
 
 }
 
-void MainWindow::routerArchitectureChanged(int newValue) {
+void MainWindow::topologyChange(int newValue) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::routerArchitectureChanged" << std::endl;
+    std::cout << "View/MainWindow::topologyChange" << std::endl;
+#endif
+
+    QComboBox* combo = (QComboBox* ) sender();
+    QString objName = combo->objectName();
+    int experimentIndex = objName.at( objName.size()-1 ).digitValue();
+
+    emit configurationExperimentChanged(7,experimentIndex,newValue);
+
+    // After change topology, update the routing algorithms to new topology
+    SystemDefines* def = SystemDefines::getInstance();
+
+    // Selecting the current experiment combo
+    QComboBox* routingCombo = NULL;
+    switch(experimentIndex) {
+        case 1:
+            routingCombo = ui->comboInRoutingAlgorithmExp1;
+            break;
+        case 2:
+            routingCombo = ui->comboInRoutingAlgorithmExp2;
+            break;
+        case 3:
+            routingCombo = ui->comboInRoutingAlgorithmExp3;
+            break;
+        case 4:
+            routingCombo = ui->comboInRoutingAlgorithmExp4;
+            break;
+        case 5:
+            routingCombo = ui->comboInRoutingAlgorithmExp5;
+            break;
+    }
+
+    routingCombo->clear();
+
+    SystemDefines::Routing routing = def->findRoutingAlgorithm( def->findTopology(newValue).getTopology() );
+    for( int x = 0; x < routing.algorithmsCount(); x++ ) {
+        QString alg = routing.getRoutingAlgorithm(x);
+        routingCombo->insertItem(qint32(x),alg);
+    }
+
+}
+
+void MainWindow::routingAlgorithmChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::routingAlgorithmChange" << std::endl;
+#endif
+    QComboBox* combo = (QComboBox* ) sender();
+    QString nomeObjeto = combo->objectName();
+    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
+
+    emit configurationExperimentChanged( 2, numeroExperimento,newValue );
+
+}
+
+void MainWindow::arbiterTypeChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::arbiterTypeChange" << std::endl;
+#endif
+    QComboBox* combo = (QComboBox* ) sender();
+    QString nomeObjeto = combo->objectName();
+    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
+
+    emit configurationExperimentChanged( 4, numeroExperimento,newValue );
+
+}
+
+void MainWindow::flowControlChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::flowControlChange" << std::endl;
+#endif
+    QComboBox* combo = (QComboBox* ) sender();
+    QString nomeObjeto = combo->objectName();
+    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
+    emit configurationExperimentChanged( 3, numeroExperimento,newValue );
+
+}
+
+void MainWindow::vcOptionChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::vcOptionChange" << std::endl;
 #endif
 
     QComboBox* combo = (QComboBox* ) sender();
@@ -1306,44 +1446,9 @@ void MainWindow::routerArchitectureChanged(int newValue) {
 
 }
 
-void MainWindow::routingAlgorithmChanged(int newValue) {
+void MainWindow::inputBuffersChange(int newValue) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::routingAlgorithmChanged" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 2, numeroExperimento,newValue );
-
-}
-
-void MainWindow::arbiterTypeChanged(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::arbiterTypeChanged" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 4, numeroExperimento,newValue );
-
-}
-
-void MainWindow::flowControlChanged(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::flowControlChanged" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-    emit configurationExperimentChanged( 3, numeroExperimento,newValue );
-
-}
-
-void MainWindow::inputBuffersChanged(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::inputBuffersChanged" << std::endl;
+    std::cout << "View/MainWindow::inputBuffersChange" << std::endl;
 #endif
     QSpinBox* spin = (QSpinBox* ) sender();
     QString nomeObjeto = spin->objectName();
@@ -1353,9 +1458,9 @@ void MainWindow::inputBuffersChanged(int newValue) {
 
 }
 
-void MainWindow::outputBuffersChanged(int newValue) {
+void MainWindow::outputBuffersChange(int newValue) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::outputBuffersChanged" << std::endl;
+    std::cout << "View/MainWindow::outputBuffersChange" << std::endl;
 #endif
     QSpinBox* spin = (QSpinBox* ) sender();
     QString nomeObjeto = spin->objectName();
@@ -1375,15 +1480,17 @@ void MainWindow::loadDefaultValuesExperiment() {
 
     switch(numExp) {
         case 1:
-            ui->comboInRouterArchitectureExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+            ui->comboInTopologyExp1->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
             ui->comboInRoutingAlgorithmExp1->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
             ui->comboInSwitchingExp1->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
             ui->comboInArbiterTypeExp1->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+            ui->comboInVCExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
         case 2:
-            ui->comboInRouterArchitectureExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+            ui->comboInTopologyExp2->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+            ui->comboInVCExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->comboInRoutingAlgorithmExp2->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
             ui->comboInSwitchingExp2->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
             ui->comboInArbiterTypeExp2->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
@@ -1391,7 +1498,8 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
         case 3:
-            ui->comboInRouterArchitectureExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+            ui->comboInTopologyExp3->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+            ui->comboInVCExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->comboInRoutingAlgorithmExp3->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
             ui->comboInSwitchingExp3->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
             ui->comboInArbiterTypeExp3->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
@@ -1399,7 +1507,8 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
         case 4:
-            ui->comboInRouterArchitectureExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+            ui->comboInTopologyExp4->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+            ui->comboInVCExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->comboInRoutingAlgorithmExp4->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
             ui->comboInSwitchingExp4->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
             ui->comboInArbiterTypeExp4->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
@@ -1407,14 +1516,14 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
         case 5:
-            ui->comboInRouterArchitectureExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_ROUTER_TYPE      ));
+            ui->comboInTopologyExp5->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
+            ui->comboInVCExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->comboInRoutingAlgorithmExp5->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
             ui->comboInSwitchingExp5->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
             ui->comboInArbiterTypeExp5->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
             ui->spinInInputBuffersExp5->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
-
     }
 
 }
@@ -1431,11 +1540,11 @@ void MainWindow::copyPreviousExperimentActive() {
     QGridLayout* layout = (QGridLayout* ) ui->groupBoxExperimentsConfiguration->layout();
 
     int previousExperiment;
-    for( previousExperiment = numExp - 1 ; !layout->itemAtPosition(1,previousExperiment)->widget()->isEnabled() ; previousExperiment-- ) {}
+    for( previousExperiment = numExp - 1 ; !layout->itemAtPosition(1,previousExperiment)->widget()->isEnabled() ; previousExperiment-- );
 
-    QComboBox* routerArchSrc = (QComboBox *) layout->itemAtPosition(1,previousExperiment)->widget();
-    QComboBox* routerArchDst = (QComboBox *) layout->itemAtPosition(1,numExp)->widget();
-    routerArchDst->setCurrentIndex( routerArchSrc->currentIndex() );
+    QComboBox* topologySrc = (QComboBox *) layout->itemAtPosition(1,previousExperiment)->widget();
+    QComboBox* topologyDst = (QComboBox *) layout->itemAtPosition(1,numExp)->widget();
+    topologyDst->setCurrentIndex( topologySrc->currentIndex() );
 
     QComboBox* routingAlgorithmSrc = (QComboBox *) layout->itemAtPosition(2,previousExperiment)->widget();
     QComboBox* routingAlgorithmDst = (QComboBox *) layout->itemAtPosition(2,numExp)->widget();
@@ -1449,18 +1558,21 @@ void MainWindow::copyPreviousExperimentActive() {
     QComboBox* arbiterTypeDst = (QComboBox *) layout->itemAtPosition(4,numExp)->widget();
     arbiterTypeDst->setCurrentIndex( arbiterTypeSrc->currentIndex() );
 
-    QSpinBox* inputBufferSrc = (QSpinBox *) layout->itemAtPosition(5,previousExperiment)->widget();
-    QSpinBox* inputBufferDst = (QSpinBox *) layout->itemAtPosition(5,numExp)->widget();
+    QComboBox* vcOptionSrc = (QComboBox *) layout->itemAtPosition(5,previousExperiment)->widget();
+    QComboBox* vcOptionDst = (QComboBox *) layout->itemAtPosition(5,numExp)->widget();
+    vcOptionDst->setCurrentIndex( vcOptionSrc->currentIndex() );
+
+    QSpinBox* inputBufferSrc = (QSpinBox *) layout->itemAtPosition(6,previousExperiment)->widget();
+    QSpinBox* inputBufferDst = (QSpinBox *) layout->itemAtPosition(6,numExp)->widget();
     inputBufferDst->setValue( inputBufferSrc->value() );
 
-    QSpinBox* outputBufferSrc = (QSpinBox *) layout->itemAtPosition(6,previousExperiment)->widget();
-    QSpinBox* outputBufferDst = (QSpinBox *) layout->itemAtPosition(6,numExp)->widget();
+    QSpinBox* outputBufferSrc = (QSpinBox *) layout->itemAtPosition(7,previousExperiment)->widget();
+    QSpinBox* outputBufferDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
     outputBufferDst->setValue( outputBufferSrc->value() );
-
 
 }
 
-void MainWindow::stopOptionUpdated(int pos) {
+void MainWindow::stopOptionUpdate(int pos) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::stopOptionUpdated" << std::endl;
 #endif
@@ -1478,14 +1590,14 @@ void MainWindow::stopOptionUpdated(int pos) {
     emit stopOptionChanged(pos);
 }
 
-void MainWindow::vcdOptionUpdated(int value) {
+void MainWindow::vcdOptionUpdate(int value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::vcdOptionUpdated" << std::endl;
 #endif
     emit vcdOptionChanged(value);
 }
 
-void MainWindow::fClkFirstUpdated(double value) {
+void MainWindow::fClkFirstUpdate(double value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkFirstUpdated" << std::endl;
 #endif
@@ -1497,7 +1609,7 @@ void MainWindow::fClkFirstUpdated(double value) {
 
 }
 
-void MainWindow::fClkLastUpdated(double value) {
+void MainWindow::fClkLastUpdate(double value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkLastUpdated" << std::endl;
 #endif
@@ -1508,14 +1620,14 @@ void MainWindow::fClkLastUpdated(double value) {
     emit fClkLastChanged(value);
 }
 
-void MainWindow::fClkStepUpdated(double value) {
+void MainWindow::fClkStepUpdate(double value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkStepUpdated" << std::endl;
 #endif
     emit fClkStepChanged(value);
 }
 
-void MainWindow::fClkStepTypeUpdated(int value) {
+void MainWindow::fClkStepTypeUpdate(int value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkStepTypeUpdated" << std::endl;
 #endif

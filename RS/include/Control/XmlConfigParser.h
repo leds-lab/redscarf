@@ -27,12 +27,13 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
 *
 */
 
-#ifndef XMLCONFIGPARSER_H
-#define XMLCONFIGPARSER_H
+#ifndef __XMLCONFIGPARSER_H__
+#define __XMLCONFIGPARSER_H__
 
 class SystemParameters;
 class TrafficPatternManager;

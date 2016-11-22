@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -53,10 +54,11 @@ public:
     static const unsigned int DEFAULT_TCLK = 10;
     static const unsigned int DEFAULT_CHANNEL_BW = 3200;
 
-    static const unsigned int DEFAULT_ROUTER_TYPE = 0;
+    static const unsigned int DEFAULT_TOPOLOGY = 0;
     static const unsigned int DEFAULT_ROUTING_TYPE = 0;
     static const unsigned int DEFAULT_FC_TYPE = 1;
     static const unsigned int DEFAULT_ARBITER_TYPE = 0;
+    static const unsigned int DEFAULT_VC_OPTION = 0;
     static const unsigned int DEFAULT_FIFO_IN_DEPTH = 4;
     static const unsigned int DEFAULT_FIFO_OUT_DEPTH = 0;
 
