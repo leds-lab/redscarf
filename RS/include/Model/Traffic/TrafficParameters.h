@@ -36,7 +36,6 @@
 
 #include "include/Model/System/Defines.h"
 
-
 class TrafficParameters {
 
 private:

@@ -214,7 +214,7 @@
                    <string>Number of bits in the data channel.</string>
                   </property>
                   <property name="minimum">
-                   <number>16</number>
+                   <number>32</number>
                   </property>
                   <property name="maximum">
                    <number>510</number>

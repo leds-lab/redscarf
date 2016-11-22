@@ -1907,6 +1907,8 @@ void Control::runSimulations() {
         return;
     }
 
+    this->copySystemParameters();
+
     if( simulationFolders != NULL ) {
         simulationFolders->clear();
         delete simulationFolders;

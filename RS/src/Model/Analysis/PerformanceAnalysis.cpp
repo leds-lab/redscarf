@@ -29,6 +29,7 @@
 *
 */
 
+#include "include/Model/System/Defines.h"
 #include "include/Model/Analysis/PerformanceAnalysis.h"
 
 #include <stdlib.h>
@@ -189,11 +190,13 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
     char filenameIn[512];
 
     unsigned long int receivedPacketId = 0;
-    unsigned int      xDestination = 0;
-    unsigned int      yDestination = 0;
     unsigned int      xSource = 0;
     unsigned int      ySource = 0;
-    unsigned int      flowId = 0;
+    unsigned int      xDestination = 0;
+    unsigned int      yDestination = 0;
+    unsigned int      idSrc = 0;
+    unsigned int      idDest= 0;
+    unsigned int      threadId = 0;
     unsigned int      trafficClass = 0;
     unsigned long     deadline = 0;
     unsigned long long cycleCreationPacket = 0;
@@ -204,10 +207,11 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
 
     for( unsigned int x = 0; x < xSize; x++ ) {
         for( unsigned int y = 0; y < ySize; y++ ) {
+            unsigned int nodeId = COORDINATE_TO_ID(x,y,xSize);
             xDestination = x;
             yDestination = y;
             // It opens the input file
-            sprintf(filenameIn,"%s/ext_%u_%u_out",workDir,x,y);
+            sprintf(filenameIn,"%s/ext_%u_out",workDir,nodeId);
             if( (fpIn = fopen(filenameIn,"rt")) == NULL ) {
                 return TrafficAnalysis::NoInputFile;
             }
@@ -225,20 +229,18 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
                 if ((strcmp(str,"#") != 0)) {
                     receivedPacketId = (unsigned long int) atoi(str);
 
-//                    scanResult = fscanf(fpIn,"%s", str);
-//                    xDestination = (unsigned int) atoi(str);
-
-//                    scanResult = fscanf(fpIn,"%s", str);
-//                    yDestination = (unsigned int) atoi(str);
+                    scanResult = fscanf(fpIn,"%s", str);
+                    idSrc = (unsigned int) atoi(str);
+                    xSource = ID_TO_COORDINATE_X(idSrc,xSize);
+                    ySource = ID_TO_COORDINATE_Y(idSrc,xSize);
 
                     scanResult = fscanf(fpIn,"%s", str);
-                    xSource = (unsigned int) atoi(str);
+                    idDest = (unsigned int) atoi(str);
+                    //xDestination = ID_TO_COORDINATE_X(idDest,xSize);
+                    //yDestination = ID_TO_COORDINATE_Y(idDest,ySize);
 
                     scanResult = fscanf(fpIn,"%s", str);
-                    ySource = (unsigned int) atoi(str);
-
-                    scanResult = fscanf(fpIn,"%s", str);
-                    flowId = (unsigned int) atoi(str);
+                    threadId = (unsigned int) atoi(str);
 
                     scanResult = fscanf(fpIn,"%s", str);
                     trafficClass = (unsigned int) atoi(str);
@@ -261,7 +263,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
                     scanResult = fscanf(fpIn,"%s", str);
                     requiredBandwidth = (float) atof(str);
 
-                    PacketInfo* pckInfo = new PacketInfo(receivedPacketId,xDestination,yDestination,xSource,ySource,flowId,
+                    PacketInfo* pckInfo = new PacketInfo(receivedPacketId,xDestination,yDestination,xSource,ySource,threadId,
                             trafficClass,deadline,cycleCreationPacket,cycleReceivedHeader,
                             cycleReceivedTrailer,packetSize,requiredBandwidth);
                     this->packets[x][y]->push_back(pckInfo);

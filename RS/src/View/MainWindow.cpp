@@ -1592,7 +1592,7 @@ void MainWindow::stopOptionUpdate(int pos) {
 
 void MainWindow::vcdOptionUpdate(int value) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::vcdOptionUpdated" << std::endl;
+    std::cout << "View/MainWindow::vcdOptionUpdate" << std::endl;
 #endif
     emit vcdOptionChanged(value);
 }

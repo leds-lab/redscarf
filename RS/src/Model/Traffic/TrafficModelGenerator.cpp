@@ -45,8 +45,6 @@
     #include <iostream>
 #endif
 
-#define COORDINATE_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
-
 TrafficModelGenerator::TrafficModelGenerator(SystemParameters *sp, Experiment *exp, TrafficPatternManager *gpt) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/TrafficModelGenerator" << std::endl;

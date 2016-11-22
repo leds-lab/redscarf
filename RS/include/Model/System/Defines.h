@@ -42,6 +42,9 @@
 
 //#define PI                3.1415926535897932384626433832795029
 
+#define COORDINATE_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
+#define ID_TO_COORDINATE_X(i,X_SIZE) (i % X_SIZE)
+#define ID_TO_COORDINATE_Y(i,X_SIZE) (i / X_SIZE)
 
 class DefaultValuesSystem {
 
