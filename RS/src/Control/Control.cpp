@@ -1144,7 +1144,7 @@ void Control::finishSimulation(FinishCode code) {
     this->exes->clear();
     this->mainWindow->enableRun();
     if( code == Control::Success ) {
-//        this->mainWindow->runAnalysis(); // Run analysis after simulation
+        this->mainWindow->runAnalysis(); // Run analysis after simulation
     }
 
 }

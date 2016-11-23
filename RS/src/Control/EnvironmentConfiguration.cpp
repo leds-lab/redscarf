@@ -67,8 +67,8 @@ void EnvironmentConfiguration::readSetup() {
     settings.endGroup();
 
     settings.beginGroup("Dirs");
-    this->simulatorLocation = settings.value("Simulator","SNoCS").toString();
-    this->pluginsFolders = settings.value("Plugins","./plugins").toString();
+    this->simulatorLocation = settings.value("Simulator").toString();
+    this->pluginsFolders = settings.value("Plugins").toString();
     this->workFolder = settings.value("Work",QDir::homePath()+"/"+WORK_DIR).toString();
     this->waveformTool = settings.value("WaveformTool","").toString();
     settings.endGroup();
