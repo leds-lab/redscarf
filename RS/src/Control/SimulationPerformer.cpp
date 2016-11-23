@@ -34,6 +34,7 @@
 #include "include/Model/TimeOperation.h"
 #include <QElapsedTimer>
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 
 #ifdef DEBUG_POINTS_METHODS
@@ -49,8 +50,9 @@ SimulationPerformer::SimulationPerformer(float TClk, QString diretorio, QString 
     this->TClk = TClk;
     this->simulator = simulator;
     this->args = args;
+    this->workDir = diretorio;
     this->executor = new QProcess(this);
-    this->executor->setWorkingDirectory( diretorio );
+    this->executor->setWorkingDirectory( simulator.left(simulator.lastIndexOf( QDir::separator() )) );
     this->executor->setProcessChannelMode(QProcess::MergedChannels);
 
     connect( executor, SIGNAL(readyRead()),this,SLOT(readyRead()) );
@@ -67,12 +69,11 @@ void SimulationPerformer::execute() {
 #endif
 
     QElapsedTimer timer;
-    QString workSystem = this->executor->workingDirectory();
     timer.start();
     executor->start(simulator,args);
 
     if(!executor->waitForFinished(-1)) {
-        emit this->sendMessage( trUtf8("<font color=red><br />Failed execution on:</font> %1").arg(workSystem) );
+        emit this->sendMessage( trUtf8("<font color=red><br />Failed execution on:</font> %1").arg(workDir) );
         emit this->unsuccessfullyExecution();
     } else {
         if( executor->exitStatus() == QProcess::NormalExit ) {
@@ -81,8 +82,8 @@ void SimulationPerformer::execute() {
                 emit unsuccessfullyExecution();
             } else {
                 char* tempo = TimeOperation::formatTime( qulonglong(timer.elapsed()) );
-                QString temp = workSystem.left( workSystem.lastIndexOf("/") );
-                temp = workSystem.mid( temp.lastIndexOf("/") + 5 );
+                QString temp = workDir.left( workDir.lastIndexOf("/") );
+                temp = workDir.mid( temp.lastIndexOf("/") + 5 );
                 temp.replace("/"," @ ");
                 temp.replace("_"," ");
                 emit sendMessage(trUtf8("<font color=green><br />Configuration %1</font>")
@@ -91,7 +92,7 @@ void SimulationPerformer::execute() {
                                  .arg(tempo));
                 delete[] tempo;
                 unsigned long long simulatedTimeCycles = 0;
-                QFile stopOut(workSystem+"/stopsim.out");
+                QFile stopOut(workDir+"/stopsim.out");
                 if(stopOut.open(QIODevice::ReadOnly | QIODevice::Text) ) {
                     QTextStream ts(&stopOut);
                     ts >> simulatedTimeCycles;
@@ -138,7 +139,7 @@ void SimulationPerformer::handleError(QProcess::ProcessError error) {
 
     emit sendMessage( trUtf8("<font color=red>%1 simulator on directory:</font> %2")
             .arg(typeError)
-            .arg(executor->workingDirectory()) );
+            .arg(workDir) );
 
     emit unsuccessfullyExecution();
     emit finished();

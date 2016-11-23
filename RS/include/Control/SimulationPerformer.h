@@ -42,6 +42,7 @@ private:
     QString simulator;
     QStringList args;
     float TClk;
+    QString workDir;
 
 public:
     explicit SimulationPerformer(float TClk, QString diretorio,

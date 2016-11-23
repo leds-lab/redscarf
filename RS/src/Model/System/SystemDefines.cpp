@@ -188,7 +188,7 @@ void SystemDefines::loadVcOptions() {
 #endif
 
     QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
-    int size = settings.beginReadArray("VirtualChannel_options");
+    int size = settings.beginReadArray("VirtualChannel_Options");
     for( int i = 0; i < size; i++ ) {
         settings.setArrayIndex(i);
         QString value = settings.value("Option").toString();
