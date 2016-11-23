@@ -111,10 +111,6 @@ FoldersConfigurationPage::FoldersConfigurationPage(QString simulator,QString plu
 
     ui->lineEditWaveformTool->setCompleter(executableCompleter);
 
-#ifdef Q_OS_UNIX
-    ui->widgetMinGWOption->setEnabled(false);
-#endif
-
     ui->inSimulator->setText( simulator );
     ui->inPlugins->setText( plugins );
     ui->lineEditWorkFolder->setText( work );

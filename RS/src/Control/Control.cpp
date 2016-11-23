@@ -89,8 +89,6 @@
     #include <iostream>
 #endif
 
-#include <QDebug>
-
 Control::Control(QObject *parent) :
     QObject(parent) {
 
