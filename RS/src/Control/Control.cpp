@@ -99,7 +99,7 @@ Control::Control(QObject *parent) :
     this->mainWindow = (MainWindow* ) parent;
 
     this->systemParameters      = new SystemParameters();
-    this->trafficPatternManager = new TrafficPatternManager();
+    this->trafficPatternManager = new TrafficPatternManager(systemParameters);
     this->experimentManager     = new ExperimentManager();
     experimentManager->insertExperiment(1, new Experiment());
 
@@ -170,10 +170,11 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(generateCSVSimulationReport(AnalysisOptions*)),this,SLOT(generateCSVSimulationReport(AnalysisOptions*)));
 
     connect(this->mainWindow,SIGNAL(channelWidthUpdated(unsigned int)),this,SLOT(updateChannelWidth(unsigned int)));
-    connect(this->mainWindow,SIGNAL(sizeUpdated(uint,uint)),this,SLOT(updateSizeSystem(uint,uint)));
-    connect(this->mainWindow,SIGNAL(nodeSelected(uint,uint)),this,SLOT(nodeSelected(uint,uint)));
-    connect(this->mainWindow,SIGNAL(trafficPatternUpdate(uint,uint,uint,bool)),this,SLOT(trafficPatternStatusChanged(uint,uint,uint,bool)));
-    connect(this->mainWindow,SIGNAL(buttonEditClicked(uint,uint,uint)),this,SLOT(editTrafficPattern(uint,uint,uint)));
+    connect(this->mainWindow,SIGNAL(sizeUpdated(uint,uint,uint)),this,SLOT(updateSizeSystem(uint,uint,uint)));
+    connect(this->mainWindow,SIGNAL(nodeSelected(uint,uint,uint)),this,SLOT(nodeSelected(uint,uint,uint)));
+    connect(this->mainWindow,SIGNAL(trafficPatternUpdate(uint,uint,uint,uint,bool)),this,
+            SLOT(trafficPatternStatusChanged(uint,uint,uint,uint,bool)));
+    connect(this->mainWindow,SIGNAL(buttonEditClicked(uint,uint,uint,uint)),this,SLOT(editTrafficPattern(uint,uint,uint,uint)));
     connect(this->mainWindow,SIGNAL(previewTrafficConfiguration(int)),this,SLOT(previewTrafficConfiguration(int)));
     connect(this->mainWindow,&MainWindow::generateTcf,this,&Control::generateTrafficConfigurationFile);
 
@@ -322,6 +323,7 @@ bool Control::loadConfiguration() {
 
     this->mainWindow->updateView( this->systemParameters->getXSize(),
             this->systemParameters->getYSize(),
+                                  this->systemParameters->getZSize(),
             this->systemParameters->getDataWidth(),
             this->experimentManager,parser->getStopOption(),
             parser->getStopTime_ns(),parser->getStopTime_cycles(),parser->getVcdOption(),
@@ -422,19 +424,26 @@ bool Control::inputsOk() {
 
     if(useDefault) {
         // Verificar se há padrões de tráfico ativos
-        for(unsigned int i = 0; i < this->systemParameters->getXSize(); i++) {
-            for(unsigned int x = 0; x < this->systemParameters->getYSize(); x++) {
-                Node* no = this->trafficPatternManager->getNode(i,x);
-                if( no != NULL ) {
-                    for(unsigned int z = 0; z < MAX_PATTERNS; z++) {
-                        if( no->isPatternActive(z) ) {
-                            padroesAtivos = true;
-                            break;
+        for(unsigned int x = 0; x < this->systemParameters->getXSize(); x++) {
+            for(unsigned int y = 0; y < this->systemParameters->getYSize(); y++) {
+                for(unsigned int z = 0; z < this->systemParameters->getZSize(); z++) {
+                    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
+                                                                                        systemParameters->getXSize(),
+                                                                                        systemParameters->getYSize()));
+                    if( no != NULL ) {
+                        for(unsigned int pattern = 0; pattern < MAX_PATTERNS; pattern++) {
+                            if( no->isPatternActive(pattern) ) {
+                                padroesAtivos = true;
+                                break;
+                            }
                         }
                     }
+                    if(padroesAtivos){
+                       break;
+                    }
                 }
-                if(padroesAtivos){
-                   break;
+                if(padroesAtivos) {
+                    break;
                 }
             }
             if(padroesAtivos){
@@ -774,23 +783,26 @@ void Control::updateChannelWidth(unsigned int width) {
     this->mainWindow->setWindowModified(true);
 }
 
-void Control::updateSizeSystem(unsigned int xSize, unsigned int ySize) {
+void Control::updateSizeSystem(unsigned int xSize, unsigned int ySize,unsigned int zSize) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::updateSizeSystem" << std::endl;
 #endif
 
     this->systemParameters->setXSize(xSize);
     this->systemParameters->setYSize(ySize);
+    this->systemParameters->setZSize(zSize);
     this->mainWindow->setWindowModified(true);
 
 }
 
-void Control::nodeSelected(unsigned int posX, unsigned int posY) {
+void Control::nodeSelected(unsigned int posX, unsigned int posY, unsigned int posZ) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::nodeSelected" << std::endl;
 #endif
 
-    Node* no = this->trafficPatternManager->getNode(posX,posY);
+    Node* no = this->trafficPatternManager->getNode( COORDINATE_3D_TO_ID(posX,posY,posZ,
+                                                                         systemParameters->getXSize(),
+                                                                         systemParameters->getYSize()) );
 
     if(no != NULL) {
         for(unsigned int i = 0; i < MAX_PATTERNS; i++) {
@@ -804,12 +816,18 @@ void Control::nodeSelected(unsigned int posX, unsigned int posY) {
 
 }
 
-void Control::trafficPatternStatusChanged(unsigned int posX, unsigned int posY, unsigned int trafficNum, bool state) {
+void Control::trafficPatternStatusChanged(unsigned int posX,
+                                          unsigned int posY,
+                                          unsigned int posZ,
+                                          unsigned int trafficNum,
+                                          bool state) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::trafficPatternStatusChanged" << std::endl;
 #endif
 
-    Node* no = this->trafficPatternManager->getNode(posX,posY);
+    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(posX,posY,posZ,
+                                                                        systemParameters->getXSize(),
+                                                                        systemParameters->getYSize()));
 
     if(no) {
         TrafficParameters* tp = no->getTrafficPattern(trafficNum);
@@ -821,13 +839,16 @@ void Control::trafficPatternStatusChanged(unsigned int posX, unsigned int posY, 
     this->mainWindow->setWindowModified(true);
 }
 
-void Control::editTrafficPattern(unsigned int xPos, unsigned int yPos, unsigned int trafficNum) {
+void Control::editTrafficPattern(unsigned int xPos, unsigned int yPos,
+                                 unsigned int zPos, unsigned int trafficNum) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::editTrafficPattern" << std::endl;
 #endif
 
-    /// Caso já exista um padrao de tráfico para esta posicao e trafficNum = carrega a tela com os valores!
-    Node* no = this->trafficPatternManager->getNode(xPos,yPos);
+    /// Caso já exista um padrao de tráfico para esta posicao e trafficNum -> carrega a tela com os valores!
+    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(xPos,yPos,zPos,
+                                                                        systemParameters->getXSize(),
+                                                                        systemParameters->getYSize()));
 
     TrafficParameters* tp = NULL;
     // Verifica se o "no" é não nulo
@@ -835,10 +856,12 @@ void Control::editTrafficPattern(unsigned int xPos, unsigned int yPos, unsigned 
         tp = no->getTrafficPattern(trafficNum);
     }
 
-    TrafficConfigurationDialog* tf = new TrafficConfigurationDialog(this->mainWindow,xPos,yPos,trafficNum,
-                                                                this->systemParameters->getXSize(),
-                                                                systemParameters->getYSize(),
-                                                                this->systemParameters->getDataWidth());
+    TrafficConfigurationDialog* tf = new TrafficConfigurationDialog(this->mainWindow,xPos,yPos,zPos,
+                                                                    trafficNum,
+                                                                    this->systemParameters->getXSize(),
+                                                                    systemParameters->getYSize(),
+                                                                    systemParameters->getZSize(),
+                                                                    this->systemParameters->getDataWidth());
     tf->setLocale( mainWindow->locale() );
 
     if( tp ) {
@@ -861,12 +884,17 @@ void Control::applyTrafficConfiguration(TrafficParameters *configuration, unsign
     // Aplicar ao nodo atual
     unsigned int xPos = configuration->getSourceNodeX();
     unsigned int yPos = configuration->getSourceNodeY();
+    unsigned int zPos = configuration->getSourceNodeZ();
 
-    Node* no = this->trafficPatternManager->getNode(xPos,yPos);
+    unsigned int id = COORDINATE_3D_TO_ID(xPos,yPos,zPos,
+                                          systemParameters->getXSize(),
+                                          systemParameters->getYSize());
+
+    Node* no = this->trafficPatternManager->getNode(id);
 
     if(!no) {
-        no = new Node(xPos,yPos);
-        this->trafficPatternManager->insertNode(no);
+        no = new Node(xPos,yPos,zPos);
+        this->trafficPatternManager->insertNode(id,no);
     }
     no->setTrafficPattern(configuration,trafficNum);
     this->mainWindow->setWindowModified(true);
@@ -880,18 +908,25 @@ void Control::applyAndReplicateTrafficConfiguration(TrafficParameters *configura
 
     unsigned int xSize = systemParameters->getXSize();
     unsigned int ySize = systemParameters->getYSize();
+    unsigned int zSize = systemParameters->getZSize();
 
     for(unsigned int x = 0; x < xSize; x++) {
         for(unsigned int y = 0; y < ySize; y++) {
-            Node* no = this->trafficPatternManager->getNode(x,y);
-            if(!no) {
-                no = new Node(x,y);
-                this->trafficPatternManager->insertNode(no);
+            for( unsigned int z = 0; z < zSize; z++ ) {
+                unsigned int elementId = COORDINATE_3D_TO_ID(x,y,z,
+                                                             systemParameters->getXSize(),
+                                                             systemParameters->getYSize());
+                Node* no = this->trafficPatternManager->getNode(elementId);
+                if(!no) {
+                    no = new Node(x,y,z);
+                    this->trafficPatternManager->insertNode(elementId,no);
+                }
+                TrafficParameters* clone = new TrafficParameters(*configuration);
+                clone->setSourceNodeX(x);
+                clone->setSourceNodeY(y);
+                clone->setSourceNodeZ(z);
+                no->setTrafficPattern( clone , trafficNum ); // first argument is clone of object
             }
-            TrafficParameters* clone = new TrafficParameters(*configuration);
-            clone->setSourceNodeX(x);
-            clone->setSourceNodeY(y);
-            no->setTrafficPattern( clone , trafficNum ); // first argument is clone of object
         }
     }
 
@@ -918,12 +953,17 @@ void Control::previewTrafficConfiguration(int typePreview) {
     preview->setLocale( mainWindow->locale() );
     unsigned int xSize = this->systemParameters->getXSize();
     unsigned int ySize = this->systemParameters->getYSize();
+    unsigned int zSize = this->systemParameters->getZSize();
 
-    for( unsigned int i = 0; i < xSize; i++ ) {
-        for( unsigned int x = 0; x < ySize; x++ ) {
-            Node* nodo = this->trafficPatternManager->getNode(i,x);
-            if( nodo != NULL ) {
-                preview->addNode(nodo);
+    for( unsigned int x = 0; x < xSize; x++ ) {
+        for( unsigned int y = 0; y < ySize; y++ ) {
+            for(unsigned int z = 0; z < zSize; z++) {
+                Node* nodo = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
+                                                                                      systemParameters->getXSize(),
+                                                                                      systemParameters->getYSize()));
+                if( nodo != NULL ) {
+                    preview->addNode(nodo);
+                }
             }
         }
     }
@@ -1067,6 +1107,7 @@ void Control::copySystemParameters() {
 
     this->xSize = this->systemParameters->getXSize();
     this->ySize = this->systemParameters->getYSize();
+    this->zSize = this->systemParameters->getZSize();
     this->dataWidth = this->systemParameters->getDataWidth();
 
     this->vcdOption = this->systemParameters->getVcdOption();
@@ -1205,7 +1246,7 @@ void Control::generateAnalysis(float lower, float upper) {
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(trUtf8("<font color=green><br />Analyzing simulation results</font>"));
-    Analyzer* analyzer = new Analyzer(this->simulationFolders,xSize,ySize,dataWidth,lower,upper);
+    Analyzer* analyzer = new Analyzer(this->simulationFolders,xSize,ySize,zSize,dataWidth,lower,upper);
     QThread* threadAnalisador = new QThread(this);
     threadAnalisador->setObjectName("Analyzer");
     connect(threadAnalisador,SIGNAL(started()),analyzer,SLOT(analyze()));
@@ -2084,6 +2125,12 @@ void Control::runSimulations() {
                     args.append(QString::number(systemParameters->getXSize()));
                     args.append("-ysize");
                     args.append(QString::number(systemParameters->getYSize()));
+                    if(systemParameters->getZSize()>1) {
+                        if(topology.getTopology().contains("3D")) { // WARNING - verify a safe alternative
+                            args.append("-zsize");
+                            args.append(QString::number(systemParameters->getZSize()));
+                        }
+                    }
                     args.append("-datawidth");
                     args.append(QString::number(systemParameters->getDataWidth()));
                     args.append("-fifoin");

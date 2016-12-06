@@ -36,31 +36,29 @@
 
 #include <map>
 
+class SystemParameters;
 
 /*!
  * \brief The TrafficPatternManager class
  * is responsible by mantain the traffic parameters
  * applied in system
- *
- * Warning: Only supports keys to a network with 2 dimensions
- * and wich dimension with size from 0 to 9 positions
- * Pos: 9,9 -> key= '9' * 10 + '9' = 99
  */
 class TrafficPatternManager {
 private:
+    SystemParameters* sp;
+
     std::map<unsigned int,Node*>           *nodes;
     std::map<unsigned int,Node*>::iterator  it   ;
 
-    bool chaveExiste (unsigned int chave) const;
+    bool keyExist(unsigned int key) const;
 
 public:
-    TrafficPatternManager();
+    TrafficPatternManager(SystemParameters* sp);
     ~TrafficPatternManager();
 
-    void   insertNode(Node* nodo);
-    void   removeNode(unsigned int posX,unsigned int posY );
-    void   removeNode(Node* nodo);
-    Node*  getNode   (unsigned int posX, unsigned int posY) const;
+    void   insertNode(unsigned int key,Node* node);
+    void   removeNode(unsigned int key);
+    Node*  getNode   (unsigned int key) const;
     void   clear     ();
 
     TrafficPatternManager* clone();

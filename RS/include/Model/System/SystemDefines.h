@@ -165,9 +165,4 @@ private:
 
 };
 
-Q_DECLARE_METATYPE(SystemDefines::Topology)
-Q_DECLARE_METATYPE(SystemDefines::Routing)
-Q_DECLARE_METATYPE(SystemDefines::FlowControl)
-Q_DECLARE_METATYPE(SystemDefines::PriorityGenerator)
-
 #endif // SYSTEMDEFINES_H

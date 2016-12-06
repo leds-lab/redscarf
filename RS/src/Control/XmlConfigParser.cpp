@@ -282,6 +282,7 @@ void XmlConfigParser::saveXML(QFile *file) {
 #endif
     unsigned int xSize = this->systemParameters->getXSize();
     unsigned int ySize = this->systemParameters->getYSize();
+    unsigned int zSize = this->systemParameters->getZSize();
 
     QXmlStreamWriter* xml = new QXmlStreamWriter(file);
 
@@ -297,6 +298,7 @@ void XmlConfigParser::saveXML(QFile *file) {
     xml->writeStartElement("systemSize");
     xml->writeAttribute("xSize",QString::number(xSize));
     xml->writeAttribute("ySize",QString::number(ySize));
+    xml->writeAttribute("zSize",QString::number(zSize));
     xml->writeAttribute("channelWidth",QString::number(systemParameters->getDataWidth()));
     xml->writeComment(QString("Sistem size range in %1: x= 2 <-> 10; y= 2 <-> 10 channelWidth= 16 <-> 56")
                       .arg(APPLICATION_NAME));
@@ -305,37 +307,42 @@ void XmlConfigParser::saveXML(QFile *file) {
 
     for( unsigned int x = 0; x < xSize; x++ ) {
         for( unsigned int y = 0; y < ySize; y++ ) {
-            Node* nodo = this->trafficPatternManager->getNode(x,y);
-            if( nodo != NULL ) {
-                bool semPadroes = true;
-                // Verifica se há padrão de tráfego ativo para este nodo
-                for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
-                    if( nodo->isPatternActive(i) ) {
-                        semPadroes = false;
+            for(unsigned int z = 0; z < zSize; z++) {
+                Node* nodo = this->trafficPatternManager->getNode(
+                            COORDINATE_3D_TO_ID(x,y,z,xSize,ySize)
+                            );
+                if( nodo != NULL ) {
+                    bool semPadroes = true;
+                    // Verifica se há padrão de tráfego ativo para este nodo
+                    for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
+                        if( nodo->isPatternActive(i) ) {
+                            semPadroes = false;
+                        }
                     }
-                }
-                // Se não houver padrao ativo passa para próximo nodo
-                if(semPadroes) {
-                    continue;
-                }
+                    // Se não houver padrao ativo passa para próximo nodo
+                    if(semPadroes) {
+                        continue;
+                    }
 
-                // Início da escrita do elemento fonte - sourceNode
-                xml->writeStartElement("sourceNode");
-                xml->writeAttribute("x",QString::number(x));
-                xml->writeAttribute("y",QString::number(y));
-                for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
-                    if( nodo->isPatternActive(i) ) {
-                        TrafficParameters* tp = nodo->getTrafficPattern(i);
-                        // Início da escrita do elemento padrão de tráfego - trafficPattern
-                        xml->writeStartElement("trafficPattern");
-                        xml->writeAttribute("index",QString::number(i));
-                        this->writeTrafficParametersInNode(xml,tp);
-                        xml->writeEndElement();
-                        // Fim da escrita do elemento padrão de tráfego - trafficPattern
+                    // Início da escrita do elemento fonte - sourceNode
+                    xml->writeStartElement("sourceNode");
+                    xml->writeAttribute("x",QString::number(x));
+                    xml->writeAttribute("y",QString::number(y));
+                    xml->writeAttribute("z",QString::number(z));
+                    for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
+                        if( nodo->isPatternActive(i) ) {
+                            TrafficParameters* tp = nodo->getTrafficPattern(i);
+                            // Início da escrita do elemento padrão de tráfego - trafficPattern
+                            xml->writeStartElement("trafficPattern");
+                            xml->writeAttribute("index",QString::number(i));
+                            this->writeTrafficParametersInNode(xml,tp);
+                            xml->writeEndElement();
+                            // Fim da escrita do elemento padrão de tráfego - trafficPattern
+                        }
                     }
+                    xml->writeEndElement();
+                    // Fim da escrite do elemento fonte - sourceNode
                 }
-                xml->writeEndElement();
-                // Fim da escrite do elemento fonte - sourceNode
             }
         }
     }
@@ -451,6 +458,7 @@ void XmlConfigParser::loadXML(QFile *file) {
             if( name == "systemSize" ) {
                 this->systemParameters->setXSize( attributes.value("xSize").toString().toUInt() );
                 this->systemParameters->setYSize( attributes.value("ySize").toString().toUInt() );
+                this->systemParameters->setZSize( attributes.value("zSize").toString().toUInt() );
                 this->systemParameters->setDataWidth( attributes.value("channelWidth").toString().toUInt() );
                 continue;
             }
@@ -459,7 +467,8 @@ void XmlConfigParser::loadXML(QFile *file) {
             if( name == "sourceNode" ) {
                 unsigned int xSrc = attributes.value("x").toString().toUInt();
                 unsigned int ySrc = attributes.value("y").toString().toUInt();
-                Node* nodo = new Node(xSrc,ySrc);
+                unsigned int zSrc = attributes.value("z").toString().toUInt();
+                Node* nodo = new Node(xSrc,ySrc,zSrc);
                 // Ler Padrões de Tráfego
                 do {
                     token = xml->readNext();
@@ -469,11 +478,16 @@ void XmlConfigParser::loadXML(QFile *file) {
                         TrafficParameters* tp = this->parseTrafficPattern(xml);
                         tp->setSourceNodeX( xSrc );
                         tp->setSourceNodeY( ySrc );
+                        tp->setSourceNodeZ( zSrc );
                         nodo->setTrafficPattern(tp,index);
                     }
                 } while( !(token == QXmlStreamReader::EndElement && xml->name() == "sourceNode" ) );
 
-                this->trafficPatternManager->insertNode(nodo);
+                this->trafficPatternManager->insertNode(
+                            COORDINATE_3D_TO_ID(xSrc,ySrc,zSrc,
+                                                systemParameters->getXSize(),
+                                                systemParameters->getYSize()),
+                            nodo);
             }
 
             // Experiment

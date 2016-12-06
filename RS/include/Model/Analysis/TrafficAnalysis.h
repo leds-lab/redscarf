@@ -36,6 +36,7 @@ class TrafficAnalysis {
 protected:
     unsigned int xSize;
     unsigned int ySize;
+    unsigned int zSize;
     unsigned int dataWidth;
     float lower;
     float upper;
@@ -51,7 +52,7 @@ protected:
 public:
     // Versão antiga => 0 = NoInputFile | 1 = Ok | -1 = NoPackets Delivered
     enum StatusAnalysis{Ok=0,NoPacketsDelivered,NoInputFile,NoOutputFile};
-    TrafficAnalysis(unsigned int xSize, unsigned int ySize,
+    TrafficAnalysis(unsigned int xSize, unsigned int ySize,unsigned int zSize,
                     unsigned int dataWidth,float lower,float upper,
                     float fClk,float tClk,unsigned long int channelBw,
                     unsigned int fifoOutDepth,unsigned int flowControlType,

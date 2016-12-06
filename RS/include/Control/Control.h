@@ -85,6 +85,7 @@ private:
     // Model copy system parameters for analysis
     unsigned int xSize;
     unsigned int ySize;
+    unsigned int zSize;
     unsigned int dataWidth;
     unsigned int vcdOption;
     bool analysisOk;
@@ -195,11 +196,16 @@ private slots:
     void folderCompressorWorkCompleted(bool success,int opType);
 
     // System and traffic configuration
-    void updateSizeSystem(unsigned int xSize,unsigned int ySize);
+    void updateSizeSystem(unsigned int xSize,unsigned int ySize,unsigned int zSize);
     void updateChannelWidth(unsigned int width);
-    void nodeSelected(unsigned int posX,unsigned int posY);
-    void trafficPatternStatusChanged(unsigned int posX,unsigned int posY, unsigned int trafficNum, bool state);
-    void editTrafficPattern(unsigned int xPos,unsigned int yPos,unsigned int trafficNum);
+    void nodeSelected(unsigned int posX,unsigned int posY,unsigned int posZ);
+    void trafficPatternStatusChanged(unsigned int posX,
+                                     unsigned int posY,
+                                     unsigned int posZ,
+                                     unsigned int trafficNum,
+                                     bool state);
+    void editTrafficPattern(unsigned int xPos, unsigned int yPos,
+                            unsigned int zPos, unsigned int trafficNum);
     void applyTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
     void applyAndReplicateTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
     void previewTrafficConfiguration(int typePreview);

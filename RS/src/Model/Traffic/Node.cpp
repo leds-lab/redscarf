@@ -35,12 +35,13 @@
     #include <iostream>
 #endif
 
-Node::Node(unsigned int posX, unsigned int posY) {
+Node::Node(unsigned int posX, unsigned int posY, unsigned int posZ) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/Node" << std::endl;
 #endif
     this->xPosition = posX;
     this->yPosition = posY;
+    this->zPosition = posZ;
     for( int i = 0; i < MAX_PATTERNS; i++ ) {
         this->patternActive[i] = false;
         this->trafficPattern[i] = NULL;
@@ -115,6 +116,13 @@ unsigned int Node::getPosicaoY() const {
     return this->yPosition;
 }
 
+unsigned int Node::getPosicaoZ() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Model/TrafficPattern/Node::getPosicaoZ" << std::endl;
+#endif
+    return this->zPosition;
+}
+
 std::string Node::toString() const {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/Node::toString" << std::endl;
@@ -128,6 +136,10 @@ std::string Node::toString() const {
     intToStr.str("");
     intToStr << this->yPosition;
     str += "Node PosY: "+intToStr.str()+"\n";
+
+    intToStr.str("");
+    intToStr << this->zPosition;
+    str += "Node PosZ: "+intToStr.str()+"\n";
 
     for( unsigned int i = 0; i < MAX_PATTERNS; i++ ) {
         if( this->patternActive[i] ) {
@@ -145,7 +157,7 @@ Node* Node::clone() {
     std::cout << "Model/TrafficPattern/Node::clone" << std::endl;
 #endif
 
-    Node* no = new Node(this->xPosition,this->yPosition);
+    Node* no = new Node(this->xPosition,this->yPosition,this->zPosition);
 
     for(unsigned int i = 0; i < MAX_PATTERNS; i++) {
         no->patternActive[i] = this->patternActive[i];

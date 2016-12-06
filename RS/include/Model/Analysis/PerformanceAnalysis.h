@@ -227,7 +227,7 @@ public:
      * \param workDir Read log files folder for analysis
      * \param resultDir Write report files folder of analysis
      */
-    PerformanceAnalysis(unsigned int xSize, unsigned int ySize,
+    PerformanceAnalysis(unsigned int xSize, unsigned int ySize,unsigned int zSize,
                         unsigned int dataWidth,float lower,float upper,
                         float fClk,float tClk,unsigned long int channelBw,
                         unsigned int fifoOutDepth,unsigned int flowControlType,

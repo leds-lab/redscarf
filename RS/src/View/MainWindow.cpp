@@ -148,6 +148,7 @@ void MainWindow::loadDefaultValues() {
 
     ui->spinInXSize->setValue(qint32(DefaultValuesSystem::DEFAULT_X_SIZE));
     ui->spinInYSize->setValue(qint32(DefaultValuesSystem::DEFAULT_Y_SIZE));
+    ui->spinInZSize->setValue(qint32(DefaultValuesSystem::DEFAULT_Z_SIZE));
     ui->spinInChannelWidth->setValue(qint32(DefaultValuesSystem::DEFAULT_DATA_WIDTH));
 
     ui->spinBoxStopTimeNs->setValue( qint32(DefaultValuesSystem::DEFAULT_STOP_TIME_NS) );
@@ -313,6 +314,8 @@ void MainWindow::establishConnections() {
     // System Configuration
     connect(ui->spinInXSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
     connect(ui->spinInYSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
+    connect(ui->spinInZSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
+
     connect(ui->spinInChannelWidth,SIGNAL(valueChanged(int)),this,SLOT(channelWidthUpdate(int)));
 
     connect(ui->checkInTrafficPattern0,SIGNAL(stateChanged(int)),this,SLOT(trafficPatternStateChanged(int)));
@@ -327,8 +330,9 @@ void MainWindow::establishConnections() {
 
     connect(ui->spinInSrcNodeX,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
     connect(ui->spinInSrcNodeY,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
+    connect(ui->spinInSrcNodeZ,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
 
-    connect(this,SIGNAL(nodeSelected(uint,uint)),this,SLOT(nodeSelectedUpdated(uint,uint)));
+    connect(this,SIGNAL(nodeSelected(uint,uint,uint)),this,SLOT(nodeSelectedUpdated(uint,uint,uint)));
 
     connect(ui->buttonPreviewDefault,SIGNAL(clicked()),this,SLOT(previewTrafficConfigurationClicked()));
     connect(ui->buttonXmlViewer,SIGNAL(clicked()),this,SLOT(previewTrafficConfigurationClicked()));
@@ -795,7 +799,7 @@ void MainWindow::changeEvent(QEvent *event) {
 
 }
 
-void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
+void MainWindow::updateView(unsigned int xSize, unsigned int ySize,unsigned int zSize,
         unsigned int channelWidth, ExperimentManager *gpe,
         int stopOption, int stopTime_ns, int stopTime_cycles,
         int vcdOption, float fClkFirst, float fClkLast, int fClkStepType, float fClkStep) {
@@ -805,10 +809,12 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
 
     ui->spinInXSize->setValue( qint32(xSize) );
     ui->spinInYSize->setValue( qint32(ySize) );
+    ui->spinInZSize->setValue( qint32(zSize) );
     ui->spinInChannelWidth->setValue( qint32(channelWidth) );
 
     ui->spinInSrcNodeX->setValue(0);
     ui->spinInSrcNodeY->setValue(0);
+    ui->spinInSrcNodeZ->setValue(0);
 
     ui->spinBoxStopTimeCycles->setValue( stopTime_cycles );
     ui->spinBoxStopTimeNs->setValue( stopTime_ns );
@@ -887,7 +893,7 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,
         }
     }
 
-    emit this->nodeSelected(0,0);
+    emit this->nodeSelected(0,0,0);
 }
 
 void MainWindow::enableRun() {
@@ -1154,6 +1160,7 @@ void MainWindow::sizeUpdate() {
 
     unsigned int xSize = quint32(ui->spinInXSize->value());
     unsigned int ySize = quint32(ui->spinInYSize->value());
+    unsigned int zSize = quint32(ui->spinInZSize->value());
 
     this->clearGridNodes();
 
@@ -1181,24 +1188,26 @@ void MainWindow::sizeUpdate() {
 
     ui->spinInSrcNodeX->setMaximum(xSize - 1);
     ui->spinInSrcNodeY->setMaximum(ySize - 1);
+    ui->spinInSrcNodeZ->setMaximum(zSize - 1);
 
     ui->spinBoxXDestinationAnalyze->setMaximum( xSize - 1 );
     ui->spinBoxXSourceAnalyze->setMaximum( xSize - 1 );
     ui->spinBoxYDestinationAnalyze->setMaximum( ySize - 1 );
     ui->spinBoxYSourceAnalyze->setMaximum( ySize - 1 );
 
-    emit nodeSelected( ui->spinInSrcNodeX->value(),ui->spinInSrcNodeY->value() );
+    emit nodeSelected( ui->spinInSrcNodeX->value(),ui->spinInSrcNodeY->value(),ui->spinInSrcNodeZ->value());
     // Send to control
-    emit this->sizeUpdated(xSize,ySize);
+    emit this->sizeUpdated(xSize,ySize, zSize );
 }
 
-void MainWindow::nodeSelectedUpdated(unsigned int posX, unsigned int posY) {
+void MainWindow::nodeSelectedUpdated(unsigned int posX, unsigned int posY,unsigned int posZ) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::nodeSelectedUpdated" << std::endl;
 #endif
 
     unsigned int xSize = quint32(ui->spinInXSize->value());
     unsigned int ySize = quint32(ui->spinInYSize->value());
+//    unsigned int zSize = quint32(ui->spinInZSize->value());
 
     QGridLayout* grid = (QGridLayout* ) ui->nodes->layout();
     for( unsigned int x = 0; x < xSize; x++) {
@@ -1226,12 +1235,12 @@ void MainWindow::nodeClicked() {
     QStringList list = text.split(',');
     unsigned int xSrc = quint32(list.at(0).toInt());
     unsigned int ySrc = quint32(list.at(1).toInt());
-
+    unsigned int zSrc = quint32(ui->spinInSrcNodeZ->value());
 
     ui->spinInSrcNodeX->setValue(xSrc);
     ui->spinInSrcNodeY->setValue(ySrc);
 
-    emit this->nodeSelected(xSrc,ySrc);
+    emit this->nodeSelected(xSrc,ySrc,zSrc);
 
 }
 
@@ -1251,7 +1260,9 @@ void MainWindow::srcNodeUpdated() {
     std::cout << "View/MainWindow::srcNodeUpdated" << std::endl;
 #endif
 
-    emit this->nodeSelected( quint32(ui->spinInSrcNodeX->value()) , quint32(ui->spinInSrcNodeY->value()) );
+    emit this->nodeSelected( quint32(ui->spinInSrcNodeX->value()),
+                             quint32(ui->spinInSrcNodeY->value()),
+                             quint32(ui->spinInSrcNodeZ->value()) );
 
 }
 
@@ -1281,7 +1292,11 @@ void MainWindow::trafficPatternStateChanged(int s) {
             break;
     }
 
-    emit this->trafficPatternUpdate( quint32(ui->spinInSrcNodeX->value()), quint32(ui->spinInSrcNodeY->value()), num, state );
+    emit this->trafficPatternUpdate(
+                quint32(ui->spinInSrcNodeX->value()),
+                quint32(ui->spinInSrcNodeY->value()),
+                quint32(ui->spinInSrcNodeZ->value()),
+                num, state );
 
 }
 
@@ -1292,7 +1307,10 @@ void MainWindow::editClicked() {
 
     QPushButton* botao = (QPushButton* ) sender();
 
-    emit this->buttonEditClicked( quint32(ui->spinInSrcNodeX->value()), quint32(ui->spinInSrcNodeY->value()), botao->property("num").toUInt() );
+    emit this->buttonEditClicked( quint32(ui->spinInSrcNodeX->value()),
+                                  quint32(ui->spinInSrcNodeY->value()),
+                                  quint32(ui->spinInSrcNodeZ->value()),
+                                  botao->property("num").toUInt() );
 
 }
 

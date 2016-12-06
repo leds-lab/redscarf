@@ -64,7 +64,8 @@ SystemParameters::SystemParameters(bool defaultValues) {
         this->tClk                    = DefaultValuesSystem::DEFAULT_TCLK            ; // Clock cycle
         this->vcdOption               = DefaultValuesSystem::DEFAULT_VCD_OPTION      ; // VCD generation option
         this->xSize                   = DefaultValuesSystem::DEFAULT_X_SIZE          ; // Network dimension in axis x
-        this->ySize                   = DefaultValuesSystem::DEFAULT_Y_SIZE          ; // Network dimensions in axis y
+        this->ySize                   = DefaultValuesSystem::DEFAULT_Y_SIZE          ; // Network dimension in axis y
+        this->zSize                   = DefaultValuesSystem::DEFAULT_Z_SIZE          ; // Network dimension in z-axis
 
         this->fClkFirst    = DefaultValuesSystem::DEFAULT_FCLK_FIRST;
         this->fClkLast     = DefaultValuesSystem::DEFAULT_FCLK_LAST;
@@ -91,6 +92,18 @@ std::string SystemParameters::toString() const {
 
     // Assembly string
 
+    intToString << this->xSize;
+    description += "Network dimension in x-axis: "+intToString.str()+"\n";
+
+    intToString.str("");
+    intToString << this->ySize;
+    description += "Network dimension in y-axis: "+intToString.str()+"\n";
+
+    intToString.str("");
+    intToString << this->zSize;
+    description += "Network dimension in z-axis:"+intToString.str()+"\n";
+
+    intToString.str("");
     intToString << this->ageClockWidth;
     description += "Width of aging counter: "+intToString.str()+"\n";
 
@@ -143,14 +156,6 @@ std::string SystemParameters::toString() const {
     description += "VCD generation option: "+intToString.str()+"\n";
 
     intToString.str("");
-    intToString << this->xSize;
-    description += "Network dimension in axis x: "+intToString.str()+"\n";
-
-    intToString.str("");
-    intToString << this->ySize;
-    description += "Network dimensions in axis y: "+intToString.str()+"\n";
-
-    intToString.str("");
     intToString << this->fClkFirst;
     description += "FClk First: "+intToString.str()+"\n";
 
@@ -194,7 +199,8 @@ inline bool SystemParameters::equals(SystemParameters *obj) const {
             obj->tClk                    == this->tClk                    &&
             obj->vcdOption               == this->vcdOption               &&
             obj->xSize                   == this->xSize                   &&
-            obj->ySize                   == this->ySize
+            obj->ySize                   == this->ySize                   &&
+            obj->zSize                   == this->zSize
             ) {
         return true;
     }

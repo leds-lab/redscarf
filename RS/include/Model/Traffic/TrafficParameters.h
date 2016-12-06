@@ -42,9 +42,11 @@ private:
 
     unsigned int        sourceNodeX                  ;  // Source node - X coordinate
     unsigned int        sourceNodeY                  ;  // Source node - Y coordinate
+    unsigned int        sourceNodeZ                  ;  // Source node - Z coordinate
     unsigned int        spatialDistribution          ;  // Type of spatial distribution (e.g. Uniform)
-    unsigned int        destionationNodeX            ;  // Destination node - X coordinate
-    unsigned int        destionationNodeY            ;  // Destination node - Y coordinate
+    unsigned int        destinationNodeX             ;  // Destination node - X coordinate
+    unsigned int        destinationNodeY             ;  // Destination node - Y coordinate
+    unsigned int        destinationNodeZ             ;  // Destination node - Z coordinate
     unsigned int        trafficClass                 ;  // Traffic class: RT0, RT1, nRT0 or nRT1
     unsigned int        injectionType                ;  // Injection mode (e.g. Constant rate)
     unsigned int        switchingTechnique           ;  // Swithcing mode
@@ -71,8 +73,10 @@ public:
     ///////////////// SETs /////////////////
     inline void setSourceNodeX                  (unsigned int sourceX               ) { this->sourceNodeX                   = sourceX                       ; }
     inline void setSourceNodeY                  (unsigned int sourceY               ) { this->sourceNodeY                   = sourceY                       ; }
-    inline void setDestinationNodeX             (unsigned int destinationX          ) { this->destionationNodeX             = destinationX                  ; }
-    inline void setDestinationNodeY             (unsigned int destinationY          ) { this->destionationNodeY             = destinationY                  ; }
+    inline void setSourceNodeZ                  (unsigned int sourceZ               ) { this->sourceNodeZ                   = sourceZ                       ; }
+    inline void setDestinationNodeX             (unsigned int destinationX          ) { this->destinationNodeX              = destinationX                  ; }
+    inline void setDestinationNodeY             (unsigned int destinationY          ) { this->destinationNodeY              = destinationY                  ; }
+    inline void setDestinationNodeZ             (unsigned int destinationZ          ) { this->destinationNodeZ              = destinationZ                  ; }
     inline void setTrafficClass                 (unsigned int trafficClass          ) { this->trafficClass                  = trafficClass                  ; }
     inline void setInjectionType                (unsigned int injectionType         ) { this->injectionType                 = injectionType                 ; }
     inline void setSwitchingTechnique           (unsigned int switchingTechnique    ) { this->switchingTechnique            = switchingTechnique            ; }
@@ -92,8 +96,10 @@ public:
     ///////////////// GETs /////////////////
     inline unsigned int      getSourceNodeX                  () const { return this->sourceNodeX                   ; }
     inline unsigned int      getSourceNodeY                  () const { return this->sourceNodeY                   ; }
-    inline unsigned int      getDestinationNodeX             () const { return this->destionationNodeX             ; }
-    inline unsigned int      getDestinationNodeY             () const { return this->destionationNodeY             ; }
+    inline unsigned int      getSourceNodeZ                  () const { return this->sourceNodeZ                   ; }
+    inline unsigned int      getDestinationNodeX             () const { return this->destinationNodeX              ; }
+    inline unsigned int      getDestinationNodeY             () const { return this->destinationNodeY              ; }
+    inline unsigned int      getDestinationNodeZ             () const { return this->destinationNodeZ              ; }
     inline unsigned int      getTrafficClass                 () const { return this->trafficClass                  ; }
     inline unsigned int      getInjectionType                () const { return this->injectionType                 ; }
     inline unsigned int      getSwitchingTechnique           () const { return this->switchingTechnique            ; }

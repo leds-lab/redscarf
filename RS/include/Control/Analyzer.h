@@ -52,6 +52,7 @@ private:
     QList<QString> *analysisFolders;
     unsigned int xSize;
     unsigned int ySize;
+    unsigned int zSize;
     float lower;
     float upper;
     unsigned int dataWidth;
@@ -68,7 +69,7 @@ public:
      * \param parent QObject parent of this Analyzer
      */
     explicit Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
-                      unsigned int ySize, unsigned int dataWidth, float lower,
+                      unsigned int ySize, unsigned int zSize, unsigned int dataWidth, float lower,
                       float upper, QObject *parent = 0);
     ~Analyzer();
 

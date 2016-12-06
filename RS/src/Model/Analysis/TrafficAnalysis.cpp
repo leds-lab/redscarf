@@ -35,10 +35,10 @@
     #include <iostream>
 #endif
 
-TrafficAnalysis::TrafficAnalysis(unsigned int xSize, unsigned int ySize,
-         unsigned int dataWidth,float lower,float upper,
-         float fClk,float tClk,unsigned long int channelBw,
-         unsigned int fifoOutDepth,unsigned int flowControlType,
+TrafficAnalysis::TrafficAnalysis(unsigned int xSize, unsigned int ySize, unsigned int zSize,
+         unsigned int dataWidth, float lower, float upper,
+         float fClk, float tClk, unsigned long int channelBw,
+         unsigned int fifoOutDepth, unsigned int flowControlType,
          const char* workDir, const char* resultDir) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/Analysis/TrafficAnalysis" << std::endl;
@@ -56,6 +56,7 @@ TrafficAnalysis::TrafficAnalysis(unsigned int xSize, unsigned int ySize,
     this->workDir         = workDir;
     this->xSize           = xSize;
     this->ySize           = ySize;
+    this->zSize           = zSize;
 
 }
 

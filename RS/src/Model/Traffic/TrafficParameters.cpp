@@ -44,8 +44,9 @@ TrafficParameters::TrafficParameters(bool defaultValues) {
         this->alfaOff                       = DefaultValuesTrafficGeneration::DEFAULT_ALFA_OFF;
         this->alfaOn                        = DefaultValuesTrafficGeneration::DEFAULT_ALFA_ON;
         this->deadline                      = DefaultValuesTrafficGeneration::DEFAULT_DEADLINE;
-        this->destionationNodeX             = 0;
-        this->destionationNodeY             = 0;
+        this->destinationNodeX              = 0;
+        this->destinationNodeY              = 0;
+        this->destinationNodeZ              = 0;
         this->idleTime                      = DefaultValuesTrafficGeneration::DEFAULT_IDLE_TIME;
         this->injectionType                 = DefaultValuesTrafficGeneration::DEFAULT_INJECTION_TYPE;
         this->intervalTime                  = DefaultValuesTrafficGeneration::DEFAULT_INTERVAL_TIME;
@@ -58,6 +59,7 @@ TrafficParameters::TrafficParameters(bool defaultValues) {
         this->requiredBandwidthStdDeviation = DefaultValuesTrafficGeneration::DEFAULT_REQUIRED_BANDWIDTH_STD_DEVIATION;
         this->sourceNodeX                   = 0;
         this->sourceNodeY                   = 0;
+        this->sourceNodeZ                   = 0;
         this->spatialDistribution           = DefaultValuesTrafficGeneration::DEFAULT_SPATIAL_DISTRIBUTION;
         this->switchingTechnique            = DefaultValuesTrafficGeneration::DEFAULT_SWITCHING_TYPE;
         this->trafficClass                  = DefaultValuesTrafficGeneration::DEFAULT_TRAFFIC_CLASS;
@@ -87,16 +89,24 @@ std::string TrafficParameters::toString() const {
     description += "Source node - Y coordinate: "+intToString.str()+"\n";
 
     intToString.str("");
+    intToString << this->sourceNodeZ;
+    description += "Source node - Z coordinate: "+intToString.str()+"\n";
+
+    intToString.str("");
     intToString << this->spatialDistribution;
     description += "Type of spatial distribution (e.g. Uniform): "+intToString.str()+"\n";
 
     intToString.str("");
-    intToString << this->destionationNodeX;
+    intToString << this->destinationNodeX;
     description += "Destination node - X coordinate: "+intToString.str()+"\n";
 
     intToString.str("");
-    intToString << this->destionationNodeY;
+    intToString << this->destinationNodeY;
     description += "Destination node - Y coordinate: "+intToString.str()+"\n";
+
+    intToString.str("");
+    intToString << this->destinationNodeZ;
+    description += "Destination node - Z coordinate: "+intToString.str()+"\n";
 
     intToString.str("");
     intToString << this->trafficClass;
@@ -177,9 +187,11 @@ bool TrafficParameters::equals(TrafficParameters* obj) const {
     }
     if(obj->sourceNodeX                        == this->sourceNodeX                   &&
             obj->sourceNodeY                   == this->sourceNodeY                   &&
+            obj->sourceNodeZ                   == this->sourceNodeZ                   &&
             obj->spatialDistribution           == this->spatialDistribution           &&
-            obj->destionationNodeX             == this->destionationNodeX             &&
-            obj->destionationNodeY             == this->destionationNodeY             &&
+            obj->destinationNodeX              == this->destinationNodeX              &&
+            obj->destinationNodeY              == this->destinationNodeY              &&
+            obj->destinationNodeZ              == this->destinationNodeZ              &&
             obj->trafficClass                  == this->trafficClass                  &&
             obj->injectionType                 == this->injectionType                 &&
             obj->switchingTechnique            == this->switchingTechnique            &&

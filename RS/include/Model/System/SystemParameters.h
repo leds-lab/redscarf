@@ -29,8 +29,8 @@
 *
 */
 
-#ifndef SYSTEMPARAMETERS_H
-#define SYSTEMPARAMETERS_H
+#ifndef __SYSTEMPARAMETERS_H__
+#define __SYSTEMPARAMETERS_H__
 
 #include <string>
 
@@ -40,9 +40,13 @@ class SystemParameters {
 
 private:
     // System parameters
+    unsigned int        xSize;                      // Network dimension in axis x
+    unsigned int        ySize;                      // Network dimension in axis y
+    unsigned int        zSize;                      // Network dimension in z-axis
+    unsigned int        dataWidth;                  // Width of the data channel
+
     unsigned int        ageWidth;                   // Width of the header's age field
     unsigned int        ageClockWidth;              // Width of aging counter
-    unsigned int        dataWidth;                  // Width of the data channel
 
     unsigned int        destinationAddressWidth;    // Width of the destination address
     unsigned int        phitWidth;                  // Width of the flit
@@ -54,8 +58,6 @@ private:
     unsigned long int   stopTime_ns;                // Time to stop simulation in ns
     float               tClk;                       // Clock cycle
     unsigned int        vcdOption;                  // VCD generation option
-    unsigned int        xSize;                      // Network dimension in axis x
-    unsigned int        ySize;                      // Network dimensions in axis y
 
     float               channelBandwidth;
 
@@ -84,6 +86,7 @@ public:
     inline unsigned int      getVcdOption               () const { return this->vcdOption;               }
     inline unsigned int      getXSize                   () const { return this->xSize;                   }
     inline unsigned int      getYSize                   () const { return this->ySize;                   }
+    inline unsigned int      getZSize                   () const { return this->zSize;                   }
 
     inline float             getfClkFirst               () const { return this->fClkFirst;               }
     inline float             getfClkLast                () const { return this->fClkLast;                }
@@ -106,6 +109,7 @@ public:
     inline void setVcdOption              (unsigned int      value) { this->vcdOption = value;                                              }
     inline void setXSize                  (unsigned int      value) { this->xSize = value;                                                  }
     inline void setYSize                  (unsigned int      value) { this->ySize = value;                                                  }
+    inline void setZSize                  (unsigned int      value) { this->zSize = value;                                                  }
 
     inline void setfClkFirst              (float             value) { this->fClkFirst = value;                                              }
     inline void setfClkLast               (float             value) { this->fClkLast  = value;                                              }
@@ -118,4 +122,4 @@ public:
     bool equals(SystemParameters*) const;
 };
 
-#endif // SYSTEMPARAMETERS_H
+#endif // __SYSTEMPARAMETERS_H__

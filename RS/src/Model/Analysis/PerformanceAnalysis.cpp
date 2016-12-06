@@ -43,17 +43,18 @@
     #include <iostream>
 #endif
 
-PerformanceAnalysis::PerformanceAnalysis(unsigned int xSize, unsigned int ySize,
-         unsigned int dataWidth, float lower,float upper, float fClk, float tClk,
-         unsigned long channelBw, unsigned int fifoOutDepth,unsigned int flowControlType,
+PerformanceAnalysis::PerformanceAnalysis(unsigned int xSize, unsigned int ySize, unsigned int zSize,
+         unsigned int dataWidth, float lower, float upper, float fClk, float tClk,
+         unsigned long channelBw, unsigned int fifoOutDepth, unsigned int flowControlType,
          const char *workDir, const char *resultDir) :
-        TrafficAnalysis(xSize,ySize,dataWidth,lower,upper,fClk,tClk,channelBw,
+        TrafficAnalysis(xSize,ySize,zSize,dataWidth,lower,upper,fClk,tClk,channelBw,
         fifoOutDepth,flowControlType,workDir,resultDir)
 {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/Analysis/PerformanceAnalysis" << std::endl;
 #endif
 
+    // TODO: Alterar todo o analisador para suporter análise 3D
     std::setlocale(LC_ALL, "en_US.UTF-8");
 
     this->packets = new std::vector<PacketInfo* >**[xSize];
@@ -207,7 +208,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
 
     for( unsigned int x = 0; x < xSize; x++ ) {
         for( unsigned int y = 0; y < ySize; y++ ) {
-            unsigned int nodeId = COORDINATE_TO_ID(x,y,xSize);
+            unsigned int nodeId = COORDINATE_2D_TO_ID(x,y,xSize);
             xDestination = x;
             yDestination = y;
             // It opens the input file
@@ -231,8 +232,8 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
 
                     scanResult = fscanf(fpIn,"%s", str);
                     idSrc = (unsigned int) atoi(str);
-                    xSource = ID_TO_COORDINATE_X(idSrc,xSize);
-                    ySource = ID_TO_COORDINATE_Y(idSrc,xSize);
+                    xSource = ID_TO_COORDINATE_2D_X(idSrc,xSize);
+                    ySource = ID_TO_COORDINATE_2D_Y(idSrc,xSize);
 
                     scanResult = fscanf(fpIn,"%s", str);
                     idDest = (unsigned int) atoi(str);

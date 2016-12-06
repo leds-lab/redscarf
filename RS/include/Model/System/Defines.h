@@ -42,15 +42,23 @@
 
 //#define PI                3.1415926535897932384626433832795029
 
-#define COORDINATE_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
-#define ID_TO_COORDINATE_X(i,X_SIZE) (i % X_SIZE)
-#define ID_TO_COORDINATE_Y(i,X_SIZE) (i / X_SIZE)
+// Convert from router cartesian coordinate in the MESH network to router ID
+#define COORDINATE_2D_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
+#define COORDINATE_3D_TO_ID(x,y,z,X_SIZE,Y_SIZE) ( COORDINATE_2D_TO_ID(x,y,X_SIZE) + (X_SIZE * Y_SIZE * z) )
+// Convert from network router ID to cartesian coordinate in the MESH
+#define ID_TO_COORDINATE_2D_X(id,X_SIZE) (id % X_SIZE)
+#define ID_TO_COORDINATE_2D_Y(id,X_SIZE) (id / X_SIZE)
+#define ID_TO_COORDINATE_3D_Z(id,X_SIZE,Y_SIZE) (id / (X_SIZE * Y_SIZE))
+#define ID_TO_COORDINATE_3D_X(id,X_SIZE,Y_SIZE) ( ID_TO_COORDINATE_2D_X(id - (X_SIZE*Y_SIZE*ID_TO_COORDINATE_3D_Z(id,X_SIZE,Y_SIZE)),X_SIZE) )
+#define ID_TO_COORDINATE_3D_Y(id,X_SIZE,Y_SIZE) ( ID_TO_COORDINATE_2D_Y(id - (X_SIZE*Y_SIZE*ID_TO_COORDINATE_3D_Z(id,X_SIZE,Y_SIZE)),X_SIZE) )
+
 
 class DefaultValuesSystem {
 
 public:
     static const unsigned int DEFAULT_X_SIZE = 2;
     static const unsigned int DEFAULT_Y_SIZE = 2;
+    static const unsigned int DEFAULT_Z_SIZE = 1;
     static const unsigned int DEFAULT_DATA_WIDTH = 32;
     static const unsigned int DEFAULT_RIB_WIDTH = 8;
     static const unsigned int DEFAULT_FCLK = 100;

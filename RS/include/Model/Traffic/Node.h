@@ -39,6 +39,7 @@ class Node {
 private:
     unsigned int       xPosition                   ;
     unsigned int       yPosition                   ;
+    unsigned int       zPosition                   ;
     TrafficParameters* trafficPattern[MAX_PATTERNS];
     bool               patternActive[MAX_PATTERNS] ;
 
@@ -49,7 +50,7 @@ private:
 
 public:
     std::string fluxos;
-    Node                                ( unsigned int posX, unsigned int posY      );
+    Node                                ( unsigned int posX, unsigned int posY,unsigned int posZ);
     ~Node();
     TrafficParameters* getTrafficPattern( unsigned int index                        ) const;
     bool               isPatternActive  ( unsigned int index                        ) const;
@@ -57,6 +58,7 @@ public:
     void               setPatternActive ( bool active, unsigned int index           );
     unsigned int       getPosicaoX      ( ) const;
     unsigned int       getPosicaoY      ( ) const;
+    unsigned int       getPosicaoZ      ( ) const;
 
     inline unsigned int getNumberFlows() { return this->numberFlows; }
     inline void         setNumberFlows(unsigned int nbFlows) { this->numberFlows = nbFlows; }

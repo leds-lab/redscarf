@@ -42,7 +42,15 @@
 #endif
 
 /// Construtor
-TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, unsigned int xSource, unsigned int ySource, unsigned int trafficNum, unsigned int xTam, unsigned int yTam, unsigned int dataWidth)
+TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent,
+                                                       unsigned int xSource,
+                                                       unsigned int ySource,
+                                                       unsigned int zSource,
+                                                       unsigned int trafficNum,
+                                                       unsigned int xSize,
+                                                       unsigned int ySize,
+                                                       unsigned int zSize,
+                                                       unsigned int dataWidth)
     : QDialog(parent,Qt::Window),ui(new Ui::TrafficConfigurationDialog) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class View/TrafficConfigurationDialog" << std::endl;
@@ -62,23 +70,26 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, unsigned
     this->setWindowTitle(title);
 
     // Se não for o nodo 0x0 esconde o botão de Aplicar e Replicar da interface
-    if(!(xSource == 0 && ySource == 0)){
+    if(!(xSource == 0 && ySource == 0 && zSource == 0)){
         ui->buttonApplyAndReplicate->hide();
     }
     this->xSrc = xSource;
     this->ySrc = ySource;
+    this->zSrc = zSource;
     this->trafficNum = trafficNum;
     this->dataWidth = dataWidth;
 
     // Formando a String do nó fonte
-    QString sourceNode = QString("( %1 , %2 )").arg(QString::number(xSource)).arg(QString::number(ySource));
+    QString sourceNode = QString("( %1 , %2 , %3 )").arg(xSource).arg(ySource).arg(zSource);
     ui->labelSourceNodeXY->setText(sourceNode);
 
     // Setando o valor máximo de x para o nodo de destino, no caso de o usuário optar na configuração de tráfico
     // por especificar o endereço de destino
-    ui->spinInNodeAddressX->setMaximum(xTam - 1);
+    ui->spinInNodeAddressX->setMaximum(xSize - 1);
     // Setando o valor máximo de y para o nodo de destino
-    ui->spinInNodeAddressY->setMaximum(yTam - 1);
+    ui->spinInNodeAddressY->setMaximum(ySize - 1);
+    //
+    ui->spinInNodeAddressZ->setMaximum(zSize - 1);
 
     // Conectando sinais de combos da interface com o Slot de atualização de interface combos
     updateSpatialDistribution(0);
@@ -181,6 +192,7 @@ void TrafficConfigurationDialog::setConfiguration(TrafficParameters *tp) {
     ui->spinInDeadLine->setValue( qint32(tp->getDeadline() ) );
     ui->spinInNodeAddressX->setValue( qint32(tp->getDestinationNodeX()) );
     ui->spinInNodeAddressY->setValue( qint32(tp->getDestinationNodeY()) );
+    ui->spinInNodeAddressZ->setValue( qint32(tp->getDestinationNodeZ()) );
     ui->spinInIdleTime->setValue( qint32(tp->getIdleTime()) );
     ui->comboInTypeInjection->setCurrentIndex( qint32(tp->getInjectionType()) );
     ui->spinInMessageInterval->setValue( qint32(tp->getIntervalTime()) );
@@ -201,17 +213,19 @@ void TrafficConfigurationDialog::updateSpatialDistribution(int value) {
 #endif
 
     if( TrafficPatternDefines::getInstance()->findSpatialDistribution( quint32(value) ).compare("Specified Address") == 0 ){
-        ui->labelNodeAddress   ->setEnabled(true);
-        ui->labelNodeAddressX  ->setEnabled(true);
-        ui->labelNodeAddressY  ->setEnabled(true);
+        ui->labelNodeAddress  ->setEnabled(true);
+        ui->labelNodeAddressX ->setEnabled(true);
+        ui->labelNodeAddressY ->setEnabled(true);
         ui->spinInNodeAddressX->setEnabled(true);
         ui->spinInNodeAddressY->setEnabled(true);
+        ui->spinInNodeAddressZ->setEnabled(true);
     } else { // Se não deve ser desabilitada
-        ui->labelNodeAddress   ->setEnabled(false);
-        ui->labelNodeAddressX  ->setEnabled(false);
-        ui->labelNodeAddressY  ->setEnabled(false);
+        ui->labelNodeAddress  ->setEnabled(false);
+        ui->labelNodeAddressX ->setEnabled(false);
+        ui->labelNodeAddressY ->setEnabled(false);
         ui->spinInNodeAddressX->setEnabled(false);
         ui->spinInNodeAddressY->setEnabled(false);
+        ui->spinInNodeAddressZ->setEnabled(false);
     }
 }
 
@@ -417,6 +431,7 @@ void TrafficConfigurationDialog::applyClicked() {
     tp->setDeadline( ulong( ui->spinInDeadLine->value() ) );
     tp->setDestinationNodeX( quint32(ui->spinInNodeAddressX->value()) );
     tp->setDestinationNodeY( quint32(ui->spinInNodeAddressY->value()) );
+    tp->setDestinationNodeZ( quint32(ui->spinInNodeAddressZ->value()) );
     tp->setIdleTime( quint32(ui->spinInIdleTime->value()) );
     tp->setInjectionType( quint32( ui->comboInTypeInjection->currentIndex() ) );
     tp->setIntervalTime( quint32( ui->spinInMessageInterval->value() ) );
@@ -428,6 +443,7 @@ void TrafficConfigurationDialog::applyClicked() {
     tp->setRequiredBandwidthStdDeviation( (float) ui->spinInStdDeviation->value() );
     tp->setSourceNodeX( this->xSrc );
     tp->setSourceNodeY( this->ySrc );
+    tp->setSourceNodeZ( this->zSrc );
     tp->setSpatialDistribution( quint32( ui->comboInDestinationNode->currentIndex() ) );
     tp->setSwitchingTechnique( quint32(ui->comboInSwitchingTechnique->currentIndex()) );
     tp->setTrafficClass( quint32(ui->comboInTrafficClass->currentIndex()) );
@@ -457,6 +473,7 @@ void TrafficConfigurationDialog::applyAndReplicateClicked() {
         tp->setDeadline( ulong( ui->spinInDeadLine->value() ) );
         tp->setDestinationNodeX( quint32(ui->spinInNodeAddressX->value()) );
         tp->setDestinationNodeY( quint32(ui->spinInNodeAddressY->value()) );
+        tp->setDestinationNodeZ( quint32(ui->spinInNodeAddressZ->value()) );
         tp->setIdleTime( quint32(ui->spinInIdleTime->value()) );
         tp->setInjectionType( quint32( ui->comboInTypeInjection->currentIndex() ) );
         tp->setIntervalTime( quint32( ui->spinInMessageInterval->value() ) );
@@ -468,6 +485,7 @@ void TrafficConfigurationDialog::applyAndReplicateClicked() {
         tp->setRequiredBandwidthStdDeviation( (float) ui->spinInStdDeviation->value() );
         tp->setSourceNodeX( this->xSrc );
         tp->setSourceNodeY( this->ySrc );
+        tp->setSourceNodeZ( this->zSrc );
         tp->setSpatialDistribution( quint32( ui->comboInDestinationNode->currentIndex() ) );
         tp->setSwitchingTechnique( quint32(ui->comboInSwitchingTechnique->currentIndex()) );
         tp->setTrafficClass( quint32(ui->comboInTrafficClass->currentIndex()) );
@@ -475,8 +493,6 @@ void TrafficConfigurationDialog::applyAndReplicateClicked() {
         emit this->applyAndReplicate(tp,this->trafficNum);
         this->close();
     }
-
-
 }
 
 void TrafficConfigurationDialog::changeEvent(QEvent *event) {
@@ -486,7 +502,6 @@ void TrafficConfigurationDialog::changeEvent(QEvent *event) {
     }
 
     QWidget::changeEvent(event);
-
 }
 
 /// Destrutor

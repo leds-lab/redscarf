@@ -184,6 +184,30 @@
                </layout>
               </item>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <widget class="QLabel" name="label">
+                  <property name="text">
+                   <string>Z size:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInZSize">
+                  <property name="statusTip">
+                   <string>Number of layers in a 3D Mesh</string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
                  <widget class="QLabel" name="labelChannelWidth">
@@ -284,7 +308,7 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>559</width>
+                   <width>528</width>
                    <height>469</height>
                   </rect>
                  </property>
@@ -447,6 +471,27 @@
                   </property>
                   <property name="statusTip">
                    <string>Y coordinate of the source node.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <item>
+                 <widget class="QLabel" name="labelSourceNodeZ">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Z:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="spinInSrcNodeZ">
+                  <property name="maximum">
+                   <number>3</number>
                   </property>
                  </widget>
                 </item>
@@ -3730,12 +3775,14 @@ distribution</string>
   <tabstop>tabs</tabstop>
   <tabstop>spinInXSize</tabstop>
   <tabstop>spinInYSize</tabstop>
+  <tabstop>spinInZSize</tabstop>
   <tabstop>spinInChannelWidth</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>verticalSlider</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>spinInSrcNodeX</tabstop>
   <tabstop>spinInSrcNodeY</tabstop>
+  <tabstop>spinInSrcNodeZ</tabstop>
   <tabstop>checkInTrafficPattern0</tabstop>
   <tabstop>buttonEditTrafficPattern0</tabstop>
   <tabstop>checkInTrafficPattern1</tabstop>
@@ -3828,6 +3875,19 @@ distribution</string>
   <tabstop>buttonViewReport</tabstop>
   <tabstop>console</tabstop>
   <tabstop>toolButtonClearConsole</tabstop>
+  <tabstop>buttonGenerateTcf</tabstop>
+  <tabstop>comboInVCExp1</tabstop>
+  <tabstop>comboInVCExp3</tabstop>
+  <tabstop>comboInVCExp2</tabstop>
+  <tabstop>comboInVCExp5</tabstop>
+  <tabstop>comboInVCExp4</tabstop>
+  <tabstop>comboInTopologyExp1</tabstop>
+  <tabstop>comboInTopologyExp2</tabstop>
+  <tabstop>comboInTopologyExp3</tabstop>
+  <tabstop>comboInTopologyExp4</tabstop>
+  <tabstop>comboInTopologyExp5</tabstop>
+  <tabstop>checkBoxTopology</tabstop>
+  <tabstop>checkBoxVcOption</tabstop>
  </tabstops>
  <resources>
   <include location="../resources/Icons.qrc"/>
@@ -3840,12 +3900,12 @@ distribution</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>249</x>
-     <y>710</y>
+     <x>275</x>
+     <y>654</y>
     </hint>
     <hint type="destinationlabel">
-     <x>224</x>
-     <y>149</y>
+     <x>161</x>
+     <y>130</y>
     </hint>
    </hints>
   </connection>
@@ -3856,12 +3916,12 @@ distribution</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>224</x>
-     <y>149</y>
+     <x>161</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
-     <x>238</x>
-     <y>710</y>
+     <x>264</x>
+     <y>654</y>
     </hint>
    </hints>
   </connection>
@@ -3872,12 +3932,12 @@ distribution</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>417</x>
-     <y>149</y>
+     <x>295</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
-     <x>621</x>
-     <y>683</y>
+     <x>589</x>
+     <y>620</y>
     </hint>
    </hints>
   </connection>
@@ -3888,12 +3948,12 @@ distribution</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>621</x>
-     <y>683</y>
+     <x>589</x>
+     <y>620</y>
     </hint>
     <hint type="destinationlabel">
-     <x>417</x>
-     <y>149</y>
+     <x>295</x>
+     <y>130</y>
     </hint>
    </hints>
   </connection>

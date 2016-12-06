@@ -35,20 +35,20 @@
     #include <iostream>
 #endif
 
-TrafficPatternManager::TrafficPatternManager() {
+TrafficPatternManager::TrafficPatternManager(SystemParameters *sp)
+    : sp(sp){
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/TrafficPatternManager" << std::endl;
 #endif
     this->nodes = new std::map<unsigned int,Node*>();
 }
 
-Node* TrafficPatternManager::getNode(unsigned int posX, unsigned int posY) const {
+Node* TrafficPatternManager::getNode(unsigned int key) const {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficPatternManager::getNode" << std::endl;
 #endif
-    unsigned int chave = posX * 10 + posY;
-    if( this->chaveExiste(chave) ) {
-        return this->nodes->find(chave)->second;
+    if( this->keyExist(key) ) {
+        return this->nodes->find(key)->second;
     } else {
         return NULL;
     }
@@ -60,52 +60,38 @@ void TrafficPatternManager::clear() {
 #endif
 
     for( this->it = this->nodes->begin(); it != this->nodes->end(); it++ ) {
-        Node* nodo = (*it).second;
-        delete nodo;
+        Node* node = (*it).second;
+        delete node;
     }
 
     this->nodes->clear();
 }
 
-void TrafficPatternManager::removeNode(Node *nodo) {
+void TrafficPatternManager::removeNode(unsigned int key) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficPatternManager::removeNode" << std::endl;
 #endif
-    this->nodes->erase(nodo->getPosicaoX() * 10 + nodo->getPosicaoY());
-    delete nodo;
-
+    this->nodes->erase(key);
 }
 
-void TrafficPatternManager::removeNode(unsigned int posX, unsigned int posY) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/TrafficPattern/TrafficPatternManager::removeNode" << std::endl;
-#endif
-    Node* no = this->getNode(posX,posY);
-    if(no != NULL) {
-        this->removeNode(no);
-    }
-}
-
-void TrafficPatternManager::insertNode(Node *nodo) {
+void TrafficPatternManager::insertNode(unsigned int key,Node *nodo) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficPatternManager::insertNode" << std::endl;
 #endif
 
-    unsigned int chave = (nodo->getPosicaoX() * 10 + nodo->getPosicaoY());
-
-    if( this->chaveExiste(chave) ) {
-        this->removeNode(chave / 10 , chave % 10);
+    if( this->keyExist(key) ) {
+        this->removeNode(key);
     }
 
-    this->nodes->insert(std::pair<unsigned int, Node*>(chave,nodo) );
+    this->nodes->insert(std::pair<unsigned int, Node*>(key,nodo) );
 
 }
 
-bool TrafficPatternManager::chaveExiste(unsigned int chave) const {
+bool TrafficPatternManager::keyExist(unsigned int key) const {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/TrafficPattern/TrafficPatternManager::chaveExiste" << std::endl;
+    std::cout << "Model/TrafficPattern/TrafficPatternManager::keyExist" << std::endl;
 #endif
-    if( this->nodes->count(chave) == 0 ) {
+    if( this->nodes->count(key) == 0 ) {
         return false;
     } else {
         return true;
@@ -121,10 +107,10 @@ std::string TrafficPatternManager::toString() {
     std::string str = "";
 
     for( this->it = this->nodes->begin(); it != this->nodes->end(); it++ ) {
-        Node* nodo = (*it).second;
+        Node* node = (*it).second;
         format.str("");
         format << (*it).first;
-        str += "Chave: "+format.str()+"\nValor: "+nodo->toString()+"\n\n";
+        str += "Key: "+format.str()+"\nValue: "+node->toString()+"\n\n";
     }
     return str;
 }
@@ -134,11 +120,12 @@ TrafficPatternManager* TrafficPatternManager::clone() {
     std::cout << "Model/TrafficPattern/TrafficPatternManager::clone" << std::endl;
 #endif
 
-    TrafficPatternManager* clone = new TrafficPatternManager();
+    TrafficPatternManager* clone = new TrafficPatternManager(sp);
 
     for(it = this->nodes->begin(); it != this->nodes->end(); it++) {
-        Node* nodo = (*it).second;
-        clone->insertNode( nodo->clone() );
+        unsigned int key = (*it).first;
+        Node* node = (*it).second;
+        clone->insertNode( key,node->clone() );
     }
 
     return clone;

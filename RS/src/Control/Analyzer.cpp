@@ -41,7 +41,7 @@
 #endif
 
 Analyzer::Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
-                   unsigned int ySize, unsigned int dataWidth, float lower,
+                   unsigned int ySize, unsigned int zSize, unsigned int dataWidth, float lower,
                    float upper, QObject* parent)
     : QObject(parent) {
 #ifdef DEBUG_POINTS_METHODS
@@ -50,6 +50,7 @@ Analyzer::Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
 
     this->xSize = xSize;
     this->ySize = ySize;
+    this->zSize = zSize;
     this->lower = lower;
     this->upper = upper;
     this->dataWidth = dataWidth;
@@ -103,7 +104,7 @@ void Analyzer::analyze() {
 
         // Realizar a análise
         TrafficAnalysis* analyzer = new PerformanceAnalysis(
-                    xSize, ySize, dataWidth, lower, upper, fClk, tClk, channelBw,
+                    xSize, ySize,zSize, dataWidth, lower, upper, fClk, tClk, channelBw,
                     fifoOutDepth, flowControlType, analise, resultado);
         TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
         falhaAnalise = true;

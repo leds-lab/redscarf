@@ -76,7 +76,7 @@ public:
     unsigned int saveChanges(QString title,QString msg);
     QString selectSystemFolder(QString msgSelect);
     void openFileError(QString error);
-    void updateView(unsigned int xSize, unsigned int ySize,
+    void updateView(unsigned int xSize, unsigned int ySize,unsigned int zSize,
             unsigned int channelWidth, ExperimentManager* gpe,
             int stopOption, int stopTime_ns, int stopTime_cycles,
             int vcdOption, float fClkFirst, float fClkLast,
@@ -113,11 +113,18 @@ signals:
     void generateCSVSimulationReport(AnalysisOptions* aop);
 
     // System configuration
-    void nodeSelected(unsigned int posX,unsigned int posY);
-    void sizeUpdated(unsigned int tamX,unsigned int tamY);
+    void nodeSelected(unsigned int posX,unsigned int posY,unsigned int posZ);
+    void sizeUpdated(unsigned int xSize,unsigned int ySize,unsigned int zSize);
     void channelWidthUpdated(unsigned int width);
-    void trafficPatternUpdate(unsigned int posX,unsigned int posY, unsigned int trafficPattern, bool state);
-    void buttonEditClicked(unsigned int posX,unsigned int posY,unsigned int trafficNum);
+    void trafficPatternUpdate(unsigned int posX,
+                              unsigned int posY,
+                              unsigned int posZ,
+                              unsigned int trafficPattern,
+                              bool state);
+    void buttonEditClicked(unsigned int posX,
+                           unsigned int posY,
+                           unsigned int posZ,
+                           unsigned int trafficNum);
     void previewTrafficConfiguration(int typePreview);
     void generateTcf();
 
@@ -167,7 +174,7 @@ private slots:
     void trafficPatternStateChanged(int state);
     void editClicked();
     void previewTrafficConfigurationClicked();
-    void nodeSelectedUpdated(unsigned int posX,unsigned int posY);
+    void nodeSelectedUpdated(unsigned int posX,unsigned int posY,unsigned int posZ);
 
     // Tab System Simulation
     void experimentChangeState();

@@ -160,6 +160,20 @@
          </item>
         </layout>
        </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="labelNodeAddressZ">
+           <property name="text">
+            <string>Z:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="spinInNodeAddressZ"/>
+         </item>
+        </layout>
+       </item>
       </layout>
      </item>
      <item row="0" column="0">

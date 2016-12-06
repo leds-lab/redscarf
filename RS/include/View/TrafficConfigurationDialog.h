@@ -48,6 +48,7 @@ private:
 
     unsigned int xSrc;
     unsigned int ySrc;
+    unsigned int zSrc;
     unsigned int dataWidth;
     unsigned int trafficNum;
 
@@ -65,8 +66,15 @@ protected:
 
 public:
 
-    explicit TrafficConfigurationDialog(QWidget *parent,unsigned int xSource,unsigned int ySource,unsigned int trafficNum,
-                                  unsigned int xTam,unsigned int yTam,unsigned int dataWidth);
+    explicit TrafficConfigurationDialog(QWidget *parent,
+                                        unsigned int xSource,
+                                        unsigned int ySource,
+                                        unsigned int zSource,
+                                        unsigned int trafficNum,
+                                        unsigned int xSize,
+                                        unsigned int ySize,
+                                        unsigned int zSize,
+                                        unsigned int dataWidth);
     void setConfiguration(TrafficParameters* tp);
     ~TrafficConfigurationDialog();
 
