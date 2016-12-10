@@ -29,6 +29,7 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
+* ----------------------------------------------------------------------------
 * 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
 *
@@ -52,7 +53,7 @@
 
 // Control
 #include "include/Control/Control.h"
-#include "include/Control/XmlConfigParser.h"
+//#include "include/Control/XmlConfigParser.h"
 #include "include/Control/SimulationPerformer.h"
 #include "include/Control/ThreadManager.h"
 #include "include/Control/WaveformViewer.h"
@@ -64,8 +65,6 @@
 // View
 #include "include/View/MainWindow.h"
 #include "include/View/TrafficConfigurationDialog.h"
-#include "include/View/DefaultPreviewTrafficConfiguration.h"
-#include "include/View/XMLPreviewTrafficConfiguration.h"
 #include "include/View/AnalysisOptions.h"
 #include "include/View/ReportDialog.h"
 #include "include/View/GetSelectedItemsDialog.h"
@@ -75,11 +74,9 @@
 
 // Model
 #include "include/Model/System/SystemParameters.h"
+#include "include/Model/System/SystemOperation.h"
 #include "include/Model/System/Experiment.h"
-#include "include/Model/System/ExperimentManager.h"
 #include "include/Model/System/SystemDefines.h"
-#include "include/Model/Traffic/TrafficPatternManager.h"
-#include "include/Model/Traffic/TrafficPatternDefines.h"
 #include "include/Model/Traffic/TrafficModelGenerator.h"
 #include "include/Model/TimeOperation.h"
 #include "include/Model/Analysis/DataReport.h"
@@ -99,9 +96,6 @@ Control::Control(QObject *parent) :
     this->mainWindow = (MainWindow* ) parent;
 
     this->systemParameters      = new SystemParameters();
-    this->trafficPatternManager = new TrafficPatternManager(systemParameters);
-    this->experimentManager     = new ExperimentManager();
-    experimentManager->insertExperiment(1, new Experiment());
 
     this->exes = new QList<SimulationPerformer *>();
     this->timer = new QElapsedTimer();
@@ -130,8 +124,6 @@ Control::~Control() {
     exes->clear();
 
     delete this->systemParameters;
-    delete this->trafficPatternManager;
-    delete this->experimentManager;
     delete this->exes;
     delete this->timer;
     conf->writeSetup();
@@ -146,8 +138,6 @@ Control::~Control() {
     }
     SystemDefines* defSis = SystemDefines::getInstance();
     delete defSis;
-    TrafficPatternDefines* defPTr = TrafficPatternDefines::getInstance();
-    delete defPTr;
 }
 
 void Control::establishConnections() {
@@ -160,7 +150,6 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(saveSystem()),this,SLOT(saveSystem()));
     connect(this->mainWindow,SIGNAL(saveAsSystem()),this,SLOT(saveAsSystem()));
     connect(this->mainWindow,SIGNAL(saveAsDefaultSystem()),this,SLOT(saveAsDefaultSystem()));
-    connect(this->mainWindow,SIGNAL(clearSystem()),this,SLOT(clearSystem()));
     connect(this->mainWindow,SIGNAL(exitApplication(QCloseEvent*)),this,SLOT(exitApplication(QCloseEvent*)));
     connect(this->mainWindow,SIGNAL(editOptions()),this,SLOT(editOptions()));
     connect(this->mainWindow,SIGNAL(changeLanguage(QString)),this,SLOT(changeLanguage(QString)));
@@ -169,26 +158,8 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(saveSimulationResults()),this,SLOT(saveSimulationResults()));
     connect(this->mainWindow,SIGNAL(generateCSVSimulationReport(AnalysisOptions*)),this,SLOT(generateCSVSimulationReport(AnalysisOptions*)));
 
-    connect(this->mainWindow,SIGNAL(channelWidthUpdated(unsigned int)),this,SLOT(updateChannelWidth(unsigned int)));
-    connect(this->mainWindow,SIGNAL(sizeUpdated(uint,uint,uint)),this,SLOT(updateSizeSystem(uint,uint,uint)));
-    connect(this->mainWindow,SIGNAL(nodeSelected(uint,uint,uint)),this,SLOT(nodeSelected(uint,uint,uint)));
-    connect(this->mainWindow,SIGNAL(trafficPatternUpdate(uint,uint,uint,uint,bool)),this,
-            SLOT(trafficPatternStatusChanged(uint,uint,uint,uint,bool)));
-    connect(this->mainWindow,SIGNAL(buttonEditClicked(uint,uint,uint,uint)),this,SLOT(editTrafficPattern(uint,uint,uint,uint)));
-    connect(this->mainWindow,SIGNAL(previewTrafficConfiguration(int)),this,SLOT(previewTrafficConfiguration(int)));
-    connect(this->mainWindow,&MainWindow::generateTcf,this,&Control::generateTrafficConfigurationFile);
-
-    connect(this->mainWindow,SIGNAL(experimentStateChanged(int,bool)),this,SLOT(experimentStateChanged(int,bool)));
-    connect(this->mainWindow,SIGNAL(configurationExperimentChanged(int,int,int)),this,SLOT(configurationExperimentChanged(int,int,int)));
-
-    connect(this->mainWindow,SIGNAL(stopOptionChanged(int)),this,SLOT(stopOptionUpdated(int)));
-    connect(this->mainWindow,SIGNAL(stopTimeNsChanged(int)),this,SLOT(stopTimeNsUpdated(int)));
-    connect(this->mainWindow,SIGNAL(stopTimeCyclesChanged(int)),this,SLOT(stopTimeCyclesUpdated(int)));
-    connect(this->mainWindow,SIGNAL(vcdOptionChanged(int)),this,SLOT(vcdOptionUpdated(int)));
-    connect(this->mainWindow,SIGNAL(fClkFirstChanged(double)),this,SLOT(fClkFirstUpdated(double)));
-    connect(this->mainWindow,SIGNAL(fClkLastChanged(double)),this,SLOT(fClkLastUpdated(double)));
-    connect(this->mainWindow,SIGNAL(fClkStepChanged(double)),this,SLOT(fClkStepUpdated(double)));
-    connect(this->mainWindow,SIGNAL(fClkStepTypeChanged(int)),this,SLOT(fClkStepTypeUpdated(int)));
+    // TODO TEMP
+    connect(this->mainWindow,&MainWindow::generateTCF,this,&Control::generateTrafficConfigurationFile);
 
     connect(this->mainWindow,&MainWindow::runSimulation,this,&Control::runSimulations);
 
@@ -316,7 +287,7 @@ bool Control::loadConfiguration() {
         this->configFile = NULL;
         return false;
     }
-
+/*
     /// Carregar
     XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
     parser->loadXML(configFile);
@@ -330,12 +301,11 @@ bool Control::loadConfiguration() {
             parser->getFClk1(),parser->getFClk2(),parser->getFClkStepType(), parser->getFClkStep() );
     delete parser;
 
+*/
+    configFile->close();
     this->mainWindow->printConsole(trUtf8("Configuration file successfuly loaded"));
 
-    configFile->close();
-
     return true;
-
 }
 
 bool Control::saveConfiguration() {
@@ -362,13 +332,14 @@ bool Control::saveConfiguration() {
         this->configFile = NULL;
         return false;
     }
+/*
     /// Salvar
     XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
     parser->saveXML(configFile);
     delete parser;
-
-    this->mainWindow->printConsole(trUtf8("Configuration file successfully saved"));
+*/
     this->configFile->close();
+    this->mainWindow->printConsole(trUtf8("Configuration file successfully saved"));
     return true;
 }
 
@@ -389,27 +360,12 @@ bool Control::saveAsConfiguration() {
     }
 }
 
-bool Control::clearTrafficPatterns() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::clearTrafficPatterns" << std::endl;
-#endif
-
-    /// Limpar padroes de trafico
-    this->trafficPatternManager->clear();
-    for(unsigned int i = 0; i < MAX_PATTERNS; i++) {
-        this->mainWindow->setPatternState(i,false);
-    }
-    this->mainWindow->printConsole(trUtf8("Traffic patterns clean"));
-    return true;
-}
-
 /**
  * @brief Verify if:
  *  (1) There are some traffic pattern configured and active;
  *  (2) There are some identical experiment configuration;
  *  (3) The system parameters are Ok
  */
-
 bool Control::inputsOk() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::inputsOk" << std::endl;
@@ -424,32 +380,33 @@ bool Control::inputsOk() {
 
     if(useDefault) {
         // Verificar se há padrões de tráfico ativos
-        for(unsigned int x = 0; x < this->systemParameters->getXSize(); x++) {
-            for(unsigned int y = 0; y < this->systemParameters->getYSize(); y++) {
-                for(unsigned int z = 0; z < this->systemParameters->getZSize(); z++) {
-                    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
-                                                                                        systemParameters->getXSize(),
-                                                                                        systemParameters->getYSize()));
-                    if( no != NULL ) {
-                        for(unsigned int pattern = 0; pattern < MAX_PATTERNS; pattern++) {
-                            if( no->isPatternActive(pattern) ) {
-                                padroesAtivos = true;
-                                break;
-                            }
-                        }
-                    }
-                    if(padroesAtivos){
-                       break;
-                    }
-                }
-                if(padroesAtivos) {
-                    break;
-                }
-            }
-            if(padroesAtivos){
-               break;
-            }
-        }
+// TODO fazer
+//        for(unsigned int x = 0; x < this->systemParameters->getXSize(); x++) {
+//            for(unsigned int y = 0; y < this->systemParameters->getYSize(); y++) {
+//                for(unsigned int z = 0; z < this->systemParameters->getZSize(); z++) {
+//                    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
+//                                                                                        systemParameters->getXSize(),
+//                                                                                        systemParameters->getYSize()));
+//                    if( no != NULL ) {
+//                        for(unsigned int pattern = 0; pattern < MAX_PATTERNS; pattern++) {
+//                            if( no->isPatternActive(pattern) ) {
+//                                padroesAtivos = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if(padroesAtivos){
+//                       break;
+//                    }
+//                }
+//                if(padroesAtivos) {
+//                    break;
+//                }
+//            }
+//            if(padroesAtivos){
+//               break;
+//            }
+//        }
 
         if(!padroesAtivos) {
             this->mainWindow->printConsole(trUtf8("<font color=red>There is no traffic pattern defined</font>"));
@@ -469,12 +426,15 @@ bool Control::inputsOk() {
     }
 
     // Verificar se há algum experimento repetido
+// TODO fazer
     for(unsigned int i = 1; i < 5; i++) {
-        Experiment* exp1 = this->experimentManager->getExperiment(i);
+        // TODO
+        Experiment* exp1 = 0;// this->experimentManager->getExperiment(i);
         if(exp1 != NULL) {
             if(exp1->isActive()) {
                 for(unsigned int x = i+1; x < 6; x++) {
-                    Experiment* exp2 = this->experimentManager->getExperiment(x);
+                    // TODO
+                    Experiment* exp2 = 0;//this->experimentManager->getExperiment(x);
                     if(exp2 != NULL) {
                         if( exp2->isActive() && exp1->equals(exp2) ) {
                             this->mainWindow->printConsole(trUtf8("<font color=red>Configuration #%1 is identical to configuration #%2 (this is not allowed)</font>").arg(i).arg(x));
@@ -488,10 +448,14 @@ bool Control::inputsOk() {
 
 
     // Verificar se os parâmetros FClk estão OK
-    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
-    float fClkFirst = this->systemParameters->getfClkFirst();
-    float fClkLast = this->systemParameters->getfClkLast();
-    float fClkStep = this->systemParameters->getfClkStep();
+//    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
+//    float fClkFirst = this->systemParameters->getfClkFirst();
+//    float fClkLast = this->systemParameters->getfClkLast();
+//    float fClkStep = this->systemParameters->getfClkStep();
+    unsigned int fClkStepType = this->systemOperation->fClkStepType;
+    float fClkFirst = this->systemOperation->fClkFirst;
+    float fClkLast = this->systemOperation->fClkLast;
+    float fClkStep = this->systemOperation->fClkStep;
 
     if ( fClkStepType == 0) {
         if (( fClkFirst <  fClkLast) && (fClkStep <  0)) {
@@ -531,10 +495,15 @@ unsigned int Control::calcAmountExperimentsExecutions() {
 
     unsigned int numExecucoesExperimento = 0;
 
-    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
-    float fClkFirst = this->systemParameters->getfClkFirst();
-    float fClkLast = this->systemParameters->getfClkLast();
-    float fClkStep = this->systemParameters->getfClkStep();
+// TODO verificar
+//    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
+//    float fClkFirst = this->systemParameters->getfClkFirst();
+//    float fClkLast = this->systemParameters->getfClkLast();
+//    float fClkStep = this->systemParameters->getfClkStep();
+    unsigned int fClkStepType = this->systemOperation->fClkStepType;
+    float fClkFirst = this->systemOperation->fClkFirst;
+    float fClkLast = this->systemOperation->fClkLast;
+    float fClkStep = this->systemOperation->fClkStep;
 
     if(fClkStep == 0) {
         return 1u;
@@ -610,7 +579,7 @@ void Control::newSystem() {
     if( loadConfiguration() ) {
         delete configFile;
         configFile = NULL;
-        clearTrafficPatterns();
+//        clearTrafficPatterns();
         this->mainWindow->setWindowModified(false);
     }
 
@@ -724,28 +693,6 @@ void Control::saveAsDefaultSystem() {
     configFile = tmp;
 }
 
-void Control::clearSystem() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::clearSystem" << std::endl;
-#endif
-
-    if( this->mainWindow->isWindowModified() ) {
-        switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
-            case 0: // Save
-                if(!this->saveConfiguration()) {
-                    return;
-                }
-            case 1: // Discard
-                break;
-            case 2: // Cancel
-                return;
-        }
-    }
-
-    this->clearTrafficPatterns();
-    this->mainWindow->setWindowModified(true);
-}
-
 void Control::exitApplication(QCloseEvent *event) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::exitApplication" << std::endl;
@@ -771,347 +718,6 @@ void Control::exitApplication(QCloseEvent *event) {
     settings.setValue("mainWindowState",mainWindow->saveState());
 
     event->accept();
-}
-
-void Control::updateChannelWidth(unsigned int width) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::updateChannelWidth" << std::endl;
-#endif
-
-    this->systemParameters->setChannelBandwidth( (float) systemParameters->getfClkFirst() * width );
-    this->systemParameters->setDataWidth(width);
-    this->mainWindow->setWindowModified(true);
-}
-
-void Control::updateSizeSystem(unsigned int xSize, unsigned int ySize,unsigned int zSize) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::updateSizeSystem" << std::endl;
-#endif
-
-    this->systemParameters->setXSize(xSize);
-    this->systemParameters->setYSize(ySize);
-    this->systemParameters->setZSize(zSize);
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::nodeSelected(unsigned int posX, unsigned int posY, unsigned int posZ) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::nodeSelected" << std::endl;
-#endif
-
-    Node* no = this->trafficPatternManager->getNode( COORDINATE_3D_TO_ID(posX,posY,posZ,
-                                                                         systemParameters->getXSize(),
-                                                                         systemParameters->getYSize()) );
-
-    if(no != NULL) {
-        for(unsigned int i = 0; i < MAX_PATTERNS; i++) {
-            this->mainWindow->setPatternState(i,no->isPatternActive(i));
-        }
-    } else {
-        for(unsigned int i = 0; i < MAX_PATTERNS; i++) {
-            this->mainWindow->setPatternState(i,false);
-        }
-    }
-
-}
-
-void Control::trafficPatternStatusChanged(unsigned int posX,
-                                          unsigned int posY,
-                                          unsigned int posZ,
-                                          unsigned int trafficNum,
-                                          bool state) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::trafficPatternStatusChanged" << std::endl;
-#endif
-
-    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(posX,posY,posZ,
-                                                                        systemParameters->getXSize(),
-                                                                        systemParameters->getYSize()));
-
-    if(no) {
-        TrafficParameters* tp = no->getTrafficPattern(trafficNum);
-        if(tp) {
-            no->setPatternActive(state,trafficNum);
-        }
-    }
-
-    this->mainWindow->setWindowModified(true);
-}
-
-void Control::editTrafficPattern(unsigned int xPos, unsigned int yPos,
-                                 unsigned int zPos, unsigned int trafficNum) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::editTrafficPattern" << std::endl;
-#endif
-
-    /// Caso já exista um padrao de tráfico para esta posicao e trafficNum -> carrega a tela com os valores!
-    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(xPos,yPos,zPos,
-                                                                        systemParameters->getXSize(),
-                                                                        systemParameters->getYSize()));
-
-    TrafficParameters* tp = NULL;
-    // Verifica se o "no" é não nulo
-    if( no ) {
-        tp = no->getTrafficPattern(trafficNum);
-    }
-
-    TrafficConfigurationDialog* tf = new TrafficConfigurationDialog(this->mainWindow,xPos,yPos,zPos,
-                                                                    trafficNum,
-                                                                    this->systemParameters->getXSize(),
-                                                                    systemParameters->getYSize(),
-                                                                    systemParameters->getZSize(),
-                                                                    this->systemParameters->getDataWidth());
-    tf->setLocale( mainWindow->locale() );
-
-    if( tp ) {
-        tf->setConfiguration( tp );
-    }
-
-    connect(tf,SIGNAL(apply(TrafficParameters*,uint)),this,SLOT(applyTrafficConfiguration(TrafficParameters*,uint)));
-    connect(tf,SIGNAL(applyAndReplicate(TrafficParameters*,uint)),this,SLOT(applyAndReplicateTrafficConfiguration(TrafficParameters*,uint)));
-    tf->exec();
-
-    delete tf;
-
-}
-
-void Control::applyTrafficConfiguration(TrafficParameters *configuration, unsigned int trafficNum) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::applyTrafficConfiguration" << std::endl;
-#endif
-
-    // Aplicar ao nodo atual
-    unsigned int xPos = configuration->getSourceNodeX();
-    unsigned int yPos = configuration->getSourceNodeY();
-    unsigned int zPos = configuration->getSourceNodeZ();
-
-    unsigned int id = COORDINATE_3D_TO_ID(xPos,yPos,zPos,
-                                          systemParameters->getXSize(),
-                                          systemParameters->getYSize());
-
-    Node* no = this->trafficPatternManager->getNode(id);
-
-    if(!no) {
-        no = new Node(xPos,yPos,zPos);
-        this->trafficPatternManager->insertNode(id,no);
-    }
-    no->setTrafficPattern(configuration,trafficNum);
-    this->mainWindow->setWindowModified(true);
-    this->mainWindow->printConsole(trUtf8("Traffic configuration applied"));
-}
-
-void Control::applyAndReplicateTrafficConfiguration(TrafficParameters *configuration, unsigned int trafficNum) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::applyAndReplicateTrafficConfiguration" << std::endl;
-#endif
-
-    unsigned int xSize = systemParameters->getXSize();
-    unsigned int ySize = systemParameters->getYSize();
-    unsigned int zSize = systemParameters->getZSize();
-
-    for(unsigned int x = 0; x < xSize; x++) {
-        for(unsigned int y = 0; y < ySize; y++) {
-            for( unsigned int z = 0; z < zSize; z++ ) {
-                unsigned int elementId = COORDINATE_3D_TO_ID(x,y,z,
-                                                             systemParameters->getXSize(),
-                                                             systemParameters->getYSize());
-                Node* no = this->trafficPatternManager->getNode(elementId);
-                if(!no) {
-                    no = new Node(x,y,z);
-                    this->trafficPatternManager->insertNode(elementId,no);
-                }
-                TrafficParameters* clone = new TrafficParameters(*configuration);
-                clone->setSourceNodeX(x);
-                clone->setSourceNodeY(y);
-                clone->setSourceNodeZ(z);
-                no->setTrafficPattern( clone , trafficNum ); // first argument is clone of object
-            }
-        }
-    }
-
-    delete configuration;
-    this->mainWindow->setWindowModified(true);
-    this->mainWindow->printConsole(trUtf8("Traffic configuration applied and replicated"));
-}
-
-void Control::previewTrafficConfiguration(int typePreview) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::previewTrafficConfiguration" << std::endl;
-#endif
-
-    PreviewDialog* preview = NULL;
-
-    switch( typePreview ) {
-        case 1:
-            preview = new DefaultPreviewTrafficConfiguration(this->mainWindow);
-            break;
-        case 2:
-            preview = new XMLPreviewTrafficConfiguration(this->mainWindow);
-            break;
-    }
-    preview->setLocale( mainWindow->locale() );
-    unsigned int xSize = this->systemParameters->getXSize();
-    unsigned int ySize = this->systemParameters->getYSize();
-    unsigned int zSize = this->systemParameters->getZSize();
-
-    for( unsigned int x = 0; x < xSize; x++ ) {
-        for( unsigned int y = 0; y < ySize; y++ ) {
-            for(unsigned int z = 0; z < zSize; z++) {
-                Node* nodo = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
-                                                                                      systemParameters->getXSize(),
-                                                                                      systemParameters->getYSize()));
-                if( nodo != NULL ) {
-                    preview->addNode(nodo);
-                }
-            }
-        }
-    }
-
-    preview->exec();
-
-    delete preview;
-
-}
-
-void Control::experimentStateChanged(int numExperiment, bool state) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::experimentStateChanged" << std::endl;
-#endif
-    Experiment* exp = experimentManager->getExperiment( quint32(numExperiment));;
-   if( exp == NULL ) {
-       exp = new Experiment();
-       experimentManager->insertExperiment(quint32(numExperiment),exp);
-   }
-   exp->setActive(state);
-   this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::configurationExperimentChanged(int opCode, int numExperiment, int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::configurationExperimentChanged" << std::endl;
-#endif
-    Experiment* exp = experimentManager->getExperiment(quint32(numExperiment));
-    if(!exp) {
-        return;
-    }
-    switch(opCode) {
-        case 1: // Virtual channels option changed
-            exp->setVCOptions( quint32(newValue) );
-            break;
-        case 2: // Routing algorithm changed
-            exp->setRoutingAlgorithm( quint32(newValue) );
-            break;
-        case 3: // Flow Control (switching) changed
-            exp->setFlowControl(quint32(newValue));
-            break;
-        case 4: // Arbiter type changed
-            exp->setArbiterType(quint32(newValue));
-            break;
-        case 5: // Input Buffers changed
-            exp->setInputBufferSize( newValue );
-            break;
-        case 6: // Output Buffers changed
-            exp->setOutputBufferSize(newValue);
-            break;
-        case 7: // Topology changed
-            exp->setTopology(newValue);
-            break;
-    }
-
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::stopOptionUpdated(int indice) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::stopOptionUpdated" << std::endl;
-#endif
-    this->systemParameters->setStopOption( quint32(indice) );
-    this->mainWindow->setWindowModified(true);
-}
-
-void Control::stopTimeNsUpdated(int newTime) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::stopTimeNsUpdated" << std::endl;
-#endif
-
-    this->systemParameters->setStopTime_ns( quint32(newTime) );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::stopTimeCyclesUpdated(int newTime) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::stopTimeCyclesUpdated" << std::endl;
-#endif
-
-    this->systemParameters->setStopTime_cycles( quint32(newTime) );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::vcdOptionUpdated(int indice) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::vcdOptionsUpdated" << std::endl;
-#endif
-    this->systemParameters->setVcdOption( quint32(indice) );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::fClkFirstUpdated(double newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::fClkFirstUpdated" << std::endl;
-#endif
-    this->systemParameters->setfClkFirst( (float)newValue );
-    this->systemParameters->setTClk( (1.0 / newValue ) * 1000.0 );
-    this->systemParameters->setChannelBandwidth( newValue * this->systemParameters->getDataWidth());
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::fClkLastUpdated(double newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::fClkLastUpdated" << std::endl;
-#endif
-
-    this->systemParameters->setfClkLast( (float)newValue );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::fClkStepUpdated(double newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::fClkStepUpdated" << std::endl;
-#endif
-    this->systemParameters->setfClkStep( (float)newValue );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::fClkStepTypeUpdated(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::fClkStepTypeUpdated" << std::endl;
-#endif
-    this->systemParameters->setfClkStepType( quint32(newValue) );
-    this->mainWindow->setWindowModified(true);
-
-}
-
-void Control::copySystemParameters() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::copySystemObjects" << std::endl;
-#endif
-
-    this->xSize = this->systemParameters->getXSize();
-    this->ySize = this->systemParameters->getYSize();
-    this->zSize = this->systemParameters->getZSize();
-    this->dataWidth = this->systemParameters->getDataWidth();
-
-    this->vcdOption = this->systemParameters->getVcdOption();
-
 }
 
 void Control::updateStatusExecution(int status) {
@@ -1246,7 +852,8 @@ void Control::generateAnalysis(float lower, float upper) {
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(trUtf8("<font color=green><br />Analyzing simulation results</font>"));
-    Analyzer* analyzer = new Analyzer(this->simulationFolders,xSize,ySize,zSize,dataWidth,lower,upper);
+    // TODO enviar numero de elementos para o analisador e dataWidth
+    Analyzer* analyzer = new Analyzer(this->simulationFolders,16,32,lower,upper);
     QThread* threadAnalisador = new QThread(this);
     threadAnalisador->setObjectName("Analyzer");
     connect(threadAnalisador,SIGNAL(started()),analyzer,SLOT(analyze()));
@@ -1283,8 +890,9 @@ void Control::viewWaveform() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::viewWaveform" << std::endl;
 #endif
-
-    if( this->vcdOption == 0 ) {
+// TODO verificar
+//    if( this->vcdOption == 0 ) {
+    if( this->systemOperation->vcdOption == 0 ) {
         this->mainWindow->printConsole(trUtf8("<font color=red>No VCD file available</font>"));
     } else {
         if( simulationFolders != NULL ) {
@@ -1461,12 +1069,10 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
                 filename += QString("/class_%1").arg(aop->getFlowOp() - 1);
                 break;
             case AnalysisOptions::Specified:
-                filename += QString("/flow_%1_%2_%3_%4_%5")
-                        .arg(aop->getXSrc())
-                        .arg(aop->getYSrc())
-                        .arg(aop->getXDest())
-                        .arg(aop->getYDest())
-                        .arg( aop->getTrafficPattern() );
+                filename += QString("/flow_%1_%2_%3")
+                        .arg(aop->getSource())
+                        .arg(aop->getDestination())
+                        .arg(0); // TODO Obter flowID
                 break;
 
         }
@@ -1775,7 +1381,8 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
             }
         }
         tmp->close();
-        this->copySystemParameters();
+// TODO verificar
+//        this->copySystemParameters();
         delete tmp;
     }
 
@@ -1926,8 +1533,9 @@ void Control::generateTrafficConfigurationFile() {
         return;
     }
 
-    Experiment* e = experimentManager->getExperiment(1);
-    TrafficModelGenerator* tmg = new TrafficModelGenerator(systemParameters,e,trafficPatternManager);
+// TODO Verificar
+    Experiment* e = 0; // experimentManager->getExperiment(1);
+    TrafficModelGenerator* tmg = new TrafficModelGenerator(systemParameters,e);
 
     tmg->generateTraffic( outDir.toStdString().c_str() );
 
@@ -1946,7 +1554,8 @@ void Control::runSimulations() {
         return;
     }
 
-    this->copySystemParameters();
+// TODO verificar
+//    this->copySystemParameters();
 
     if( simulationFolders != NULL ) {
         simulationFolders->clear();
@@ -1992,9 +1601,12 @@ void Control::runSimulations() {
 
     // For each experiment - create a folder
     for( unsigned int i = 1; i <= 5; i++ ) {
-        float fClk = this->systemParameters->getfClkFirst();
+// TODO Verificar
+//        float fClk = this->systemParameters->getfClkFirst();
+        float fClk = this->systemOperation->fClkFirst;
         float fClkPrevious = fClk;
-        Experiment* experiment = this->experimentManager->getExperiment(i);
+// TODO
+        Experiment* experiment = 0; //this->experimentManager->getExperiment(i);
         if(experiment != NULL) {
             if(experiment->isActive()) {
                 numberOfExperiments++;
@@ -2026,22 +1638,34 @@ void Control::runSimulations() {
                                                         .arg(stopSimPar->fileName()),Qt::red);
                     return;
                 }
-
-                switch(systemParameters->getStopOption()) {
-                    case 0:
-                        systemParameters->setStopTime_ns(0);
-                        systemParameters->setStopTime_cycles(0);
-                        break;
-                    case 1:
-                        systemParameters->setStopTime_cycles( (unsigned long int) systemParameters->getStopTime_ns()/systemParameters->getTClk() );
-                        break;
-                    case 2:
-                        systemParameters->setStopTime_ns( (unsigned long int) systemParameters->getStopTime_cycles()*systemParameters->getTClk());
-                        break;
+// TODO verificar
+//                switch(systemParameters->getStopOption()) {
+//                    case 0:
+//                        systemParameters->setStopTime_ns(0);
+//                        systemParameters->setStopTime_cycles(0);
+//                        break;
+//                    case 1:
+//                        systemParameters->setStopTime_cycles( (unsigned long int) systemParameters->getStopTime_ns()/systemParameters->getTClk() );
+//                        break;
+//                    case 2:
+//                        systemParameters->setStopTime_ns( (unsigned long int) systemParameters->getStopTime_cycles()*systemParameters->getTClk());
+//                        break;
+//                }
+                switch(systemOperation->stopOption) {
+                case 0:
+                    systemOperation->stopTime_ns = 0;
+                    systemOperation->stopTime_cycles = 0;
+                    break;
+                case 1:
+                    systemOperation->stopTime_cycles = (unsigned long int) systemOperation->stopTime_ns/systemOperation->tClk;
+                    break;
+                case 2:
+                    systemOperation->stopTime_ns = (unsigned long int) systemOperation->stopTime_cycles*systemOperation->tClk;
+                    break;
                 }
                 QString stopSimParContent = QString("%1\t%2")
-                        .arg(systemParameters->getStopTime_cycles())
-                        .arg(systemParameters->getStopTime_ns());
+                        .arg(systemOperation->stopTime_cycles)
+                        .arg(systemOperation->stopTime_ns);
                 stopSimPar->write(stopSimParContent.toUtf8());
                 stopSimPar->close();
                 delete stopSimPar;
@@ -2050,7 +1674,7 @@ void Control::runSimulations() {
                  */
 
                 int aux = 0;
-                SystemParameters* sp = new SystemParameters(*systemParameters);
+                SystemOperation* sp = new SystemOperation(*systemOperation);
                 for(unsigned int x = 0; x < runCountPerExperiment; x++) {
                     /*
                      * Generate Traffic conf file on simulation dir (root_experiment_dir/experiment/fClk/)
@@ -2061,8 +1685,9 @@ void Control::runSimulations() {
                     dirSimulation.cd(dirFreqOp);
                     QString strDirSimul = dirSimulation.absolutePath();
                     this->simulationFolders->append(strDirSimul);
+                    // TODO verificar
                     TrafficModelGenerator* trafficGen =
-                            new TrafficModelGenerator(sp,experiment,this->trafficPatternManager);
+                            new TrafficModelGenerator(systemParameters,experiment);
                     try {
                         if( useDefault ) {
                             trafficGen->generateTraffic( strDirSimul.toStdString().c_str() );
@@ -2141,8 +1766,11 @@ void Control::runSimulations() {
                         args.append( "-vc" );
                         args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
                     }
-
-                    if( systemParameters->getVcdOption() ) {
+// TODO verificar
+//                    if( systemParameters->getVcdOption() ) {
+//                        args.append("-trace");
+//                    }
+                    if( systemOperation->vcdOption ) {
                         args.append("-trace");
                     }
                     /*
@@ -2181,27 +1809,27 @@ void Control::runSimulations() {
                     /*
                      * Calculating
                      */
-                    if( sp->getfClkStepType() == 0 ) {
-                        fClk += sp->getfClkStep();
-                        if( (sp->getfClkFirst() > sp->getfClkLast() )
-                                && (fClk < sp->getfClkLast()) ) {
-                            fClk = sp->getfClkLast();
+                    if( sp->fClkStepType == 0 ) {
+                        fClk += sp->fClkStep;
+                        if( (sp->fClkFirst > sp->fClkLast )
+                                && (fClk < sp->fClkLast) ) {
+                            fClk = sp->fClkLast;
                         }
-                        if( (sp->getfClkFirst() < sp->getfClkLast())
-                                && (fClk > sp->getfClkLast()) ) {
-                            fClk = sp->getfClkLast();
+                        if( (sp->fClkFirst < sp->fClkLast)
+                                && (fClk > sp->fClkLast) ) {
+                            fClk = sp->fClkLast;
                         }
                     } else {
                         do {
                             fClkPrevious = fClk;
-                            int tmp = (unsigned int) (sp->getfClkFirst()
-                                                      / ( exp(aux*sp->getfClkStep()) )*10 );
+                            int tmp = (unsigned int) (sp->fClkFirst
+                                                      / ( exp(aux*sp->fClkStep) )*10 );
                             fClk = ((float) tmp) / 10.0;
                             aux++;
                         } while (fClk == fClkPrevious);
                     } // if(getfClkStepType == 0)
-                    sp->setTClk( (1.0/fClk)*1000.0 );
-                    sp->setChannelBandwidth( fClk * sp->getDataWidth() );
+                    sp->tClk = (1.0f/fClk)*1000.0f;
+                    sp->channelBandwidth = fClk * systemParameters->getDataWidth();
 
                 } // for(unsigned int x = 0; x < runCountPerExperiment; x++)
                 delete sp;

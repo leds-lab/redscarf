@@ -26,7 +26,8 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
+* ----------------------------------------------------------------------------
+* 10/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -34,10 +35,13 @@
 #define __MAINWINDOW_H__
 
 #include <QMainWindow>
+#include <QVariant>
 
 class QTranslator;
 class AnalysisOptions;
-class ExperimentManager;
+class SystemParameters;
+class Experiment;
+class SystemOperation;
 class EnvironmentConfiguration;
 
 namespace Ui {
@@ -54,12 +58,13 @@ private:
 
     void centerWindow();
     void loadDefaultValues();
-    void clearGridNodes();
     void establishConnections();
     void setProperties();
     void insertComboItens();
     void configureToolBar();
     void configureWidgets();
+
+    bool alreadyExists(SystemParameters* );
 
     enum TypeAnalysis { GraphicSelected,LatencyDistribution, Report };
     AnalysisOptions* getAnalysisOptions(TypeAnalysis opcaoAnalise);
@@ -76,11 +81,7 @@ public:
     unsigned int saveChanges(QString title,QString msg);
     QString selectSystemFolder(QString msgSelect);
     void openFileError(QString error);
-    void updateView(unsigned int xSize, unsigned int ySize,unsigned int zSize,
-            unsigned int channelWidth, ExperimentManager* gpe,
-            int stopOption, int stopTime_ns, int stopTime_cycles,
-            int vcdOption, float fClkFirst, float fClkLast,
-            int fClkStepType, float fClkStep);
+    void updateView(QList<Experiment*>,SystemOperation*);
     void enableRun();
 
     void setLimitsProgressBar(int minimum,int maximum);
@@ -104,7 +105,6 @@ signals:
     void saveSystem();
     void saveAsSystem();
     void saveAsDefaultSystem();
-    void clearSystem();
     void exitApplication(QCloseEvent* );
     void editOptions();
     void changeLanguage(QString);
@@ -112,34 +112,9 @@ signals:
     void saveSimulationResults();
     void generateCSVSimulationReport(AnalysisOptions* aop);
 
-    // System configuration
-    void nodeSelected(unsigned int posX,unsigned int posY,unsigned int posZ);
-    void sizeUpdated(unsigned int xSize,unsigned int ySize,unsigned int zSize);
-    void channelWidthUpdated(unsigned int width);
-    void trafficPatternUpdate(unsigned int posX,
-                              unsigned int posY,
-                              unsigned int posZ,
-                              unsigned int trafficPattern,
-                              bool state);
-    void buttonEditClicked(unsigned int posX,
-                           unsigned int posY,
-                           unsigned int posZ,
-                           unsigned int trafficNum);
-    void previewTrafficConfiguration(int typePreview);
-    void generateTcf();
-
     // System simulation
-    void experimentStateChanged(int numExperimento,bool state);
-    void configurationExperimentChanged(int config,int numExperimento,int novoValor);
-    void stopOptionChanged(int indice);
-    void stopTimeNsChanged(int newTime);
-    void stopTimeCyclesChanged(int newTime);
-    void vcdOptionChanged(int indice);
-    void fClkFirstChanged(double);
-    void fClkLastChanged(double);
-    void fClkStepChanged(double);
-    void fClkStepTypeChanged(int);
     void runSimulation();
+    void generateTCF();
     void cancel();
 
     // Performance Analysis
@@ -167,40 +142,26 @@ private slots:
     void about();
 
     // Tab System Configuration
-    void sizeUpdate();
-    void nodeClicked();
-    void channelWidthUpdate(int);
-    void srcNodeUpdated();
-    void trafficPatternStateChanged(int state);
-    void editClicked();
-    void previewTrafficConfigurationClicked();
-    void nodeSelectedUpdated(unsigned int posX,unsigned int posY,unsigned int posZ);
+    void topologyChange(int);
+    void addSystemConfiguration();
+    void removeSelectedItems();
+    void editTrafficPatterns();
+    void setupTraffic(QList<QVariant> configuration);
 
     // Tab System Simulation
     void experimentChangeState();
     void loadDefaultValuesExperiment();
-    void topologyChange(int);
-    void routingAlgorithmChange(int);
-    void flowControlChange(int);
-    void arbiterTypeChange(int);
-    void vcOptionChange(int);
-    void inputBuffersChange(int);
-    void outputBuffersChange(int);
+    void topologyExpChange(int);
     void copyPreviousExperimentActive();
     void stopOptionUpdate(int);
-    void vcdOptionUpdate(int);
     void fClkFirstUpdate(double);
     void fClkLastUpdate(double);
-    void fClkStepUpdate(double);
-    void fClkStepTypeUpdate(int);
     void run();
 
     // Tab Performance Analysis
     void flowSelectionUpdated(int);
     void buttonCheckUncheckAllClicked();
     void toolButtonCurveClicked();
-    void lowerAnalysisValueChanged(int);
-    void upperAnalysisValueChanged(int);
     void plotGraphic();
     void report();
 

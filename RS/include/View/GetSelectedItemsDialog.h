@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * GetSelectedItemsDialog.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,21 +26,26 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#ifndef GETSELECTEDITEMSDIALOG_H
-#define GETSELECTEDITEMSDIALOG_H
+#ifndef __GETSELECTEDITEMSDIALOG_H__
+#define __GETSELECTEDITEMSDIALOG_H__
 
-#include "include/View/PreviewDialog.h"
+#include <QDialog>
 
-class GetSelectedItemsDialog : public PreviewDialog {
+namespace Ui {
+    class PreviewDialog;
+}
+
+
+class GetSelectedItemsDialog : public QDialog {
     Q_OBJECT
+private:
+    Ui::PreviewDialog *ui;
 public:
     GetSelectedItemsDialog(QStringList items,QWidget* parent = 0);
     ~GetSelectedItemsDialog();
-
-    void addNode(Node*) {}
 
     QStringList getSelectedItems();
 

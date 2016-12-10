@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>932</width>
-    <height>921</height>
+    <width>1144</width>
+    <height>980</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_15">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QSplitter" name="splitter_2">
       <property name="orientation">
@@ -64,144 +64,124 @@
         <attribute name="title">
          <string>System Configuration</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0,0">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
-          <widget class="QGroupBox" name="systemSize">
-           <property name="statusTip">
-            <string>Configure the system size</string>
-           </property>
-           <property name="title">
-            <string>System Size</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Topology:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboTopology">
+               <item>
+                <property name="text">
+                 <string>Non-Orthogonal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2D-Orthogonal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>3D-Orthogonal</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QWidget" name="widgetNonOrtho" native="true">
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <property name="spacing">
+               <number>5</number>
+              </property>
               <property name="leftMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="topMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="rightMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="bottomMargin">
-               <number>10</number>
+               <number>0</number>
+              </property>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <property name="spacing">
+                 <number>5</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_2">
+                  <property name="text">
+                   <string>Number of Elements:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>inNElements</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="inNElements">
+                  <property name="minimum">
+                   <number>4</number>
+                  </property>
+                  <property name="maximum">
+                   <number>256</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="widget2dOrtho" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
               </property>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <item>
-                 <widget class="QLabel" name="labelXSize">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of columns of the 2-D mesh network</string>
-                  </property>
+                 <widget class="QLabel" name="label_3">
                   <property name="text">
-                   <string>X size:</string>
+                   <string>X Size:</string>
                   </property>
                   <property name="buddy">
-                   <cstring>spinInXSize</cstring>
+                   <cstring>in2dXSize</cstring>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinInXSize">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of columns of the 2-D mesh network</string>
-                  </property>
+                 <widget class="QSpinBox" name="in2dXSize">
                   <property name="minimum">
                    <number>2</number>
                   </property>
                   <property name="maximum">
-                   <number>10</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_10">
-                <item>
-                 <widget class="QLabel" name="labelYSize">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of rows of 2-D mesh network</string>
-                  </property>
-                  <property name="text">
-                   <string>Y size:</string>
-                  </property>
-                  <property name="buddy">
-                   <cstring>spinInYSize</cstring>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spinInYSize">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of rows of 2-D mesh network</string>
-                  </property>
-                  <property name="minimum">
-                   <number>2</number>
-                  </property>
-                  <property name="maximum">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>10</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_8">
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>Z size:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spinInZSize">
-                  <property name="statusTip">
-                   <string>Number of layers in a 3D Mesh</string>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>4</number>
+                   <number>16</number>
                   </property>
                  </widget>
                 </item>
@@ -210,233 +190,67 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
-                 <widget class="QLabel" name="labelChannelWidth">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of bits in the data channel.</string>
-                  </property>
+                 <widget class="QLabel" name="label_4">
                   <property name="text">
-                   <string>Channel width:</string>
+                   <string>Y Size:</string>
                   </property>
                   <property name="buddy">
-                   <cstring>spinInChannelWidth</cstring>
+                   <cstring>in2dYSize</cstring>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinInChannelWidth">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Number of bits in the data channel.</string>
-                  </property>
+                 <widget class="QSpinBox" name="in2dYSize">
                   <property name="minimum">
-                   <number>32</number>
+                   <number>2</number>
                   </property>
                   <property name="maximum">
-                   <number>510</number>
-                  </property>
-                  <property name="singleStep">
-                   <number>8</number>
+                   <number>16</number>
                   </property>
                  </widget>
                 </item>
                </layout>
               </item>
              </layout>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="1" column="1">
-               <widget class="QSlider" name="verticalSlider">
-                <property name="minimum">
-                 <number>2</number>
-                </property>
-                <property name="maximum">
-                 <number>10</number>
-                </property>
-                <property name="pageStep">
-                 <number>1</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="tickPosition">
-                 <enum>QSlider::TicksBelow</enum>
-                </property>
-                <property name="tickInterval">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QSlider" name="horizontalSlider">
-                <property name="minimum">
-                 <number>2</number>
-                </property>
-                <property name="maximum">
-                 <number>10</number>
-                </property>
-                <property name="pageStep">
-                 <number>1</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="tickPosition">
-                 <enum>QSlider::TicksBelow</enum>
-                </property>
-                <property name="tickInterval">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QScrollArea" name="scrollArea">
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>528</width>
-                   <height>469</height>
-                  </rect>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_35">
-                  <item>
-                   <widget class="QGroupBox" name="nodes">
-                    <property name="enabled">
-                     <bool>true</bool>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="statusTip">
-                     <string>Preview of the cores in network</string>
-                    </property>
-                    <property name="title">
-                     <string>Nodes</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout"/>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="lineDivisorSystemConfiguration">
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="trafficConfiguration">
-           <property name="statusTip">
-            <string>Configure the traffic paterns</string>
-           </property>
-           <property name="title">
-            <string>Traffic Configuration</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_15">
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="widget3dOrtho" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <property name="spacing">
+               <number>5</number>
+              </property>
               <property name="leftMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="topMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="rightMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
               <property name="bottomMargin">
-               <number>10</number>
+               <number>0</number>
               </property>
-              <item>
-               <widget class="QLabel" name="labelSourceNode">
-                <property name="font">
-                 <font>
-                  <italic>false</italic>
-                 </font>
-                </property>
-                <property name="statusTip">
-                 <string>Configure the source node of the traffic pattern</string>
-                </property>
-                <property name="text">
-                 <string>Source node:</string>
-                </property>
-               </widget>
-              </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_13">
                 <item>
-                 <widget class="QLabel" name="labelSourceNodeX">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>X coordinate of the source node.</string>
-                  </property>
+                 <widget class="QLabel" name="label_6">
                   <property name="text">
-                   <string>X:</string>
+                   <string>X Size:</string>
                   </property>
                   <property name="buddy">
-                   <cstring>spinInSrcNodeX</cstring>
+                   <cstring>in3dXSize</cstring>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinInSrcNodeX">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
+                 <widget class="QSpinBox" name="in3dXSize">
+                  <property name="minimum">
+                   <number>2</number>
                   </property>
-                  <property name="statusTip">
-                   <string>X coordinate of the source node.</string>
+                  <property name="maximum">
+                   <number>8</number>
                   </property>
                  </widget>
                 </item>
@@ -445,376 +259,141 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_14">
                 <item>
-                 <widget class="QLabel" name="labelSourceNodeY">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
-                  </property>
-                  <property name="statusTip">
-                   <string>Y coordinate of the source node.</string>
-                  </property>
+                 <widget class="QLabel" name="label_7">
                   <property name="text">
-                   <string>Y:</string>
+                   <string>Y Size:</string>
                   </property>
                   <property name="buddy">
-                   <cstring>spinInSrcNodeY</cstring>
+                   <cstring>in3dYSize</cstring>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinInSrcNodeY">
-                  <property name="font">
-                   <font>
-                    <italic>false</italic>
-                   </font>
+                 <widget class="QSpinBox" name="in3dYSize">
+                  <property name="minimum">
+                   <number>2</number>
                   </property>
-                  <property name="statusTip">
-                   <string>Y coordinate of the source node.</string>
+                  <property name="maximum">
+                   <number>8</number>
                   </property>
                  </widget>
                 </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_22">
+               <layout class="QHBoxLayout" name="horizontalLayout_15">
                 <item>
-                 <widget class="QLabel" name="labelSourceNodeZ">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
+                 <widget class="QLabel" name="label_5">
                   <property name="text">
-                   <string>Z:</string>
+                   <string>Z Size:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>in3dZSize</cstring>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinInSrcNodeZ">
+                 <widget class="QSpinBox" name="in3dZSize">
+                  <property name="minimum">
+                   <number>2</number>
+                  </property>
                   <property name="maximum">
-                   <number>3</number>
+                   <number>4</number>
                   </property>
                  </widget>
                 </item>
                </layout>
               </item>
              </layout>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="trafficPaterns">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Configure traffic patterns</string>
-              </property>
-              <property name="title">
-               <string>Traffic Patterns</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <item>
-                <layout class="QHBoxLayout" name="layoutTrafficPattern0">
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetFixedSize</enum>
-                 </property>
-                 <property name="leftMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>10</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="checkInTrafficPattern0">
-                   <property name="statusTip">
-                    <string>Enable/Disable traffic pattern 0</string>
-                   </property>
-                   <property name="text">
-                    <string>Traffic pattern 0</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buttonEditTrafficPattern0">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="statusTip">
-                    <string>Edit traffic patern 0</string>
-                   </property>
-                   <property name="text">
-                    <string>Edit</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="layoutTrafficPattern1">
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetFixedSize</enum>
-                 </property>
-                 <property name="leftMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>10</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="checkInTrafficPattern1">
-                   <property name="statusTip">
-                    <string>Enable/Disable traffic pattern 1</string>
-                   </property>
-                   <property name="text">
-                    <string>Traffic pattern 1</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buttonEditTrafficPattern1">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="statusTip">
-                    <string>Edit traffic patern 1</string>
-                   </property>
-                   <property name="text">
-                    <string>Edit</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="layoutTrafficPattern2">
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetFixedSize</enum>
-                 </property>
-                 <property name="leftMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>10</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="checkInTrafficPattern2">
-                   <property name="statusTip">
-                    <string>Enable/Disable traffic pattern 2</string>
-                   </property>
-                   <property name="text">
-                    <string>Traffic pattern 2</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buttonEditTrafficPattern2">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="statusTip">
-                    <string>Edit traffic patern 2</string>
-                   </property>
-                   <property name="text">
-                    <string>Edit</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="layoutTrafficPattern3">
-                 <property name="sizeConstraint">
-                  <enum>QLayout::SetFixedSize</enum>
-                 </property>
-                 <property name="leftMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>10</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="checkInTrafficPattern3">
-                   <property name="statusTip">
-                    <string>Enable/Disable traffic pattern 3</string>
-                   </property>
-                   <property name="text">
-                    <string>Traffic pattern 3</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buttonEditTrafficPattern3">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="statusTip">
-                    <string>Edit traffic patern 3</string>
-                   </property>
-                   <property name="text">
-                    <string>Edit</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_edit.png</normaloff>:/icons/icons/icon_edit.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="font">
-               <font>
-                <weight>50</weight>
-                <italic>false</italic>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Preview options</string>
-              </property>
-              <property name="title">
-               <string>Preview</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_7">
-               <property name="leftMargin">
-                <number>2</number>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_14">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_22">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Data Width</string>
                </property>
-               <property name="topMargin">
-                <number>2</number>
+               <property name="buddy">
+                <cstring>inDataWidth</cstring>
                </property>
-               <property name="rightMargin">
-                <number>2</number>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="inDataWidth">
+               <property name="minimum">
+                <number>32</number>
                </property>
-               <property name="bottomMargin">
-                <number>2</number>
+               <property name="maximum">
+                <number>510</number>
                </property>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <property name="leftMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>10</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>10</number>
-                 </property>
-                 <item>
-                  <widget class="QPushButton" name="buttonPreviewDefault">
-                   <property name="font">
-                    <font>
-                     <weight>50</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="statusTip">
-                    <string>Preview traffic configuration in default style</string>
-                   </property>
-                   <property name="text">
-                    <string>Preview
-traffic
-configuration</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_preview.png</normaloff>:/icons/icons/icon_preview.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buttonXmlViewer">
-                   <property name="font">
-                    <font>
-                     <weight>50</weight>
-                     <italic>false</italic>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="statusTip">
-                    <string>Preview traffic configuration in xml style (tree view)</string>
-                   </property>
-                   <property name="text">
-                    <string>XML view
-traffic
-configuration</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources/Icons.qrc">
-                     <normaloff>:/icons/icons/icon_preview_xml.png</normaloff>:/icons/icons/icon_preview_xml.png</iconset>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <widget class="QPushButton" name="buttonGenerateTcf">
-                 <property name="text">
-                  <string>Generate Traffic Model</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonAddSystemConf">
+               <property name="text">
+                <string>Add</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_23">
+           <item>
+            <widget class="QListWidget" name="listConf">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ExtendedSelection</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QPushButton" name="buttonTrafficConfiguration">
+               <property name="text">
+                <string>Traffic Configuration</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonGenTCF">
+               <property name="text">
+                <string>Generate Traffic File</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -2470,154 +2049,50 @@ configuration</string>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <layout class="QHBoxLayout" name="horizontalLayout_18">
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_8">
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_17">
-                    <item>
-                     <widget class="QLabel" name="labelXSource">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>X source:</string>
-                      </property>
-                      <property name="buddy">
-                       <cstring>spinBoxXSourceAnalyze</cstring>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBoxXSourceAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_18">
-                    <item>
-                     <widget class="QLabel" name="labelYSource">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Y source:</string>
-                      </property>
-                      <property name="buddy">
-                       <cstring>spinBoxYSourceAnalyze</cstring>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBoxYSourceAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
+                 <widget class="QLabel" name="labelAnalysisSource">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Source:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinAnalysisSource</cstring>
+                  </property>
+                 </widget>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_17">
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_20">
-                    <item>
-                     <widget class="QLabel" name="labelXDestination">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>X destination:</string>
-                      </property>
-                      <property name="buddy">
-                       <cstring>spinBoxXDestinationAnalyze</cstring>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBoxXDestinationAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_19">
-                    <item>
-                     <widget class="QLabel" name="labelYDestination">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Y destination:</string>
-                      </property>
-                      <property name="buddy">
-                       <cstring>spinBoxYDestinationAnalyze</cstring>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBoxYDestinationAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
+                 <widget class="QSpinBox" name="spinAnalysisSource">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_20">
+                <item>
+                 <widget class="QLabel" name="labelAnalysisDestination">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Destination:</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>spinAnalysisDestination</cstring>
+                  </property>
+                 </widget>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_4">
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_21">
-                    <item>
-                     <widget class="QLabel" name="labelTrafficPatternAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Traffic pattern:</string>
-                      </property>
-                      <property name="buddy">
-                       <cstring>spinBoxTrafficPatternAnalyze</cstring>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBoxTrafficPatternAnalyze">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="maximum">
-                       <number>3</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_7">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
+                 <widget class="QSpinBox" name="spinAnalysisDestination">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -3381,7 +2856,7 @@ distribution</string>
           <item>
            <widget class="QToolButton" name="toolButtonClearConsole">
             <property name="icon">
-             <iconset resource="../resources/Icons.qrc">
+             <iconset>
               <normaloff>:/icons/icons/icon_clear.png</normaloff>:/icons/icons/icon_clear.png</iconset>
             </property>
            </widget>
@@ -3434,7 +2909,7 @@ distribution</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>932</width>
+     <width>1144</width>
      <height>26</height>
     </rect>
    </property>
@@ -3451,7 +2926,6 @@ distribution</string>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionSaveAsDefault"/>
-    <addaction name="actionClearAll"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -3613,21 +3087,6 @@ distribution</string>
     <string>Save as default a configuration file</string>
    </property>
   </action>
-  <action name="actionClearAll">
-   <property name="icon">
-    <iconset resource="../resources/Icons.qrc">
-     <normaloff>:/icons/icons/icon_clear.png</normaloff>:/icons/icons/icon_clear.png</iconset>
-   </property>
-   <property name="text">
-    <string>Clear all traffic patterns</string>
-   </property>
-   <property name="toolTip">
-    <string>Clear all the traffic patterns configured for the system</string>
-   </property>
-   <property name="statusTip">
-    <string>Clear all the traffic patterns configured for the system</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="checked">
     <bool>false</bool>
@@ -3680,36 +3139,6 @@ distribution</string>
    </property>
    <property name="menuRole">
     <enum>QAction::AboutQtRole</enum>
-   </property>
-  </action>
-  <action name="actionPreview_Traffic_Configuration">
-   <property name="icon">
-    <iconset resource="../resources/Icons.qrc">
-     <normaloff>:/icons/icons/icon_preview.png</normaloff>:/icons/icons/icon_preview.png</iconset>
-   </property>
-   <property name="text">
-    <string>Preview traffic configuration</string>
-   </property>
-   <property name="toolTip">
-    <string>Preview traffic configuration in default style</string>
-   </property>
-   <property name="statusTip">
-    <string>Preview traffic configuration in default style</string>
-   </property>
-  </action>
-  <action name="actionXML_View_Traffic_Configuration">
-   <property name="icon">
-    <iconset resource="../resources/Icons.qrc">
-     <normaloff>:/icons/icons/icon_preview_xml.png</normaloff>:/icons/icons/icon_preview_xml.png</iconset>
-   </property>
-   <property name="text">
-    <string>XML view traffic configuration</string>
-   </property>
-   <property name="toolTip">
-    <string>Preview traffic configuration in XML style (tree view)</string>
-   </property>
-   <property name="statusTip">
-    <string>Preview traffic configuration in XML style (tree view)</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -3773,26 +3202,6 @@ distribution</string>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>tabs</tabstop>
-  <tabstop>spinInXSize</tabstop>
-  <tabstop>spinInYSize</tabstop>
-  <tabstop>spinInZSize</tabstop>
-  <tabstop>spinInChannelWidth</tabstop>
-  <tabstop>scrollArea</tabstop>
-  <tabstop>verticalSlider</tabstop>
-  <tabstop>horizontalSlider</tabstop>
-  <tabstop>spinInSrcNodeX</tabstop>
-  <tabstop>spinInSrcNodeY</tabstop>
-  <tabstop>spinInSrcNodeZ</tabstop>
-  <tabstop>checkInTrafficPattern0</tabstop>
-  <tabstop>buttonEditTrafficPattern0</tabstop>
-  <tabstop>checkInTrafficPattern1</tabstop>
-  <tabstop>buttonEditTrafficPattern1</tabstop>
-  <tabstop>checkInTrafficPattern2</tabstop>
-  <tabstop>buttonEditTrafficPattern2</tabstop>
-  <tabstop>checkInTrafficPattern3</tabstop>
-  <tabstop>buttonEditTrafficPattern3</tabstop>
-  <tabstop>buttonPreviewDefault</tabstop>
-  <tabstop>buttonXmlViewer</tabstop>
   <tabstop>checkInExperiment2</tabstop>
   <tabstop>checkInExperiment3</tabstop>
   <tabstop>checkInExperiment4</tabstop>
@@ -3849,11 +3258,8 @@ distribution</string>
   <tabstop>spinBoxEndPacketsAnalyze</tabstop>
   <tabstop>buttonRunAnalysis</tabstop>
   <tabstop>comboFlowSelection</tabstop>
-  <tabstop>spinBoxXSourceAnalyze</tabstop>
-  <tabstop>spinBoxYSourceAnalyze</tabstop>
-  <tabstop>spinBoxXDestinationAnalyze</tabstop>
-  <tabstop>spinBoxYDestinationAnalyze</tabstop>
-  <tabstop>spinBoxTrafficPatternAnalyze</tabstop>
+  <tabstop>spinAnalysisSource</tabstop>
+  <tabstop>spinAnalysisDestination</tabstop>
   <tabstop>comboBoxYAxisGraphic</tabstop>
   <tabstop>comboBoxXAxisGraphic</tabstop>
   <tabstop>checkBoxRoutingAlgorithm</tabstop>
@@ -3875,7 +3281,6 @@ distribution</string>
   <tabstop>buttonViewReport</tabstop>
   <tabstop>console</tabstop>
   <tabstop>toolButtonClearConsole</tabstop>
-  <tabstop>buttonGenerateTcf</tabstop>
   <tabstop>comboInVCExp1</tabstop>
   <tabstop>comboInVCExp3</tabstop>
   <tabstop>comboInVCExp2</tabstop>
@@ -3892,70 +3297,5 @@ distribution</string>
  <resources>
   <include location="../resources/Icons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinInXSize</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>275</x>
-     <y>654</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>161</x>
-     <y>130</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinInXSize</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>161</x>
-     <y>130</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>264</x>
-     <y>654</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinInYSize</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>verticalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>295</x>
-     <y>130</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>589</x>
-     <y>620</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>verticalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinInYSize</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>589</x>
-     <y>620</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>295</x>
-     <y>130</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

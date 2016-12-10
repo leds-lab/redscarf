@@ -50,12 +50,10 @@ private:
      * \brief analysisFolders List with contains all directories for analysis
      */
     QList<QString> *analysisFolders;
-    unsigned int xSize;
-    unsigned int ySize;
-    unsigned int zSize;
+    unsigned short numElements;
+    unsigned int dataWidth;
     float lower;
     float upper;
-    unsigned int dataWidth;
 
 public:
     /*!
@@ -68,9 +66,8 @@ public:
      * \param upper End percentual of the all packets transfered that it should be considered
      * \param parent QObject parent of this Analyzer
      */
-    explicit Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
-                      unsigned int ySize, unsigned int zSize, unsigned int dataWidth, float lower,
-                      float upper, QObject *parent = 0);
+    explicit Analyzer(QList<QString> *analysisFolders, unsigned short numElements,
+                      unsigned int dataWidth, float lower,float upper, QObject *parent = 0);
     ~Analyzer();
 
 signals:

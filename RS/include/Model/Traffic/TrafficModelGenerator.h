@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * TrafficModelGenerator.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,28 +26,27 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 10/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef TRAFFICGENERATOR_H
-#define TRAFFICGENERATOR_H
+#ifndef __TRAFFICGENERATOR_H__
+#define __TRAFFICGENERATOR_H__
 
 #include <string>
 
 class SystemParameters;
+class SystemOperation;
 class Experiment;
-class TrafficPatternManager;
 class TrafficParameters;
-class Node;
 
 class TrafficModelGenerator {
 protected:
 
     SystemParameters* sp;
     Experiment* exp;
-    TrafficPatternManager* gpt;
-
-    Node* nodeTemp;
+    SystemOperation* sop;
 
     unsigned int numberCyclesPerFlit;
     unsigned int lastPayloadLength;
@@ -65,7 +64,6 @@ protected:
     void createFileTrafficConfiguration(const char* diretorio) throw (const char*);
 
     // gtr_functions
-    virtual void getDestination(TrafficParameters* tp);
     virtual int functionProbability(TrafficParameters* tp);
     virtual void removeZeroPayloadPacket(TrafficParameters* tp);
     virtual unsigned int calculateIdleBasedOnPayloadLength(unsigned int payloadLength,
@@ -87,7 +85,7 @@ protected:
     virtual void generateSingleDestinationDistributions(TrafficParameters* tp);
     virtual void generateMultipleDestinationDistributions(TrafficParameters* tp);
 public:
-    TrafficModelGenerator(SystemParameters* sp, Experiment* exp, TrafficPatternManager *gpt);
+    TrafficModelGenerator(SystemParameters* sp, Experiment* exp);
 
     virtual void generateTraffic(const char* diretorio) throw (const char* );
 

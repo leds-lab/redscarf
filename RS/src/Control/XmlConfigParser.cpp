@@ -38,19 +38,17 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-#include "include/Model/System/SystemParameters.h"
 #include "include/Model/System/SystemDefines.h"
-#include "include/Model/System/ExperimentManager.h"
-#include "include/Model/Traffic/TrafficPatternManager.h"
-#include "include/Model/Traffic/TrafficPatternDefines.h"
+#include "include/Model/System/SystemParameters.h"
+#include "include/Model/System/SystemOperation.h"
 #include "include/Control/Control.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif
 
-XmlConfigParser::XmlConfigParser(SystemParameters *sp, TrafficPatternManager *tpm, ExperimentManager *em) :
-        systemParameters(sp),trafficPatternManager(tpm),expManager(em) {
+XmlConfigParser::XmlConfigParser() :
+        systemParameters(0) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Control/XmlConfigParser" << std::endl;
 #endif

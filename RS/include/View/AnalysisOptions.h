@@ -45,7 +45,7 @@ public:
     AnalysisOptions();
     AnalysisOptions(bool topology,bool routingAlgorithm,bool flowControl,
             bool arbiterType,bool vcOp,bool inputBuffers,bool outputBuffers,float lineWidth,
-            float pointSize,int xSrc,int ySrc,int xDest,int yDest,int trafficPattern,
+            float pointSize,unsigned short source,unsigned short destination,
             QString xAxisLabel,QString yAxisLabel,int xAxis,int yAxis,QString title,
             FlowOptions flowOp,QColor* color[5],bool latencyDistribution);
 
@@ -59,11 +59,8 @@ public:
     inline void setLatencyDistribution(bool check) { this->latencyDistribution = check; }
     inline void setLineWidth(float width) { this->lineWidth = width; }
     inline void setPointSize(float size) { this->pointSize = size; }
-    inline void setXSrc(int xSrc) { this->xSrc = xSrc; }
-    inline void setYSrc(int ySrc) { this->ySrc = ySrc; }
-    inline void setXDest(int xDest) { this->xDest = xDest; }
-    inline void setYDest(int yDest) { this->yDest = yDest; }
-    inline void setTrafficPattern(int index) { this->trafficPattern = index; }
+    inline void setSource(int source) { this->source = source; }
+    inline void setDestination(int destination) { this->destination = destination; }
     inline void setXAxisLabel(QString xLabel) { this->xAxisLabel = xLabel; }
     inline void setYAxisLabel(QString yLabel) { this->yAxisLabel = yLabel; }
     inline void setFlowOp(FlowOptions op) { this->flowOp = op; }
@@ -82,11 +79,8 @@ public:
     inline bool isLatencyDistribution() const { return this->latencyDistribution; }
     inline float getLineWidth() const { return this->lineWidth; }
     inline float getPointSize() const { return this->pointSize; }
-    inline int getXSrc() const { return this->xSrc; }
-    inline int getYSrc() const { return this->ySrc; }
-    inline int getXDest() const { return this->xDest; }
-    inline int getYDest() const { return this->yDest; }
-    inline int getTrafficPattern() const { return this->trafficPattern; }
+    inline int getSource() const { return this->source; }
+    inline int getDestination() const { return this->destination; }
     inline QString getXAxisLabel() const { return this->xAxisLabel; }
     inline QString getYAxisLabel() const { return this->yAxisLabel; }
     inline FlowOptions getFlowOp() const { return this->flowOp; }
@@ -111,11 +105,8 @@ private:
     float lineWidth;
     float pointSize;
 
-    int xSrc;
-    int ySrc;
-    int xDest;
-    int yDest;
-    int trafficPattern;
+    unsigned short source;
+    unsigned short destination;
 
     int xAxis;
     int yAxis;

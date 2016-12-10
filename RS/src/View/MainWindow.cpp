@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * MainWindow.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -38,9 +38,13 @@
 
 #include "include/Model/System/Defines.h"
 #include "include/Model/System/SystemDefines.h"
-#include "include/Model/System/ExperimentManager.h"
+#include "include/Model/System/Experiment.h"
+#include "include/Model/System/SystemOperation.h"
+#include "include/Model/System/SystemParameters.h"
 
 #include "include/Control/EnvironmentConfiguration.h"
+
+#include "include/View/TrafficConfigurationDialog.h"
 
 #include <QMessageBox>
 #include <QDesktopWidget>
@@ -67,8 +71,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 #endif
     ui->setupUi(this); // Setup the mainwindown graphical form
 
+
+    qRegisterMetaType< QList<QVariant> >( "QList<QVariant>" );
+
     // Center the window on the center - disabled - the OS manager define the most adequated position
-//    this->centralizarTela();
+//    this->centerWindow();
     this->configureToolBar();
     this->insertComboItens();
     this->setProperties();
@@ -93,6 +100,12 @@ void MainWindow::configureWidgets() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::configureWidgets" << std::endl;
 #endif
+
+    QAction* deleteItem = new QAction(ui->listConf);
+    deleteItem->setShortcut(Qt::Key_Delete);
+    ui->listConf->addAction(deleteItem);
+    connect(deleteItem,SIGNAL(triggered(bool)),this,SLOT(removeSelectedItems()));
+
     // Desabilitando o spin de stop time da simulação, por padrão a opção de parada é até entregar todos os pacotes
     ui->spinBoxStopTimeNs->setVisible(false);
     ui->spinBoxStopTimeCycles->setVisible(false);
@@ -131,10 +144,6 @@ void MainWindow::configureToolBar() {
     ui->toolBar->addAction( ui->actionOpen );
     ui->toolBar->addAction( ui->actionSave );
     ui->toolBar->addAction( ui->actionSaveAsDefault );
-    ui->toolBar->addAction( ui->actionClearAll );
-    ui->toolBar->addSeparator();
-    ui->toolBar->addAction( ui->actionPreview_Traffic_Configuration );
-    ui->toolBar->addAction( ui->actionXML_View_Traffic_Configuration );
     ui->toolBar->addSeparator();
     ui->toolBar->addAction( ui->actionLoadSimulation );
     ui->toolBar->addAction( ui->actionSaveSimulation );
@@ -146,10 +155,7 @@ void MainWindow::loadDefaultValues() {
     std::cout << "View/MainWindow::loadDefaultValues" << std::endl;
 #endif
 
-    ui->spinInXSize->setValue(qint32(DefaultValuesSystem::DEFAULT_X_SIZE));
-    ui->spinInYSize->setValue(qint32(DefaultValuesSystem::DEFAULT_Y_SIZE));
-    ui->spinInZSize->setValue(qint32(DefaultValuesSystem::DEFAULT_Z_SIZE));
-    ui->spinInChannelWidth->setValue(qint32(DefaultValuesSystem::DEFAULT_DATA_WIDTH));
+    ui->comboTopology->setCurrentIndex(1); // Default is 2D-Orthogonal topology
 
     ui->spinBoxStopTimeNs->setValue( qint32(DefaultValuesSystem::DEFAULT_STOP_TIME_NS) );
     ui->spinBoxStopTimeCycles->setValue( qint32(DefaultValuesSystem::DEFAULT_STOP_TIME_CYCLES) );
@@ -171,41 +177,41 @@ void MainWindow::loadDefaultValues() {
     ui->comboInTopologyExp4->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
     ui->comboInTopologyExp5->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
 
-    ui->comboInRoutingAlgorithmExp1->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInRoutingAlgorithmExp2->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInRoutingAlgorithmExp3->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInRoutingAlgorithmExp4->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
-    ui->comboInRoutingAlgorithmExp5->setCurrentIndex    (qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE     ));
+    ui->comboInRoutingAlgorithmExp1->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE));
+    ui->comboInRoutingAlgorithmExp2->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE));
+    ui->comboInRoutingAlgorithmExp3->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE));
+    ui->comboInRoutingAlgorithmExp4->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE));
+    ui->comboInRoutingAlgorithmExp5->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ROUTING_TYPE));
 
-    ui->comboInSwitchingExp1->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInSwitchingExp2->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInSwitchingExp3->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInSwitchingExp4->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
-    ui->comboInSwitchingExp5->setCurrentIndex           (qint32(DefaultValuesSystem::DEFAULT_FC_TYPE          ));
+    ui->comboInSwitchingExp1->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FC_TYPE));
+    ui->comboInSwitchingExp2->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FC_TYPE));
+    ui->comboInSwitchingExp3->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FC_TYPE));
+    ui->comboInSwitchingExp4->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FC_TYPE));
+    ui->comboInSwitchingExp5->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_FC_TYPE));
 
-    ui->comboInArbiterTypeExp1->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->comboInArbiterTypeExp2->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->comboInArbiterTypeExp3->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->comboInArbiterTypeExp4->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
-    ui->comboInArbiterTypeExp5->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
+    ui->comboInArbiterTypeExp1->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE));
+    ui->comboInArbiterTypeExp2->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE));
+    ui->comboInArbiterTypeExp3->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE));
+    ui->comboInArbiterTypeExp4->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE));
+    ui->comboInArbiterTypeExp5->setCurrentIndex(qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE));
 
-    ui->comboInVCExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
-    ui->comboInVCExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
-    ui->comboInVCExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
-    ui->comboInVCExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
-    ui->comboInVCExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
+    ui->comboInVCExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
+    ui->comboInVCExp2->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
+    ui->comboInVCExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
+    ui->comboInVCExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
+    ui->comboInVCExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
 
-    ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInInputBuffersExp2->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInInputBuffersExp3->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInInputBuffersExp4->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
-    ui->spinInInputBuffersExp5->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
+    ui->spinInInputBuffersExp1->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
+    ui->spinInInputBuffersExp2->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
+    ui->spinInInputBuffersExp3->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
+    ui->spinInInputBuffersExp4->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
+    ui->spinInInputBuffersExp5->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
 
-    ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-    ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-    ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-    ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
-    ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+    ui->spinInOutputBuffersExp1->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH));
+    ui->spinInOutputBuffersExp2->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH));
+    ui->spinInOutputBuffersExp3->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH));
+    ui->spinInOutputBuffersExp4->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH));
+    ui->spinInOutputBuffersExp5->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH));
 
     this->graphLineColors[0] = new QColor( Qt::red );
     this->graphLineColors[1] = new QColor( Qt::blue );
@@ -236,16 +242,6 @@ void MainWindow::setProperties() {
     std::cout << "View/MainWindow::setProperties" << std::endl;
 #endif
 
-    ui->checkInTrafficPattern0->setProperty("num",0);
-    ui->checkInTrafficPattern1->setProperty("num",1);
-    ui->checkInTrafficPattern2->setProperty("num",2);
-    ui->checkInTrafficPattern3->setProperty("num",3);
-
-    ui->buttonEditTrafficPattern0->setProperty("num",0);
-    ui->buttonEditTrafficPattern1->setProperty("num",1);
-    ui->buttonEditTrafficPattern2->setProperty("num",2);
-    ui->buttonEditTrafficPattern3->setProperty("num",3);
-
     ui->checkInExperiment2->setProperty("exp",2);
     ui->checkInExperiment3->setProperty("exp",3);
     ui->checkInExperiment4->setProperty("exp",4);
@@ -261,12 +257,6 @@ void MainWindow::setProperties() {
     ui->buttonDefaultExp3->setProperty("exp",3);
     ui->buttonDefaultExp4->setProperty("exp",4);
     ui->buttonDefaultExp5->setProperty("exp",5);
-
-    ui->buttonPreviewDefault->setProperty("preview",1);
-    ui->buttonXmlViewer->setProperty("preview",2);
-
-    ui->actionPreview_Traffic_Configuration->setProperty("preview",1);
-    ui->actionXML_View_Traffic_Configuration->setProperty("preview",2);
 
     ui->toolButtonColorCurve1->setProperty("curve",0); // Relativo ao vetor de cores
     ui->toolButtonColorCurve2->setProperty("curve",1);
@@ -312,35 +302,10 @@ void MainWindow::establishConnections() {
 #endif
 
     // System Configuration
-    connect(ui->spinInXSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
-    connect(ui->spinInYSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
-    connect(ui->spinInZSize,SIGNAL(valueChanged(int)),this,SLOT(sizeUpdate()));
-
-    connect(ui->spinInChannelWidth,SIGNAL(valueChanged(int)),this,SLOT(channelWidthUpdate(int)));
-
-    connect(ui->checkInTrafficPattern0,SIGNAL(stateChanged(int)),this,SLOT(trafficPatternStateChanged(int)));
-    connect(ui->checkInTrafficPattern1,SIGNAL(stateChanged(int)),this,SLOT(trafficPatternStateChanged(int)));
-    connect(ui->checkInTrafficPattern2,SIGNAL(stateChanged(int)),this,SLOT(trafficPatternStateChanged(int)));
-    connect(ui->checkInTrafficPattern3,SIGNAL(stateChanged(int)),this,SLOT(trafficPatternStateChanged(int)));
-
-    connect(ui->buttonEditTrafficPattern0,SIGNAL(clicked()),this,SLOT(editClicked()));
-    connect(ui->buttonEditTrafficPattern1,SIGNAL(clicked()),this,SLOT(editClicked()));
-    connect(ui->buttonEditTrafficPattern2,SIGNAL(clicked()),this,SLOT(editClicked()));
-    connect(ui->buttonEditTrafficPattern3,SIGNAL(clicked()),this,SLOT(editClicked()));
-
-    connect(ui->spinInSrcNodeX,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
-    connect(ui->spinInSrcNodeY,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
-    connect(ui->spinInSrcNodeZ,SIGNAL(valueChanged(int)),this,SLOT(srcNodeUpdated()));
-
-    connect(this,SIGNAL(nodeSelected(uint,uint,uint)),this,SLOT(nodeSelectedUpdated(uint,uint,uint)));
-
-    connect(ui->buttonPreviewDefault,SIGNAL(clicked()),this,SLOT(previewTrafficConfigurationClicked()));
-    connect(ui->buttonXmlViewer,SIGNAL(clicked()),this,SLOT(previewTrafficConfigurationClicked()));
-
-    connect(ui->actionPreview_Traffic_Configuration,SIGNAL(triggered()),this,SLOT(previewTrafficConfigurationClicked()));
-    connect(ui->actionXML_View_Traffic_Configuration,SIGNAL(triggered()),this,SLOT(previewTrafficConfigurationClicked()));
-
-    connect(ui->buttonGenerateTcf,&QPushButton::clicked,this,&MainWindow::generateTcf);
+    connect(ui->comboTopology,SIGNAL(currentIndexChanged(int)),this,SLOT(topologyChange(int)));
+    connect(ui->buttonAddSystemConf,SIGNAL(clicked(bool)),this,SLOT(addSystemConfiguration()));
+    connect(ui->buttonTrafficConfiguration,SIGNAL(clicked(bool)),this,SLOT(editTrafficPatterns()));
+    connect(ui->buttonGenTCF,SIGNAL(clicked(bool)),this,SIGNAL(generateTCF()));
 
     // System Simulation
     connect(ui->checkInExperiment2,SIGNAL(stateChanged(int)),this,SLOT(experimentChangeState()));
@@ -360,71 +325,30 @@ void MainWindow::establishConnections() {
     connect(ui->buttonCopyExp5,SIGNAL(clicked()),this,SLOT(copyPreviousExperimentActive()));
 
     // Qt 4 approach
-    // connect(ui->comboInTopologyExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(topologyChange(int)));
+    // connect(ui->comboInTopologyExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(topologyExpChange(int)));
     // Qt 5 approach - static_cast is needed because overloaded signal "currentIndexChanged(int|QString)" of combo box
     connect(ui->comboInTopologyExp1,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this,&MainWindow::topologyChange);
+            this,&MainWindow::topologyExpChange);
     connect(ui->comboInTopologyExp2,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this,&MainWindow::topologyChange);
+            this,&MainWindow::topologyExpChange);
     connect(ui->comboInTopologyExp3,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this,&MainWindow::topologyChange);
+            this,&MainWindow::topologyExpChange);
     connect(ui->comboInTopologyExp4,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this,&MainWindow::topologyChange);
+            this,&MainWindow::topologyExpChange);
     connect(ui->comboInTopologyExp5,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this,&MainWindow::topologyChange);
-
-    connect(ui->comboInRoutingAlgorithmExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
-    connect(ui->comboInRoutingAlgorithmExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
-    connect(ui->comboInRoutingAlgorithmExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
-    connect(ui->comboInRoutingAlgorithmExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
-    connect(ui->comboInRoutingAlgorithmExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(routingAlgorithmChange(int)));
-
-    connect(ui->comboInSwitchingExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
-    connect(ui->comboInSwitchingExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
-    connect(ui->comboInSwitchingExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
-    connect(ui->comboInSwitchingExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
-    connect(ui->comboInSwitchingExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(flowControlChange(int)));
-
-    connect(ui->comboInArbiterTypeExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
-    connect(ui->comboInArbiterTypeExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
-    connect(ui->comboInArbiterTypeExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
-    connect(ui->comboInArbiterTypeExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
-    connect(ui->comboInArbiterTypeExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(arbiterTypeChange(int)));
-
-    connect(ui->comboInVCExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
-    connect(ui->comboInVCExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
-    connect(ui->comboInVCExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
-    connect(ui->comboInVCExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
-    connect(ui->comboInVCExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(vcOptionChange(int)));
-
-    connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
-    connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
-    connect(ui->spinInInputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
-    connect(ui->spinInInputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
-    connect(ui->spinInInputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(inputBuffersChange(int)));
-
-    connect(ui->spinInOutputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
-    connect(ui->spinInOutputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
-    connect(ui->spinInOutputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
-    connect(ui->spinInOutputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
-    connect(ui->spinInOutputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(outputBuffersChange(int)));
+            this,&MainWindow::topologyExpChange);
 
     connect(ui->comboInSimulationStopMethod,SIGNAL(currentIndexChanged(int)),this,SLOT(stopOptionUpdate(int)));
-    connect(ui->spinBoxStopTimeNs,SIGNAL(valueChanged(int)),this,SIGNAL(stopTimeNsChanged(int)));
-    connect(ui->spinBoxStopTimeCycles,SIGNAL(valueChanged(int)),this,SIGNAL(stopTimeCyclesChanged(int)));
-    connect(ui->comboInGenerateVCD,SIGNAL(currentIndexChanged(int)),this,SLOT(vcdOptionUpdate(int)));
 
     connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(fClkFirstUpdate(double)));
     connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(fClkLastUpdate(double)));
-    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(fClkStepUpdate(double)));
-    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(fClkStepTypeUpdate(int)));
+//    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(fClkStepUpdate(double)));
+//    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(fClkStepTypeUpdate(int)));
 
     connect(ui->buttonCancel,SIGNAL(clicked()),this,SIGNAL(cancel()));
     connect(ui->buttonRunSimulation,SIGNAL(clicked()),this,SLOT(run()));
 
     // Performance Analysis
-    connect(ui->spinBoxInitPacketsAnalyze,SIGNAL(valueChanged(int)),this,SLOT(lowerAnalysisValueChanged(int)));
-    connect(ui->spinBoxEndPacketsAnalyze,SIGNAL(valueChanged(int)),this,SLOT(upperAnalysisValueChanged(int)));
     connect(ui->buttonRunAnalysis,SIGNAL(clicked()),this,SLOT(runAnalysis()));
     connect(ui->comboFlowSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(flowSelectionUpdated(int)));
     connect(ui->buttonCheckUncheckAll, SIGNAL(clicked()),this,SLOT(buttonCheckUncheckAllClicked()));
@@ -440,7 +364,6 @@ void MainWindow::establishConnections() {
 
     // Actions
     connect(ui->actionNew,SIGNAL(triggered()),this,SIGNAL(newSystem()));
-    connect(ui->actionClearAll,SIGNAL(triggered()),this,SIGNAL(clearSystem()));
     connect(ui->actionLoadDefault,SIGNAL(triggered()),this,SIGNAL(loadDefaultSystem()));
     connect(ui->actionOpen,SIGNAL(triggered()),this,SIGNAL(loadSystem()));
     connect(ui->actionSave,SIGNAL(triggered()),this,SIGNAL(saveSystem()));
@@ -477,7 +400,7 @@ void MainWindow::configureLanguages(EnvironmentConfiguration *conf) {
 }
 
 /**
- * Centralizar a janela principal em relação a tela do sistema
+ * Center the main window on the system desktop
  */
 void MainWindow::centerWindow() {
 #ifdef DEBUG_POINTS_METHODS
@@ -688,47 +611,6 @@ void MainWindow::openFileError(QString error) {
 
 }
 
-void MainWindow::clearGridNodes() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::clearGridNodes" << std::endl;
-#endif
-
-    QGridLayout* grid = (QGridLayout* ) ui->nodes->layout();
-
-    QLayoutItem* item;
-    while( (item = grid->takeAt(0)) != 0 ) {
-        delete item->widget();
-        delete item;
-    }
-
-}
-
-void MainWindow::setPatternState(unsigned int patternNum, bool state) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::setPatternState" << std::endl;
-#endif
-
-    switch(patternNum) {
-        case 0:
-            ui->checkInTrafficPattern0->setChecked(state);
-            ui->buttonEditTrafficPattern0->setEnabled(state);
-            break;
-        case 1:
-            ui->checkInTrafficPattern1->setChecked(state);
-            ui->buttonEditTrafficPattern1->setEnabled(state);
-            break;
-        case 2:
-            ui->checkInTrafficPattern2->setChecked(state);
-            ui->buttonEditTrafficPattern2->setEnabled(state);
-            break;
-        case 3:
-            ui->checkInTrafficPattern3->setChecked(state);
-            ui->buttonEditTrafficPattern3->setEnabled(state);
-            break;
-    }
-
-}
-
 unsigned int MainWindow::saveChanges(QString title, QString msg) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::saveChanges" << std::endl;
@@ -799,39 +681,26 @@ void MainWindow::changeEvent(QEvent *event) {
 
 }
 
-void MainWindow::updateView(unsigned int xSize, unsigned int ySize,unsigned int zSize,
-        unsigned int channelWidth, ExperimentManager *gpe,
-        int stopOption, int stopTime_ns, int stopTime_cycles,
-        int vcdOption, float fClkFirst, float fClkLast, int fClkStepType, float fClkStep) {
+void MainWindow::updateView(QList<Experiment *> gpe, SystemOperation* sop) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::updateView" << std::endl;
 #endif
 
-    ui->spinInXSize->setValue( qint32(xSize) );
-    ui->spinInYSize->setValue( qint32(ySize) );
-    ui->spinInZSize->setValue( qint32(zSize) );
-    ui->spinInChannelWidth->setValue( qint32(channelWidth) );
+    ui->spinBoxStopTimeCycles->setValue( sop->stopTime_cycles );
+    ui->spinBoxStopTimeNs->setValue( sop->stopTime_ns );
+    ui->comboInSimulationStopMethod->setCurrentIndex( sop->stopOption );
 
-    ui->spinInSrcNodeX->setValue(0);
-    ui->spinInSrcNodeY->setValue(0);
-    ui->spinInSrcNodeZ->setValue(0);
-
-    ui->spinBoxStopTimeCycles->setValue( stopTime_cycles );
-    ui->spinBoxStopTimeNs->setValue( stopTime_ns );
-    ui->comboInSimulationStopMethod->setCurrentIndex( stopOption );
-
-    ui->comboInGenerateVCD->setCurrentIndex( vcdOption );
-    ui->doubleSpinInChannelFclkRange->setValue(fClkFirst);
-    ui->doubleSpinInChannelFclkRange_2->setValue(fClkLast);
-    ui->comboInStep->setCurrentIndex(fClkStepType);
-    ui->doubleSpinInStep->setValue(fClkStep);
+    ui->comboInGenerateVCD->setCurrentIndex( sop->vcdOption );
+    ui->doubleSpinInChannelFclkRange->setValue(sop->fClkFirst);
+    ui->doubleSpinInChannelFclkRange_2->setValue(sop->fClkLast);
+    ui->comboInStep->setCurrentIndex(sop->fClkStepType);
+    ui->doubleSpinInStep->setValue(sop->fClkStep);
 
     // Update experiments
-    for(unsigned int i = 1u; i <= 5u; i++) {
-        Experiment* experiment = gpe->getExperiment(i);
+    for(int i = 0u; i < gpe.size(); i++) {
+        Experiment* experiment = gpe.at(i);
         if( experiment != NULL ) {
-
-            switch (i) {
+            switch (i+1) {
                 case 1:
                     ui->comboInTopologyExp1->setCurrentIndex( experiment->getTopology() );
                     ui->comboInRoutingAlgorithmExp1->setCurrentIndex( experiment->getRoutingAlgorithm() );
@@ -892,8 +761,6 @@ void MainWindow::updateView(unsigned int xSize, unsigned int ySize,unsigned int 
             }
         }
     }
-
-    emit this->nodeSelected(0,0,0);
 }
 
 void MainWindow::enableRun() {
@@ -942,16 +809,14 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
     float lineWidth = ui->doubleSpinBoxLineWidth->value();
     float pointSize = ui->doubleSpinBoxPointSize->value();
 
-    int xSrc = ui->spinBoxXSourceAnalyze->value();
-    int ySrc = ui->spinBoxYSourceAnalyze->value();
-    int xDest = ui->spinBoxXDestinationAnalyze->value();
-    int yDest = ui->spinBoxYDestinationAnalyze->value();
-    int trfPtr = ui->spinBoxTrafficPatternAnalyze->value();
+    unsigned short source = quint16(ui->spinAnalysisSource->value());
+    unsigned short destination = quint16(ui->spinAnalysisDestination->value());
 
     QString xLabel;
     QString yLabel;
     QString title;
-    AnalysisOptions::FlowOptions flowOps = static_cast<AnalysisOptions::FlowOptions>(ui->comboFlowSelection->currentIndex());
+    AnalysisOptions::FlowOptions flowOps =
+            static_cast<AnalysisOptions::FlowOptions>(ui->comboFlowSelection->currentIndex());
 
     int xAxis = ui->comboBoxXAxisGraphic->currentIndex();
     int yAxis = ui->comboBoxYAxisGraphic->currentIndex();
@@ -978,8 +843,8 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
         title = trUtf8("Report");
     }
     AnalysisOptions* gop = new AnalysisOptions(topology,routingAlg,flowControl,
-            arbiterType,vcOp,inBuffers,outBuffers,lineWidth,pointSize,xSrc,ySrc,
-            xDest,yDest,trfPtr,xLabel,yLabel,xAxis,yAxis,title,flowOps,
+            arbiterType,vcOp,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
+            xLabel,yLabel,xAxis,yAxis,title,flowOps,
             graphLineColors,latencyDistribution);
 
     return gop;
@@ -1063,28 +928,16 @@ void MainWindow::flowSelectionUpdated(int current) {
 #endif
 
     if( current == ui->comboFlowSelection->count()-1 ) {
-        ui->labelXSource->setEnabled( true );
-        ui->labelXDestination->setEnabled(true);
-        ui->labelYSource->setEnabled(true);
-        ui->labelYDestination->setEnabled(true);
-        ui->labelTrafficPatternAnalyze->setEnabled(true);
-        ui->spinBoxXDestinationAnalyze->setEnabled(true);
-        ui->spinBoxXSourceAnalyze->setEnabled(true);
-        ui->spinBoxYDestinationAnalyze->setEnabled(true);
-        ui->spinBoxYSourceAnalyze->setEnabled(true);
-        ui->spinBoxTrafficPatternAnalyze->setEnabled(true);
+        ui->labelAnalysisSource->setEnabled( true );
+        ui->labelAnalysisDestination->setEnabled(true);
+        ui->spinAnalysisSource->setEnabled(true);
+        ui->spinAnalysisDestination->setEnabled(true);
         ui->labelFlowParameters->setEnabled(true);
     } else {
-        ui->labelXSource->setEnabled( false );
-        ui->labelXDestination->setEnabled(false);
-        ui->labelYSource->setEnabled(false);
-        ui->labelYDestination->setEnabled(false);
-        ui->labelTrafficPatternAnalyze->setEnabled(false);
-        ui->spinBoxXDestinationAnalyze->setEnabled(false);
-        ui->spinBoxXSourceAnalyze->setEnabled(false);
-        ui->spinBoxYDestinationAnalyze->setEnabled(false);
-        ui->spinBoxYSourceAnalyze->setEnabled(false);
-        ui->spinBoxTrafficPatternAnalyze->setEnabled(false);
+        ui->labelAnalysisSource->setEnabled( false );
+        ui->labelAnalysisDestination->setEnabled(false);
+        ui->spinAnalysisSource->setEnabled(false);
+        ui->spinAnalysisDestination->setEnabled(false);
         ui->labelFlowParameters->setEnabled(false);
     }
 
@@ -1153,176 +1006,6 @@ void MainWindow::printConsole(QString msg, QColor color, Qt::Alignment alignment
 
 }
 
-void MainWindow::sizeUpdate() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::sizeUpdate" << std::endl;
-#endif
-
-    unsigned int xSize = quint32(ui->spinInXSize->value());
-    unsigned int ySize = quint32(ui->spinInYSize->value());
-    unsigned int zSize = quint32(ui->spinInZSize->value());
-
-    this->clearGridNodes();
-
-    QGridLayout* grid = (QGridLayout* ) ui->nodes->layout();
-    for(unsigned int x = 0; x < xSize; x++) {
-        for(unsigned int y = 0; y < ySize; y++) {
-            unsigned int yMatrix = ySize - 1 -y;
-            QPushButton* botao = new QPushButton(QString("%1,%2").arg(QString::number( x )).arg(QString::number( yMatrix )));
-            botao->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-            botao->setMinimumWidth(32);
-            botao->setCheckable(true);
-            botao->setObjectName(QString("Button%1%2").arg(x).arg(yMatrix));
-            QFont fonte = QFont();
-            if( xSize > ySize ) {
-                fonte.setPointSize( 22 - xSize );
-            } else {
-                fonte.setPointSize( 22 - ySize );
-            }
-            botao->setFont(fonte);
-            botao->setStatusTip(QString("X: %1 | Y: %2").arg(QString::number(x)).arg(QString::number(yMatrix)));
-            connect(botao,SIGNAL(clicked()),this,SLOT(nodeClicked()));
-            grid->addWidget(botao,y,x);
-        }
-    }
-
-    ui->spinInSrcNodeX->setMaximum(xSize - 1);
-    ui->spinInSrcNodeY->setMaximum(ySize - 1);
-    ui->spinInSrcNodeZ->setMaximum(zSize - 1);
-
-    ui->spinBoxXDestinationAnalyze->setMaximum( xSize - 1 );
-    ui->spinBoxXSourceAnalyze->setMaximum( xSize - 1 );
-    ui->spinBoxYDestinationAnalyze->setMaximum( ySize - 1 );
-    ui->spinBoxYSourceAnalyze->setMaximum( ySize - 1 );
-
-    emit nodeSelected( ui->spinInSrcNodeX->value(),ui->spinInSrcNodeY->value(),ui->spinInSrcNodeZ->value());
-    // Send to control
-    emit this->sizeUpdated(xSize,ySize, zSize );
-}
-
-void MainWindow::nodeSelectedUpdated(unsigned int posX, unsigned int posY,unsigned int posZ) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::nodeSelectedUpdated" << std::endl;
-#endif
-
-    unsigned int xSize = quint32(ui->spinInXSize->value());
-    unsigned int ySize = quint32(ui->spinInYSize->value());
-//    unsigned int zSize = quint32(ui->spinInZSize->value());
-
-    QGridLayout* grid = (QGridLayout* ) ui->nodes->layout();
-    for( unsigned int x = 0; x < xSize; x++) {
-        for( unsigned int y = 0; y < ySize; y++ ) {
-            QLayoutItem* item = grid->itemAtPosition( y , x );
-            QPushButton* nodeButton = qobject_cast<QPushButton *>(item->widget());
-            if( x == posX && (ySize - 1 - y) == posY ) {
-                nodeButton->setChecked(true);
-            } else {
-                nodeButton->setChecked(false);
-            }
-        }
-    }
-
-
-}
-
-void MainWindow::nodeClicked() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::nodeClicked" << std::endl;
-#endif
-
-    QPushButton* botao = (QPushButton* ) sender();
-    QString text = botao->text();
-    QStringList list = text.split(',');
-    unsigned int xSrc = quint32(list.at(0).toInt());
-    unsigned int ySrc = quint32(list.at(1).toInt());
-    unsigned int zSrc = quint32(ui->spinInSrcNodeZ->value());
-
-    ui->spinInSrcNodeX->setValue(xSrc);
-    ui->spinInSrcNodeY->setValue(ySrc);
-
-    emit this->nodeSelected(xSrc,ySrc,zSrc);
-
-}
-
-void MainWindow::channelWidthUpdate(int chWidth) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::channelWidthUpdate" << std::endl;
-#endif
-
-    this->ui->doubleSpinInChannelBWRange->setValue((float) ui->doubleSpinInChannelFclkRange->value() * chWidth);
-    this->ui->doubleSpinInChannelBWRange_2->setValue( ui->doubleSpinInChannelFclkRange_2->value() * chWidth );
-    emit this->channelWidthUpdated(quint32(chWidth));
-
-}
-
-void MainWindow::srcNodeUpdated() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::srcNodeUpdated" << std::endl;
-#endif
-
-    emit this->nodeSelected( quint32(ui->spinInSrcNodeX->value()),
-                             quint32(ui->spinInSrcNodeY->value()),
-                             quint32(ui->spinInSrcNodeZ->value()) );
-
-}
-
-void MainWindow::trafficPatternStateChanged(int s) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::trafficPatternStateChanged" << std::endl;
-#endif
-
-    QCheckBox* check = (QCheckBox* ) sender();
-
-    unsigned int num =  check->property("num").toUInt();
-
-    bool state = s == 0 ? false : true;
-
-    switch(num) {
-        case 0:
-            this->ui->buttonEditTrafficPattern0->setEnabled(state);
-            break;
-        case 1:
-            this->ui->buttonEditTrafficPattern1->setEnabled(state);
-            break;
-        case 2:
-            this->ui->buttonEditTrafficPattern2->setEnabled(state);
-            break;
-        case 3:
-            this->ui->buttonEditTrafficPattern3->setEnabled(state);
-            break;
-    }
-
-    emit this->trafficPatternUpdate(
-                quint32(ui->spinInSrcNodeX->value()),
-                quint32(ui->spinInSrcNodeY->value()),
-                quint32(ui->spinInSrcNodeZ->value()),
-                num, state );
-
-}
-
-void MainWindow::editClicked() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::editClicked" << std::endl;
-#endif
-
-    QPushButton* botao = (QPushButton* ) sender();
-
-    emit this->buttonEditClicked( quint32(ui->spinInSrcNodeX->value()),
-                                  quint32(ui->spinInSrcNodeY->value()),
-                                  quint32(ui->spinInSrcNodeZ->value()),
-                                  botao->property("num").toUInt() );
-
-}
-
-void MainWindow::previewTrafficConfigurationClicked() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::previewTrafficConfigurationClicked" << std::endl;
-#endif
-
-    emit this->previewTrafficConfiguration( sender()->property("preview").toInt() );
-
-}
-
 void MainWindow::experimentChangeState() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::stateChangedExperiment" << std::endl;
@@ -1367,21 +1050,16 @@ void MainWindow::experimentChangeState() {
             ui->toolButtonColorCurve5->setEnabled(checked);
             break;
     }
-
-    emit experimentStateChanged( numExp,checked );
-
 }
 
-void MainWindow::topologyChange(int newValue) {
+void MainWindow::topologyExpChange(int newValue) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::topologyChange" << std::endl;
+    std::cout << "View/MainWindow::topologyExpChange" << std::endl;
 #endif
 
     QComboBox* combo = (QComboBox* ) sender();
     QString objName = combo->objectName();
     int experimentIndex = objName.at( objName.size()-1 ).digitValue();
-
-    emit configurationExperimentChanged(7,experimentIndex,newValue);
 
     // After change topology, update the routing algorithms to new topology
     SystemDefines* def = SystemDefines::getInstance();
@@ -1413,78 +1091,6 @@ void MainWindow::topologyChange(int newValue) {
         QString alg = routing.getRoutingAlgorithm(x);
         routingCombo->insertItem(qint32(x),alg);
     }
-
-}
-
-void MainWindow::routingAlgorithmChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::routingAlgorithmChange" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 2, numeroExperimento,newValue );
-
-}
-
-void MainWindow::arbiterTypeChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::arbiterTypeChange" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 4, numeroExperimento,newValue );
-
-}
-
-void MainWindow::flowControlChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::flowControlChange" << std::endl;
-#endif
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-    emit configurationExperimentChanged( 3, numeroExperimento,newValue );
-
-}
-
-void MainWindow::vcOptionChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::vcOptionChange" << std::endl;
-#endif
-
-    QComboBox* combo = (QComboBox* ) sender();
-    QString nomeObjeto = combo->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 1, numeroExperimento,newValue );
-
-}
-
-void MainWindow::inputBuffersChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::inputBuffersChange" << std::endl;
-#endif
-    QSpinBox* spin = (QSpinBox* ) sender();
-    QString nomeObjeto = spin->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 5, numeroExperimento,newValue );
-
-}
-
-void MainWindow::outputBuffersChange(int newValue) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::outputBuffersChange" << std::endl;
-#endif
-    QSpinBox* spin = (QSpinBox* ) sender();
-    QString nomeObjeto = spin->objectName();
-    int numeroExperimento = nomeObjeto.at( nomeObjeto.size() - 1 ).digitValue();
-
-    emit configurationExperimentChanged( 6, numeroExperimento,newValue );
 
 }
 
@@ -1605,14 +1211,6 @@ void MainWindow::stopOptionUpdate(int pos) {
         this->ui->spinBoxStopTimeCycles->setVisible(false);
         this->ui->spinBoxStopTimeNs->setVisible(false);
     }
-    emit stopOptionChanged(pos);
-}
-
-void MainWindow::vcdOptionUpdate(int value) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::vcdOptionUpdate" << std::endl;
-#endif
-    emit vcdOptionChanged(value);
 }
 
 void MainWindow::fClkFirstUpdate(double value) {
@@ -1621,9 +1219,7 @@ void MainWindow::fClkFirstUpdate(double value) {
 #endif
 
     ui->doubleSpinInChannelTclkRange->setValue( (1.0 / value ) * 1000.0);
-    ui->doubleSpinInChannelBWRange->setValue( value * ui->spinInChannelWidth->value() );
-
-    emit fClkFirstChanged(value);
+    ui->doubleSpinInChannelBWRange->setValue( value * ui->inDataWidth->value() );
 
 }
 
@@ -1633,23 +1229,7 @@ void MainWindow::fClkLastUpdate(double value) {
 #endif
 
     ui->doubleSpinInChannelTclkRange_2->setValue( (1.0 / value) * 1000.0 );
-    ui->doubleSpinInChannelBWRange_2->setValue( value * ui->spinInChannelWidth->value() );
-
-    emit fClkLastChanged(value);
-}
-
-void MainWindow::fClkStepUpdate(double value) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::fClkStepUpdated" << std::endl;
-#endif
-    emit fClkStepChanged(value);
-}
-
-void MainWindow::fClkStepTypeUpdate(int value) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::fClkStepTypeUpdated" << std::endl;
-#endif
-    emit fClkStepTypeChanged(value);
+    ui->doubleSpinInChannelBWRange_2->setValue( value * ui->inDataWidth->value() );
 }
 
 void MainWindow::about() {
@@ -1662,7 +1242,6 @@ void MainWindow::about() {
     about->exec();
 
     delete about;
-
 }
 
 void MainWindow::run() {
@@ -1674,25 +1253,10 @@ void MainWindow::run() {
     this->ui->buttonRunSimulation->setEnabled(false);
     this->ui->buttonCancel->setEnabled(true);
     this->setAnalysisOptionsEnabled(false);
+
+    // TODO Enviar configuração daqui
+
     emit this->runSimulation();
-}
-
-void MainWindow::lowerAnalysisValueChanged(int valor) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::lowerAnalysisValueChanged" << std::endl;
-#endif
-
-    ui->spinBoxEndPacketsAnalyze->setMinimum(valor+1);
-
-}
-
-void MainWindow::upperAnalysisValueChanged(int valor) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::upperAnalysisValueChanged" << std::endl;
-#endif
-
-    ui->spinBoxInitPacketsAnalyze->setMaximum(valor-1);
-
 }
 
 void MainWindow::runAnalysis() {
@@ -1741,4 +1305,146 @@ void MainWindow::generateCSVClicked() {
 
     emit this->generateCSVSimulationReport( this->getAnalysisOptions( GraphicSelected ) );
 
+}
+
+////////////// NEW SIMULATOR //////////////
+
+void MainWindow::topologyChange(int newTop) {
+
+    switch (newTop) {
+        case 0: // Non-Orthogonal
+        ui->widget2dOrtho->setVisible(false);
+        ui->widget3dOrtho->setVisible(false);
+            ui->widgetNonOrtho->setVisible(true);
+            break;
+        case 1: // 2D-Orthogonal
+            ui->widgetNonOrtho->setVisible(false);
+            ui->widget3dOrtho->setVisible(false);
+            ui->widget2dOrtho->setVisible(true);
+            break;
+        case 2: // 3D-Orthogonal
+            ui->widgetNonOrtho->setVisible(false);
+            ui->widget2dOrtho->setVisible(false);
+            ui->widget3dOrtho->setVisible(true);
+            break;
+        default:break;
+    }
+
+}
+
+void MainWindow::addSystemConfiguration() {
+
+    SystemParameters sp;
+    sp.setDataWidth( quint16(ui->inDataWidth->value()) );
+    switch( ui->comboTopology->currentIndex() ) {
+        case 0: // Non-Orthogonal
+            sp.setTopologyType(SystemParameters::NonOrthogonal);
+            sp.setNumberElements( quint16(ui->inNElements->value()) );
+            break;
+        case 1: // 2D-Orthogonal
+            sp.setTopologyType(SystemParameters::Orthogonal2D);
+            sp.setXSize( quint16(ui->in2dXSize->value()) );
+            sp.setYSize( quint16(ui->in2dYSize->value()) );
+            break;
+        case 2: // 3D-Orthogonal
+            sp.setTopologyType(SystemParameters::Orthogonal3D);
+            sp.setXSize( quint16(ui->in3dXSize->value()) );
+            sp.setYSize( quint16(ui->in3dYSize->value()) );
+            sp.setZSize( quint16(ui->in3dZSize->value()) );
+            break;
+        default:break;
+    }
+
+    if( this->alreadyExists(&sp) ) {
+        QMessageBox::information(this,tr("Configuration already exists"),
+                                 tr("Duplicated configuration... not added"));
+    } else {
+        QListWidgetItem* item = new QListWidgetItem(sp.getFormattedString(),ui->listConf);
+        QVariant parameters;
+        parameters.setValue(sp);
+        item->setData(Qt::UserRole,parameters);
+    }
+
+}
+
+bool MainWindow::alreadyExists(SystemParameters *sp) {
+
+    int listSize = ui->listConf->count();
+    for(int i = 0; i < listSize; i++) {
+        QListWidgetItem* it = ui->listConf->item(i);
+        QVariant parameter = it->data(Qt::UserRole);
+        SystemParameters listSp = parameter.value<SystemParameters>();
+        if( sp->equal(listSp) ) {
+            return true;
+        }
+    }
+    return false;
+
+}
+
+void MainWindow::removeSelectedItems() {
+
+    QList<QListWidgetItem *> items = this->ui->listConf->selectedItems();
+
+    if( items.size() != 0 ) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, tr("Confirm remove"),
+                                      tr("Are you sure to remove the selected items?"),
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            for(int i = 0; i < items.size(); i++) {
+                QListWidgetItem* item = items.at(i);
+                delete item;
+            }
+
+        }
+    }
+}
+
+void MainWindow::editTrafficPatterns() {
+
+    QList<QListWidgetItem *> items = this->ui->listConf->selectedItems();
+
+    if(items.size() == 0) {
+        QMessageBox::information(this,tr("Message"),tr("None configuration selected."),QMessageBox::Ok);
+    } else {
+        QString differentNodeCount = tr("Different number of elements on the selected configurations!");
+        bool someDifferent = false;
+        for( int i = 0; i < items.size() - 1; i++ ) {
+            QListWidgetItem* item1 = items.at(i);
+            QVariant data1 = item1->data(Qt::UserRole);
+            SystemParameters sp1 = data1.value<SystemParameters>();
+            for( int x =  i+1; x < items.size(); x++) {
+                QListWidgetItem* item2 = items.at(x);
+                QVariant data2 = item2->data(Qt::UserRole);
+                SystemParameters sp2 = data2.value<SystemParameters>();
+                if(sp1.getNumberElements() != sp2.getNumberElements()) {
+                    differentNodeCount += tr("\nConfig.: %1 has %2 elements and Config.: %3 has %4 elements")
+                            .arg(i+1)
+                            .arg(sp1.getNumberElements())
+                            .arg(x+1)
+                            .arg(sp2.getNumberElements());
+                    someDifferent = true;
+                }
+            }
+        }
+        if( someDifferent ) {
+            QMessageBox::information(this,tr("ATTENTION on the traffic setup!"),differentNodeCount,
+                                     QMessageBox::Ok);
+        }
+        TrafficConfigurationDialog* tcw = new TrafficConfigurationDialog(this,items);
+        connect(tcw,SIGNAL(trafficConfigured(QList<QVariant>)),this,SLOT(setupTraffic(QList<QVariant>)));
+        tcw->exec();
+        delete tcw;
+    }
+}
+
+void MainWindow::setupTraffic(QList<QVariant> configuration) {
+
+    QList<QListWidgetItem *> systemSelected = ui->listConf->selectedItems();
+
+    for( int i = 0; i < systemSelected.size(); i++ ) {
+        QListWidgetItem* sysConf = systemSelected.at(i);
+        sysConf->setData(Qt::UserRole+1,configuration);
+    }
 }

@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * PerformanceAnalysis.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,14 +26,15 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-#ifndef PERFORMANCEANALYSIS_H
-#define PERFORMANCEANALYSIS_H
+#ifndef __PERFORMANCEANALYSIS_H__
+#define __PERFORMANCEANALYSIS_H__
 
-#include "include/Model/Analysis/TrafficAnalysis.h"
-#include "include/Model/Analysis/PacketInfo.h"
+#include "TrafficAnalysis.h"
+#include "PacketInfo.h"
 #include <vector>
 
 /*!
@@ -64,11 +65,11 @@
 class PerformanceAnalysis : public TrafficAnalysis {
 private:
 
-    static const int MAX_CLASSES = 4;
+    static const int MAX_CLASSES = 8;
     static const int IDEAL_LATENCY_RNG_SIZE = 1002;
     static const int MAX_FLOW_IDS = 4;
 
-    std::vector<PacketInfo* >*** packets;
+    std::vector<std::vector<PacketInfo* > > packets;
 
     unsigned int tRA;
 
@@ -78,9 +79,9 @@ private:
     unsigned int nbOfCyclesPerRouter;           //! Minimum number of cycles spent by a header in a router
     unsigned int nbOfCyclesPerFlit;             //! Numb. of cycles spent to send a flit (it depends on the flow control tech.)
 
-    unsigned long int accPckWithDeadline[MAX_CLASSES];	//! Counter of packes with deadline requirements
-    unsigned long int accMissedDeadlines[MAX_CLASSES];	//! Accumulated missed deadlines
-    float             metDeadlinesPer[MAX_CLASSES];		//! Met deadlines
+    std::vector<unsigned long> accPckWithDeadline;	//! Counter of packes with deadline requirements
+    std::vector<unsigned long> accMissedDeadlines;	//! Accumulated missed deadlines
+    std::vector<float>         metDeadlinesPer;     //! Met deadlines
 
     unsigned long int accLatency;                   //! Sum of the latencies of all the packets
     float 			  avgLatency;                   //! Average of all packet latencies
@@ -93,14 +94,11 @@ private:
 
     // The following variables are used to identify the frequency of latencys in a scale of 100 intervals of
     // latency from the smallest latency to the greatest one, in intervals of (max_latency-min_latency)/100 cycles
-    unsigned long int latencyRng[100];		//! Array of latency intervals
-    unsigned long int latencyRngPcks[100];	//! Number of packets of latency in each interval
+    std::vector<unsigned long> latencyRng;	//! Array of latency intervals
+    std::vector<unsigned long> latencyRngPcks;	//! Number of packets of latency in each interval
     unsigned long int latencyRngInc;		//! Size of each interval
     unsigned long int idealLatencyIndex;  	//! Index to access each latency interval
     unsigned long int idealLatencyRng[IDEAL_LATENCY_RNG_SIZE]; //! Array with the amount of latency that are X% greater than the ideal latency
-    // ex. rng_latency[ 0] is for latencies = ideal latency
-    // 		 rng_latency[ 1] is for latencies from  1% up to 10% greater than the ideal lantency
-    // 		 rng_latency[ 1] is for latencies from 11% up to 20% greater than the ideal lantency
 
     // Variables to collect data for perfomance analysis of the NoC
     float             acceptedTrafficFlits;	//! Traffic accepted by the network
@@ -108,57 +106,59 @@ private:
     float             accRequiredBw;		//! Accumulated bandwidth required by all the packets
     float             avgRequiredBw;		//! Avergage bandwidth required by all the packets
     unsigned long int accNbOfPck;           //! Sum of all the number of packets
-    unsigned long long simulatedTimeCycles; //! Total simulation time in cycles
-    unsigned long long simulatedTimeNs;     //! Total simulation time in ns
+    unsigned long int simulatedTimeCycles;  //! Total simulation time in cycles
+    unsigned long int simulatedTimeNs;      //! Total simulation time in ns
     unsigned long int accNbOfFlits;         //! Accumulated number of flits
-    unsigned long long startCycle;			//! First cycle of a packet
-    unsigned long long endCycle;            //! Last  cycle of a packet
-    unsigned long long smallestStartCycle;  //! First cycle of simulation (considering only the packets to be analized) - Alternative 1: when there is no previous processing
-    unsigned long long smallestEndCycle;    //! First cycle of simulation (considering only the packets to be analized) - Alternative 2: when a packet is created after a processing
-    unsigned long long biggestEndCycle;     //! Last  cycle of simulation (considering only the packets to be analized)
+    unsigned long int startCycle;			//! First cycle of a packet
+    unsigned long int endCycle;             //! Last  cycle of a packet
+    unsigned long int smallestStartCycle;   //! First cycle of simulation (considering only the packets to be analized) - Alternative 1: when there is no previous processing
+    unsigned long int smallestEndCycle;     //! First cycle of simulation (considering only the packets to be analized) - Alternative 2: when a packet is created after a processing
+    unsigned long int biggestEndCycle;      //! Last  cycle of simulation (considering only the packets to be analized)
 
     // Variables to collect data for perfomance analysis of individual flows
-    unsigned long int*** flowAccNbOfPck;
-    unsigned long int*** flowAccNbOfFlits;
-    unsigned long int*** flowAccRequiredBw;
-    float***             flowAvgRequiredBw;
-    float***             flowAvgRequiredBwNorm;
-    float***             flowAcceptedTrafficFlits;
-    float***             flowAcceptedTrafficBps;
-    unsigned long int**** flowAccPckWithDeadline;
-    unsigned long int**** flowAccMissedDeadlines;
-    float****             flowMissedDeadlinesPer;
-    float****             flowMetDeadlinesPer;
-    unsigned long int*** flowAccLatency;
-    float***             flowAvgLatency;
-    float***             flowAccLatencyMinusAvgLatency;
-    float***             flowStdevLatency;
-    unsigned long int*** flowMinLatency;                //! Minimal flow latency
-    unsigned long int*** flowMaxLatency;                //! Maximal flow latency
-    unsigned long int**** flowLatencyRng;               //! Array of latency intervals
-    unsigned long int*** flowLatencyRngInc;             //! Array of latency intervals
-    unsigned long int**** flowLatencyRngPcks;           //! Number of packets of latency
+    std::vector<std::vector<unsigned long> > flowAccNbOfPck;
+    std::vector<std::vector<unsigned long> > flowAccNbOfFlits;
+    std::vector<std::vector<unsigned long> > flowAccRequiredBw;
+    std::vector<std::vector<float> >         flowAvgRequiredBw;
+    std::vector<std::vector<float> >         flowAvgRequiredBwNorm;
+    std::vector<std::vector<float> >         flowAcceptedTrafficFlits;
+    std::vector<std::vector<float> >         flowAcceptedTrafficBps;
+    std::vector<std::vector<std::vector<unsigned long> > > flowAccPckWithDeadline;
+    std::vector<std::vector<std::vector<unsigned long> > > flowAccMissedDeadlines;
+    std::vector<std::vector<std::vector<float> > >         flowMissedDeadlinesPer;
+    std::vector<std::vector<std::vector<float> > >         flowMetDeadlinesPer;
+    std::vector<std::vector<unsigned long> >               flowAccLatency;
+    std::vector<std::vector<float> >                       flowAvgLatency;
+    std::vector<std::vector<float> >                       flowIdealAvgLatency;
+    std::vector<std::vector<float> >                       flowAccLatencyMinusAvgLatency;
+    std::vector<std::vector<float> >                       flowStdevLatency;
+    std::vector<std::vector<unsigned long> >               flowMinLatency;                //! Minimal flow latency
+    std::vector<std::vector<unsigned long> >               flowMaxLatency;                //! Maximal flow latency
+    std::vector<std::vector<std::vector<unsigned long> > > flowLatencyRng;                //! Array of latency intervals
+    std::vector<std::vector<unsigned long> >               flowLatencyRngInc;             //! Array of latency intervals
+    std::vector<std::vector<std::vector<unsigned long> > > flowLatencyRngPcks;            //! Number of packets of latency
 
     // Variables to collect data for perfomance analysis of each class
-    unsigned long int classAccNbOfPck[MAX_CLASSES];
-    unsigned long int classAccNbOfFlits[MAX_CLASSES];
-    unsigned long int classAccRequiredBw[MAX_CLASSES];
-    float             classAvgRequiredBw[MAX_CLASSES];
-    float             classAvgRequiredBwNorm[MAX_CLASSES];
-    float             classAcceptedTrafficFlits[MAX_CLASSES];
-    float             classAcceptedTrafficBps[MAX_CLASSES];
-    unsigned long int classAccPckWithDeadline[MAX_CLASSES];
-    unsigned long int classAccMissedDeadlines[MAX_CLASSES];
-    float             classMetDeadlinesPer[MAX_CLASSES];
-    unsigned long int classAccLatency[MAX_CLASSES];
-    float             classAvgLatency[MAX_CLASSES];
-    float             classAccLatencyMinusAvgLatency[MAX_CLASSES];
-    float             classStdevLatency[MAX_CLASSES];
-    unsigned long int classMinLatency[MAX_CLASSES];         //! Minimal flow latency
-    unsigned long int classMaxLatency[MAX_CLASSES];         //! Maximal flow latency
-    unsigned long int classLatencyRng[MAX_CLASSES][100];	//! Array of latency intervals
-    unsigned long int classLatencyRngInc[MAX_CLASSES];		//! Array of latency intervals
-    unsigned long int classLatencyRngPcks[MAX_CLASSES][100];//! Number of packets of latency
+    std::vector<unsigned long> classAccNbOfPck;
+    std::vector<unsigned long> classAccNbOfFlits;
+    std::vector<unsigned long> classAccRequiredBw;
+    std::vector<float>         classAvgRequiredBw;
+    std::vector<float>         classAvgRequiredBwNorm;
+    std::vector<float>         classAcceptedTrafficFlits;
+    std::vector<float>         classAcceptedTrafficBps;
+    std::vector<unsigned long> classAccPckWithDeadline;
+    std::vector<unsigned long> classAccMissedDeadlines;
+    std::vector<float>         classMetDeadlinesPer;
+    std::vector<unsigned long> classAccLatency;
+    std::vector<float>         classAvgLatency;
+    std::vector<float>         classIdealAvgLatency;
+    std::vector<float>         classAccLatencyMinusAvgLatency;
+    std::vector<float>         classStdevLatency;
+    std::vector<unsigned long> classMinLatency;                   //! Minimal flow latency
+    std::vector<unsigned long> classMaxLatency;                   //! Maximal flow latency
+    std::vector<std::vector<unsigned long> > classLatencyRng;     //! Array of latency intervals
+    std::vector<unsigned long>               classLatencyRngInc;  //! Array of latency intervals
+    std::vector<std::vector<unsigned long> > classLatencyRngPcks; //! Number of packets of latency
 
     float channelBwAvailable;	//! It takes into account the used flow control (= channel_bw/nb_of_cycles_per_flit)
 
@@ -191,11 +191,10 @@ protected:
     virtual StatusAnalysis analyzeIndividualFlows();
     /*!
      * \brief createReportsForIndividualFlows Write report files for individual flow
-     * \param xDest X coordinate of the destination flow
-     * \param yDest Y coordinate of the destination flow
+     * \param destionation Destination address of the flow
      * \return The status from write reports
      */
-    virtual StatusAnalysis createReportsForIndividualFlows(unsigned int xDest, unsigned int yDest);
+    virtual StatusAnalysis createReportsForIndividualFlows(unsigned int destination);
 
     /*!
      * \brief calculateIdealLatency Calculate ideal latency in relation to the
@@ -214,24 +213,21 @@ public:
     /*!
      * \brief PerformanceAnalysis Constructor with parameters to be set
      * attributes and allocate memory for calculations.
-     * \param xSize X dimension of Network
-     * \param ySize Y dimension of Network
+     * \param numElements Number of elements in the system
      * \param dataWidth Channel data width
      * \param lower Initial percentual of packets discarded in analysis
      * \param upper End percentual of packets discarded in analysis
      * \param fClk Frequency operation (MHz) to be analyzed
-     * \param tClk Clock of analysis (ns)
-     * \param channelBw Channel bandwidth (Mbps)
      * \param fifoOutDepth Fifo out depth
      * \param flowControlType Flow control type
      * \param workDir Read log files folder for analysis
      * \param resultDir Write report files folder of analysis
      */
-    PerformanceAnalysis(unsigned int xSize, unsigned int ySize,unsigned int zSize,
-                        unsigned int dataWidth,float lower,float upper,
-                        float fClk,float tClk,unsigned long int channelBw,
-                        unsigned int fifoOutDepth,unsigned int flowControlType,
-                        const char* workDir,const char* resultDir);
+    PerformanceAnalysis(unsigned short numElements,unsigned short dataWidth,
+                        float lower,float upper,float fClk,
+                        unsigned short fifoOutDepth,
+                        unsigned short flowControlType,
+                        const char* workDir, const char* resultDir);
 
     /*!
      * \brief makeAnalysis Run all analysis
@@ -246,4 +242,4 @@ public:
 
 };
 
-#endif // PERFORMANCEANALYSIS_H
+#endif // __PERFORMANCEANALYSIS_H__

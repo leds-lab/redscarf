@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * ReportDialog.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,9 +26,10 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
+#include "ui_PreviewDialog.h"
 #include "include/View/ReportDialog.h"
 #include "include/Model/Analysis/DataReport.h"
 
@@ -43,10 +44,11 @@
 ReportDialog::ReportDialog(QStringList legendas,
                            QVector<QList<DataReport *> *> *_dados,
                            QWidget *parent)
-    : PreviewDialog(parent) {
+    : QDialog(parent), ui(new Ui::PreviewDialog) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class View/ReportDialog" << std::endl;
 #endif
+    ui->setupUi(this);
 
     QLabel* label = new QLabel(qApp->translate("ReportDialog","Experiment: "),this);
     combo = new QComboBox(this);
@@ -164,4 +166,5 @@ ReportDialog::~ReportDialog() {
 
     delete combo;
 
+    delete ui;
 }

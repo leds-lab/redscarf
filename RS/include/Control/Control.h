@@ -29,8 +29,8 @@
 * ----------------------------------------------------------------------------
 * 31/05/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 *    ||      - ||      - Sérgio Vargas Júnior        |      ||
-* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 * ----------------------------------------------------------------------------
+* 10/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
@@ -46,9 +46,8 @@ class MainWindow;
 class AnalysisOptions;
 // Model
 class SystemParameters;
-class TrafficPatternManager;
+class SystemOperation;
 class TrafficParameters;
-class ExperimentManager;
 class DataReport;
 // Control
 class SimulationPerformer;
@@ -79,15 +78,9 @@ private:
     // View
     MainWindow* mainWindow;
     // Model
-    SystemParameters*      systemParameters;
-    TrafficPatternManager* trafficPatternManager;
-    ExperimentManager*     experimentManager;
-    // Model copy system parameters for analysis
-    unsigned int xSize;
-    unsigned int ySize;
-    unsigned int zSize;
-    unsigned int dataWidth;
-    unsigned int vcdOption;
+    SystemParameters* systemParameters;
+    SystemOperation* systemOperation;
+
     bool analysisOk;
     // Control
     QFile* configFile;
@@ -110,14 +103,12 @@ private:
     bool saveConfiguration();
     bool saveAsConfiguration();
     bool loadConfiguration();
-    bool clearTrafficPatterns();
+//    bool clearTrafficPatterns();
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 
     bool inputsOk();
     unsigned int calcAmountExperimentsExecutions();
-
-    void copySystemParameters();
 
     void finishSimulation(FinishCode code);
 
@@ -185,7 +176,6 @@ private slots:
     void saveSystem();
     void saveAsSystem();
     void saveAsDefaultSystem();
-    void clearSystem();
     void editOptions();
     void changeLanguage(QString languageName);
     void exitApplication(QCloseEvent* event);
@@ -196,32 +186,9 @@ private slots:
     void folderCompressorWorkCompleted(bool success,int opType);
 
     // System and traffic configuration
-    void updateSizeSystem(unsigned int xSize,unsigned int ySize,unsigned int zSize);
-    void updateChannelWidth(unsigned int width);
-    void nodeSelected(unsigned int posX,unsigned int posY,unsigned int posZ);
-    void trafficPatternStatusChanged(unsigned int posX,
-                                     unsigned int posY,
-                                     unsigned int posZ,
-                                     unsigned int trafficNum,
-                                     bool state);
-    void editTrafficPattern(unsigned int xPos, unsigned int yPos,
-                            unsigned int zPos, unsigned int trafficNum);
-    void applyTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
-    void applyAndReplicateTrafficConfiguration(TrafficParameters* configuration,unsigned int trafficNum);
-    void previewTrafficConfiguration(int typePreview);
     void generateTrafficConfigurationFile();
 
     // System simulation
-    void experimentStateChanged(int numExperiment,bool state);
-    void configurationExperimentChanged(int opCode,int numExperiment,int newValue);
-    void stopOptionUpdated(int indice);
-    void stopTimeNsUpdated(int newTime);
-    void stopTimeCyclesUpdated(int newTime);
-    void vcdOptionUpdated(int indice);
-    void fClkFirstUpdated(double newValue);
-    void fClkLastUpdated(double newValue);
-    void fClkStepUpdated(double newValue);
-    void fClkStepTypeUpdated(int newValue);
     void runSimulations();
     void cancelSimulation();
     void removeExe(QObject*);

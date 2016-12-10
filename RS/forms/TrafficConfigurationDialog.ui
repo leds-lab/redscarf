@@ -2,16 +2,16 @@
 <ui version="4.0">
  <class>TrafficConfigurationDialog</class>
  <widget class="QDialog" name="TrafficConfigurationDialog">
-  <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>646</height>
+    <width>1000</width>
+    <height>592</height>
    </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Traffic Setup</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -19,470 +19,205 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QHBoxLayout" name="layoutPrincipal">
-   <property name="spacing">
-    <number>0</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,1">
-     <property name="horizontalSpacing">
-      <number>0</number>
-     </property>
-     <property name="verticalSpacing">
-      <number>6</number>
-     </property>
-     <item row="13" column="0">
-      <widget class="QLabel" name="labelFunctionProbability">
-       <property name="text">
-        <string>Function of probability:</string>
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0,0">
+     <item>
+      <widget class="PersonalGraphicsView" name="graphicsView">
+       <property name="renderHints">
+        <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
+       </property>
+       <property name="dragMode">
+        <enum>QGraphicsView::RubberBandDrag</enum>
+       </property>
+       <property name="transformationAnchor">
+        <enum>QGraphicsView::AnchorUnderMouse</enum>
+       </property>
+       <property name="viewportUpdateMode">
+        <enum>QGraphicsView::FullViewportUpdate</enum>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="Line" name="lineDivisoraSuperior">
-       <property name="lineWidth">
-        <number>2</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="labelNodeAddress">
-       <property name="text">
-        <string>Node address: </string>
-       </property>
-      </widget>
-     </item>
-     <item row="19" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QToolButton" name="zoomIn">
+         <property name="icon">
+          <iconset resource="../resources/Icons.qrc">
+           <normaloff>:/icons/icons/zoomin.png</normaloff>:/icons/icons/zoomin.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QToolButton" name="zoomOut">
+         <property name="icon">
+          <iconset resource="../resources/Icons.qrc">
+           <normaloff>:/icons/icons/zoomout.png</normaloff>:/icons/icons/zoomout.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QToolButton" name="zoomRestore">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources/Icons.qrc">
+           <normaloff>:/icons/icons/zoomrestore.png</normaloff>:/icons/icons/zoomrestore.png</iconset>
+         </property>
+        </widget>
+       </item>
        <item>
-        <spacer name="horizontalSpacer_2">
+        <widget class="QDoubleSpinBox" name="zoomScale">
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.150000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>1</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
        </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,1">
        <item>
-        <widget class="QPushButton" name="buttonApply">
-         <property name="statusTip">
-          <string>Apply this configuration for this node in network</string>
+        <widget class="QListWidget" name="listConf">
+         <property name="editTriggers">
+          <set>QAbstractItemView::CurrentChanged|QAbstractItemView::SelectedClicked</set>
          </property>
-         <property name="text">
-          <string>Apply</string>
-         </property>
-         <property name="default">
+         <property name="wordWrap">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonCancel">
-         <property name="statusTip">
-          <string>Cancel the configuration, the configuration is lost</string>
-         </property>
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="9" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinInRequiredBandwidth">
-       <property name="statusTip">
-        <string>Define a required bandwidth</string>
-       </property>
-       <property name="maximum">
-        <double>530000.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>10.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="labelTypeInjection">
-       <property name="text">
-        <string>Type of injection:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="comboInDestinationNode">
-       <property name="statusTip">
-        <string>Define a type of spatial distribution</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="labelNodeAddressX">
-           <property name="text">
-            <string>X:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinInNodeAddressX">
-           <property name="statusTip">
-            <string>Define a target in position X in traffic with destination</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="labelNodeAddressY">
-           <property name="text">
-            <string>Y:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinInNodeAddressY">
-           <property name="statusTip">
-            <string>Define a target in position Y in traffic with destination</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QLabel" name="labelNodeAddressZ">
-           <property name="text">
-            <string>Z:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinInNodeAddressZ"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item row="0" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="labelSourceNode">
-         <property name="statusTip">
-          <string>Indicates the source node in position X and position Y in network</string>
-         </property>
-         <property name="text">
-          <string>Source node:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelSourceNodeXY">
-         <property name="text">
-          <string>(x,y)</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="labelTrafficClass">
-       <property name="text">
-        <string>Traffic class:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelDestinationNode">
-       <property name="text">
-        <string>Destination node(s):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="16" column="0">
-      <widget class="QLabel" name="labelParetoAlfaOff">
-       <property name="text">
-        <string>Pareto - alfa off:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QComboBox" name="comboInSwitchingTechnique">
-       <property name="statusTip">
-        <string>Define a switching technique</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="labelRequiredBandwidth">
-       <property name="text">
-        <string>Required bandwidth (Mbps):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="15" column="0">
-      <widget class="QLabel" name="labelParetoAlfaOn">
-       <property name="text">
-        <string>Pareto - alfa on:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QSpinBox" name="spinInDeadLine">
-       <property name="statusTip">
-        <string>Define a deadline if exists. If not exists value = 0</string>
-       </property>
-       <property name="maximum">
-        <number>100000000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="1">
-      <widget class="QComboBox" name="comboInFunctionProbability">
-       <property name="statusTip">
-        <string>Define a function of probability</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="labelMessageSize">
-       <property name="text">
-        <string>Message size (bits):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="labelNumberPacketsFlow">
-       <property name="text">
-        <string>Number of packets per flow:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="labelMessageInterval">
-       <property name="text">
-        <string>Message interval (ns):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="17" column="0" colspan="2">
-      <widget class="Line" name="lineDivisoraInferior">
-       <property name="lineWidth">
-        <number>2</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="labelIdleTime">
-       <property name="text">
-        <string>Idle time (ns):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="1">
-      <widget class="QSpinBox" name="spinInStdDeviation">
-       <property name="statusTip">
-        <string>Define a standard deviation in relation to % of required bandwidth</string>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QComboBox" name="comboInTypeInjection">
-       <property name="statusTip">
-        <string>Define a type of injection of data</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QSpinBox" name="spinInNumberPacketsFlow">
-       <property name="statusTip">
-        <string>Define a number of packets per flow</string>
-       </property>
-       <property name="maximum">
-        <number>1000000</number>
-       </property>
-       <property name="singleStep">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-     <item row="15" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinInParetoAlfaOn">
-       <property name="statusTip">
-        <string>Define pareto alfa on</string>
-       </property>
-       <property name="maximum">
-        <double>100.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="comboInTrafficClass">
-       <property name="statusTip">
-        <string>Define a traffic class</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QSpinBox" name="spinInMessageSize">
-       <property name="statusTip">
-        <string>Define a message size in bits</string>
-       </property>
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="16" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinInParetoAlfaOff">
-       <property name="statusTip">
-        <string>Define pareto alfa off</string>
-       </property>
-       <property name="maximum">
-        <double>100.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="0">
-      <widget class="QLabel" name="labelStdDeviation">
-       <property name="text">
-        <string>Std. deviation (% of req. bw):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="labelDeadLine">
-       <property name="text">
-        <string>Deadline (ns):</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="1">
-      <widget class="QSpinBox" name="spinInMessageInterval">
-       <property name="statusTip">
-        <string>Define a message interval in nanoseconds</string>
-       </property>
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="labelSwitchingTechnique">
-       <property name="text">
-        <string>Switching technique:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="1">
-      <widget class="QSpinBox" name="spinInIdleTime">
-       <property name="statusTip">
-        <string>Define a idle time in nanoseconds</string>
-       </property>
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="18" column="1">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>1</width>
-         <height>2</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="19" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <item>
-        <widget class="QPushButton" name="buttonApplyAndReplicate">
-         <property name="text">
-          <string>Apply and Replicate</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="minimumSize">
           <size>
-           <width>1</width>
-           <height>1</height>
+           <width>340</width>
+           <height>0</height>
           </size>
          </property>
-        </spacer>
+         <property name="title">
+          <string>Traffic Setup</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Source selected:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelNodeSelected">
+              <property name="text">
+               <string>None</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>10</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>90</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="buttonAddTraffic">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Add Traffic</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="listTraffic">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="dialogButtons">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>comboInDestinationNode</tabstop>
-  <tabstop>spinInNodeAddressX</tabstop>
-  <tabstop>spinInNodeAddressY</tabstop>
-  <tabstop>comboInTrafficClass</tabstop>
-  <tabstop>comboInTypeInjection</tabstop>
-  <tabstop>comboInSwitchingTechnique</tabstop>
-  <tabstop>spinInNumberPacketsFlow</tabstop>
-  <tabstop>spinInDeadLine</tabstop>
-  <tabstop>doubleSpinInRequiredBandwidth</tabstop>
-  <tabstop>spinInMessageSize</tabstop>
-  <tabstop>spinInIdleTime</tabstop>
-  <tabstop>spinInMessageInterval</tabstop>
-  <tabstop>comboInFunctionProbability</tabstop>
-  <tabstop>spinInStdDeviation</tabstop>
-  <tabstop>doubleSpinInParetoAlfaOn</tabstop>
-  <tabstop>doubleSpinInParetoAlfaOff</tabstop>
-  <tabstop>buttonApplyAndReplicate</tabstop>
-  <tabstop>buttonApply</tabstop>
-  <tabstop>buttonCancel</tabstop>
- </tabstops>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>PersonalGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>PersonalGraphicsView.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../resources/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

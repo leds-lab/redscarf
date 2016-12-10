@@ -40,20 +40,20 @@
     #include <iostream>
 #endif
 
-Analyzer::Analyzer(QList<QString> *analysisFolders, unsigned int xSize,
-                   unsigned int ySize, unsigned int zSize, unsigned int dataWidth, float lower,
-                   float upper, QObject* parent)
+Analyzer::Analyzer(QList<QString> *analysisFolders,
+                   unsigned short numElements,
+                   unsigned int dataWidth,
+                   float lower,float upper,
+                   QObject* parent)
     : QObject(parent) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Control/Analyzer" << std::endl;
 #endif
 
-    this->xSize = xSize;
-    this->ySize = ySize;
-    this->zSize = zSize;
+    this->numElements = numElements;
+    this->dataWidth = dataWidth;
     this->lower = lower;
     this->upper = upper;
-    this->dataWidth = dataWidth;
 
     this->analysisFolders = analysisFolders;
 }
@@ -84,8 +84,6 @@ void Analyzer::analyze() {
         }
         // Obtendo dados a partir do diretorio de analise
         float fClk = diretorioAnalise.mid(lio + 1, diretorioAnalise.size() - lio - 4).toFloat();
-        float tClk = (1.0 / fClk) * 1000.0;
-        unsigned long channelBw = fClk * dataWidth;
         QString auxiliarExperimento = diretorioExperimento.right(
                     diretorioExperimento.size() - 1 -
                     diretorioExperimento.lastIndexOf("/"));  // Extrair controle de fluxo e
@@ -104,7 +102,7 @@ void Analyzer::analyze() {
 
         // Realizar a análise
         TrafficAnalysis* analyzer = new PerformanceAnalysis(
-                    xSize, ySize,zSize, dataWidth, lower, upper, fClk, tClk, channelBw,
+                    numElements, dataWidth, lower, upper, fClk,
                     fifoOutDepth, flowControlType, analise, resultado);
         TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
         falhaAnalise = true;

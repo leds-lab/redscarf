@@ -29,8 +29,8 @@
 *
 */
 
-#ifndef ABOUTWINDOW_H
-#define ABOUTWINDOW_H
+#ifndef __ABOUTWINDOW_H__
+#define __ABOUTWINDOW_H__
 
 #include <QDialog>
 

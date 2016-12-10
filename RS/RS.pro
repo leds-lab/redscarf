@@ -33,6 +33,8 @@
 # ----------------------------------------------------------------------------
 # 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
 # ----------------------------------------------------------------------------
+# 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
+# ----------------------------------------------------------------------------
 #
 
 
@@ -63,30 +65,21 @@ OBJECTS_DIR = $$_PRO_FILE_PWD_/build/objs        # C++ object files (.o)
 # Application Sources files
 SOURCES +=  \
     src/Model/Traffic/MathFunction.cpp \
-    src/Model/Traffic/Node.cpp \
     src/Model/Traffic/TrafficModelGenerator.cpp \
-    src/Model/Traffic/TrafficParameters.cpp \
-    src/Model/Traffic/TrafficPatternDefines.cpp \
-    src/Model/Traffic/TrafficPatternManager.cpp \
     src/Model/System/Defines.cpp \
     src/Model/System/Experiment.cpp \
-    src/Model/System/SystemParameters.cpp \
     src/Model/System/SystemDefines.cpp \
-    src/Model/System/ExperimentManager.cpp \
     src/Model/Analysis/DataReport.cpp \
     src/Model/Analysis/PacketInfo.cpp \
     src/Model/Analysis/PerformanceAnalysis.cpp \
     src/Model/Analysis/TrafficAnalysis.cpp \
     src/Model/Analysis/ReportReader.cpp \
-    src/View/DefaultPreviewTrafficConfiguration.cpp \
-    src/View/XMLPreviewTrafficConfiguration.cpp \
     src/View/AnalysisOptions.cpp \
     src/View/ConfigDialog.cpp \
     src/View/Pages.cpp \
     src/View/AboutWindow.cpp \
     src/View/GetSelectedItemsDialog.cpp \
     src/View/ReportDialog.cpp \
-    src/View/TrafficConfigurationDialog.cpp \
     src/View/MainWindow.cpp \
     src/View/Plotter.cpp \
     src/View/CustomPlotter.cpp \
@@ -98,41 +91,41 @@ SOURCES +=  \
     src/Control/ExternalWaveformViewer.cpp \
     src/Control/Control.cpp \
     src/Control/SimulationPerformer.cpp \
-    src/Control/XmlConfigParser.cpp \
+#    src/Control/XmlConfigParser.cpp \
     src/Main.cpp \
     src/View/qcustomplot.cpp \
     src/View/CustomPlotZoom.cpp \
     src/Model/FolderOperation.cpp \
-    src/Model/TimeOperation.cpp
+    src/Model/TimeOperation.cpp \
+    src/View/Arc.cpp \
+    src/View/Edge.cpp \
+    src/View/PersonalGraphicsView.cpp \
+    src/View/TrafficConfigurationDialog.cpp \
+    src/View/TrafficEditDialog.cpp \
+    src/View/Vertice.cpp \
+    src/Model/Traffic/SpatialDistribution.cpp \
+    src/Model/Traffic/TrafficParameters.cpp \
+    src/Model/System/SystemParameters.cpp \
+    src/Model/System/SystemOperation.cpp
 
 # Application Headers files
 HEADERS += \
     include/Model/Traffic/MathFunction.h \
-    include/Model/Traffic/Node.h \
     include/Model/Traffic/TrafficModelGenerator.h \
-    include/Model/Traffic/TrafficParameters.h \
-    include/Model/Traffic/TrafficPatternDefines.h \
-    include/Model/Traffic/TrafficPatternManager.h \
     include/Model/System/Defines.h \
     include/Model/System/Experiment.h \
-    include/Model/System/SystemParameters.h \
     include/Model/System/SystemDefines.h \
-    include/Model/System/ExperimentManager.h \
     include/Model/Analysis/DataReport.h \
     include/Model/Analysis/PacketInfo.h \
     include/Model/Analysis/PerformanceAnalysis.h \
     include/Model/Analysis/TrafficAnalysis.h \
     include/Model/Analysis/ReportReader.h \
     include/View/AnalysisOptions.h \
-    include/View/DefaultPreviewTrafficConfiguration.h \
-    include/View/XMLPreviewTrafficConfiguration.h \
     include/View/ConfigDialog.h \
     include/View/Pages.h \
     include/View/AboutWindow.h \
     include/View/GetSelectedItemsDialog.h \
     include/View/ReportDialog.h \
-    include/View/PreviewDialog.h \
-    include/View/TrafficConfigurationDialog.h \
     include/View/MainWindow.h \
     include/View/Plotter.h \
     include/View/CustomPlotter.h \
@@ -144,12 +137,22 @@ HEADERS += \
     include/Control/ExternalWaveformViewer.h \
     include/Control/Control.h \
     include/Control/SimulationPerformer.h \
-    include/Control/XmlConfigParser.h \
+#    include/Control/XmlConfigParser.h \
     include/Main.h \
     include/View/qcustomplot.h \
     include/View/CustomPlotZoom.h \
     include/Model/FolderOperation.h \
-    include/Model/TimeOperation.h
+    include/Model/TimeOperation.h \
+    include/View/Arc.h \
+    include/View/Edge.h \
+    include/View/PersonalGraphicsView.h \
+    include/View/TrafficConfigurationDialog.h \
+    include/View/TrafficEditDialog.h \
+    include/View/Vertice.h \
+    include/Model/Traffic/SpatialDistribution.h \
+    include/Model/Traffic/TrafficParameters.h \
+    include/Model/System/SystemParameters.h \
+    include/Model/System/SystemOperation.h
 
 # Application configurations support
 CONFIG += qt
@@ -161,11 +164,12 @@ CONFIG += c++11
 FORMS  += \
     forms/AboutWindow.ui \
     forms/PreviewDialog.ui \
-    forms/TrafficConfigurationDialog.ui \
     forms/FoldersConfigurationPage.ui \
     forms/GeneralConfigurationPage.ui \
     forms/MainWindow.ui \
-    forms/Plotter.ui
+    forms/Plotter.ui \
+    forms/TrafficConfigurationDialog.ui \
+    forms/TrafficEditDialog.ui
 
 # Application resources files (.qrc)
 RESOURCES += resources/Icons.qrc
@@ -182,7 +186,7 @@ win32 {
     QMAKE_TARGET_COMPANY = "LEDS - Laboratory of Embedded and Distributed Systems"
     QMAKE_TARGET_PRODUCT = RedScarf
     QMAKE_TARGET_DESCRIPTION = "Network-on-Chip Simulator"
-    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2014 - 2016 LEDS - Univali"
+    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2014 - 2017 LEDS - Univali"
     RC_ICONS = resources/icons/RedScarf_icon.ico
 }
 

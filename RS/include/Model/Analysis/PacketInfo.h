@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * PacketInfo.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014-2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,11 +26,11 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#ifndef PACKETINFO_H
-#define PACKETINFO_H
+#ifndef __PACKETINFO_H__
+#define __PACKETINFO_H__
 
 /*!
  * \brief The PacketInfo class is used to store packets information from logs of simulation.
@@ -42,21 +42,18 @@
  */
 class PacketInfo {
 protected:
-//    char* str;
-
-    unsigned long int receivedPacketId;
-    unsigned int      xDestination;
-    unsigned int      yDestination;
-    unsigned int      xSource;
-    unsigned int      ySource;
-    unsigned int      flowId;
-    unsigned int      trafficClass;
+    unsigned long long receivedPacketId;
+    unsigned int       source;
+    unsigned int       destination;
+    unsigned short     hops;
+    unsigned int       flowId;
+    unsigned int       trafficClass;
     unsigned long long deadline;
     unsigned long long cycleCreationPacket;
     unsigned long long cycleReceivedHeader;
     unsigned long long cycleReceivedTrailer;
-    unsigned int      packetSize;           // Payload
-    float             requiredBandwidth;
+    unsigned int       packetSize;           // Payload
+    float              requiredBandwidth;
 
 public:
     /*!
@@ -65,7 +62,7 @@ public:
     PacketInfo();
     /*!
      * \brief PacketInfo is secondary constructor that initializes all attributes with your respective argument
-     * \param receivedPacketId Packet id of simulated packets
+     * \param receivedPacketId Packet id
      * \param xDestination X coordinate of the destination
      * \param yDestination Y coordinate of the destination
      * \param xSource X coordinate of the source
@@ -79,40 +76,38 @@ public:
      * \param packetSize The packet size (only payload)
      * \param requiredBandwidth The required bandwidth of the packet
      */
-    PacketInfo(unsigned long int receivedPacketId, unsigned int xDestination, unsigned int yDestination,
-            unsigned int xSource, unsigned int ySource, unsigned int flowId, unsigned int trafficClass,
+    PacketInfo(unsigned long int receivedPacketId, unsigned int source, unsigned int destination,
+            unsigned short hops, unsigned int flowId, unsigned int trafficClass,
             unsigned long int deadline, unsigned long long cycleCreationPacket, unsigned long long cycleReceivedHeader,
             unsigned long long cycleReceivedTrailer, unsigned int packetSize, float requiredBandwidth);
 
     // Seters
-    inline void setReceivedPacketId     (unsigned long int pckId   ) { this->receivedPacketId = pckId;              }
-    inline void setXDestination         (unsigned int xDest        ) { this->xDestination = xDest;                  }
-    inline void setYDestionation        (unsigned int yDest        ) { this->yDestination = yDest;                  }
-    inline void setXSource              (unsigned int xSource      ) { this->xSource = xSource;                     }
-    inline void setYSource              (unsigned int ySource      ) { this->ySource = ySource;                     }
-    inline void setFlowId               (unsigned int flowId       ) { this->flowId = flowId;                       }
-    inline void setTrafficClass         (unsigned int trafficClass ) { this->trafficClass = trafficClass;           }
-    inline void setDeadline             (unsigned long long deadline) { this->deadline = deadline;                   }
-    inline void setCycleCreationPacket  (unsigned long long cycle   ) { this->cycleCreationPacket = cycle;           }
-    inline void setCycleReceivedHeader  (unsigned long long cycle   ) { this->cycleReceivedHeader = cycle;           }
-    inline void setCycleReceivedTrailer (unsigned long long cycle   ) { this->cycleReceivedTrailer = cycle;          }
-    inline void setPacketSize           (unsigned int size         ) { this->packetSize = size;                     }
-    inline void setRequiredBandwidth    (float requiredBandwidth   ) { this->requiredBandwidth = requiredBandwidth; }
+    inline void setReceivedPacketId     (unsigned long long pckId   ) { this->receivedPacketId    = pckId       ;}
+    inline void setDestination          (unsigned int  destination  ) { this->destination         = destination ;}
+    inline void setSource               (unsigned int       source  ) { this->source              = source      ;}
+    inline void setHops                 (unsigned short     hops    ) { this->hops                = hops        ;}
+    inline void setFlowId               (unsigned int       flowId  ) { this->flowId              = flowId      ;}
+    inline void setTrafficClass         (unsigned int  trafficClass ) { this->trafficClass        = trafficClass;}
+    inline void setDeadline             (unsigned long long deadline) { this->deadline            = deadline    ;}
+    inline void setCycleCreationPacket  (unsigned long long cycle   ) { this->cycleCreationPacket = cycle       ;}
+    inline void setCycleReceivedHeader  (unsigned long long cycle   ) { this->cycleReceivedHeader = cycle       ;}
+    inline void setCycleReceivedTrailer (unsigned long long cycle   ) { this->cycleReceivedTrailer= cycle       ;}
+    inline void setPacketSize           (unsigned int       size    ) { this->packetSize          = size        ;}
+    inline void setRequiredBandwidth    (float              reqBW   ) { this->requiredBandwidth   = reqBW       ;}
 
     // Geters
-    inline unsigned long int getReceivedPacketId     () { return this->receivedPacketId;    }
-    inline unsigned int      getXDestination         () { return this->xDestination;        }
-    inline unsigned int      getYDestionation        () { return this->yDestination;        }
-    inline unsigned int      getXSource              () { return this->xSource;             }
-    inline unsigned int      getYSource              () { return this->ySource;             }
-    inline unsigned int      getFlowId               () { return this->flowId;              }
-    inline unsigned int      getTrafficClass         () { return this->trafficClass;        }
-    inline unsigned long long getDeadline             () { return this->deadline;            }
-    inline unsigned long long getCycleCreationPacket  () { return this->cycleCreationPacket; }
-    inline unsigned long long getCycleReceivedHeader  () { return this->cycleReceivedHeader; }
+    inline unsigned long long getReceivedPacketId     () { return this->receivedPacketId    ;}
+    inline unsigned int       getDestination          () { return this->destination         ;}
+    inline unsigned int       getSource               () { return this->source              ;}
+    inline unsigned int       getHops                 () { return this->hops                ;}
+    inline unsigned int       getFlowId               () { return this->flowId              ;}
+    inline unsigned int       getTrafficClass         () { return this->trafficClass        ;}
+    inline unsigned long long getDeadline             () { return this->deadline            ;}
+    inline unsigned long long getCycleCreationPacket  () { return this->cycleCreationPacket ;}
+    inline unsigned long long getCycleReceivedHeader  () { return this->cycleReceivedHeader ;}
     inline unsigned long long getCycleReceivedTrailer () { return this->cycleReceivedTrailer;}
-    inline unsigned int      getPacketSize           () { return this->packetSize;          }
-    inline float             getRequiredBandwidth    () { return this->requiredBandwidth;   }
+    inline unsigned int       getPacketSize           () { return this->packetSize          ;}
+    inline float              getRequiredBandwidth    () { return this->requiredBandwidth   ;}
 
     /*!
      * \brief getLatency Method used to get latency of packet in cycles where
@@ -120,17 +115,17 @@ public:
      * at the destination and packet creation at source, less one.
      * \return Packet latency in cycles
      */
-    virtual inline unsigned long int getLatency() { return (unsigned long int)(this->getCycleReceivedTrailer() - this->getCycleCreationPacket() + 1); }
+    virtual inline unsigned long int getLatency() { return this->getCycleReceivedTrailer() - this->getCycleCreationPacket(); }
 
     /*!
      * \brief getNumberOfRoutersInPath Method to get the number of routers in path
-     * between source and destination.
+     * between source and destination. It is the same as the number of hops
      * \return Number of routers in path
      */
     virtual unsigned int getNumberOfRoutersInPath();
     /*!
      * \brief getNumberOfLinksInPath Method to get the number of links in path
-     * between source and destination.
+     * between source and destination. Number of router plus one
      * \return Number of links in path
      */
     virtual unsigned int getNumberOfLinksInPath();
@@ -140,6 +135,7 @@ public:
      */
     virtual ~PacketInfo();
 
+    void printInfo();
 };
 
-#endif // PACKETINFO_H
+#endif // __PACKETINFO_H__

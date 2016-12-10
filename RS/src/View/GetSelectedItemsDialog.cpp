@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * GetSelectedItemsDialog.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,8 +26,11 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
+
+#include "ui_PreviewDialog.h"
 
 #include "include/View/AnalysisOptions.h"
 #include "include/View/GetSelectedItemsDialog.h"
@@ -39,10 +42,12 @@
 #endif
 
 GetSelectedItemsDialog::GetSelectedItemsDialog(QStringList items, QWidget *parent)
-    : PreviewDialog(parent) {
+    : QDialog(parent), ui(new Ui::PreviewDialog) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class View/GetSelectedItemsDialog" << std::endl;
 #endif
+
+    ui->setupUi(this);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
     buttonBox->setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );

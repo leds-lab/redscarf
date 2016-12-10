@@ -36,18 +36,16 @@
 #define __XMLCONFIGPARSER_H__
 
 class SystemParameters;
-class TrafficPatternManager;
-class ExperimentManager;
 class TrafficParameters;
 class QXmlStreamReader;
 class QXmlStreamWriter;
 class QFile;
+class SystemOperation;
 
 class XmlConfigParser {
 private:
     SystemParameters* systemParameters;
-    TrafficPatternManager* trafficPatternManager;
-    ExperimentManager* expManager;
+    SystemOperation* systemOperation;
 
     /**
      * @brief parseTrafficPattern Parse a XML Stream node to a TrafficPattern object
@@ -62,17 +60,9 @@ private:
      */
     void writeTrafficParametersInNode(QXmlStreamWriter* xml,TrafficParameters* tp);
 
-    int fClkStepType;
-    int stopOption;
-    int stopTime_ns;
-    int stopTime_cycles;
-    int vcdOption;
-    double fClk1;
-    double fClk2;
-    double fClkStep;
 
 public:
-    XmlConfigParser(SystemParameters* sp, TrafficPatternManager* tpm, ExperimentManager* em);
+    XmlConfigParser();
     virtual ~XmlConfigParser();
 
     /**
@@ -85,15 +75,15 @@ public:
      * @param file The file already opened
      */
     void loadXML(QFile* file);
-
-    inline int    getFClkStepType   () { return this->fClkStepType   ; }
-    inline int    getStopOption     () { return this->stopOption     ; }
-    inline int    getStopTime_ns    () { return this->stopTime_ns    ; }
-    inline int    getStopTime_cycles() { return this->stopTime_cycles; }
-    inline int    getVcdOption      () { return this->vcdOption      ; }
-    inline double getFClk1          () { return this->fClk1          ; }
-    inline double getFClk2          () { return this->fClk2          ; }
-    inline double getFClkStep       () { return this->fClkStep       ; }
+// TODO verificar
+//    inline int    getFClkStepType   () { return this->fClkStepType   ; }
+//    inline int    getStopOption     () { return this->stopOption     ; }
+//    inline int    getStopTime_ns    () { return this->stopTime_ns    ; }
+//    inline int    getStopTime_cycles() { return this->stopTime_cycles; }
+//    inline int    getVcdOption      () { return this->vcdOption      ; }
+//    inline double getFClk1          () { return this->fClk1          ; }
+//    inline double getFClk2          () { return this->fClk2          ; }
+//    inline double getFClkStep       () { return this->fClkStep       ; }
 
 };
 

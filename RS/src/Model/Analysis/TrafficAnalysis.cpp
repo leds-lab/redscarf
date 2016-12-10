@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * TrafficAnalysis.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,7 +26,8 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* ----------------------------------------------------------------------------
+* 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
 #include "include/Model/Analysis/TrafficAnalysis.h"
@@ -35,28 +36,28 @@
     #include <iostream>
 #endif
 
-TrafficAnalysis::TrafficAnalysis(unsigned int xSize, unsigned int ySize, unsigned int zSize,
-         unsigned int dataWidth, float lower, float upper,
-         float fClk, float tClk, unsigned long int channelBw,
-         unsigned int fifoOutDepth, unsigned int flowControlType,
-         const char* workDir, const char* resultDir) {
+TrafficAnalysis::TrafficAnalysis(unsigned short numElements,
+                                 unsigned short dataWidth,
+                                 float lower, float upper,
+                                 float fClk,unsigned short fifoOutDepth,
+                                 unsigned short flowControlType,
+                                 const char *workDir, const char *resultDir)
+{
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/Analysis/TrafficAnalysis" << std::endl;
 #endif
 
-    this->channelBw       = channelBw;
+    this->numberOfElements= numElements;
     this->dataWidth       = dataWidth;
     this->fClk            = fClk;
+    this->tClk            = (1.0f / fClk) * 1000.0f;
+    this->channelBw       = dataWidth * fClk;
     this->fifoOutDepth    = fifoOutDepth;
     this->flowControlType = flowControlType;
     this->lower           = lower;
     this->resultDir       = resultDir;
-    this->tClk            = tClk;
     this->upper           = upper;
     this->workDir         = workDir;
-    this->xSize           = xSize;
-    this->ySize           = ySize;
-    this->zSize           = zSize;
 
 }
 

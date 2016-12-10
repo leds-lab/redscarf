@@ -53,11 +53,8 @@ AnalysisOptions::AnalysisOptions() {
     lineWidth = 0.0f;
     pointSize = 0.0f;
 
-    xSrc = 0;
-    ySrc = 0;
-    xDest = 0;
-    yDest = 0;
-    trafficPattern = 0;
+    source = 0;
+    destination = 0;
 
     color[0] = NULL;
     color[1] = NULL;
@@ -71,8 +68,8 @@ AnalysisOptions::AnalysisOptions() {
 
 AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
         bool flowControl, bool arbiterType, bool vcOp, bool inputBuffers, bool outputBuffers,
-        float lineWidth, float pointSize, int xSrc, int ySrc, int xDest, int yDest,
-        int trafficPattern, QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis,
+        float lineWidth, float pointSize, unsigned short source, unsigned short destination,
+                                 QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis,
         QString title, FlowOptions flowOp, QColor *color[5], bool latencyDistribution) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor class View/AnalysisOptions" << std::endl;
@@ -89,11 +86,8 @@ AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
     this->lineWidth = lineWidth;
     this->pointSize = pointSize;
 
-    this->xSrc = xSrc;
-    this->ySrc = ySrc;
-    this->xDest = xDest;
-    this->yDest = yDest;
-    this->trafficPattern = trafficPattern;
+    this->source = source;
+    this->destination = destination;
 
     this->xAxis = xAxis;
     this->yAxis = yAxis;

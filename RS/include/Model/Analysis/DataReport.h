@@ -26,12 +26,13 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 10/12/2016 - 1.0     - Eduardo Alves da Silva      | Back-end change
 *
 */
 
-
-#ifndef DATAREPORT_H
-#define DATAREPORT_H
+#ifndef __DATAREPORT_H__
+#define __DATAREPORT_H__
 
 /*!
  * \brief The DataReport class is used to store latency data from latency reports.
@@ -41,8 +42,6 @@
 
 class DataReport {
 public:
-
-    // Attributes for general report
     float fClk;
     long unsigned int accNbOfPck;
     float avgRequiredBwNorm;
@@ -62,15 +61,15 @@ public:
     float metDeadlinesPer1;
     float metDeadlinesPer2;
     float metDeadlinesPer3;
-    // Attributes for latency histogram
-    long unsigned int latencyCycle;
-    long unsigned int packetCount;
-    float packetPercentage;
 
-    DataReport();
+    unsigned long int latencyCycle;
+    unsigned long int packetCount;
+    float packetPercentage;
 
     void debugGeneral();
     void debugHistogram();
+
+    DataReport();
 
 };
 

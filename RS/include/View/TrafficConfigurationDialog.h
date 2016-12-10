@@ -1,95 +1,71 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
-/*
-* TrafficConfigurationDialog.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
-* Laboratory of Embedded and Distributed Systems
-* University of Vale do Itajaí
-*
-* Authors: Laboratory of Embedded and Distributed Systems (LEDS)
-*
-* Contact: Profº Dr. Cesar Albenes Zeferino {zeferino@univali.br}
-*
-* RedScarf is free software: you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* RedScarf is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-* See the GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* ------------------------------ Reviews -------------------------------------
-* Date       - Version - Author                      | Description
-* ----------------------------------------------------------------------------
-* 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
-*/
-
-#ifndef TRAFFICCONFIGURATIONDIALOG_H
-#define TRAFFICCONFIGURATIONDIALOG_H
+#ifndef __TRAFFICCONFIGURATIONDIALOG_H__
+#define __TRAFFICCONFIGURATIONDIALOG_H__
 
 #include <QDialog>
+#include <QListWidgetItem>
+#include <QGraphicsScene>
 
 namespace Ui {
     class TrafficConfigurationDialog;
 }
 
+class QAbstractButton;
+class SystemParameters;
+class Vertice;
+class Arc;
 class TrafficParameters;
 
 class TrafficConfigurationDialog : public QDialog {
     Q_OBJECT
 
-private:
-    Ui::TrafficConfigurationDialog *ui;
-
-    unsigned int xSrc;
-    unsigned int ySrc;
-    unsigned int zSrc;
-    unsigned int dataWidth;
-    unsigned int trafficNum;
-
-    void inserirItemsSpatialsDistributions();
-    void inserirItemsTrafficClasses();
-    void inserirItemsTypesInjection();
-    void inserirItemsSwitchingTechniques();
-    void inserirItemsFunctionProbability();
-
-    void loadDefaultValues();
-
-    bool inputsOk();
-protected:
-    void changeEvent(QEvent*);
-
 public:
-
-    explicit TrafficConfigurationDialog(QWidget *parent,
-                                        unsigned int xSource,
-                                        unsigned int ySource,
-                                        unsigned int zSource,
-                                        unsigned int trafficNum,
-                                        unsigned int xSize,
-                                        unsigned int ySize,
-                                        unsigned int zSize,
-                                        unsigned int dataWidth);
-    void setConfiguration(TrafficParameters* tp);
+    explicit TrafficConfigurationDialog(QWidget *parent,QList<QListWidgetItem *> systemConfItems);
     ~TrafficConfigurationDialog();
 
+protected:
+    void configureGraphics(SystemParameters* sp);
+    void drawRing(SystemParameters* sp);
+    void draw2DMesh(SystemParameters* sp);
+    void draw3DMesh(SystemParameters* sp);
+
+    void drawFlowsSelectedVertices(QList<Vertice *> selectedVertices);
+
 signals:
-    void apply(TrafficParameters* configuration,unsigned int trafficNum);
-    void applyAndReplicate(TrafficParameters* configuration,unsigned int trafficNum);
+    void trafficConfigured(QList<QVariant> configuration);
 
 private slots:
-    // Combos
-    void updateSpatialDistribution(int);
-    void updateTypeInjection(int);
-    void updateFunctionProbability(int);
+    void itemClicked(QListWidgetItem*);
+    void graphicSelectionChange();
+    void repaintGraphics();
+    void addTrafficConfiguration();
+    void applyTrafficParameters(TrafficParameters*);
 
-    void applyClicked();
-    void applyAndReplicateClicked();
+    void trafficListSelectionChange();
+    void trafficItemDoubleClick(QModelIndex);
+
+    void removeSelectedTraffic();
+
+    void apply(QAbstractButton* );
+
+    void zoomRestore();
+private:
+
+    void clearScene();
+    void clearConnections();
+    void loadExistentConfigurations();
+
+    const unsigned short SPACE=80;
+
+    Ui::TrafficConfigurationDialog *ui;
+    QList<QListWidgetItem* > systemConfItems;
+    QList<Vertice* > vertices;
+    QList<Arc *> flowConnections;
+
+    QGraphicsScene* scene;
+
+    unsigned short currentNumberElements;
+    unsigned short currentDataWidth;
+
 };
 
-#endif // TRAFFICCONFIGURATIONDIALOG_H
+#endif // __TRAFFICCONFIGURATIONDIALOG_H__

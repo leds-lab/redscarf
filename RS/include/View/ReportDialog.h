@@ -26,20 +26,26 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#ifndef REPORTDIALOG_H
-#define REPORTDIALOG_H
+#ifndef __REPORTDIALOG_H__
+#define __REPORTDIALOG_H__
 
-#include "include/View/PreviewDialog.h"
+#include <QDialog>
+
+namespace Ui {
+    class PreviewDialog;
+}
 
 class QComboBox;
 class DataReport;
 
-class ReportDialog : public PreviewDialog {
+class ReportDialog : public QDialog {
     Q_OBJECT
 private:
+
+    Ui::PreviewDialog* ui;
 
     QComboBox* combo;
     QVector<QList<DataReport *> *> *dados;
@@ -49,8 +55,6 @@ public:
                  QVector<QList<DataReport *> *> * _dados,
                  QWidget* parent = 0);
     ~ReportDialog();
-
-    void addNode(Node* ){}
 
 private slots:
     void changeReport(int pos);

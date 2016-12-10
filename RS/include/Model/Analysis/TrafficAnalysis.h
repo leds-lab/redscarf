@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * TrafficAnalysis.h
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -26,36 +26,33 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#ifndef TRAFFICANALYSIS_H
-#define TRAFFICANALYSIS_H
+#ifndef __TRAFFICANALYSIS_H__
+#define __TRAFFICANALYSIS_H__
 
 class TrafficAnalysis {
 protected:
-    unsigned int xSize;
-    unsigned int ySize;
-    unsigned int zSize;
-    unsigned int dataWidth;
+    unsigned short numberOfElements;
+    unsigned short dataWidth;
     float lower;
     float upper;
     float fClk;
     float tClk;
     unsigned long int channelBw;
-    unsigned int fifoOutDepth;
-    unsigned int flowControlType;
+    unsigned short fifoOutDepth;
+    unsigned short flowControlType;
     const char* workDir;
     const char* resultDir;
 
-
 public:
-    // Versão antiga => 0 = NoInputFile | 1 = Ok | -1 = NoPackets Delivered
+    // Legacy version => 0 = NoInputFile | 1 = Ok | -1 = NoPackets Delivered
     enum StatusAnalysis{Ok=0,NoPacketsDelivered,NoInputFile,NoOutputFile};
-    TrafficAnalysis(unsigned int xSize, unsigned int ySize,unsigned int zSize,
-                    unsigned int dataWidth,float lower,float upper,
-                    float fClk,float tClk,unsigned long int channelBw,
-                    unsigned int fifoOutDepth,unsigned int flowControlType,
+    TrafficAnalysis(unsigned short numElements,unsigned short dataWidth,
+                    float lower,float upper,float fClk,
+                    unsigned short fifoOutDepth,
+                    unsigned short flowControlType,
                     const char* workDir, const char* resultDir);
 
     virtual StatusAnalysis makeAnalysis() = 0;
@@ -63,4 +60,4 @@ public:
     virtual ~TrafficAnalysis();
 };
 
-#endif // ANALYSISTRAFFIC_H
+#endif // __TRAFFICANALYSIS_H__
