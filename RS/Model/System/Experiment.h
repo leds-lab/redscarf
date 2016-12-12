@@ -38,8 +38,6 @@
 
 class Experiment {
 private:
-
-
     bool active;
 
     unsigned int topology;              // Topology
@@ -59,7 +57,7 @@ public:
     inline void setRoutingAlgorithm  (unsigned int algorithm  ) { this->routingAlgorithm   = algorithm  ; }
     inline void setFlowControl       (unsigned int flowControl) { this->flowControl        = flowControl; }
     inline void setArbiterType       (unsigned int arbiter    ) { this->arbiterType        = arbiter    ; }
-    inline void setVCOptions         (unsigned int vcOp       ) { this->virtualChannelsOption = vcOp    ; }
+    inline void setVCOption          (unsigned int vcOp       ) { this->virtualChannelsOption = vcOp    ; }
     inline void setInputBufferSize   (unsigned int inputSize  ) { this->inputBufferSize    = inputSize  ; }
     inline void setOutputBufferSize  (unsigned int outputSize ) { this->outputBufferSize   = outputSize ; }
 

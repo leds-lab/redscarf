@@ -5,6 +5,10 @@
 
 #include <QMessageBox>
 
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
+
 TrafficEditDialog::TrafficEditDialog(QWidget *parent,
                                      short source,
                                      unsigned short numElements,
@@ -189,7 +193,7 @@ void TrafficEditDialog::updateSpatialDistribution(int value) {
 
 void TrafficEditDialog::updateTypeInjection(int value) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/TrafficConfigurationDialog::updateTypeInjection" << std::endl;
+    std::cout << "View/TrafficEditDialog::updateTypeInjection" << std::endl;
 #endif
 
     switch(value) {
@@ -270,7 +274,7 @@ void TrafficEditDialog::updateTypeInjection(int value) {
 
 void TrafficEditDialog::updateFunctionProbability(int value) {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/TrafficConfigurationDialog::updateFunctionProbability" << std::endl;
+    std::cout << "View/TrafficEditDialog::updateFunctionProbability" << std::endl;
 #endif
 
     if(ui->comboInFunctionProbability->isEnabled()){
@@ -321,7 +325,7 @@ void TrafficEditDialog::updateFunctionProbability(int value) {
 
 bool TrafficEditDialog::inputsOk() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/TrafficConfigurationDialog::inputsOk" << std::endl;
+    std::cout << "View/TrafficEditDialog::inputsOk" << std::endl;
 #endif
 
     QMessageBox msg(this);// = QMessageBox(this);
@@ -389,7 +393,7 @@ bool TrafficEditDialog::inputsOk() {
 
 void TrafficEditDialog::applyClicked() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/TrafficConfigurationDialog::applyClicked" << std::endl;
+    std::cout << "View/TrafficEditDialog::applyClicked" << std::endl;
 #endif
 
     if(! inputsOk() ) {
@@ -441,7 +445,7 @@ void TrafficEditDialog::changeEvent(QEvent *event) {
 /// Destrutor
 TrafficEditDialog::~TrafficEditDialog(){
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "Destructor Class View/TrafficConfigurationDialog" << std::endl;
+    std::cout << "Destructor Class View/TrafficEditDialog" << std::endl;
 #endif
 
     delete ui;

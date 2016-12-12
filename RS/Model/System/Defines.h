@@ -94,7 +94,7 @@ class DefaultValuesTrafficGeneration {
 public:
     static const unsigned int DEFAULT_PACKAGE_TO_SEND = 0;
     static const unsigned int DEFAULT_REQUIRED_BANDWIDTH = 0;
-    static const unsigned int DEFAULT_SPATIAL_DISTRIBUTION = 0;      // 0 == Uniform
+    static const unsigned int DEFAULT_SPATIAL_DISTRIBUTION = 0;      // 0 == Specified Address
     static const unsigned int DEFAULT_TRAFFIC_CLASS = 0;
     static const unsigned int DEFAULT_INJECTION_TYPE = 0;
     static const unsigned int DEFAULT_SWITCHING_TYPE = 0;
@@ -110,7 +110,7 @@ public:
 
     static const unsigned int DEFAULT_NUMBER_RATES = 100;
 
-    static const unsigned int MIN_PAYLOAD_LENGTH = 4;       //Required BW, Deadline, Cycle_2send_hi, Cycle_2send_low
+    static const unsigned int MIN_PAYLOAD_LENGTH = 1;       // Bye word on trailer
 };
 
 

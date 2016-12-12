@@ -2,6 +2,9 @@
 #include <cmath>
 #include <QDebug>
 
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
 
 SpatialDistribution::SpatialDistribution(unsigned short source,
                                          unsigned short numElements,

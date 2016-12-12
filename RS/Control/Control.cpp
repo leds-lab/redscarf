@@ -74,6 +74,7 @@
 
 // Model
 #include "Model/System/SystemParameters.h"
+#include "Model/System/SystemConfiguration.h"
 #include "Model/System/SystemOperation.h"
 #include "Model/System/Experiment.h"
 #include "Model/System/SystemDefines.h"
@@ -282,7 +283,7 @@ bool Control::loadConfiguration() {
     }
 
     if( !configFile->open(QIODevice::ReadOnly | QIODevice::Text) ) {
-        this->mainWindow->openFileError(configFile->errorString());
+        this->mainWindow->showOpenFileError(configFile->errorString());
         delete this->configFile;
         this->configFile = NULL;
         return false;
@@ -327,7 +328,7 @@ bool Control::saveConfiguration() {
     }
 
     if( !configFile->open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        this->mainWindow->openFileError(configFile->errorString());
+        this->mainWindow->showOpenFileError(configFile->errorString());
         delete this->configFile;
         this->configFile = NULL;
         return false;
@@ -488,69 +489,6 @@ bool Control::inputsOk() {
     return true;
 }
 
-unsigned int Control::calcAmountExperimentsExecutions() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Control/Control::calcAmountExperimentsExecutions" << std::endl;
-#endif
-
-    unsigned int numExecucoesExperimento = 0;
-
-// TODO verificar
-//    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
-//    float fClkFirst = this->systemParameters->getfClkFirst();
-//    float fClkLast = this->systemParameters->getfClkLast();
-//    float fClkStep = this->systemParameters->getfClkStep();
-    unsigned int fClkStepType = this->systemOperation->fClkStepType;
-    float fClkFirst = this->systemOperation->fClkFirst;
-    float fClkLast = this->systemOperation->fClkLast;
-    float fClkStep = this->systemOperation->fClkStep;
-
-    if(fClkStep == 0) {
-        return 1u;
-    }
-
-    switch(fClkStepType) {
-        case 0: // INC
-            numExecucoesExperimento = (unsigned int) (abs(fClkLast-fClkFirst)) / abs(fClkStep) + 1;
-            if((fClkFirst+fClkStep*numExecucoesExperimento) != fClkLast ){
-                if((fClkFirst+fClkStep*(numExecucoesExperimento-1)) !=  fClkLast) {
-                    numExecucoesExperimento++;
-                }
-            }
-            break;
-        case 1: { // EXP
-            int i = 0;
-            numExecucoesExperimento = 1;
-            float fClk = fClkFirst;
-            float fClkPrevious;
-            unsigned int tmpInt;
-            if(fClkFirst > fClkLast) {
-                while(fClk >= fClkLast) {
-                    fClkPrevious = fClk;
-                    tmpInt = (unsigned int) (fClkFirst/(exp(i*fClkStep))*10);
-                    fClk = ((float) tmpInt)/10;
-                    if((fClk >= fClkLast) && (fClk != fClkPrevious) ){
-                        numExecucoesExperimento++;
-                    }
-                    i++;
-                }
-            } else if(fClkFirst < fClkLast) {
-                while(fClk <= fClkLast) {
-                    fClkPrevious = fClk;
-                    tmpInt = (unsigned int) (fClkFirst/(exp(i*fClkStep))*10);
-                    fClk = ((float) tmpInt)/10;
-                    if((fClk <= fClkLast) && (fClk != fClkPrevious)){
-                        numExecucoesExperimento++;
-                    }
-                    i++;
-                }
-            }
-            break;
-        }
-    }
-    return numExecucoesExperimento;
-
-}
 
 ////////////////////////////// Slots //////////////////////////////
 
@@ -579,7 +517,6 @@ void Control::newSystem() {
     if( loadConfiguration() ) {
         delete configFile;
         configFile = NULL;
-//        clearTrafficPatterns();
         this->mainWindow->setWindowModified(false);
     }
 
@@ -1533,11 +1470,32 @@ void Control::generateTrafficConfigurationFile() {
         return;
     }
 
-// TODO Verificar
-    Experiment* e = 0; // experimentManager->getExperiment(1);
-    TrafficModelGenerator* tmg = new TrafficModelGenerator(systemParameters,e);
+    SystemConfiguration sysConf = this->mainWindow->getSelectedConfiguration();
+    if( !sysConf.isValid() ) {
+        this->mainWindow->printConsole(tr("The current configuration is not valid"),Qt::red);
+        return;
+    }
+    QList<float> freqs = this->mainWindow->getOperationFrequencies();
 
-    tmg->generateTraffic( outDir.toStdString().c_str() );
+    QList<Experiment> experiments = this->mainWindow->getAllExperiments();
+    Experiment experiment = experiments.at(0);
+    unsigned int flowControl = experiment.getFlowControl();
+    if( flowControl == 0 ) { // Hand-shake
+        flowControl = 4; // Cycles per flit
+    } else { // Credit-based
+        flowControl = 1; // Cycles per flit
+    }
+
+    TrafficModelGenerator* tmg = new TrafficModelGenerator(sysConf,freqs.at(0),flowControl);
+
+    try {
+        tmg->generateTraffic( outDir.toStdString().c_str() );
+    } catch(char* exceptionMsg) {
+        this->mainWindow->printConsole(exceptionMsg,Qt::red);
+        delete[] exceptionMsg;
+        delete tmg;
+        return;
+    }
 
     this->mainWindow->printConsole("Traffic File Generated",Qt::blue);
 
@@ -1584,7 +1542,9 @@ void Control::runSimulations() {
     connect(threadManager,SIGNAL(threadFinished(int)),this,SLOT(updateStatusExecution(int)));
 
     int numberOfExperiments = 0;
-    unsigned int runCountPerExperiment = this->calcAmountExperimentsExecutions();
+    // TODO verificar
+//    unsigned int runCountPerExperiment = this->calcAmountExperimentsExecutions();
+    unsigned int runCountPerExperiment = 1; // Alterar
 
     QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
     settings.beginGroup("Traffic_Parameters");
@@ -1686,8 +1646,9 @@ void Control::runSimulations() {
                     QString strDirSimul = dirSimulation.absolutePath();
                     this->simulationFolders->append(strDirSimul);
                     // TODO verificar
+                    QList<SystemConfiguration> allConfs = this->mainWindow->getAllConfiguration();
                     TrafficModelGenerator* trafficGen =
-                            new TrafficModelGenerator(systemParameters,experiment);
+                            new TrafficModelGenerator(allConfs.at(0),fClk,1);
                     try {
                         if( useDefault ) {
                             trafficGen->generateTraffic( strDirSimul.toStdString().c_str() );

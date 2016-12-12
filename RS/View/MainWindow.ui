@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1144</width>
-    <height>980</height>
+    <width>1322</width>
+    <height>986</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,7 +123,7 @@
                 <item>
                  <widget class="QLabel" name="label_2">
                   <property name="text">
-                   <string>Number of Elements:</string>
+                   <string>&amp;Number of Elements:</string>
                   </property>
                   <property name="buddy">
                    <cstring>inNElements</cstring>
@@ -168,7 +168,7 @@
                 <item>
                  <widget class="QLabel" name="label_3">
                   <property name="text">
-                   <string>X Size:</string>
+                   <string>&amp;X Size:</string>
                   </property>
                   <property name="buddy">
                    <cstring>in2dXSize</cstring>
@@ -285,7 +285,7 @@
                 <item>
                  <widget class="QLabel" name="label_5">
                   <property name="text">
-                   <string>Z Size:</string>
+                   <string>&amp;Z Size:</string>
                   </property>
                   <property name="buddy">
                    <cstring>in3dZSize</cstring>
@@ -1536,7 +1536,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Channel Tclk range:</string>
+                 <string>Channel Tcl&amp;k range:</string>
                 </property>
                 <property name="buddy">
                  <cstring>doubleSpinInChannelTclkRange</cstring>
@@ -1551,7 +1551,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>ns to</string>
+                 <string>&amp;ns to</string>
                 </property>
                 <property name="buddy">
                  <cstring>doubleSpinInChannelTclkRange_2</cstring>
@@ -1566,7 +1566,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>MHz, step=</string>
+                 <string>MH&amp;z, step=</string>
                 </property>
                 <property name="buddy">
                  <cstring>comboInStep</cstring>
@@ -1878,7 +1878,7 @@
               <item>
                <widget class="QLabel" name="labelInitPacketsAnalyze">
                 <property name="text">
-                 <string>Analyze packets from</string>
+                 <string>A&amp;nalyze packets from</string>
                 </property>
                 <property name="buddy">
                  <cstring>spinBoxInitPacketsAnalyze</cstring>
@@ -2396,7 +2396,7 @@
                       <item>
                        <widget class="QLabel" name="labelPointSize">
                         <property name="text">
-                         <string>Point size:</string>
+                         <string>Point si&amp;ze:</string>
                         </property>
                         <property name="buddy">
                          <cstring>doubleSpinBoxPointSize</cstring>
@@ -2856,7 +2856,7 @@ distribution</string>
           <item>
            <widget class="QToolButton" name="toolButtonClearConsole">
             <property name="icon">
-             <iconset>
+             <iconset resource="../resources/Icons.qrc">
               <normaloff>:/icons/icons/icon_clear.png</normaloff>:/icons/icons/icon_clear.png</iconset>
             </property>
            </widget>
@@ -2909,8 +2909,8 @@ distribution</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1144</width>
-     <height>26</height>
+     <width>1322</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2918,7 +2918,7 @@ distribution</string>
      <string>File menu</string>
     </property>
     <property name="title">
-     <string>File</string>
+     <string>Fi&amp;le</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -2945,7 +2945,7 @@ distribution</string>
       <string>Select the environment language</string>
      </property>
      <property name="title">
-      <string>Language</string>
+      <string>&amp;Language</string>
      </property>
     </widget>
     <addaction name="menuLanguage"/>
@@ -2954,7 +2954,7 @@ distribution</string>
    </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title">
-     <string>Simulation</string>
+     <string>Si&amp;mulation</string>
     </property>
     <addaction name="actionLoadSimulation"/>
     <addaction name="actionSaveSimulation"/>
@@ -2963,7 +2963,7 @@ distribution</string>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
    </widget>
    <addaction name="menuFile"/>
@@ -2991,7 +2991,7 @@ distribution</string>
      <normaloff>:/icons/icons/Rede.png</normaloff>:/icons/icons/Rede.png</iconset>
    </property>
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
    <property name="toolTip">
     <string>Create a new system with default values and clear all the traffic patterns</string>
@@ -3009,7 +3009,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_open.png</normaloff>:/icons/icons/icon_open.png</iconset>
    </property>
    <property name="text">
-    <string>Open</string>
+    <string>&amp;Open</string>
    </property>
    <property name="toolTip">
     <string>Open a system configuration file</string>
@@ -3027,7 +3027,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_open_default.png</normaloff>:/icons/icons/icon_open_default.png</iconset>
    </property>
    <property name="text">
-    <string>Load default</string>
+    <string>&amp;Load default</string>
    </property>
    <property name="toolTip">
     <string>Load default system configuration including the network and traffic parameters</string>
@@ -3042,7 +3042,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_save.png</normaloff>:/icons/icons/icon_save.png</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="toolTip">
     <string>Save a system configuration including the network and traffic parameters</string>
@@ -3060,7 +3060,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_saveAs.png</normaloff>:/icons/icons/icon_saveAs.png</iconset>
    </property>
    <property name="text">
-    <string>Save as...</string>
+    <string>Sa&amp;ve as...</string>
    </property>
    <property name="toolTip">
     <string>Save as a system configuration including the network and traffic parameters</string>
@@ -3078,7 +3078,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_save_default.png</normaloff>:/icons/icons/icon_save_default.png</iconset>
    </property>
    <property name="text">
-    <string>Save as default</string>
+    <string>Save as &amp;default</string>
    </property>
    <property name="toolTip">
     <string>Save as default a current system configuration including the network and traffic parameters</string>
@@ -3096,7 +3096,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_exit.png</normaloff>:/icons/icons/icon_exit.png</iconset>
    </property>
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
    <property name="toolTip">
     <string>Exit of the simulator</string>
@@ -3114,7 +3114,7 @@ distribution</string>
      <normaloff>:/icons/icons/RedScarf_icon.png</normaloff>:/icons/icons/RedScarf_icon.png</iconset>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>A&amp;bout</string>
    </property>
    <property name="toolTip">
     <string>About application</string>
@@ -3132,7 +3132,7 @@ distribution</string>
      <normaloff>:/icons/icons/qt_icon.png</normaloff>:/icons/icons/qt_icon.png</iconset>
    </property>
    <property name="text">
-    <string>About Qt</string>
+    <string>&amp;About Qt</string>
    </property>
    <property name="statusTip">
     <string>About Qt framework that was used to build this environment</string>
@@ -3147,7 +3147,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_tool.png</normaloff>:/icons/icons/icon_tool.png</iconset>
    </property>
    <property name="text">
-    <string>Options</string>
+    <string>&amp;Options</string>
    </property>
    <property name="toolTip">
     <string>Edit RedScarf options</string>
@@ -3162,7 +3162,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_save_simulation.png</normaloff>:/icons/icons/icon_save_simulation.png</iconset>
    </property>
    <property name="text">
-    <string>Save simulation</string>
+    <string>&amp;Save simulation</string>
    </property>
    <property name="toolTip">
     <string>Save simulation</string>
@@ -3177,7 +3177,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_open_simulation.png</normaloff>:/icons/icons/icon_open_simulation.png</iconset>
    </property>
    <property name="text">
-    <string>Load simulation</string>
+    <string>&amp;Load simulation</string>
    </property>
    <property name="toolTip">
     <string>Load previous simulation</string>
@@ -3192,7 +3192,7 @@ distribution</string>
      <normaloff>:/icons/icons/icon_csv.png</normaloff>:/icons/icons/icon_csv.png</iconset>
    </property>
    <property name="text">
-    <string>Generate CSV</string>
+    <string>&amp;Generate CSV</string>
    </property>
    <property name="statusTip">
     <string>Generate CSV simulation Report</string>

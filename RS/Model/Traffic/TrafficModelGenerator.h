@@ -34,30 +34,36 @@
 #ifndef __TRAFFICGENERATOR_H__
 #define __TRAFFICGENERATOR_H__
 
-#include <string>
+#include <QList>
+#include <QVector>
 
-class SystemParameters;
-class SystemOperation;
-class Experiment;
-class TrafficParameters;
+#include "Model/System/SystemConfiguration.h"
+#include "Model/Traffic/TrafficParameters.h"
 
 class TrafficModelGenerator {
+private:
+    SystemConfiguration sysConf;
+    unsigned short numberCyclesPerFlit;
+    unsigned short dataWidth;
+    float fClk;
+    float tClk;
+    float channelBW;
+    unsigned int numElements;
+    QList<TrafficParameters> traffics;
+    unsigned int countTrafficConfigured;
+
+    unsigned int flowId;
+
+    QVector<QStringList> flowsStr;
 protected:
 
-    SystemParameters* sp;
-    Experiment* exp;
-    SystemOperation* sop;
-
-    unsigned int numberCyclesPerFlit;
     unsigned int lastPayloadLength;
 
-    float requiredBwArray[100];
     float requiredBw;
+    float requiredBwArray[100];
 
     unsigned long int pck2Send;
     unsigned long int pck2SendArray[100];
-
-    unsigned int numTrafficPatter;
 
     void writeFlow(TrafficParameters* tp, unsigned int type = 0, unsigned int burstSize=0);
 
@@ -66,26 +72,20 @@ protected:
     // gtr_functions
     virtual int functionProbability(TrafficParameters* tp);
     virtual void removeZeroPayloadPacket(TrafficParameters* tp);
-    virtual unsigned int calculateIdleBasedOnPayloadLength(unsigned int payloadLength,
-                                                   float channelBw, float requiredBw);
-    virtual unsigned int calculatePayloadLengthBasedOnIdle(unsigned int idle,
-                                                           float channelBw, float requiredBw);
-    virtual unsigned int calculatePayloadLengthBasedOnInterArrival(unsigned int iat,
-                                                                    float channelBw, float requiredBw);
-    virtual unsigned int calculateInterArrivalBasedOnPayloadLength(unsigned int payloadLength,
-                                                                   float channelBw, float requiredBw);
+    virtual unsigned int calculateIdleBasedOnPayloadLength(unsigned int payloadLength, float requiredBw);
+    virtual unsigned int calculatePayloadLengthBasedOnIdle(unsigned int idle,float requiredBw);
+    virtual unsigned int calculatePayloadLengthBasedOnInterArrival(unsigned int iat, float requiredBw);
+    virtual unsigned int calculateInterArrivalBasedOnPayloadLength(unsigned int payloadLength,float requiredBw);
 
     // gtr2
-    virtual void validateTrafficAddresses();
     virtual void adjustParameters();
-    virtual void determineFlowControl();
+//    virtual void determineFlowControl();
     virtual void generateVariableRate() throw (const char*);
     virtual void generateTrafficModel();
 
-    virtual void generateSingleDestinationDistributions(TrafficParameters* tp);
-    virtual void generateMultipleDestinationDistributions(TrafficParameters* tp);
+    virtual void generateFlow(TrafficParameters* tp);
 public:
-    TrafficModelGenerator(SystemParameters* sp, Experiment* exp);
+    TrafficModelGenerator(SystemConfiguration sysConf, float fClk, unsigned short numberCyclesPerFlit);
 
     virtual void generateTraffic(const char* diretorio) throw (const char* );
 

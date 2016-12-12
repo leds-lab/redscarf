@@ -106,7 +106,8 @@ SOURCES +=  \
     Model/Traffic/SpatialDistribution.cpp \
     Model/Traffic/TrafficParameters.cpp \
     Model/System/SystemParameters.cpp \
-    Model/System/SystemOperation.cpp
+    Model/System/SystemOperation.cpp \
+    Model/System/SystemConfiguration.cpp
 
 # Application Headers files
 HEADERS += \
@@ -152,7 +153,8 @@ HEADERS += \
     Model/Traffic/SpatialDistribution.h \
     Model/Traffic/TrafficParameters.h \
     Model/System/SystemParameters.h \
-    Model/System/SystemOperation.h
+    Model/System/SystemOperation.h \
+    Model/System/SystemConfiguration.h
 
 # Application configurations support
 CONFIG += qt
@@ -210,9 +212,9 @@ CONFIG(release, debug|release) {
     TARGET  = RedScarf
     CONFIG -= debug release
     CONFIG += release
-    DEFINES += QT_NO_DEBUG_OUTPUT
-    DEFINES -= QT_NO_WARNING_OUTPUT
-    DEFINES += QT_NO_DEBUG
+#    DEFINES += QT_NO_DEBUG_OUTPUT
+#    DEFINES -= QT_NO_WARNING_OUTPUT
+#    DEFINES += QT_NO_DEBUG
 }
 
 # Debug options. Active methods traceability

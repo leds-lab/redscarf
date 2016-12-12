@@ -26,14 +26,16 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-*
+* ----------------------------------------------------------------------------
+* 11/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
+
+
 #include "Model/Traffic/TrafficModelGenerator.h"
-#include "Model/Traffic/TrafficParameters.h"
 #include "Model/Traffic/MathFunction.h"
 
-#include "Model/System/SystemParameters.h"
+#include "Model/System/Defines.h"
 #include "Model/System/SystemOperation.h"
 #include "Model/System/Experiment.h"
 
@@ -42,24 +44,33 @@
 #include <cmath>
 #include <cstring>
 
+#include <QString>
+
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
 #endif
 
-TrafficModelGenerator::TrafficModelGenerator(SystemParameters *sp, Experiment *exp) {
+TrafficModelGenerator::TrafficModelGenerator(SystemConfiguration sysConf, float fClk, unsigned short numberCyclesPerFlit) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/TrafficModelGenerator" << std::endl;
 #endif
 
-    this->sp = sp;
-    this->exp = exp;
+    this->sysConf = sysConf;
+    this->fClk = fClk;
+    this->tClk = (1.0f / fClk ) * 1000.0f;
+    this->numElements = sysConf.getSystemConfiguration().getNumberElements();
+    this->traffics = sysConf.getTrafficConfiguration();
+    this->countTrafficConfigured = traffics.size();
+    this->dataWidth = sysConf.getSystemConfiguration().getDataWidth();
+    this->channelBW = dataWidth * fClk;
+
+    this->numberCyclesPerFlit = numberCyclesPerFlit;
 
     this->lastPayloadLength = 0;
-    this->requiredBw = 0;
-    this->numberCyclesPerFlit = 0;
-    this->numTrafficPatter = 0;
     this->pck2Send = 0;
     this->requiredBw = 0.0;
+
+    this->flowsStr.resize(numElements);
 }
 
 int TrafficModelGenerator::functionProbability(TrafficParameters *tp) {
@@ -177,8 +188,7 @@ void TrafficModelGenerator::removeZeroPayloadPacket(TrafficParameters *tp) {
 
 }
 
-unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned int payloadLength,
-                                                         float channelBw,float requiredBw) {
+unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned int payloadLength, float requiredBw) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::calculateIdleBasedOnPayloadLength" << std::endl;
 #endif
@@ -187,7 +197,7 @@ unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned i
 // If application requires a bandwidth greater than the channel bandwidth it is considered
 // that 100% of the channel bandwidth is required (none idle cycle is inserted)
 
-    float tmp = (float) ( channelBw / requiredBw ) - 1.0f;
+    float tmp = (float) ( this->channelBW / requiredBw ) - 1.0f;
 
     if( tmp < 0 ) {
         tmp = 0;
@@ -196,15 +206,14 @@ unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned i
     return ( (unsigned int) ( payloadLength * numberCyclesPerFlit * tmp ) );
 }
 
-unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnIdle(unsigned int idle,
-                                                                 float channelBw, float requiredBw) {
+unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnIdle(unsigned int idle, float requiredBw) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::calculatePayloadLengthBasedOnIdle" << std::endl;
 #endif
 
     float tmp;
 
-    tmp = (float) (channelBw / requiredBw) - 1.0f;
+    tmp = (float) (this->channelBW / requiredBw) - 1.0f;
 
     if(tmp < 0) {
         tmp = 0;
@@ -218,32 +227,22 @@ unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnIdle(unsigned i
     return (unsigned int) tmp;
 }
 
-unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnInterArrival(unsigned int iat,
-                                                                         float channelBw, float requiredBw) {
+unsigned int TrafficModelGenerator::calculatePayloadLengthBasedOnInterArrival(unsigned int iat, float requiredBw) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::calculatePayloadLengthBasedOnInterArrival" << std::endl;
 #endif
-    return (unsigned int) (iat / numberCyclesPerFlit) * (unsigned int) (requiredBw/channelBw);
+    return (unsigned int) (iat / numberCyclesPerFlit) * (unsigned int) (requiredBw/this->channelBW);
 
 }
 
-unsigned int TrafficModelGenerator::calculateInterArrivalBasedOnPayloadLength(unsigned int payloadLength,
-                                                                         float channelBw, float requiredBw) {
+unsigned int TrafficModelGenerator::calculateInterArrivalBasedOnPayloadLength(unsigned int payloadLength, float requiredBw) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::calculateInterArrivalBasedOnPayloadLength" << std::endl;
 #endif
     float tmp;
 
-    tmp = (float) (channelBw/requiredBw);
+    tmp = (float) (this->channelBW/requiredBw);
     return (unsigned int) (payloadLength * numberCyclesPerFlit * tmp);
-}
-
-void TrafficModelGenerator::validateTrafficAddresses() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/TrafficPattern/TrafficModelGenerator::validateTrafficAddresses" << std::endl;
-#endif
-
-
 }
 
 void TrafficModelGenerator::adjustParameters() {
@@ -260,94 +259,67 @@ void TrafficModelGenerator::adjustParameters() {
 
     unsigned int numberRates = 0;
 
-    unsigned int xSize = this->sp->getXSize();
-    unsigned int ySize = this->sp->getYSize();
-    unsigned int zSize = this->sp->getZSize();
+    for(unsigned int trafficIndex = 0; trafficIndex < countTrafficConfigured; trafficIndex++) {
+        TrafficParameters* tp = &traffics[trafficIndex];
+        unsigned int injType = tp->getInjectionType();
+        switch(injType) {
+        // Cases according to the view
+            case 0: // Constant injection rate
+                payloadLength = tp->getMessageSize();
+                numberRates = 1; // There is no probabilistic generation
+                break;
+            case 1: // Variable idle period, fixed packet size
+                payloadLength = tp->getMessageSize();
+                break;
+            case 2: // Variable packet size, fixed idle period
+                idle = tp->getIdleTime();
+                break;
+            case 3: // Variable packet size, fixed inter-arrival
+                iat = tp->getIntervalTime();
+                break;
+            case 4: // Variable idle inter-arrival time, fixed packet size
+                payloadLength = tp->getMessageSize();
+                break;
+            case 5: // Variable burst size, fixed idle inter-arrival time
+                payloadLength = tp->getMessageSize();
+                iat = tp->getIntervalTime();
+                break;
+        }
 
-    for(unsigned int x = 0; x < xSize; x++) {
-        for(unsigned int y = 0; y < ySize; y++) {
-            for(unsigned int z = 0; z < zSize; z++) {
-            // TODO
-                            TrafficParameters* tp = NULL;//no->getTrafficPattern(p);
-                            unsigned int injType = tp->getInjectionType();
-
-                            switch(injType) {
-                            // Cases according to the view
-                                case 0: // Constant injection rate
-                                    payloadLength = tp->getMessageSize();
-                                    numberRates = 1; // There is no probabilistic generation
-                                    break;
-                                case 1: // Variable idle period, fixed packet size
-                                    payloadLength = tp->getMessageSize();
-                                    break;
-                                case 2: // Variable packet size, fixed idle period
-                                    idle = tp->getIdleTime();
-                                    break;
-                                case 3: // Variable packet size, fixed inter-arrival
-                                    iat = tp->getIntervalTime();
-                                    break;
-                                case 4: // Variable idle inter-arrival time, fixed packet size
-                                    payloadLength = tp->getMessageSize();
-                                    break;
-                                case 5: // Variable burst size, fixed idle inter-arrival time
-                                    payloadLength = tp->getMessageSize();
-                                    iat = tp->getIntervalTime();
-                                    break;
-
-                            }
-                            // Injection type different of constant
-                            if( injType != 0  ) {
-                                switch(tp->getProbabilityFunction()) {
-                                    case 0: // Normal
-                                        requiredBwStdev = tp->getRequiredBandwidthStdDeviation();
-                                    case 1: // Exponential
-                                        numberRates = 100; //DefaultValuesTrafficGeneration::DEFAULT_NUMBER_RATES;
-                                        break;
-                                    case 2: // Pareto
-                                        alfaOn = tp->getAlfaOn();
-                                        alfaOff = tp->getAlfaOff();
-                                        numberRates = 1; // It is determined at run time
-                                        break;
-                                }
-                            }
-                            // It updates the traffic patterns parameters by doing the conversion
-                            // of units: from ns to cycles, from bits to flits
-                            if(payloadLength) {
-                                tp->setPayloadLength((unsigned int) ceil( (float)payloadLength/(float)sp->getDataWidth()) );
-                            }
-                            if( tp->getPayloadLength() < 1 ) {
-                                tp->setPayloadLength( 1 );
-                            }
-
-                            if(idle) {
-// TODO alterado
-//                                tp->setIdleTime( (unsigned int) ceil( (float)idle / (float)sp->getTClk() ) );
-                                tp->setIdleTime( (unsigned int) ceil( (float)idle / (float)sop->tClk) );
-                            }
-                            if(iat) {
-// TODO alterado
-//                                tp->setIntervalTime( (unsigned int) ceil( (float)iat /(float)sp->getTClk() ) );
-                                tp->setIntervalTime( (unsigned int) ceil( (float)iat /(float)sop->tClk ) );
-                            }
-                            tp->setRequiredBandwidthStdDeviation( requiredBwStdev );
-                            tp->setAlfaOn( alfaOn );
-                            tp->setAlfaOff( alfaOff );
-                            tp->setNumberRates( numberRates );
+        // Injection type different of constant
+        if( injType != 0  ) {
+            switch(tp->getProbabilityFunction()) {
+                case 0: // Normal
+                    requiredBwStdev = tp->getRequiredBandwidthStdDeviation();
+                case 1: // Exponential
+                    numberRates = DefaultValuesTrafficGeneration::DEFAULT_NUMBER_RATES;
+                    break;
+                case 2: // Pareto
+                    alfaOn = tp->getAlfaOn();
+                    alfaOff = tp->getAlfaOff();
+                    numberRates = 1; // It is determined at run time
+                    break;
             }
         }
-    }
 
-}
-
-void TrafficModelGenerator::determineFlowControl() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/TrafficPattern/TrafficModelGenerator::determineFlowControl" << std::endl;
-#endif
-
-    switch( exp->getFlowControl() ) {
-        case 0: this->numberCyclesPerFlit = 4; break; // HS-(WH)
-        case 1: // CB-(WH)
-        case 2: this->numberCyclesPerFlit = 1; break; // CB-(VCT)
+        // It updates the traffic patterns parameters by doing the conversion
+        // of units: from ns to cycles, from bits to flits
+        if(payloadLength) {
+            tp->setPayloadLength((unsigned int) ceil( (float)payloadLength/(float)dataWidth) );
+        }
+        if( tp->getPayloadLength() < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH ) {
+            tp->setPayloadLength( DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH );
+        }
+        if(idle) {
+            tp->setIdleTime( (unsigned int) ceil( (float)idle / (float)tClk) );
+        }
+        if(iat) {
+            tp->setIntervalTime( (unsigned int) ceil( (float)iat /(float)tClk ) );
+        }
+        tp->setRequiredBandwidthStdDeviation( requiredBwStdev );
+        tp->setAlfaOn( alfaOn );
+        tp->setAlfaOff( alfaOff );
+        tp->setNumberRates( numberRates );
     }
 
 }
@@ -357,610 +329,200 @@ void TrafficModelGenerator::generateVariableRate() throw (const char*) {
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateVariableRate" << std::endl;
 #endif
 
-    unsigned int xSize = sp->getXSize();
-    unsigned int ySize = sp->getYSize();
-    unsigned int zSize = sp->getZSize();
+    for(unsigned int trafficIndex = 0; trafficIndex < countTrafficConfigured; trafficIndex++) {
+        TrafficParameters* tp = &traffics[trafficIndex];
+        // It generates the variable rates
+        if( tp->getInjectionType() != 0 /*CONSTANT*/  ) {
+            // It fills required_bw_array
+            for(unsigned int i = 0; i < 100; i++) {
+                this->requiredBwArray[i] = ((float)i+1)/100.0f; // required_bw_array[i+1] + 0.01
+            }
 
-    for( unsigned int x = 0; x < xSize; x++ ) {
-        for(unsigned int y = 0; y < ySize; y++) {
-            for(unsigned int z = 0; z < zSize; z++) {
-                // TODO obter tp
-                             TrafficParameters* tp = NULL; //no->getTrafficPattern(x);
-                            // It generates the variable rates
-                            if( tp->getInjectionType() != 0 /*CONSTANT*/  ) {
-                                // It fills required_bw_array
-                                for(unsigned int i = 0; i < 100; i++) {
-                                    this->requiredBwArray[i] = ((float)i+1)/100.0f; // required_bw_array[i+1] + 0.01
-                                }
-
-                                // It fills pck_2send_array by using a probability function
-// TODO Alterado
-//                                requiredBw = tp->getRequiredBandwidth() / sp->getChannelBandwidth();
-                                requiredBw = tp->getRequiredBandwidth() / sop->channelBandwidth;
-
-                                if(requiredBw > 1.0) {
-                                    requiredBw = 1.0;
-                                }
-                                int resFunProb = this->functionProbability(tp);
-                                           //  != ERROR |
-                                if( resFunProb != 0 ) {
-                                    char *error = new char[512];
-                                    sprintf(error,"[probability_function] WARNING: No packet was inserted! Input variable \"pck_2send\" (=%d) is too small for the selected function of probability.",resFunProb);
-                                    throw error;
-                                }
-                                for(unsigned int z = 0; z < 100; z++) {
-                                    tp->requiredBandwidthArray[z] = this->requiredBwArray[z];
-                                    tp->packageToSendArray[z] = this->pck2SendArray[z];
-                                }
-                            }
+            // It fills pck_2send_array by using a probability function
+            requiredBw = tp->getRequiredBandwidth() / channelBW;
+            if(requiredBw > 1.0) {
+                requiredBw = 1.0;
+            }
+            int resFunProb = this->functionProbability(tp);
+            //  != ERROR |
+            if( resFunProb != 0 ) {
+                char *error = new char[512];
+                sprintf(error,"[TrafficModelGenerator] WARNING: No packet was inserted! Input variable \"pck_2send\" (=%d) is too small for the selected function of probability.",resFunProb);
+                throw error;
+            }
+            for(unsigned int z = 0; z < 100; z++) {
+                tp->requiredBandwidthArray[z] = this->requiredBwArray[z];
+                tp->packageToSendArray[z] = this->pck2SendArray[z];
             }
         }
     }
 
 }
 
-void TrafficModelGenerator::generateSingleDestinationDistributions(TrafficParameters *tp) {
+void TrafficModelGenerator::generateFlow(TrafficParameters *tp) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateSingleDestinationDistributions" << std::endl;
 #endif
 
-    unsigned int numberOfDestinations;
     unsigned int numberRatesWithNoPackets = 0;
 
     unsigned int spatialDistribution = tp->getSpatialDistribution();
 
     unsigned int injType = tp->getInjectionType();
 
+    // For variable injection rates based on the variation of the
+    // payload length (except for Pareto-based ones),
+    // it removes the packets with no payload
+    if(tp->getProbabilityFunction() != 2) { // != PARETO
+        // == VAR_PCK_FIX_IDL ||       == VAR_PCK_FIX_IAT
+        if( (injType == 2) || (injType == 3) ) {
+            this->removeZeroPayloadPacket(tp);
 
-    //                      < UNIFORM
-    if( spatialDistribution < 6 ) { // != UNIFORM, NON-UNIFORM or LOCAL
-// TODO alterado
-        // It determines the number of destinations for the traffic generator
-//        if( (tp->getDestinationNodeX() == tp->getSourceNodeX()) &&
-//            (tp->getDestinationNodeY() == tp->getSourceNodeY()) &&
-//            (tp->getDestinationNodeZ() == tp->getSourceNodeZ()) ) {
-//            numberOfDestinations = 0;
-//        } else {
-//            numberOfDestinations = 1;
-//        }
-        numberOfDestinations = 1;
+        }
 
-        // For variable injection rates based on the variation of the
-        // payload length (except for Pareto-based ones),
-        // it removes the packets with no payload
-        if(tp->getProbabilityFunction() != 2) { // != PARETO
-            // == VAR_PCK_FIX_IDL ||       == VAR_PCK_FIX_IAT
-            if( (injType == 2) || (injType == 3) ) {
-                this->removeZeroPayloadPacket(tp);
-
-            }
-
-            // It determines how many rates in the distribution has no packets
-            // to be sent. They will not be written to the file
-            if( injType != 0 ) { // != CONSTANT
-                unsigned int i;
-                for( numberRatesWithNoPackets = 0,  i = 0; i < tp->getNumberRates(); i++) {
-                    if( tp->packageToSendArray[i] == 0 ) {
-                        numberRatesWithNoPackets++;
-                    }
+        // It determines how many rates in the distribution has no packets
+        // to be sent. They will not be written to the file
+        if( injType != 0 ) { // != CONSTANT
+            unsigned int i;
+            for( numberRatesWithNoPackets = 0,  i = 0; i < tp->getNumberRates(); i++) {
+                if( tp->packageToSendArray[i] == 0 ) {
+                    numberRatesWithNoPackets++;
                 }
             }
         }
-
-        unsigned int numberFlows;
-        // It calculates the number of flows
-        if(injType == 0) { // == CONSTANT
-            numberFlows = numberOfDestinations;
-        } else {
-            if( tp->getProbabilityFunction() == 2 ) { // == PARETO
-                numberFlows = numberOfDestinations;
-            } else {
-                numberFlows = numberOfDestinations * ( tp->getNumberRates() - numberRatesWithNoPackets );
-            }
-        }
-
-        // It generates the flows
-        if( numberFlows != 0 ) {
-            //////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////
-            /// PART VI.1(a) - CBR TRAFFIC GENERATION FOR SINGLE DESTINATION DISTRIBUTIONS
-            //////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////
-            if(injType == 0) { // == CONSTANT
-// TODO Alterado
-                tp->setIdleTime( this->calculateIdleBasedOnPayloadLength(tp->getPayloadLength(),
-//                                                                         sp->getChannelBandwidth(),
-                                                                         sop->channelBandwidth,
-                                                                         tp->getRequiredBandwidth()) );
-                // After calculating idle cycles, it determines the actual bandwidth that the
-                // the flow will consume, taking into account the header costs. The bandwidth
-                // consumed by the flow will be always greater than the one required by the
-                // application. Indeed, it will be determined a normalized value, varying from
-                // 1 to 100% of the channel bandwidth.
-                //required_bw = ((float)  (win.payload_length[x][y][k] + 1) * nb_of_cycles_per_flit) /
-                //				((float)(((win.payload_length[x][y][k] + 1) * nb_of_cycles_per_flit) + win.idle[x][y][k]));
-
-                //				required_bw = win.required_bw_bps[x][y][k]/win.channel_bw;
-                //				if (required_bw > 1.0) required_bw = 1.0;
-                requiredBw = tp->getRequiredBandwidth();
-                pck2Send = tp->getPackageToSend();
-                this->writeFlow(tp);
-            } else {
-            //////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////
-            /// PART VI.1(b) - VBR TRAFFIC GENERATION FOR SINGLE DESTINATION DISTRIBUTIONS
-            //////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////
-                if( tp->getProbabilityFunction() == 2 ) { // == PARETO
-                    this->requiredBw = 0.0;
-                    this->pck2Send = tp->getPackageToSend();
-                    this->writeFlow( tp, tp->getInjectionType() );
-                } else {
-                    for( unsigned int i = 0; i < tp->getNumberRates() ; i++ ) {
-                        if( tp->packageToSendArray[i] != 0 ) {
-                            unsigned int burstSize = 0;
-                            switch( injType ) {
-                                case 1: // VAR_IDL_FIX_PCK // It determines the number of idle cycles
-                                    tp->setIdleTime(this->calculateIdleBasedOnPayloadLength( tp->getPayloadLength(),
-                                                                                             1.0, // channelBW
-                                                                                             tp->requiredBandwidthArray[i] ) );
-                                    break;
-                                case 2: // VAR_PCK_FIX_IDL // It determines the payload length
-                                    tp->setPayloadLength( this->calculatePayloadLengthBasedOnIdle( tp->getIdleTime(),
-                                                                                                   1.0, // channelBw
-                                                                                                   tp->requiredBandwidthArray[i]) );
-// TODO alterado
-                                    if(tp->getPayloadLength() < 1) {
-                                        tp->setPayloadLength( 1 );
-                                    }
-                                    break;
-                                case 3: // VAR_PCK_FIX_IAT // It determines the payload length and the number of idle cycles
-                                    tp->setPayloadLength( this->calculatePayloadLengthBasedOnInterArrival(tp->getIntervalTime(),
-                                                                                                          1.0, // channelBw
-                                                                                                          tp->requiredBandwidthArray[i]) );
-                                    if( tp->getPayloadLength() < 1 ) {
-                                        tp->setPayloadLength( 1 );
-                                    }
-                                    // Não gerar o fluxo se a condição abaixo for verdadeira
-                                    if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
-                                        continue;
-                                    }
-                                    tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
-                                    break;
-                                case 4: // VAR_IAT_FIX_PCK // It determines the inter-arrival time and the number if idle cycles
-                                    tp->setIntervalTime( this->calculateInterArrivalBasedOnPayloadLength(tp->getPayloadLength(),
-                                                                                                         1.0, // channelBw
-                                                                                                         tp->requiredBandwidthArray[i]) );
-
-                                    if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
-                                        // Não gera fluxo
-                                        continue;
-                                    }
-                                    tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
-                                    break;
-                                case 5:{ // VAR_BST_FIX_IAT
-                                // It determines the burst size and the size of the last packet
-                                // It determines the burst size. If it does not have a decimal part, then
-                                // last_payload_lengh = payload_length. If it has a decimal part, then the
-                                // burst size is incremented by one packet and the length of this last
-                                // packet is determined. Depending on the required bandwidth, the length of
-                                // the payload of the last packet can equal 0, 1 or a number <= payload_length
-                                    float tmp;
-                                    tmp = ((tp->requiredBandwidthArray[i]*tp->getIntervalTime()) /
-                                           ((float)((tp->getPayloadLength()*numberCyclesPerFlit))));
-                                    if(((unsigned int)(100*tmp)%100) == 0) { // If decimal part is 0
-                                        burstSize = (unsigned int) tmp;
-                                        lastPayloadLength = tp->getPayloadLength();
-                                    } else {
-                                        burstSize = (unsigned int) (round((float) (tmp+0.5)));
-                                        tmp = (trunc((fmod( tp->requiredBandwidthArray[i] * tp->getIntervalTime(),
-                                                            (float) (tp->getPayloadLength())*numberCyclesPerFlit ))/numberCyclesPerFlit));
-                                        if(tmp < 1) {
-                                            lastPayloadLength = 0;
-                                        } else {
-// TODO Alterado
-                                            if(tmp < 1) { // min_Payload_length
-                                                lastPayloadLength = 1;
-                                            } else {
-                                                lastPayloadLength = (unsigned int) tmp;
-                                            }
-                                        }
-                                    }
-                                    if( lastPayloadLength == 0 ) {
-                                        if( tp->getIntervalTime() < numberCyclesPerFlit * ((burstSize-1)*(tp->getPayloadLength())) ) {
-                                            // Não gera o fluxo
-                                            continue;
-                                        }
-                                        tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
-                                                         ((burstSize-1)*(tp->getPayloadLength())) );
-                                    } else {
-                                        if( tp->getIntervalTime() < numberCyclesPerFlit * (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) ) {
-                                            // Não gera o fluxo
-                                            continue;
-                                        }
-                                        tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
-                                                         (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) );
-                                    }
-                                    break;
-                                }
-                            }
-// TODO alterado
-//                            requiredBw = tp->requiredBandwidthArray[i] * sp->getChannelBandwidth();
-                            requiredBw = tp->requiredBandwidthArray[i] * sop->channelBandwidth;
-                            this->pck2Send = tp->packageToSendArray[i];
-                            this->writeFlow( tp,0,burstSize );
-                        }
-                    }
-                }
-            }
-        }
-
     }
 
-}
-
-void TrafficModelGenerator::generateMultipleDestinationDistributions(TrafficParameters *tp) {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateMultipleDestinationsDistributions" << std::endl;
-#endif
-
-    unsigned int numberOfDestinations = 0;
-    unsigned int numberRatesWithNoPackets = 0;
-
-    unsigned int spatialDistribution = tp->getSpatialDistribution();
-    unsigned int injType = tp->getInjectionType();
-
-
-    if( spatialDistribution >= 6 ) { // == UNIFORM, NON-UNIFORM (1 and 2) or LOCAL
-        // It determines the number of destinations for the traffic generator
-        switch( spatialDistribution ) {
-            case 6: // UNIFORM          // Equal to non-uniform distributions
-            case 7: // NON-UNIFORM_1
-            case 8: // NON_UNIFORM_2
-// TODO Alterado
-//                numberOfDestinations = ( sp->getXSize()*sp->getYSize()*sp->getZSize() - 1 );
-                numberOfDestinations = sp->getNumberElements() - 1;
-                break;
-/*
-            case 9: { // LOCAL
-
-                unsigned int x = tp->getSourceNodeX();
-                unsigned int y = tp->getSourceNodeY();
-                //unsigned int z = tp->getSourceNodeZ();
-    // TODO: Adicionar vizinhos UP e DOWN. Mudar abordagem para use[N|E|S|W|U|D]
-                unsigned int xy;
-                if( (x != 0) && (x != (sp->getXSize()-1)) && (y!=0) && (y!=(sp->getYSize()-1)) ) {
-                    numberOfDestinations = 4;
-                } else {
-                    xy = x + y;
-                    if( (xy == 0) || (xy==(sp->getXSize()-1)) ||
-                        (xy == (sp->getYSize()-1)) ||
-                        (xy == (sp->getXSize()+sp->getYSize()-2)) ) {
-                        numberOfDestinations = 2;
-                    } else {
-                        numberOfDestinations = 3;
-                    }
-                }
-                break;
-            }
-            */
-        }
-        // For variable injection rates based on the variation of the
-        // payload length (except for Pareto-based ones),
-        // it removes the packets with no payload
-        if( tp->getProbabilityFunction() != 2 ) { // != PARETO
-            //     == VAR_PCK_FIX_IDL ||   == VAR_PCK_FIX_IAT
-            if( (injType == 2) || (injType == 3) ) {
-                this->removeZeroPayloadPacket( tp );
-            }
-
-            // It determines how many rates in the distribution has no packets
-            // to be sent. They will not be written to the file
-            if( injType != 0 ) { // != CONSTANT
-                numberRatesWithNoPackets = 0;
-                for( unsigned int i = 0; i < tp->getNumberRates(); i++) {
-                    if( tp->packageToSendArray[i] == 0 ) {
-                        numberRatesWithNoPackets++;
-                    }
-                }
-            }
-        }
-
-        unsigned int numberFlows = 0;
-        // It calculates the number of flows
-        if( injType == 0 ) { // == CONSTANT
-            numberFlows = numberOfDestinations;
+    unsigned int numberFlows;
+    // It calculates the number of flows
+    if(injType == 0) { // == CONSTANT
+        numberFlows = 1;
+    } else {
+        if( tp->getProbabilityFunction() == 2 ) { // == PARETO
+            numberFlows = 1;
         } else {
-            if( tp->getProbabilityFunction() == 2) { // == PARETO
-                numberFlows = numberOfDestinations;
-            } else {
-                numberFlows = numberOfDestinations * (tp->getNumberRates() - numberRatesWithNoPackets);
-            }
+            numberFlows = tp->getNumberRates() - numberRatesWithNoPackets;
         }
+    }
 
+    //////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
+    /// PART VI(a) - CBR TRAFFIC GENERATION
+    //////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
+    if(injType == 0) { // == CONSTANT
+        tp->setIdleTime( this->calculateIdleBasedOnPayloadLength(tp->getPayloadLength(),
+                                                                 tp->getRequiredBandwidth()) );
 
-        // It generates the flows
-        if( numberFlows != 0 ) {
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            /// PART VI.2(a) - CBR TRAFFIC GENERATION FOR MULTIPLE DESTINATION DISTRIBUTIONS
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            if( injType == 0 ) { // == CONSTANT
-// TODO alterado
-// Alterado sp->getChannelBandwidth(),
-                tp->setIdleTime( this->calculateIdleBasedOnPayloadLength( tp->getPayloadLength(),
-                                                                          sop->channelBandwidth,
-                                                                          tp->getRequiredBandwidth()) );
+        // Non-uniform distribution type 1: the number of packets to be sent decreases with
+        // the distance between the source and the destination nodes
+        if(spatialDistribution == 7) { // Non-uniform
+            pck2Send = tp->getPackageToSend()/2; // TODO Identificar se é vizinho ou não
+        } else {
+            pck2Send = tp->getPackageToSend();
+        }
+        requiredBw = tp->getRequiredBandwidth();
 
-                for( unsigned int zDest = 0; zDest < sp->getZSize(); zDest++ ) {
-                    for( unsigned int yDest = 0; yDest < sp->getYSize(); yDest++ ) {
-                        for( unsigned int xDest = 0; xDest < sp->getXSize(); xDest++ ) {
-                            bool destOk= false;
-                            // It determines if the destination node is OK
-                            switch( spatialDistribution ) {
-                                case 6: // UNIFORM
-                                case 7: // NON_UNIFORM_1
-                                case 8: // NON_UNIFORM_2
-                                    break;
-// TODO verificar
-//                                    if( (xDest != tp->getSourceNodeX()) ||
-//                                        (yDest != tp->getSourceNodeY()) ||
-//                                        (zDest != tp->getSourceNodeZ()) ) {
-//                                        destOk = true;
-//                                    } else {
-//                                        destOk = false;
-//                                    }
-//                                    break;
-//                                case 9: // LOCAL
-//                                    if( (abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) ) ) == 1) {
-//                                        destOk = true;
-//                                    } else {
-//                                        destOk = false;
-//                                    }
-//                                    break;
-                            }
-
-                            if(destOk) {
-//                                tp->setDestinationNodeX(xDest);
-//                                tp->setDestinationNodeY(yDest);
-//                                tp->setDestinationNodeZ(zDest);
-                                unsigned int xy;
-                                unsigned long int pck2SendNonUniform;
-                                switch ( spatialDistribution ) {
-                                // Non-uniform distribution type 1: the number of packets to be sent decreases with
-                                // the distance between the source and the destination nodes
-//                                    case 7 : // NON_UNIFORM_1
-//                                        xy = abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) );
-//                                        pck2SendNonUniform = (unsigned long int) ( tp->getPackageToSend() / pow(2,xy-1));
-//                                        pck2Send = pck2SendNonUniform;
-//                                        break;
-//                                // Non-uniform distribution type 2: the number of packets to be sent to the nodes outside of the
-//                                // neighbourhood is the half of the number of packets to be sent to the neighbour nodes
-//                                    case 8: // NON_UNIFORM_2
-//                                        xy = abs( long(xDest-tp->getSourceNodeX()) ) + abs( long(yDest-tp->getSourceNodeY()) );
-//                                        if (xy == 1) {
-//                                            pck2SendNonUniform = tp->getPackageToSend();
-//                                        } else {
-//                                            pck2SendNonUniform = (unsigned long int) (tp->getPackageToSend() / 2);
-//                                        }
-
-//                                        pck2Send = pck2SendNonUniform;
-//                                        break;
-
-                                // For Uniform and Local, the number of packets is the same to all the destination nodes
-                                    default :
-                                        pck2Send = tp->getPackageToSend();
-                                        break;
-                                }
-                                requiredBw = tp->getRequiredBandwidth();
-                                this->writeFlow(tp);
-                            }
-
-                        }
-                    }
-                }
+        this->writeFlow(tp);
+    } else {
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        /// PART VI(b) - VBR TRAFFIC GENERATION
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        if( tp->getProbabilityFunction() == 2 ) { // == PARETO
+            this->requiredBw = 0.0;
+            if( spatialDistribution == 7 ) { // Non-uniform
+                this->pck2Send = tp->getPackageToSend() / 2;
             } else {
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-            /// PART VI.2(b) - VBR TRAFFIC GENERATION FOR MULTIPLE DESTINATION DISTRIBUTIONS
-            ////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////
-                if( tp->getProbabilityFunction() == 2 ) { // == PARETO
-                    for( unsigned int zDest = 0; zDest < sp->getZSize(); zDest++ ) {
-                        for( unsigned int yDest = 0; yDest < sp->getYSize(); yDest++ ) {
-                            for( unsigned int xDest = 0; xDest < sp->getXSize(); xDest++ ) {
-// TODO verificar
-//                                tp->setDestinationNodeX(xDest);
-//                                tp->setDestinationNodeY(yDest);
-//                                tp->setDestinationNodeZ(zDest);
-//                                if( (xDest != tp->getSourceNodeX()) ||
-//                                    (yDest != tp->getSourceNodeY()) ||
-//                                    (zDest != tp->getSourceNodeZ()) ) {
-                                    this->requiredBw = 0.0;
-                                    this->pck2Send = tp->getPackageToSend();
-                                    this->writeFlow(tp,tp->getInjectionType());
-                                //}
+                this->pck2Send = tp->getPackageToSend();
+            }
+            this->writeFlow( tp, tp->getInjectionType() );
+        } else {
+            for( unsigned int i = 0; i < tp->getNumberRates() ; i++ ) {
+                if( tp->packageToSendArray[i] != 0 ) {
+                    unsigned int burstSize = 0;
+                    switch( injType ) {
+                        case 1: // VAR_IDL_FIX_PCK // It determines the number of idle cycles
+                            tp->setIdleTime(this->calculateIdleBasedOnPayloadLength( tp->getPayloadLength(),
+                                                                                     tp->requiredBandwidthArray[i] ) );
+                            break;
+                        case 2: // VAR_PCK_FIX_IDL // It determines the payload length
+                            tp->setPayloadLength( this->calculatePayloadLengthBasedOnIdle( tp->getIdleTime(),
+                                                                                           tp->requiredBandwidthArray[i]) );
+                            if(tp->getPayloadLength() < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH) {
+                                tp->setPayloadLength( DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH );
                             }
-                        }
-                    }
-                } else { // NORMAL and EXPONENTIAL
-                    for(unsigned int zDest = 0; zDest < sp->getZSize(); zDest++) {
-                        for( unsigned int yDest = 0; yDest < sp->getYSize(); yDest++ ) {
-                            for( unsigned int xDest = 0; xDest < sp->getXSize(); xDest++ ) {
-                                bool destOk = false;
-                                // It determines if the destination node is OK
-// TODO verificar
-//                                switch (spatialDistribution) {
-//                                    case 6: // UNIFORM
-//                                    case 7: // NON_UNIFORM_1
-//                                    case 8: // NON_UNIFORM_2:
-//                                        if ((xDest!=tp->getSourceNodeX()) ||
-//                                            (yDest!=tp->getSourceNodeY()) ||
-//                                            (zDest!=tp->getSourceNodeZ()) ) {
-//                                            destOk = true;
-//                                        } else {
-//                                            destOk = false;
-//                                        }
-//                                        break;
-//                                    case 9: // LOCAL
-//                                        if ((abs( long(xDest-tp->getSourceNodeX()))+abs(long(yDest-tp->getSourceNodeY()))) == 1) {
-//                                            destOk = true;
-//                                        } else {
-//                                            destOk = false;
-//                                        }
-//                                        break;
-//                                }
+                            break;
+                        case 3: // VAR_PCK_FIX_IAT // It determines the payload length and the number of idle cycles
+                            tp->setPayloadLength( this->calculatePayloadLengthBasedOnInterArrival(tp->getIntervalTime(),
+                                                                                                  tp->requiredBandwidthArray[i]) );
+                            if( tp->getPayloadLength() < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH ) {
+                                tp->setPayloadLength( DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH );
+                            }
 
-                                if (destOk) {
-//                                    tp->setDestinationNodeX(xDest);
-//                                    tp->setDestinationNodeY(yDest);
-//                                    tp->setDestinationNodeZ(zDest);
-                                    for (unsigned int i = 0; i < tp->getNumberRates(); i++) {
-                                        if (tp->packageToSendArray[i] != 0) {
-                                            unsigned int burstSize = 0;
-                                            switch(injType) {
-                                                case 1: // VAR_IDL_FIX_PCK  // It determines the number of idle cycles
-                                                    tp->setIdleTime(this->calculateIdleBasedOnPayloadLength( tp->getPayloadLength(),
-                                                                                                             1.0, // channelBw
-                                                                                                             tp->requiredBandwidthArray[i]) );
-                                                    break;
-                                                case 2: // VAR_PCK_FIX_IDL:  // It determines the payload length
-                                                    tp->setPayloadLength( this->calculatePayloadLengthBasedOnIdle(
-                                                                              tp->getIdleTime(),
-                                                                              1.0, // channelBw
-                                                                              tp->requiredBandwidthArray[i]) );
+                            if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
+                                continue;
+                            }
+                            tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
+                            break;
+                        case 4: // VAR_IAT_FIX_PCK // It determines the inter-arrival time and the number if idle cycles
+                            tp->setIntervalTime( this->calculateInterArrivalBasedOnPayloadLength(tp->getPayloadLength(),
+                                                                                                 tp->requiredBandwidthArray[i]) );
 
-// TODO alterado
-//                                                    if (tp->getPayloadLength() < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH) {
-//                                                        tp->setPayloadLength( DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH );
-//                                                    }
-                                                    if (tp->getPayloadLength() < 1) {
-                                                        tp->setPayloadLength( 1 );
-                                                    }
-                                                    break;
-                                                case 3: // VAR_PCK_FIX_IAT:  // It determines the payload length and the number of idle cycles
-                                                    tp->setPayloadLength( this->calculatePayloadLengthBasedOnInterArrival(
-                                                                              tp->getIntervalTime(),
-                                                                              1.0, // channelBw
-                                                                              tp->requiredBandwidthArray[i]) );
-// TODO alterado
-//                                                    if (tp->getPayloadLength() < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH) {
-//                                                        tp->setPayloadLength( DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH );
-//                                                    }
-                                                    if (tp->getPayloadLength() < 1) {
-                                                        tp->setPayloadLength( 1 );
-                                                    }
-
-                                                    // Não gerar o fluxo se a condição abaixo for verdadeira
-                                                    if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
-                                                        continue;
-                                                    }
-
-                                                    tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
-                                                    break;
-                                                case 4: //  VAR_IAT_FIX_PCK:  // It determines the inter-arrival time and the number of idle cycles
-                                                    tp->setIntervalTime( this->calculateInterArrivalBasedOnPayloadLength(
-                                                                             tp->getPayloadLength(),
-                                                                             1.0, // ChannelBw
-                                                                             tp->requiredBandwidthArray[i]) );
-
-                                                    if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
-                                                        // Não gera fluxo
-                                                        continue;
-                                                    }
-                                                    tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength()*numberCyclesPerFlit) );
-                                                    break;
-                                                case 5: // VAR_BST_FIX_IAT:
-                                                    // It determines the burst size and the size of the last packet
-                                                    // It determines the burst size. If it does not have a decimal part, then
-                                                    // last_payload_lengh = payload_length. If it has a decimal part, then the
-                                                    // burst size is incremented by one packet and the length of this last
-                                                    // packet is determined. Depending on the required bandwidth, the length of
-                                                    // the payload of the last packet can equal 0, 1 or a number <= payload_length
-                                                    float tmp = ((tp->requiredBandwidthArray[i]*tp->getIntervalTime()) /
-                                                                 ((float)((tp->getPayloadLength()) * numberCyclesPerFlit)));
-
-                                                    if (((unsigned int)(100*tmp)%100) == 0) { // If decimal part is 0
-                                                        burstSize = (unsigned int) tmp;
-                                                        lastPayloadLength = tp->getPayloadLength();
-                                                    } else {
-                                                        burstSize = (unsigned int) (roundf((float)(tmp+0.5)));
-                                                        tmp = (trunc((fmod( tp->requiredBandwidthArray[i]*tp->getIntervalTime(),
-                                                                           (float) (tp->getPayloadLength()) * numberCyclesPerFlit))/
-                                                                           numberCyclesPerFlit));
-                                                        if (tmp < 1) {
-                                                            lastPayloadLength = 0;
-                                                        } else {
-// TODO alterado
-//                                                            if (tmp < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH) {
-//                                                                lastPayloadLength = DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH;
-                                                            if (tmp < 0) {
-                                                                lastPayloadLength = 0;
-                                                            } else {
-                                                                lastPayloadLength = (unsigned int) tmp;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if( lastPayloadLength == 0 ) {
-                                                        if( tp->getIntervalTime() < numberCyclesPerFlit * ((burstSize-1)*(tp->getPayloadLength())) ) {
-                                                            // Não gera o fluxo
-                                                            continue;
-                                                        }
-                                                        tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
-                                                                         ((burstSize-1)*(tp->getPayloadLength())) );
-                                                    } else {
-                                                        if( tp->getIntervalTime() < numberCyclesPerFlit * (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) ) {
-                                                            // Não gera o fluxo
-                                                            continue;
-                                                        }
-                                                        tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
-                                                                         (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) );
-                                                    }
-                                                    break;
-
-                                            }
-
-                                            unsigned long int pck2SendNonUnif;
-                                            unsigned int xy;
-                                            switch (spatialDistribution) {
-                                            // Non-uniform distribution type 1: the number of packets to be sent decreases with
-                                            // the distance between the source and the destination nodes
-                                                case 7: // NON_UNIFORM_1 :
-                                                break;
-// TODO verificar
-//                                                    xy = abs(long(xDest-tp->getSourceNodeX())) + abs(long(yDest-tp->getSourceNodeY()));
-//                                                    pck2SendNonUnif = (unsigned long int) (tp->packageToSendArray[i] / pow(2,xy-1));
-
-//                                                    pck2Send = pck2SendNonUnif;
-//                                                    break;
-//                                            // Non-uniform distribution type 2: the number of packets to be sent to the nodes outside of the
-//                                            // neighbourhood is the half of the number of packets to be sent to the neighbour nodes
-//                                                case 8: // NON_UNIFORM_2 :
-//                                                    xy = abs(long(xDest-tp->getSourceNodeX())) + abs(long(yDest-tp->getSourceNodeY()));
-//                                                    if (xy==1) {
-//                                                        pck2SendNonUnif = tp->packageToSendArray[i];
-//                                                    } else {
-//                                                        pck2SendNonUnif = (unsigned long int) (tp->packageToSendArray[i] / 2);
-//                                                    }
-//                                                    pck2Send = pck2SendNonUnif;
-//                                                    break;
-                                            // For Uniform and Local, the number of packets is the same to all the destination nodes
-                                                default :
-                                                    pck2Send = tp->packageToSendArray[i];
-                                                    break;
-                                            }
-// TODO alterado
-//                                            requiredBw = tp->requiredBandwidthArray[i]*sp->getChannelBandwidth();
-                                            requiredBw = tp->requiredBandwidthArray[i]*sop->channelBandwidth;
-                                            this->writeFlow(tp,0,burstSize);
-                                        }
+                            if( tp->getIntervalTime() < (tp->getPayloadLength() * numberCyclesPerFlit) ) {
+                                // Não gera fluxo
+                                continue;
+                            }
+                            tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
+                            break;
+                        case 5:{ // VAR_BST_FIX_IAT
+                            // It determines the burst size and the size of the last packet
+                            // It determines the burst size. If it does not have a decimal part, then
+                            // last_payload_lengh = payload_length. If it has a decimal part, then the
+                            // burst size is incremented by one packet and the length of this last
+                            // packet is determined. Depending on the required bandwidth, the length of
+                            // the payload of the last packet can equal 0, 1 or a number <= payload_length
+                            float tmp;
+                            tmp = ((tp->requiredBandwidthArray[i]*tp->getIntervalTime()) /
+                                   ((float)((tp->getPayloadLength()*numberCyclesPerFlit))));
+                            if(((unsigned int)(100*tmp)%100) == 0) { // If decimal part is 0
+                                burstSize = (unsigned int) tmp;
+                                lastPayloadLength = tp->getPayloadLength();
+                            } else {
+                                burstSize = (unsigned int) (round((float) (tmp+0.5)));
+                                tmp = (trunc((fmod( tp->requiredBandwidthArray[i] * tp->getIntervalTime(),
+                                                    (float) (tp->getPayloadLength())*numberCyclesPerFlit ))/numberCyclesPerFlit));
+                                if(tmp < 1) {
+                                    lastPayloadLength = 0;
+                                } else {
+                                    if(tmp < DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH) {
+                                        lastPayloadLength = DefaultValuesTrafficGeneration::MIN_PAYLOAD_LENGTH;
+                                    } else {
+                                        lastPayloadLength = (unsigned int) tmp;
                                     }
                                 }
                             }
+                            if( lastPayloadLength == 0 ) {
+                                if( tp->getIntervalTime() < numberCyclesPerFlit * ((burstSize-1)*(tp->getPayloadLength())) ) {
+                                    // Não gera o fluxo
+                                    continue;
+                                }
+                                tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
+                                                 ((burstSize-1)*(tp->getPayloadLength())) );
+                            } else {
+                                if( tp->getIntervalTime() < numberCyclesPerFlit * (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) ) {
+                                    // Não gera o fluxo
+                                    continue;
+                                }
+                                tp->setIdleTime( tp->getIntervalTime() - numberCyclesPerFlit *
+                                                 (((burstSize-1)*(tp->getPayloadLength())) + (lastPayloadLength)) );
+                            }
+                            break;
                         }
                     }
+                    requiredBw = tp->requiredBandwidthArray[i] * channelBW;
+                    this->pck2Send = tp->packageToSendArray[i];
+                    this->writeFlow( tp,0,burstSize );
                 }
             }
         }
@@ -973,31 +535,15 @@ void TrafficModelGenerator::generateTrafficModel() {
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateTrafficModel" << std::endl;
 #endif
 
-    unsigned int xSize = this->sp->getXSize();
-    unsigned int ySize = this->sp->getYSize();
-    unsigned int zSize = this->sp->getZSize();
-
-    for(unsigned int x = 0; x < xSize; x++) {
-        for(unsigned int y = 0; y < ySize; y++) {
-            for(unsigned int z = 0; z < zSize; z++) {
-                // TODO verificar
-                            TrafficParameters* tp = 0; //nodo->getTrafficPattern(k);
-                            this->numTrafficPatter = 0;//k;
-                            //////////////////////////////////////////////////////////////////////////////
-                            //////////////////////////////////////////////////////////////////////////////
-                            /// PART VI.1 - TRAFFIC GENERATION FOR SINGLE DESTINATION DISTRIBUTIONS
-                            //////////////////////////////////////////////////////////////////////////////
-                            //////////////////////////////////////////////////////////////////////////////
-                            this->generateSingleDestinationDistributions(tp);
-                            //////////////////////////////////////////////////////////////////////////////
-                            //////////////////////////////////////////////////////////////////////////////
-                            /// PART VI.2 - TRAFFIC GENERATION FOR MULTIPLE DESTINATION DISTRIBUTIONS
-                            //////////////////////////////////////////////////////////////////////////////
-                            //////////////////////////////////////////////////////////////////////////////
-                            this->generateMultipleDestinationDistributions(tp);
-
-            }
-        }
+    for(unsigned int trafficIndex = 0; trafficIndex < countTrafficConfigured; trafficIndex++) {
+        TrafficParameters* tp = &traffics[trafficIndex];
+        this->flowId = 0; // NOTE Here set the flowId | threadId
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        /// PART VI - TRAFFIC GENERATION FOR SINGLE DESTINATION DISTRIBUTIONS
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        this->generateFlow(tp);
     }
 
 }
@@ -1014,7 +560,9 @@ void TrafficModelGenerator::generateTraffic(const char *diretorio) throw (const 
     //////////////////////////////////////////////////////////////////////////////
     // It determines the destination node for some spatial distributions	and
     // checks if it is valid (different of the source node and inside the network)
-    this->validateTrafficAddresses();
+
+    // No longer necessary - since version 2.0 - address validation on MainWindow
+
 
     //////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
@@ -1036,7 +584,7 @@ void TrafficModelGenerator::generateTraffic(const char *diretorio) throw (const 
     //////////////////////////////////////////////////////////////////////////////
     // It calculates the number of cycles per flit for the used flow control
     // technique
-    this->determineFlowControl();
+//    No longer necessary - since version 2.0 - the control sends this information
 
     //////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
@@ -1074,7 +622,7 @@ void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::createFileTrafficConfiguration" << std::endl;
 #endif
 
-    FILE* arquivo;
+    FILE* outFile;
 
     std::stringstream ss;
     ss << diretorio;
@@ -1083,53 +631,40 @@ void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio
 
     std::string arqDir = ss.str();
 
-    if( (arquivo = fopen(arqDir.c_str(),"wt")) == NULL ) {
+    if( (outFile = fopen(arqDir.c_str(),"wt")) == NULL ) {
         char* buffer = new char[512];
         sprintf(buffer,"ERROR: Impossible to create file: %s",arqDir.c_str());
         throw buffer;
     }
 
-    for(unsigned int z = 0; z < sp->getZSize(); z++) {
-        for( unsigned int y = 0; y < sp->getYSize(); y++ ) {
-            for( unsigned int x = 0; x < sp->getXSize(); x++ ) {
-// TODO verificar
-                unsigned int id = 0; // COORDINATE_3D_TO_ID(x,y,z,
-                                     //                 sp->getXSize(),
-                                     //                 sp->getYSize());
-//                        COORDINATE_TO_ID(x,y,sp->getXSize());
-                fprintf(arquivo,"tg_%u\n",id);
-// TODO verificar
-//                Node* no = gpt->getNode(id);
-//                if( no != NULL ) {
-//                    fprintf(arquivo,"%u\n",no->getNumberFlows());
-//                    fprintf(arquivo,"%s",no->fluxos.c_str());
-//                } else {
-//                    fprintf(arquivo,"0\n");
-//                }
-
-//                fprintf(arquivo,"\n\n");
-
-            }
+    for(unsigned int source = 0; source < numElements; source++) {
+        fprintf(outFile,"tg_%u\n",source);
+        fprintf(outFile,"%d\n",flowsStr[source].size());
+        for( int flowIndex = 0; flowIndex < flowsStr[source].size(); flowIndex++ ) {
+            QString flow = flowsStr[source].at(flowIndex);
+            fprintf(outFile,"%s",flow.toStdString().c_str());
         }
-    }
-    fprintf(arquivo,"\n\n// Parameters");
-    fprintf(arquivo,"\n 0  type");
-    fprintf(arquivo,"\n 1  destination");
-    fprintf(arquivo,"\n 2  flow_id");
-    fprintf(arquivo,"\n 3  traffic_class");
-    fprintf(arquivo,"\n 4  switching_type");
-    fprintf(arquivo,"\n 5  pck_2send");
-    fprintf(arquivo,"\n 6  deadline");
-    fprintf(arquivo,"\n 7  required_bw");
-    fprintf(arquivo,"\n 8  payload_length");
-    fprintf(arquivo,"\n 9  idle_cycles");
-    fprintf(arquivo,"\n10  iat");
-    fprintf(arquivo,"\n11  burst_size");
-    fprintf(arquivo,"\n12  last_payload_length");
-    fprintf(arquivo,"\n13  alfa_on");
-    fprintf(arquivo,"\n14  alfa_off");
 
-    fclose(arquivo);
+        fprintf(outFile,"\n\n");
+    }
+    fprintf(outFile,"\n\n// Parameters");
+    fprintf(outFile,"\n 0  Type");
+    fprintf(outFile,"\n 1  Destination");
+    fprintf(outFile,"\n 2  Flow Id ");
+    fprintf(outFile,"\n 3  Traffic Class");
+    fprintf(outFile,"\n 4  Switching Type");
+    fprintf(outFile,"\n 5  Package to send");
+    fprintf(outFile,"\n 6  Deadline");
+    fprintf(outFile,"\n 7  Required bandwidth");
+    fprintf(outFile,"\n 8  Payload Length");
+    fprintf(outFile,"\n 9  Idle Cycles");
+    fprintf(outFile,"\n10  Inter-arrival");
+    fprintf(outFile,"\n11  Burst Size");
+    fprintf(outFile,"\n12  Last Payload Length");
+    fprintf(outFile,"\n13  Pareto - Alfa On");
+    fprintf(outFile,"\n14  Pareto - Alfa Off");
+
+    fclose(outFile);
 }
 
 void TrafficModelGenerator::writeFlow(TrafficParameters *tp, unsigned int type, unsigned int burstSize) {
@@ -1138,21 +673,11 @@ void TrafficModelGenerator::writeFlow(TrafficParameters *tp, unsigned int type, 
 #endif
 
     char str[512];
-// TODO verificar
-    unsigned int id = 0;
-//    COORDINATE_3D_TO_ID(tp->getDestinationNodeX(),
-//                                          tp->getDestinationNodeY(),
-//                                          tp->getDestinationNodeZ(),
-//                                          sp->getXSize(),
-//                                          sp->getYSize());
-//            COORDINATE_TO_ID(tp->getDestinationNodeX(),tp->getDestinationNodeY(),sp->getXSize());
 
     sprintf(str,"%u  %u  %u  %u  %u  %lu  %lu  %.4f  %u  %u  %u  %u  %u  %.2f  %.2f  \n",
             type,                       // Type = 0 when not pareto distribution, TypeOfInjection when pareto distribution
-//            tp->getDestinationNodeX(),  // x_dest
-//            tp->getDestinationNodeY(),  // y_dest
-            id,
-            this->numTrafficPatter,     // flow_id
+            tp->getDestination(),       // Destination
+            this->flowId,               // flow_id
             tp->getTrafficClass(),      // traffic_class
             tp->getSwitchingTechnique(),// switching_type
             this->pck2Send,             // pck_2send
@@ -1172,11 +697,8 @@ void TrafficModelGenerator::writeFlow(TrafficParameters *tp, unsigned int type, 
         }
     }
 
-    std::stringstream ss;
-    ss << str;
-// TODO verificar
-//    nodeTemp->fluxos.append(ss.str());
-//    nodeTemp->incrementNumberFlows();
+    QString flow = QString::fromStdString( str );
+    flowsStr[tp->getSource()].append(flow);
 }
 
 

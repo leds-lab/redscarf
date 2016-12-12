@@ -81,6 +81,8 @@ public:
     QString toString() const;
     bool equals(TrafficParameters*) const;
 
+    bool isValidForSystem(unsigned int numElements);
+
 };
 
 Q_DECLARE_METATYPE( TrafficParameters )

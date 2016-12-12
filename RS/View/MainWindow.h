@@ -40,8 +40,9 @@
 class QTranslator;
 class AnalysisOptions;
 class SystemParameters;
-class Experiment;
 class SystemOperation;
+class SystemConfiguration;
+class Experiment;
 class EnvironmentConfiguration;
 
 namespace Ui {
@@ -64,6 +65,8 @@ private:
     void configureToolBar();
     void configureWidgets();
 
+    SystemConfiguration getConfiguration(int index) const;
+
     bool alreadyExists(SystemParameters* );
 
     enum TypeAnalysis { GraphicSelected,LatencyDistribution, Report };
@@ -77,10 +80,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void configureLanguages(EnvironmentConfiguration* conf);
 
-    void setPatternState(unsigned int patternNum,bool state);
     unsigned int saveChanges(QString title,QString msg);
     QString selectSystemFolder(QString msgSelect);
-    void openFileError(QString error);
+    void showOpenFileError(QString error);
     void updateView(QList<Experiment*>,SystemOperation*);
     void enableRun();
 
@@ -88,14 +90,19 @@ public:
     void updateProgressBar(int value);
 
     void clearConsole();
-    void setAnalysisOptionsEnabled(bool enabled);
 
+    void setAnalysisOptionsEnabled(bool enabled);
     void setActionSaveSimulationEnabled(bool enabled);
     void setActionGenerateCSVEnabled(bool enabled);
     void setOptionsSimulationEnabled(bool enabled);
 
     QString dialogSaveFile(QString caption,QString filter,QString currentDir=QString());
     QString dialogLoadFile(QString caption,QString filter,QString currentDir=QString());
+
+    SystemConfiguration getSelectedConfiguration() const;
+    QList<SystemConfiguration> getAllConfiguration() const;
+    QList<float> getOperationFrequencies() const;
+    QList<Experiment> getAllExperiments() const;
 
     ~MainWindow();
 signals:

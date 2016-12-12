@@ -103,12 +103,10 @@ private:
     bool saveConfiguration();
     bool saveAsConfiguration();
     bool loadConfiguration();
-//    bool clearTrafficPatterns();
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 
     bool inputsOk();
-    unsigned int calcAmountExperimentsExecutions();
 
     void finishSimulation(FinishCode code);
 

@@ -153,3 +153,12 @@ QString TrafficParameters::getFormattedString() const {
 
     return formatted;
 }
+
+bool TrafficParameters::isValidForSystem(unsigned int numElements) {
+
+    if( source < numElements && destination < numElements && source != destination) {
+        return true;
+    }
+
+    return false;
+}

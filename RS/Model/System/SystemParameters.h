@@ -22,7 +22,7 @@ public:
     inline void setDataWidth(unsigned short width) { this->dataWidth = width; }
     // Get
     inline TopologyType getTopologyType() { return this->type; }
-    inline unsigned short getNumberElements() {
+    inline unsigned short getNumberElements() const {
         switch(type) {
             case NonOrthogonal:
                 return numElements;

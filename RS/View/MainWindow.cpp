@@ -40,8 +40,10 @@
 #include "Model/System/Defines.h"
 #include "Model/System/SystemDefines.h"
 #include "Model/System/Experiment.h"
-#include "Model/System/SystemOperation.h"
 #include "Model/System/SystemParameters.h"
+#include "Model/System/SystemOperation.h"
+#include "Model/System/SystemConfiguration.h"
+#include "Model/Traffic/TrafficParameters.h"
 
 #include "Control/EnvironmentConfiguration.h"
 
@@ -54,11 +56,12 @@
 #include <QTextEdit>
 #include <QSplitter>
 #include <QDockWidget>
-
 #include <QTranslator>
 #include <QLibraryInfo>
-
 #include <QSettings>
+
+
+#define MAX_EXPERIMENTS 5
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -601,7 +604,7 @@ void MainWindow::clearConsole() {
     this->ui->console->clear();
 }
 
-void MainWindow::openFileError(QString error) {
+void MainWindow::showOpenFileError(QString error) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::openFileError" << std::endl;
 #endif
@@ -850,6 +853,240 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
     return gop;
 }
 
+SystemConfiguration MainWindow::getConfiguration(int index) const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getConfiguration" << std::endl;
+#endif
+    if( index < ui->listConf->count() ) {
+        QListWidgetItem* item = ui->listConf->item(index);
+        if( item != NULL ) {
+            QVariant sysParameterVar = item->data(Qt::UserRole);
+            SystemParameters sysParameter = sysParameterVar.value<SystemParameters>();
+            QList<QVariant> trafficParameterListVar = item->data(Qt::UserRole+1).toList();
+            QList<TrafficParameters> trafficList;
+            for( int i = 0; i < trafficParameterListVar.size(); i++) {
+                QVariant trafficVar = trafficParameterListVar.at(i);
+                TrafficParameters trafficConf = trafficVar.value<TrafficParameters>();
+                if( trafficConf.isValidForSystem( sysParameter.getNumberElements() ) ) {
+                    trafficList.append(trafficConf);
+                }
+            }
+            return SystemConfiguration(sysParameter,trafficList);
+        }
+    }
+
+    return SystemConfiguration(); // Return an invalid conf - verify with isValid()
+
+}
+
+SystemConfiguration MainWindow::getSelectedConfiguration() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getSelectedConfiguration" << std::endl;
+#endif
+    return this->getConfiguration( ui->listConf->currentRow() );
+//    QList<QListWidgetItem *> confSelected = ui->listConf->selectedItems();
+
+//    if(confSelected.size()) {
+//        if(confSelected.size() > 1) {
+//        }
+//    }
+
+}
+
+
+QList<SystemConfiguration> MainWindow::getAllConfiguration() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getAllConfiguration" << std::endl;
+#endif
+    QList<SystemConfiguration> configurations;
+    for( int i = 0; i < ui->listConf->count(); i++ ) {
+        SystemConfiguration sysConf = this->getConfiguration(i);
+        if( sysConf.isValid() && sysConf.hasTraffic() ) {
+            configurations.append(sysConf);
+        }
+    }
+    return configurations;
+
+}
+
+QList<float> MainWindow::getOperationFrequencies() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getOperationFrequencies" << std::endl;
+#endif
+    float firstFClk = ui->doubleSpinInChannelFclkRange->value();
+    float lastFClk = ui->doubleSpinInChannelFclkRange_2->value();
+    int stepType = ui->comboInStep->currentIndex();
+    float step = ui->doubleSpinInStep->value();
+
+    float fClk = firstFClk;
+    float previousFClk = fClk;
+
+    unsigned int numExecutions = 0;
+
+    if(step == 0) {
+        numExecutions = 1u;
+    } else {
+        switch(stepType) {
+            case 0: { // INC
+                numExecutions = (unsigned int) (std::abs(lastFClk-firstFClk)) / std::abs(step) + 1;
+                if((firstFClk+step*numExecutions) != lastFClk ){
+                    if((firstFClk+step*(numExecutions-1)) !=  lastFClk) {
+                        numExecutions++;
+                    }
+                }
+                break;
+            }
+            case 1: { // EXP
+                int i = 0;
+                numExecutions = 1;
+                unsigned int tmpInt;
+                if(firstFClk > lastFClk) {
+                    while(fClk >= lastFClk) {
+                        previousFClk = fClk;
+                        tmpInt = (unsigned int) (firstFClk/(exp(i*step))*10.f);
+                        fClk = ((float) tmpInt)/10.f;
+                        if((fClk >= lastFClk) && (fClk != previousFClk) ){
+                            numExecutions++;
+                        }
+                        i++;
+                    }
+                } else if(firstFClk < lastFClk) {
+                    while(fClk <= lastFClk) {
+                        previousFClk = fClk;
+                        tmpInt = (unsigned int) (firstFClk/(exp(i*step))*10.f);
+                        fClk = ((float) tmpInt)/10.f;
+                        if((fClk <= lastFClk) && (fClk != previousFClk)){
+                            numExecutions++;
+                        }
+                        i++;
+                    }
+                }
+                break;
+            }
+        }
+
+    }
+
+    QList<float> freqs;
+
+    fClk = firstFClk;
+    previousFClk = fClk;
+    /*
+     * Calculating
+     */
+    int aux = 0;
+    for(unsigned int i = 0; i < numExecutions; i++) {
+        freqs.append(fClk);
+        if( stepType == 0 ) { // Increment (or decrement)
+            fClk += step;
+            if( (firstFClk > lastFClk )
+                    && (fClk < lastFClk) ) {
+                fClk = lastFClk;
+            }
+            if( (firstFClk < lastFClk)
+                    && (fClk > lastFClk) ) {
+                fClk = lastFClk;
+            }
+        } else { // Exponential
+            do {
+                previousFClk = fClk;
+                int tmp = (unsigned int) (firstFClk / ( exp(aux*step) )*10.f );
+                fClk = ((float) tmp) / 10.0f;
+                aux++;
+            } while (fClk == previousFClk);
+        }
+    }
+    return freqs;
+}
+
+QList<Experiment> MainWindow::getAllExperiments() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getActiveExperiments" << std::endl;
+#endif
+
+    QList<Experiment> experiments;
+
+    for( int i = 0; i < MAX_EXPERIMENTS; i++ ) {
+        Experiment e;
+        bool active = false;
+        QComboBox* topology = NULL;
+        QComboBox* routing = NULL;
+        QComboBox* flowControl = NULL;
+        QComboBox* arbiter = NULL;
+        QComboBox* vcOption = NULL;
+        QSpinBox* inBuffers = NULL;
+        QSpinBox* outBuffers = NULL;
+        switch (i+1) {
+            case 1: {
+                active = true;
+                topology = ui->comboInTopologyExp1;
+                routing = ui->comboInRoutingAlgorithmExp1;
+                flowControl = ui->comboInSwitchingExp1;
+                arbiter = ui->comboInArbiterTypeExp1;
+                vcOption = ui->comboInVCExp1;
+                inBuffers = ui->spinInInputBuffersExp1;
+                outBuffers = ui->spinInOutputBuffersExp1;
+                break;
+            }
+            case 2: {
+                active = ui->checkInExperiment2->isChecked();
+                topology = ui->comboInTopologyExp2;
+                routing = ui->comboInRoutingAlgorithmExp2;
+                flowControl = ui->comboInSwitchingExp2;
+                arbiter = ui->comboInArbiterTypeExp2;
+                vcOption = ui->comboInVCExp2;
+                inBuffers = ui->spinInInputBuffersExp2;
+                outBuffers = ui->spinInOutputBuffersExp2;
+                break;
+            }
+            case 3: {
+                active = ui->checkInExperiment3->isChecked();
+                topology = ui->comboInTopologyExp3;
+                routing = ui->comboInRoutingAlgorithmExp3;
+                flowControl = ui->comboInSwitchingExp3;
+                arbiter = ui->comboInArbiterTypeExp3;
+                vcOption = ui->comboInVCExp3;
+                inBuffers = ui->spinInInputBuffersExp3;
+                outBuffers = ui->spinInOutputBuffersExp3;
+                break;
+            }
+            case 4: {
+                active = ui->checkInExperiment4->isChecked();
+                topology = ui->comboInTopologyExp4;
+                routing = ui->comboInRoutingAlgorithmExp4;
+                flowControl = ui->comboInSwitchingExp4;
+                arbiter = ui->comboInArbiterTypeExp4;
+                vcOption = ui->comboInVCExp4;
+                inBuffers = ui->spinInInputBuffersExp4;
+                outBuffers = ui->spinInOutputBuffersExp4;
+                break;
+            }
+            case 5: {
+                active = ui->checkInExperiment5->isChecked();
+                topology = ui->comboInTopologyExp5;
+                routing = ui->comboInRoutingAlgorithmExp5;
+                flowControl = ui->comboInSwitchingExp5;
+                arbiter = ui->comboInArbiterTypeExp5;
+                vcOption = ui->comboInVCExp5;
+                inBuffers = ui->spinInInputBuffersExp5;
+                outBuffers = ui->spinInOutputBuffersExp5;
+                break;
+            }
+            default:
+                break;
+        }
+        e.setActive(active);
+        e.setArbiterType(arbiter->currentIndex());
+        e.setFlowControl(flowControl->currentIndex());
+        e.setInputBufferSize(inBuffers->value());
+        e.setOutputBufferSize(outBuffers->value());
+        e.setRoutingAlgorithm(routing->currentIndex());
+        e.setTopology(topology->currentIndex());
+        e.setVCOption(vcOption->currentIndex());
+        experiments.append(e);
+    }
+    return experiments;
+}
 
 /////////////////// Slots ///////////////////
 

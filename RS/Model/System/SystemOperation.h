@@ -1,5 +1,5 @@
-#ifndef SYSTEMOPERATION_H
-#define SYSTEMOPERATION_H
+#ifndef __SYSTEMOPERATION_H__
+#define __SYSTEMOPERATION_H__
 
 
 class SystemOperation {
