@@ -28,7 +28,6 @@ private:
     float             alfaOff                      ;  // Parameter for Pareto ON-OFF (e.g. 1.25)
     unsigned int      numberRates                  ;  // Number of rates for variable injection rate
 
-
 public:
     float requiredBandwidthArray[100];
     unsigned long int packageToSendArray[100];
@@ -37,6 +36,7 @@ public:
 
     ///////////////// SETs /////////////////
     inline void setSpatialDistribution(SpatialDistribution::Distribution dist) { this->distribution   = dist               ; }
+    void setSpatialDistribution(int index);
     inline void setSource             (unsigned short source             ) { this->source             = source             ; }
     inline void setDestination        (unsigned short destination        ) { this->destination        = destination        ; }
     inline void setTrafficClass       (unsigned short trafficClass       ) { this->trafficClass       = trafficClass       ; }
@@ -75,6 +75,28 @@ public:
     inline unsigned int      getNumberRates        () const { return this->numberRates        ; }
     inline float             getRequiredBandwidthStdDeviation() const
         { return this->requiredBandwidthStdDeviation ; }
+
+    QString getSpatialDistributionName(SpatialDistribution::Distribution dist) const;
+    QString getSpatialDistributionName(int index) const;
+    QString getSpatialDistributionName() const;
+
+    QString getTrafficClassName() const;
+    QString getTrafficClassName(int index) const;
+
+    QString getInjectionTypeName() const;
+    QString getInjectionTypeName(int index) const;
+
+    QString getSwitchingTechniqueName() const;
+    QString getSwitchingTechniqueName(int index) const;
+
+    QString getProbabilityFunctionName(int index) const;
+    QString getProbabilityFunctionName() const;
+
+    int indexOfSpatialDistribution(QString distName) const;
+    int indexOfTrafficClass(QString name) const;
+    int indexOfInjectionType(QString name) const;
+    int indexOfSwitchingTechnique(QString name) const;
+    int indexOfProbabilityFunction(QString name) const;
 
     QString getFormattedString() const;
 

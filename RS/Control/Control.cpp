@@ -42,8 +42,6 @@
 #include <QDir>
 #include <QThread>
 #include <QThreadPool>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
 #include <QCloseEvent>
 #include <QElapsedTimer>
 #include <QTextStream>
@@ -53,7 +51,7 @@
 
 // Control
 #include "Control/Control.h"
-//#include "Control/XmlConfigParser.h"
+#include "Control/XmlConfigParser.h"
 #include "Control/SimulationPerformer.h"
 #include "Control/ThreadManager.h"
 #include "Control/WaveformViewer.h"
@@ -96,8 +94,6 @@ Control::Control(QObject *parent) :
 
     this->mainWindow = (MainWindow* ) parent;
 
-    this->systemParameters      = new SystemParameters();
-
     this->exes = new QList<SimulationPerformer *>();
     this->timer = new QElapsedTimer();
 
@@ -124,7 +120,6 @@ Control::~Control() {
     }
     exes->clear();
 
-    delete this->systemParameters;
     delete this->exes;
     delete this->timer;
     conf->writeSetup();
@@ -288,21 +283,17 @@ bool Control::loadConfiguration() {
         this->configFile = NULL;
         return false;
     }
-/*
-    /// Carregar
-    XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
-    parser->loadXML(configFile);
 
-    this->mainWindow->updateView( this->systemParameters->getXSize(),
-            this->systemParameters->getYSize(),
-                                  this->systemParameters->getZSize(),
-            this->systemParameters->getDataWidth(),
-            this->experimentManager,parser->getStopOption(),
-            parser->getStopTime_ns(),parser->getStopTime_cycles(),parser->getVcdOption(),
-            parser->getFClk1(),parser->getFClk2(),parser->getFClkStepType(), parser->getFClkStep() );
+    /// Carregar
+    XmlConfigParser* parser = new XmlConfigParser();
+    parser->loadXML(configFile);
+    QList<SystemConfiguration> sysConfs = parser->getSystemsConfigured();
+    QList<Experiment> exps = parser->getExperiments();
+    SystemOperation sysOp = parser->getSystemOperation();
+    this->mainWindow->updateView( sysConfs,exps,sysOp );
+
     delete parser;
 
-*/
     configFile->close();
     this->mainWindow->printConsole(trUtf8("Configuration file successfuly loaded"));
 
@@ -333,12 +324,19 @@ bool Control::saveConfiguration() {
         this->configFile = NULL;
         return false;
     }
-/*
-    /// Salvar
-    XmlConfigParser* parser = new XmlConfigParser(systemParameters,trafficPatternManager,experimentManager);
+
+    /// Save
+    QList<SystemConfiguration> sysConfigured = this->mainWindow->getAllConfiguration();
+    SystemOperation sysOp = this->mainWindow->getSystemOperation();
+    QList<Experiment> experiments = this->mainWindow->getAllExperiments();
+
+    XmlConfigParser* parser = new XmlConfigParser();
+    parser->setSystemsConfigured(sysConfigured);
+    parser->setExperiments(experiments);
+    parser->setSystemOperation(sysOp);
     parser->saveXML(configFile);
     delete parser;
-*/
+
     this->configFile->close();
     this->mainWindow->printConsole(trUtf8("Configuration file successfully saved"));
     return true;
@@ -448,15 +446,16 @@ bool Control::inputsOk() {
     }
 
 
-    // Verificar se os parâmetros FClk estão OK
+    // TODO Verificar se os parâmetros FClk estão OK
 //    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
 //    float fClkFirst = this->systemParameters->getfClkFirst();
 //    float fClkLast = this->systemParameters->getfClkLast();
 //    float fClkStep = this->systemParameters->getfClkStep();
-    unsigned int fClkStepType = this->systemOperation->fClkStepType;
-    float fClkFirst = this->systemOperation->fClkFirst;
-    float fClkLast = this->systemOperation->fClkLast;
-    float fClkStep = this->systemOperation->fClkStep;
+    SystemOperation sop = this->mainWindow->getSystemOperation();
+    unsigned int fClkStepType = sop.fClkStepType;
+    float fClkFirst = sop.fClkFirst;
+    float fClkLast = sop.fClkLast;
+    float fClkStep = sop.fClkStep;
 
     if ( fClkStepType == 0) {
         if (( fClkFirst <  fClkLast) && (fClkStep <  0)) {
@@ -829,9 +828,10 @@ void Control::viewWaveform() {
 #endif
 // TODO verificar
 //    if( this->vcdOption == 0 ) {
-    if( this->systemOperation->vcdOption == 0 ) {
-        this->mainWindow->printConsole(trUtf8("<font color=red>No VCD file available</font>"));
-    } else {
+
+//    if( this->systemOperation->vcdOption == 0 ) {
+//        this->mainWindow->printConsole(trUtf8("<font color=red>No VCD file available</font>"));
+//    } else {
         if( simulationFolders != NULL ) {
             int size = simulationFolders->size();
             if( size == 0 ) {
@@ -865,7 +865,7 @@ void Control::viewWaveform() {
         } else {
             this->mainWindow->printConsole( trUtf8("<font color=red>Impossible view waveform because there is not system simulation results</font>") );
         }
-    }
+//    }
 
 
 }
@@ -1464,17 +1464,23 @@ void Control::generateTrafficConfigurationFile() {
     std::cout << "Control/Control::generateCSVSimulationReport" << std::endl;
 #endif
 
+    SystemConfiguration sysConf = this->mainWindow->getSelectedConfiguration();
+    if( !sysConf.isValid() ) {
+        this->mainWindow->printConsole(tr("The current configuration is not valid"),Qt::red);
+        return;
+    }
+
+    if( !sysConf.hasTraffic() ) {
+        this->mainWindow->printConsole(tr("The current configuration has not configured traffic"),Qt::red);
+        return;
+    }
+
     QString outDir = this->mainWindow->selectSystemFolder(trUtf8("Select the output dir to traffic conf"));
 
     if(outDir.isEmpty()) {
         return;
     }
 
-    SystemConfiguration sysConf = this->mainWindow->getSelectedConfiguration();
-    if( !sysConf.isValid() ) {
-        this->mainWindow->printConsole(tr("The current configuration is not valid"),Qt::red);
-        return;
-    }
     QList<float> freqs = this->mainWindow->getOperationFrequencies();
 
     QList<Experiment> experiments = this->mainWindow->getAllExperiments();
@@ -1513,7 +1519,7 @@ void Control::runSimulations() {
     }
 
 // TODO verificar
-//    this->copySystemParameters();
+//    this->copySystemParameters(); Mudar de copy para store run
 
     if( simulationFolders != NULL ) {
         simulationFolders->clear();
@@ -1542,13 +1548,16 @@ void Control::runSimulations() {
     connect(threadManager,SIGNAL(threadFinished(int)),this,SLOT(updateStatusExecution(int)));
 
     int numberOfExperiments = 0;
-    // TODO verificar
-//    unsigned int runCountPerExperiment = this->calcAmountExperimentsExecutions();
-    unsigned int runCountPerExperiment = 1; // Alterar
+
+    QList<SystemConfiguration> sysConfs = this->mainWindow->getAllConfiguration();
+    QList<Experiment> experiments = this->mainWindow->getAllExperiments();
+    SystemOperation sysOp = this->mainWindow->getSystemOperation();
+    QList<float> opFreqs = this->mainWindow->getOperationFrequencies();
+    unsigned int runCountPerExperiment = opFreqs.size(); // Alterar
 
     QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
     settings.beginGroup("Traffic_Parameters");
-    bool useDefault = settings.value("useDefault",true).toBool();
+    bool useDefaultTraffic = settings.value("useDefault",true).toBool();
     QString alternativeFile = settings.value("alternative",QString()).toString();
     settings.endGroup();
 
@@ -1556,18 +1565,11 @@ void Control::runSimulations() {
     QString memPlugin = settings.value("plugin").toString();
     settings.endGroup();
 
-
     SystemDefines* def = SystemDefines::getInstance();
 
     // For each experiment - create a folder
-    for( unsigned int i = 1; i <= 5; i++ ) {
-// TODO Verificar
-//        float fClk = this->systemParameters->getfClkFirst();
-        float fClk = this->systemOperation->fClkFirst;
-        float fClkPrevious = fClk;
-// TODO
-        Experiment* experiment = 0; //this->experimentManager->getExperiment(i);
-        if(experiment != NULL) {
+    for( int i = 0; i < experiments.size(); i++ ) {
+        Experiment* experiment = &experiments[i];
             if(experiment->isActive()) {
                 numberOfExperiments++;
 
@@ -1598,34 +1600,22 @@ void Control::runSimulations() {
                                                         .arg(stopSimPar->fileName()),Qt::red);
                     return;
                 }
-// TODO verificar
-//                switch(systemParameters->getStopOption()) {
-//                    case 0:
-//                        systemParameters->setStopTime_ns(0);
-//                        systemParameters->setStopTime_cycles(0);
-//                        break;
-//                    case 1:
-//                        systemParameters->setStopTime_cycles( (unsigned long int) systemParameters->getStopTime_ns()/systemParameters->getTClk() );
-//                        break;
-//                    case 2:
-//                        systemParameters->setStopTime_ns( (unsigned long int) systemParameters->getStopTime_cycles()*systemParameters->getTClk());
-//                        break;
-//                }
-                switch(systemOperation->stopOption) {
-                case 0:
-                    systemOperation->stopTime_ns = 0;
-                    systemOperation->stopTime_cycles = 0;
-                    break;
-                case 1:
-                    systemOperation->stopTime_cycles = (unsigned long int) systemOperation->stopTime_ns/systemOperation->tClk;
-                    break;
-                case 2:
-                    systemOperation->stopTime_ns = (unsigned long int) systemOperation->stopTime_cycles*systemOperation->tClk;
-                    break;
+
+                switch(sysOp.stopOption) {
+                    case 0: // Number of packets
+                        sysOp.stopTime_cycles = 0;
+                        sysOp.stopTime_ns = 0;
+                        break;
+                    case 1: // Cycles
+                        sysOp.stopTime_cycles = sysOp.stopTime_ns / sysOp.tClk; // TODO verificar
+                        break;
+                    case 2: // Nanoseconds
+                        sysOp.stopTime_ns = sysOp.stopTime_cycles * sysOp.tClk; // TODO verificar
+                        break;
                 }
                 QString stopSimParContent = QString("%1\t%2")
-                        .arg(systemOperation->stopTime_cycles)
-                        .arg(systemOperation->stopTime_ns);
+                        .arg(sysOp.stopTime_cycles)
+                        .arg(sysOp.stopTime_ns);
                 stopSimPar->write(stopSimParContent.toUtf8());
                 stopSimPar->close();
                 delete stopSimPar;
@@ -1633,9 +1623,11 @@ void Control::runSimulations() {
                  * End stopsim.par
                  */
 
-                int aux = 0;
-                SystemOperation* sp = new SystemOperation(*systemOperation);
+                SystemConfiguration sys = sysConfs.at(0); // TODO verificar configuração e topologia do experimento - relacionar
+                SystemParameters sysParam = sys.getSystemParameters();
+                SystemOperation* sop = new SystemOperation(sysOp);
                 for(unsigned int x = 0; x < runCountPerExperiment; x++) {
+                    float fClk = opFreqs.at(x);
                     /*
                      * Generate Traffic conf file on simulation dir (root_experiment_dir/experiment/fClk/)
                      */
@@ -1645,12 +1637,12 @@ void Control::runSimulations() {
                     dirSimulation.cd(dirFreqOp);
                     QString strDirSimul = dirSimulation.absolutePath();
                     this->simulationFolders->append(strDirSimul);
-                    // TODO verificar
-                    QList<SystemConfiguration> allConfs = this->mainWindow->getAllConfiguration();
+
+                    // TODO verificar - mudar, verificar se a topologia do experimento atual é condizente para a configuração que gerará o modelo de tráfego
                     TrafficModelGenerator* trafficGen =
-                            new TrafficModelGenerator(allConfs.at(0),fClk,1);
+                            new TrafficModelGenerator(sys,fClk,flowControl.getCyclesPerFlit());
                     try {
-                        if( useDefault ) {
+                        if( useDefaultTraffic ) {
                             trafficGen->generateTraffic( strDirSimul.toStdString().c_str() );
                         } else {
                             QFile::copy(alternativeFile,strDirSimul+"/traffic.tcf");
@@ -1660,7 +1652,7 @@ void Control::runSimulations() {
                         this->mainWindow->printConsole(trUtf8("Error in generate traffic model: %1")
                                                        .arg(QString::fromStdString(exception)),Qt::red);
                         delete trafficGen;
-                        delete sp;
+                        delete sop;
                         return;
                     }
                     /*
@@ -1702,23 +1694,28 @@ void Control::runSimulations() {
                     /*
                      * Setup arguments to the simulator executable (passing through command-line arguments)
                      */
-                    float TClk = (1.0/ (float) fClk) * 1000.0;
+                    float TClk = (1.0f/ fClk) * 1000.0f;
                     QStringList args;
                     args.append(QString("%1").arg(TClk));
                     args.append(QString("%1").arg(strDirSimul));
                     args.append( conf->getPluginsFolder() );
-                    args.append("-xsize");
-                    args.append(QString::number(systemParameters->getXSize()));
-                    args.append("-ysize");
-                    args.append(QString::number(systemParameters->getYSize()));
-                    if(systemParameters->getZSize()>1) {
-                        if(topology.getTopology().contains("3D")) { // WARNING - verify a safe alternative
+                    switch (sysParam.getTopologyType()) {
+                        case SystemParameters::NonOrthogonal:
+                            args.append("-nelements");
+                            args.append( QString::number( sysParam.getNumberElements() ) );
+                            break;
+                        case SystemParameters::Orthogonal3D:
                             args.append("-zsize");
-                            args.append(QString::number(systemParameters->getZSize()));
-                        }
+                            args.append(QString::number(sysParam.getZSize()));
+                        case SystemParameters::Orthogonal2D:
+                            args.append("-xsize");
+                            args.append(QString::number(sysParam.getXSize()));
+                            args.append("-ysize");
+                            args.append(QString::number(sysParam.getYSize()));
+                            break;
                     }
                     args.append("-datawidth");
-                    args.append(QString::number(systemParameters->getDataWidth()));
+                    args.append(QString::number(sysParam.getDataWidth()));
                     args.append("-fifoin");
                     args.append(QString::number(experiment->getInputBufferSize()));
                     args.append("-fifoout");
@@ -1727,11 +1724,8 @@ void Control::runSimulations() {
                         args.append( "-vc" );
                         args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
                     }
-// TODO verificar
-//                    if( systemParameters->getVcdOption() ) {
-//                        args.append("-trace");
-//                    }
-                    if( systemOperation->vcdOption ) {
+
+                    if( sysOp.vcdOption ) {
                         args.append("-trace");
                     }
                     /*
@@ -1766,36 +1760,9 @@ void Control::runSimulations() {
                      * End generate simulation performer
                      */
 
-
-                    /*
-                     * Calculating
-                     */
-                    if( sp->fClkStepType == 0 ) {
-                        fClk += sp->fClkStep;
-                        if( (sp->fClkFirst > sp->fClkLast )
-                                && (fClk < sp->fClkLast) ) {
-                            fClk = sp->fClkLast;
-                        }
-                        if( (sp->fClkFirst < sp->fClkLast)
-                                && (fClk > sp->fClkLast) ) {
-                            fClk = sp->fClkLast;
-                        }
-                    } else {
-                        do {
-                            fClkPrevious = fClk;
-                            int tmp = (unsigned int) (sp->fClkFirst
-                                                      / ( exp(aux*sp->fClkStep) )*10 );
-                            fClk = ((float) tmp) / 10.0;
-                            aux++;
-                        } while (fClk == fClkPrevious);
-                    } // if(getfClkStepType == 0)
-                    sp->tClk = (1.0f/fClk)*1000.0f;
-                    sp->channelBandwidth = fClk * systemParameters->getDataWidth();
-
                 } // for(unsigned int x = 0; x < runCountPerExperiment; x++)
-                delete sp;
+                delete sop;
             } // if(experiment->isActive())
-        } // if(experiment != NULL)
     } // for( unsigned int i = 1; i <= 5; i++ )
 
     unsigned int nExp = runCountPerExperiment*numberOfExperiments;

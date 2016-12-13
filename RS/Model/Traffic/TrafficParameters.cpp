@@ -109,37 +109,7 @@ bool TrafficParameters::equals(TrafficParameters* obj) const {
 
 QString TrafficParameters::getFormattedString() const {
 
-    QString formatted;
-
-    switch (this->distribution) {
-        case SpatialDistribution::Specific_Address:
-            formatted = tr("Specific");
-            break;
-        case SpatialDistribution::Bit_Reversal:
-            formatted = tr("Bit-Reversal");
-            break;
-        case SpatialDistribution::Perfect_Shuffle:
-            formatted = tr("Perfect Shuffle");
-            break;
-        case SpatialDistribution::Butterfly:
-            formatted = tr("Butterfly");
-            break;
-        case SpatialDistribution::Matrix_Transpose:
-            formatted = tr("Local");
-            break;
-        case SpatialDistribution::Complement:
-            formatted = tr("Complement");
-            break;
-        case SpatialDistribution::Uniform:
-            formatted = tr("Uniform");
-            break;
-        case SpatialDistribution::Non_Uniform:
-            formatted = tr("Non-Uniform");
-            break;
-        case SpatialDistribution::Local:
-            formatted = tr("Local");
-            break;
-    }
+    QString formatted = this->getSpatialDistributionName();
 
     formatted += tr(" - from %1 to %2")
             .arg(source)
@@ -154,6 +124,77 @@ QString TrafficParameters::getFormattedString() const {
     return formatted;
 }
 
+void TrafficParameters::setSpatialDistribution(int index) {
+    SpatialDistribution::Distribution dist = static_cast<SpatialDistribution::Distribution>(index);
+    this->setSpatialDistribution(dist);
+}
+
+QString TrafficParameters::getSpatialDistributionName(SpatialDistribution::Distribution dist) const {
+    switch (dist) {
+        case SpatialDistribution::Specific_Address:
+            return tr("Specific");
+        case SpatialDistribution::Bit_Reversal:
+            return tr("Bit-Reversal");
+        case SpatialDistribution::Perfect_Shuffle:
+            return tr("Perfect Shuffle");
+        case SpatialDistribution::Butterfly:
+            return tr("Butterfly");
+        case SpatialDistribution::Matrix_Transpose:
+            return tr("Matrix Transpose");
+        case SpatialDistribution::Complement:
+            return tr("Complement");
+        case SpatialDistribution::Uniform:
+            return tr("Uniform");
+        case SpatialDistribution::Non_Uniform:
+            return tr("Non-Uniform");
+        case SpatialDistribution::Local:
+            return tr("Local");
+    }
+
+}
+
+QString TrafficParameters::getSpatialDistributionName(int index) const {
+    SpatialDistribution::Distribution dist = static_cast<SpatialDistribution::Distribution>(index);
+    return this->getSpatialDistributionName( dist );
+}
+
+QString TrafficParameters::getSpatialDistributionName() const {
+    return this->getSpatialDistributionName(this->distribution);
+}
+
+int TrafficParameters::indexOfSpatialDistribution(QString name) const {
+
+    if( name.compare(tr("Specific")) == 0 ) {
+        return 0;
+    }
+    if( name.compare(tr("Bit-Reversal")) == 0 ) {
+        return 1;
+    }
+    if( name.compare(tr("Perfect Shuffle")) == 0 ) {
+        return 2;
+    }
+    if( name.compare(tr("Butterfly")) == 0 ) {
+        return 3;
+    }
+    if( name.compare(tr("Matrix Transpose")) == 0 ) {
+        return 4;
+    }
+    if( name.compare(tr("Complement")) == 0 ) {
+        return 5;
+    }
+    if( name.compare(tr("Uniform")) == 0 ) {
+        return 6;
+    }
+    if( name.compare(tr("Non-Uniform")) == 0 ) {
+        return 7;
+    }
+    if( name.compare(tr("Local")) == 0 ) {
+        return 8;
+    }
+
+    return -1; // Not found
+}
+
 bool TrafficParameters::isValidForSystem(unsigned int numElements) {
 
     if( source < numElements && destination < numElements && source != destination) {
@@ -161,4 +202,145 @@ bool TrafficParameters::isValidForSystem(unsigned int numElements) {
     }
 
     return false;
+}
+
+QString TrafficParameters::getTrafficClassName(int index) const {
+    switch (index) {
+        case 0:
+            return tr("RT0 - Signalling");
+        case 1:
+            return tr("RT1 - Audio/Video");
+        case 2:
+            return tr("nRT0 - Read/Write");
+        case 3:
+            return tr("nRT1 - Block Transfers");
+        default:
+            break;
+    }
+    return QString();
+
+}
+
+QString TrafficParameters::getTrafficClassName() const {
+    return this->getTrafficClassName(this->trafficClass);
+}
+
+int TrafficParameters::indexOfTrafficClass(QString name) const {
+
+    if( name.compare(tr("RT0 - Signalling")) == 0 ) {
+        return 0;
+    }
+    if( name.compare(tr("RT1 - Audio/Video")) == 0 ) {
+        return 1;
+    }
+    if( name.compare(tr("nRT0 - Read/Write")) == 0 ) {
+        return 2;
+    }
+    if( name.compare(tr("nRT1 - Block Transfers")) == 0 ) {
+        return 3;
+    }
+    return -1; // Not found
+}
+
+QString TrafficParameters::getInjectionTypeName(int index) const {
+
+    switch (index) {
+        case 0:
+            return tr("Constant");
+        case 1:
+            return tr("Variable idle time - Fix message size");
+        case 2:
+            return tr("Variable message size - Fix idle time");
+        case 3:
+            return tr("Variable message size - Fix message inter-arrival");
+        case 4:
+            return tr("Variable message inter-arrival - Fix message size");
+        case 5:
+            return tr("Variable burst size - Fix message inter-arrival");
+        default:break;
+    }
+    return QString();
+}
+
+QString TrafficParameters::getInjectionTypeName() const {
+    return this->getInjectionTypeName(this->injectionType);
+}
+
+int TrafficParameters::indexOfInjectionType(QString name) const {
+
+    if( name.compare(tr("Constant")) == 0 ) {
+        return 0;
+    }
+    if( name.compare(tr("Variable idle time - Fix message size")) == 0 ) {
+        return 1;
+    }
+    if( name.compare(tr("Variable message size - Fix idle time")) == 0 ) {
+        return 2;
+    }
+    if( name.compare(tr("Variable message size - Fix message inter-arrival")) == 0 ) {
+        return 3;
+    }
+    if( name.compare(tr("Variable message inter-arrival - Fix message size")) == 0 ) {
+        return 4;
+    }
+    if( name.compare(tr("Variable burst size - Fix message inter-arrival")) == 0 ) {
+        return 5;
+    }
+    return -1; // Not found
+}
+
+QString TrafficParameters::getSwitchingTechniqueName(int index) const {
+    switch (index) {
+        case 0:
+            return tr("Wormhole Switching");
+        case 1:
+            return tr("Circuit Switching");
+        default:break;
+    }
+    return QString();
+}
+
+QString TrafficParameters::getSwitchingTechniqueName() const {
+    return this->getSwitchingTechniqueName(this->switchingTechnique);
+}
+
+int TrafficParameters::indexOfSwitchingTechnique(QString name) const {
+    if( name.compare(tr("Wormhole Switching")) == 0 ) {
+        return 0;
+    }
+    if( name.compare(tr("Circuit Switching")) == 0 ) {
+        return 1;
+    }
+    return -1; // Not found
+}
+
+QString TrafficParameters::getProbabilityFunctionName(int index) const {
+    switch(index) {
+        case 0:
+            return tr("Normal");
+        case 1:
+            return tr("Exponential");
+        case 2:
+            return tr("Pareto");
+        default:break;
+    }
+    return QString();
+}
+
+QString TrafficParameters::getProbabilityFunctionName() const {
+    return this->getProbabilityFunctionName(this->probabilityFunction);
+}
+
+int TrafficParameters::indexOfProbabilityFunction(QString name) const {
+    if( name.compare(tr("Normal")) == 0 ) {
+        return 0;
+    }
+    if( name.compare(tr("Exponential")) == 0 ) {
+        return 1;
+    }
+    if( name.compare(tr("Pareto")) == 0 ) {
+        return 2;
+    }
+    return -1; // Not found
+
 }

@@ -45,9 +45,6 @@
 class MainWindow;
 class AnalysisOptions;
 // Model
-class SystemParameters;
-class SystemOperation;
-class TrafficParameters;
 class DataReport;
 // Control
 class SimulationPerformer;
@@ -77,9 +74,6 @@ class Control : public QObject {
 private:
     // View
     MainWindow* mainWindow;
-    // Model
-    SystemParameters* systemParameters;
-    SystemOperation* systemOperation;
 
     bool analysisOk;
     // Control

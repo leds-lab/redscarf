@@ -409,7 +409,6 @@ void TrafficEditDialog::applyClicked() {
     tp->setIdleTime( quint32(ui->spinInIdleTime->value()) );
     tp->setInjectionType( quint32( ui->comboInTypeInjection->currentIndex() ) );
     tp->setIntervalTime( quint32( ui->spinInMessageInterval->value() ) );
-//    tp->setNumberRates( ui->spin );
     tp->setPackageToSend( ulong( ui->spinInNumberPacketsFlow->value() ) );
     tp->setMessageSize( quint32( ui->spinInMessageSize->value()) );
     tp->setProbabilityFunction( quint32( ui->comboInFunctionProbability->currentIndex() ) );

@@ -91,7 +91,7 @@ SOURCES +=  \
     Control/ExternalWaveformViewer.cpp \
     Control/Control.cpp \
     Control/SimulationPerformer.cpp \
-#    Control/XmlConfigParser.cpp \
+    Control/XmlConfigParser.cpp \
     Main.cpp \
     View/qcustomplot.cpp \
     View/CustomPlotZoom.cpp \
@@ -138,7 +138,7 @@ HEADERS += \
     Control/ExternalWaveformViewer.h \
     Control/Control.h \
     Control/SimulationPerformer.h \
-#    Control/XmlConfigParser.h \
+    Control/XmlConfigParser.h \
     Main.h \
     View/qcustomplot.h \
     View/CustomPlotZoom.h \

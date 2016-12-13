@@ -11,7 +11,7 @@ public:
     SystemParameters();
     ~SystemParameters();
 
-    bool equal(SystemParameters&);
+    bool equal(SystemParameters&) const;
 
     // Set
     inline void setTopologyType(TopologyType type) { this->type = type; }
@@ -21,7 +21,8 @@ public:
     inline void setZSize(unsigned short size) { this->zSize = size; }
     inline void setDataWidth(unsigned short width) { this->dataWidth = width; }
     // Get
-    inline TopologyType getTopologyType() { return this->type; }
+    static TopologyType getTopologyType(QString name);
+    inline TopologyType getTopologyType() const { return this->type; }
     inline unsigned short getNumberElements() const {
         switch(type) {
             case NonOrthogonal:
@@ -34,12 +35,12 @@ public:
         }
         return this->numElements;
     }
-    inline unsigned short getXSize() { return this->xSize; }
-    inline unsigned short getYSize() { return this->ySize; }
-    inline unsigned short getZSize() { return this->zSize; }
-    inline unsigned short getDataWidth() { return this->dataWidth; }
+    inline unsigned short getXSize() const { return this->xSize; }
+    inline unsigned short getYSize() const { return this->ySize; }
+    inline unsigned short getZSize() const { return this->zSize; }
+    inline unsigned short getDataWidth() const { return this->dataWidth; }
 
-    QString getFormattedString();
+    QString getFormattedString() const;
 
 private:
     TopologyType type;

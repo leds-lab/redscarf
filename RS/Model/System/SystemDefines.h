@@ -49,12 +49,15 @@ public:
         inline void setAlias       (QString value) { this->alias        = value; }
         inline void setNoCPlugin   (QString value) { this->nocPlugin    = value; }
         inline void setRouterPlugin(QString value) { this->routerPlugin = value; }
+        inline void setTopologyType(QString value) { this->type         = value; }
         inline QString getTopology    () const { return this->topology    ; }
         inline QString getAlias       () const { return this->alias       ; }
         inline QString getNoCPlugin   () const { return this->nocPlugin   ; }
         inline QString getRouterPlugin() const { return this->routerPlugin; }
+        inline QString getTopologyType() const { return this->type        ; }
     private:
         QString topology;
+        QString type;
         QString alias;
         QString nocPlugin;
         QString routerPlugin;
@@ -87,11 +90,14 @@ public:
     public:
         inline void    setFlowControl(QString value) { this->flowControl = value; }
         inline void    setPlugin     (QString value) { this->plugin = value; }
+        inline void    setCyclesPerFlit(unsigned short value) { this->cyclesPerFlit = value; }
         inline QString getFlowControl() const { return this->flowControl; }
         inline QString getPlugin     () const { return this->plugin; }
+        inline unsigned short getCyclesPerFlit() const { return this->cyclesPerFlit; }
     private:
         QString flowControl;
         QString plugin;
+        unsigned short cyclesPerFlit;
     };
 
     class PriorityGenerator {
@@ -156,8 +162,6 @@ private:
 
     template<class T>
     T            find    (const QMap<unsigned int,T>& m, unsigned int key) const;
-//    template<class T>
-//    unsigned int getKey  (const std::map<unsigned int,T>& m, std::string value) const;
     template<class T>
     unsigned int size    (const QMap<unsigned int,T>& m) const;
     template<class T>

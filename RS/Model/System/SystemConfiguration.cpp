@@ -16,3 +16,7 @@ bool SystemConfiguration::isValid() const {
 bool SystemConfiguration::hasTraffic() const {
     return !trafficConf.isEmpty();
 }
+
+void SystemConfiguration::addTrafficConfiguration(TrafficParameters tp) {
+    this->trafficConf.append(tp);
+}

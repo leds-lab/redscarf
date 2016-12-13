@@ -58,10 +58,10 @@ TrafficModelGenerator::TrafficModelGenerator(SystemConfiguration sysConf, float 
     this->sysConf = sysConf;
     this->fClk = fClk;
     this->tClk = (1.0f / fClk ) * 1000.0f;
-    this->numElements = sysConf.getSystemConfiguration().getNumberElements();
+    this->numElements = sysConf.getSystemParameters().getNumberElements();
     this->traffics = sysConf.getTrafficConfiguration();
     this->countTrafficConfigured = traffics.size();
-    this->dataWidth = sysConf.getSystemConfiguration().getDataWidth();
+    this->dataWidth = sysConf.getSystemParameters().getDataWidth();
     this->channelBW = dataWidth * fClk;
 
     this->numberCyclesPerFlit = numberCyclesPerFlit;

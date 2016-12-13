@@ -20,8 +20,6 @@
 #include "View/Arc.h"
 #include "View/Edge.h"
 
-#include <QDebug>
-
 TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QListWidgetItem *> items) :
     QDialog(parent),
     ui(new Ui::TrafficConfigurationDialog),
@@ -335,7 +333,7 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
 
     for( int i = 0; i < sourcesSelected.size(); i++ ) {
         Vertice* source = dynamic_cast<Vertice *>(sourcesSelected.at(i));
-        TrafficParameters trafficConf = *tp;//TrafficParameters(*tp); // Clone object - Copy constructor
+        TrafficParameters trafficConf = *tp;
         // Setting source address
         if(source == NULL) {
             continue;
@@ -373,6 +371,10 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
                     QVariant parameters;
                     parameters.setValue(trafficConf);
                     newItem->setData(Qt::UserRole,parameters);
+                } else {
+                    QMessageBox::information(this,tr("Invalid configuration"),tr("For this spatial distribution at node %1"
+                                                                                 "\n an invalid destination was generated.\n"
+                                                                                 "Not added!").arg(trafficConf.getSource()));
                 }
                 break;
             } // End default:

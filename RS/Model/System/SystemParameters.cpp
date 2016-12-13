@@ -11,7 +11,7 @@ SystemParameters::SystemParameters(){
 
 SystemParameters::~SystemParameters() {}
 
-QString SystemParameters::getFormattedString() {
+QString SystemParameters::getFormattedString() const {
     QString formatted;
     switch( type ) {
         case 0: // Non-Orthogonal
@@ -37,7 +37,7 @@ QString SystemParameters::getFormattedString() {
     return formatted;
 }
 
-bool SystemParameters::equal(SystemParameters &sp) {
+bool SystemParameters::equal(SystemParameters &sp) const {
     if( type == sp.type ) {
         if( dataWidth == sp.dataWidth ) {
             switch( type ) {
@@ -63,4 +63,17 @@ bool SystemParameters::equal(SystemParameters &sp) {
 
     }
     return false;
+}
+
+SystemParameters::TopologyType SystemParameters::getTopologyType(QString name) {
+
+    if( name.compare("NonOrthogonal") == 0 ) {
+        return SystemParameters::NonOrthogonal;
+    } else if(name.compare("Orthogonal2D") == 0) {
+        return SystemParameters::Orthogonal2D;
+    } else if(name.compare("Orthogonal3D") == 0) {
+        return SystemParameters::Orthogonal3D;
+    } else {
+        return SystemParameters::NonOrthogonal; // Default value
+    }
 }

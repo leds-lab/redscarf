@@ -83,7 +83,7 @@ public:
     unsigned int saveChanges(QString title,QString msg);
     QString selectSystemFolder(QString msgSelect);
     void showOpenFileError(QString error);
-    void updateView(QList<Experiment*>,SystemOperation*);
+    void updateView(QList<SystemConfiguration> sysConfs, QList<Experiment> experiments, SystemOperation);
     void enableRun();
 
     void setLimitsProgressBar(int minimum,int maximum);
@@ -103,6 +103,7 @@ public:
     QList<SystemConfiguration> getAllConfiguration() const;
     QList<float> getOperationFrequencies() const;
     QList<Experiment> getAllExperiments() const;
+    SystemOperation getSystemOperation() const;
 
     ~MainWindow();
 signals:

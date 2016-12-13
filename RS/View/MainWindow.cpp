@@ -684,24 +684,40 @@ void MainWindow::changeEvent(QEvent *event) {
 
 }
 
-void MainWindow::updateView(QList<Experiment *> gpe, SystemOperation* sop) {
+void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experiment> experiments, SystemOperation sop) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::updateView" << std::endl;
 #endif
 
-    ui->spinBoxStopTimeCycles->setValue( sop->stopTime_cycles );
-    ui->spinBoxStopTimeNs->setValue( sop->stopTime_ns );
-    ui->comboInSimulationStopMethod->setCurrentIndex( sop->stopOption );
+    // Clear the current configuration
+    ui->listConf->clear();
 
-    ui->comboInGenerateVCD->setCurrentIndex( sop->vcdOption );
-    ui->doubleSpinInChannelFclkRange->setValue(sop->fClkFirst);
-    ui->doubleSpinInChannelFclkRange_2->setValue(sop->fClkLast);
-    ui->comboInStep->setCurrentIndex(sop->fClkStepType);
-    ui->doubleSpinInStep->setValue(sop->fClkStep);
+    for( int i = 0; i < sysConfs.size(); i++ ) {
+        SystemConfiguration conf = sysConfs.at(i);
+        SystemParameters sysParam = conf.getSystemParameters();
+        // Create the widget item
+        QListWidgetItem* item = new QListWidgetItem(sysParam.getFormattedString(),ui->listConf);
+        QVariant parameters;
+        parameters.setValue(sysParam);
+        // Set Parameters
+        item->setData(Qt::UserRole,parameters);
 
-    // Update experiments
-    for(int i = 0u; i < gpe.size(); i++) {
-        Experiment* experiment = gpe.at(i);
+        QList<TrafficParameters> traffics = conf.getTrafficConfiguration();
+        QList<QVariant> trafficsVar;
+        for( int x = 0; x < traffics.size(); x++ ) {
+            TrafficParameters tp = traffics.at(x);
+            QVariant tpVar;
+            tpVar.setValue(tp);
+            trafficsVar.append(tpVar);
+        }
+        if( !trafficsVar.isEmpty() ) {
+            item->setData(Qt::UserRole+1,trafficsVar);
+        }
+    }
+
+    // Experiments
+    for(int i = 0u; i < experiments.size(); i++) {
+        const Experiment* experiment = &experiments.at(i);
         if( experiment != NULL ) {
             switch (i+1) {
                 case 1:
@@ -764,6 +780,19 @@ void MainWindow::updateView(QList<Experiment *> gpe, SystemOperation* sop) {
             }
         }
     }
+
+
+    // System operation
+    ui->spinBoxStopTimeCycles->setValue( sop.stopTime_cycles );
+    ui->spinBoxStopTimeNs->setValue( sop.stopTime_ns );
+    ui->comboInSimulationStopMethod->setCurrentIndex( sop.stopOption );
+
+    ui->comboInGenerateVCD->setCurrentIndex( sop.vcdOption );
+    ui->doubleSpinInChannelFclkRange->setValue(sop.fClkFirst);
+    ui->doubleSpinInChannelFclkRange_2->setValue(sop.fClkLast);
+    ui->comboInStep->setCurrentIndex(sop.fClkStepType);
+    ui->doubleSpinInStep->setValue(sop.fClkStep);
+
 }
 
 void MainWindow::enableRun() {
@@ -1088,11 +1117,29 @@ QList<Experiment> MainWindow::getAllExperiments() const {
     return experiments;
 }
 
+SystemOperation MainWindow::getSystemOperation() const {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::getSystemOperation" << std::endl;
+#endif
+    SystemOperation sysOp;
+
+    sysOp.fClkFirst = ui->doubleSpinInChannelFclkRange->value();
+    sysOp.fClkLast = ui->doubleSpinInChannelFclkRange_2->value();
+    sysOp.fClkStep = ui->doubleSpinInStep->value();
+    sysOp.fClkStepType = ui->comboInStep->currentIndex();
+    sysOp.stopOption = ui->comboInSimulationStopMethod->currentIndex();
+    sysOp.stopTime_cycles = ui->spinBoxStopTimeCycles->value();
+    sysOp.stopTime_ns = ui->spinBoxStopTimeNs->value();
+    sysOp.vcdOption = ui->comboInGenerateVCD->currentIndex();
+
+    return sysOp;
+}
+
 /////////////////// Slots ///////////////////
 
 void MainWindow::toolButtonCurveClicked() {
 #ifdef DEBUG_POINTS_METHODS
-    std::cout << "View/MainWindow::tooButtonCurveClicked" << std::endl;
+    std::cout << "View/MainWindow::toolButtonCurveClicked" << std::endl;
 #endif
 
     QToolButton* toolButton = (QToolButton *) sender();

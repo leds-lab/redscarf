@@ -15,10 +15,12 @@ public:
     SystemConfiguration();
     SystemConfiguration(SystemParameters sp, QList<TrafficParameters> traffic);
 
-    inline SystemParameters getSystemConfiguration() const { return this->sysConf; }
+    inline SystemParameters getSystemParameters() const { return this->sysConf; }
     inline QList<TrafficParameters> getTrafficConfiguration() const { return this->trafficConf; }
 
-    inline void setSystemConfiguration(SystemParameters sp) { this->sysConf = sp; }
+    void addTrafficConfiguration(TrafficParameters tp);
+
+    inline void setSystemParameters(SystemParameters sp) { this->sysConf = sp; }
     inline void setTrafficConfiguration(QList<TrafficParameters> trafficConf) { this->trafficConf = trafficConf; }
 
     bool isValid() const;

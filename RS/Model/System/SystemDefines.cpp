@@ -117,12 +117,13 @@ void SystemDefines::loadTopologies() {
         QString alias = settings.value("Alias").toString();
         QString nocPlugin = settings.value("NoCPlugin").toString();
         QString routerPlugin = settings.value("RouterPlugin").toString();
+        QString type = settings.value("Type").toString();
         top.setAlias(alias);
         top.setNoCPlugin(nocPlugin);
         top.setRouterPlugin(routerPlugin);
         top.setTopology(topology);
+        top.setTopologyType(type);
         this->topologies.insert( i, top );
-//        this->topologies.insert( std::pair<unsigned int,Topology>(i,top) );
     }
 
 }
@@ -144,7 +145,6 @@ void SystemDefines::loadRoutingAlgorithms() {
         routing.setAlgorithms(algorithms);
         routing.setPlugins(plugins);
         this->routingAlgorithms.insert( i,routing );
-//        this->routingAlgorithms.insert( std::pair<unsigned int,std::string>(i,value) );
     }
 }
 
@@ -159,8 +159,10 @@ void SystemDefines::loadFlowControls() {
         FlowControl fc;
         QString value = settings.value("FlowControl").toString();
         QString plugin = settings.value("Plugin").toString();
+        unsigned short cycles = settings.value("CyclesPerFlit",1).toUInt();
         fc.setFlowControl(value);
         fc.setPlugin(plugin);
+        fc.setCyclesPerFlit(cycles);
         this->flowControls.insert( i,fc );
     }
 }
