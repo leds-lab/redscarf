@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
 * Analyzer.cpp
-* Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+* Copyright (C) 2014 - 2017 LEDS - Univali <zeferino@univali.br>
 * Laboratory of Embedded and Distributed Systems
 * University of Vale do Itajaí
 *
@@ -83,17 +83,29 @@ void Analyzer::analyze() {
         if (!dirAnalise.exists()) {
             dirAnalise.mkpath(".");
         }
+
+        QString dirConfiguration = diretorioExperimento.left( diretorioExperimento.lastIndexOf("/") );
+        dirConfiguration = dirConfiguration.right( dirConfiguration.size() - dirConfiguration.lastIndexOf("/")-1 );
+
+        QStringList listToExtractData = dirConfiguration.split("_");
+        QString numElementsStr = listToExtractData.at(1);
+        numElements = numElementsStr.toUShort();
+
+        QString dataWidthStr = listToExtractData.last();
+        dataWidthStr = dataWidthStr.remove("-bit");
+        dataWidth = dataWidthStr.toUInt();
+
         // Obtendo dados a partir do diretorio de analise
         float fClk = diretorioAnalise.mid(lio + 1, diretorioAnalise.size() - lio - 4).toFloat();
         QString auxiliarExperimento = diretorioExperimento.right(
                     diretorioExperimento.size() - 1 -
                     diretorioExperimento.lastIndexOf("/"));  // Extrair controle de fluxo e
         // profundidade dos buffers de saída
-        QStringList configuracao = auxiliarExperimento.split("_");
+        listToExtractData = auxiliarExperimento.split("_");
         unsigned int flowControlType =
-                SystemDefines::getInstance()->getKeyFlowControl(configuracao.at(3));
-        auxiliarExperimento = configuracao.at(6);
-        auxiliarExperimento.remove(0, 3);
+                SystemDefines::getInstance()->getKeyFlowControl(listToExtractData.at(3));
+        auxiliarExperimento = listToExtractData.at(7);
+        auxiliarExperimento = auxiliarExperimento.remove(0, 3);
         unsigned int fifoOutDepth = auxiliarExperimento.toUInt();
 
         QByteArray byteArrayAnalise = diretorioAnalise.toUtf8();

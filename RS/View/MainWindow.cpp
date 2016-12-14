@@ -1539,8 +1539,6 @@ void MainWindow::run() {
     this->ui->buttonCancel->setEnabled(true);
     this->setAnalysisOptionsEnabled(false);
 
-    // TODO Enviar configuração daqui
-
     emit this->runSimulation();
 }
 

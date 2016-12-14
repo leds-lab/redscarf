@@ -778,8 +778,8 @@ void Control::generateAnalysis(float lower, float upper) {
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(trUtf8("<font color=green><br />Analyzing simulation results</font>"));
-    // TODO enviar numero de elementos para o analisador e dataWidth
-    Analyzer* analyzer = new Analyzer(this->simulationFolders,16,32,lower,upper);
+    // The number of elements and data width are extracted from the folder string
+    Analyzer* analyzer = new Analyzer(this->simulationFolders,0,0,lower,upper);
     QThread* threadAnalisador = new QThread(this);
     threadAnalisador->setObjectName("Analyzer");
     connect(threadAnalisador,SIGNAL(started()),analyzer,SLOT(analyze()));
@@ -804,8 +804,8 @@ void Control::analysisEnd(bool success) {
     this->mainWindow->setAnalysisOptionsEnabled(true);
     this->mainWindow->setActionSaveSimulationEnabled(true);
     if( success ) {
-        this->mainWindow->printConsole(trUtf8("<br /><font color=blue><b>DONE !!!</b></font>"));
-        this->mainWindow->printConsole(trUtf8("<font color=blue>Now you can use the performance analysis tools</font> <br /> <br />"));
+        this->mainWindow->printConsole(trUtf8("<br /><b>DONE !!!</b>"),Qt::blue);
+        this->mainWindow->printConsole(trUtf8("Now you can use the performance analysis tools<br /> <br />"),Qt::blue);
     }
     QApplication::beep();
     QApplication::alert(mainWindow);
@@ -816,48 +816,43 @@ void Control::viewWaveform() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::viewWaveform" << std::endl;
 #endif
-// TODO verificar
-//    if( this->vcdOption == 0 ) {
-
-//    if( this->systemOperation->vcdOption == 0 ) {
-//        this->mainWindow->printConsole(trUtf8("<font color=red>No VCD file available</font>"));
-//    } else {
-        if( simulationFolders != NULL ) {
-            int size = simulationFolders->size();
-            if( size == 0 ) {
-                this->mainWindow->printConsole( trUtf8("<font color=red>Impossible view waveform because there is not system simulation results</font>") );
-                return;
+    if( simulationFolders != NULL ) {
+        int size = simulationFolders->size();
+        if( size == 0 ) {
+            this->mainWindow->printConsole( trUtf8("Impossible show waveform. There is not system simulation results"),errorColor );
+            return;
+        }
+        QString item;
+        bool ok = true;
+        if( size == 1 ) {
+            item = simulationFolders->at(0);
+        } else {
+            QStringList dirs;
+            for(int i = 0; i < size; i++) {
+                dirs.append( simulationFolders->at(i) );
             }
-            QString item;
-            bool ok = true;
-            if( size == 1 ) {
-                item = simulationFolders->at(0);
-            } else {
-                QStringList dirs;
-                for(int i = 0; i < size; i++) {
-                    dirs.append( simulationFolders->at(i) );
-                }
-                QStringList items = AnalysisOptions::getVisibleStrings(dirs);
-                item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
-                item = dirs.at(items.indexOf(item));
-            }
+            QStringList items = AnalysisOptions::getVisibleStrings(dirs);
+            item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
+            item = dirs.at(items.indexOf(item));
+        }
 
-            if(ok && !item.isEmpty()) {
-                QString waveTool = environmentConfiguration->getWaveformTool();
-                QStringList args = waveTool.split(" ");
-                args.removeFirst();
+        if(ok && !item.isEmpty()) {
+            QString waveTool = environmentConfiguration->getWaveformTool();
+            QStringList args = waveTool.split(" ");
+            args.removeFirst();
+            QFile file(item + "/snocs_wave.vcd");
+            if( file.exists() ) {
                 WaveformViewer* waveViewer = new ExternalWaveformViewer(waveTool,args,this);
                 connect(waveViewer,SIGNAL(finished(int,QProcess::ExitStatus)),waveViewer,SLOT(deleteLater()));
                 connect(waveViewer,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
-                waveViewer->viewWaveform(item);
+                waveViewer->viewWaveform(file.fileName());
+            } else {
+                this->mainWindow->printConsole(tr("Impossible show waveform. VCD file didn't generated!"),errorColor);
             }
-
-        } else {
-            this->mainWindow->printConsole( trUtf8("<font color=red>Impossible view waveform because there is not system simulation results</font>") );
         }
-//    }
-
-
+    } else {
+        this->mainWindow->printConsole( trUtf8("Impossible show waveform. There is not system simulation results"),errorColor );
+    }
 }
 
 void Control::viewGraphic(AnalysisOptions *aop) {
@@ -868,7 +863,6 @@ void Control::viewGraphic(AnalysisOptions *aop) {
     if( !analysisOk ) {
         this->mainWindow->printConsole( trUtf8("<font color=red>Impossible plot graphic because there is not analysis results</font>") );
     } else {
-
         QVector<QList<DataReport *> *> *data = getReportData(aop);
         if(data == NULL) {
             mainWindow->printConsole( trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
@@ -1616,6 +1610,7 @@ void Control::runSimulations() {
                         sysExe.setOperationFrequency(fClk);
                         sysExe.setSystemConfiguration(sys);
                         sysExe.setWorkFolder(strDirSimulation);
+                        sysExe.setVcdOption( systemOp.vcdOption );
                         this->executions.append(sysExe);
 
 
@@ -1636,10 +1631,10 @@ void Control::runSimulations() {
                                 systemOp.stopTime_ns = 0;
                                 break;
                             case 1: // Cycles
-                                systemOp.stopTime_cycles = systemOp.stopTime_ns / tClk; // TODO verificar tClk
+                                systemOp.stopTime_cycles = systemOp.stopTime_ns / tClk;
                                 break;
                             case 2: // Nanoseconds
-                                systemOp.stopTime_ns = systemOp.stopTime_cycles * tClk; // TODO verificar tClk
+                                systemOp.stopTime_ns = systemOp.stopTime_cycles * tClk;
                                 break;
                         }
                         QString stopSimParContent = QString("%1\t%2")

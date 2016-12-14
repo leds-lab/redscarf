@@ -37,9 +37,8 @@ void Vertice::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
 
     painter->drawEllipse(-SIZE/2,-SIZE/2,SIZE,SIZE);
 
-    painter->setBrush(Qt::black);
     QString vertId = QString::number(this->id);
-
+    painter->setPen( Qt::white );
     painter->drawText( QRect(-SIZE/2,-SIZE/2,SIZE,SIZE),
                        Qt::AlignHCenter|Qt::AlignVCenter,vertId );
 

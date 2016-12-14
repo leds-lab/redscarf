@@ -1,6 +1,5 @@
 #include "Model/Traffic/SpatialDistribution.h"
 #include <cmath>
-#include <QDebug>
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -129,5 +128,6 @@ QList<int> SpatialDistribution::toUniform() {
 
 QList<int> SpatialDistribution::toLocal(int **topologyAdjacentyMatrix) {
 
+    // TODO Implementar distribuição local de acordo com a topologia
     return QList<int>();
 }

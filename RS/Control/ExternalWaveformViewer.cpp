@@ -46,21 +46,23 @@ ExternalWaveformViewer::ExternalWaveformViewer(QString toolExe, QStringList args
 
 }
 
-void ExternalWaveformViewer::viewWaveform(QString dir) {
+void ExternalWaveformViewer::viewWaveform(QString file) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/ExternalWaveformViewer::viewWaveform" << std::endl;
 #endif
 
+    QString workDir = file.left( file.lastIndexOf("/") );
+
     QProcess* externalWaveformViewer = new QProcess(this);
     externalWaveformViewer->setProcessChannelMode( QProcess::MergedChannels );
-    externalWaveformViewer->setWorkingDirectory(dir);
+    externalWaveformViewer->setWorkingDirectory(workDir);
     connect(externalWaveformViewer,SIGNAL(finished(int,QProcess::ExitStatus)),this,SIGNAL(finished(int,QProcess::ExitStatus)));
     connect(externalWaveformViewer,SIGNAL(finished(int)),externalWaveformViewer,SLOT(kill()));
     connect(externalWaveformViewer,SIGNAL(finished(int)),externalWaveformViewer,SLOT(deleteLater()));
     connect(externalWaveformViewer,SIGNAL(readyRead()),this,SLOT(readReady()));
     connect(externalWaveformViewer,SIGNAL(error(QProcess::ProcessError)),this,SLOT(erroOnExecute(QProcess::ProcessError)));
     // "-a ../list_nodes.sav"  -- argumento para gtkwave
-    QString command = QString("%1 %2/snocs_wave.vcd ").arg(toolExe).arg(dir);//.arg(args);
+    QString command = QString("%1 %2 ").arg(toolExe).arg(file);//.arg(args);
     for( int i = 0; i < args.size(); i++) {
         command += QString("%1 ").arg(args.at(i));
     }

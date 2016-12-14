@@ -79,7 +79,6 @@ protected:
 
     // gtr2
     virtual void adjustParameters();
-//    virtual void determineFlowControl();
     virtual void generateVariableRate() throw (const char*);
     virtual void generateTrafficModel();
 

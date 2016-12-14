@@ -32,8 +32,3 @@ void PersonalGraphicsView::zoomOut() {
 void PersonalGraphicsView::setZoomFactor(double newFactor) {
     this->zoomFactor = newFactor;
 }
-//#include <QDebug>
-//void PersonalGraphicsView::focusOutEvent(QFocusEvent *event) {
-//    qDebug() << "focus out";
-//    QGraphicsView::focusOutEvent(event);
-//}

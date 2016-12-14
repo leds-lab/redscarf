@@ -19,7 +19,6 @@ public slots:
 
 protected:
     void wheelEvent(QWheelEvent*);
-//    void focusOutEvent(QFocusEvent*);
 
 };
 

@@ -41,7 +41,7 @@ class WaveformViewer : public QObject {
 public:
     explicit WaveformViewer(QObject *parent = 0);
 
-    virtual void viewWaveform(QString dir) = 0;
+    virtual void viewWaveform(QString file) = 0;
 
 signals:
     void finished(int,QProcess::ExitStatus);

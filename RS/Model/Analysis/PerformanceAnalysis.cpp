@@ -44,8 +44,6 @@
 #include <iostream>
 #endif
 
-#include <QDebug>
-
 PerformanceAnalysis::PerformanceAnalysis(unsigned short numElements, unsigned short dataWidth,
                                          float lower, float upper, float fClk,
                                          unsigned short fifoOutDepth,

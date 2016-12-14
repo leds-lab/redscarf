@@ -115,7 +115,7 @@ public:
      * at the destination and packet creation at source, less one.
      * \return Packet latency in cycles
      */
-    virtual inline unsigned long int getLatency() { return this->getCycleReceivedTrailer() - this->getCycleCreationPacket(); }
+    virtual inline unsigned long long getLatency() { return this->getCycleReceivedTrailer() - this->getCycleCreationPacket(); }
 
     /*!
      * \brief getNumberOfRoutersInPath Method to get the number of routers in path

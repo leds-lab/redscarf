@@ -392,18 +392,6 @@ void TrafficModelGenerator::generateFlow(TrafficParameters *tp) {
         }
     }
 
-    unsigned int numberFlows;
-    // It calculates the number of flows
-    if(injType == 0) { // == CONSTANT
-        numberFlows = 1;
-    } else {
-        if( tp->getProbabilityFunction() == 2 ) { // == PARETO
-            numberFlows = 1;
-        } else {
-            numberFlows = tp->getNumberRates() - numberRatesWithNoPackets;
-        }
-    }
-
     //////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
     /// PART VI(a) - CBR TRAFFIC GENERATION

@@ -150,7 +150,7 @@ QString TrafficParameters::getSpatialDistributionName(SpatialDistribution::Distr
         case SpatialDistribution::Local:
             return tr("Local");
     }
-
+    return QString();
 }
 
 QString TrafficParameters::getSpatialDistributionName(int index) const {
