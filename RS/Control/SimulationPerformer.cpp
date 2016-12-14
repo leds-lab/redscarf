@@ -105,7 +105,7 @@ void SimulationPerformer::execute() {
                     ts >> simulatedTimeCycles;
                     emit sendMessage( trUtf8("<font color=black>- Simulated  time: %1 cycles = %2 us</font>")
                                       .arg(simulatedTimeCycles)
-                                      .arg(QString::number(simulatedTimeCycles * this->TClk/1000,'f',2)) );
+                                      .arg(QString::number(simulatedTimeCycles * this->TClk/1000.0f,'f',2)) );
 
                     stopOut.close();
                 }

@@ -16,9 +16,6 @@
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
-  <property name="modal">
-   <bool>true</bool>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0,0">

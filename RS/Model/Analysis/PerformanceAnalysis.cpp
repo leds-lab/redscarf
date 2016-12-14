@@ -657,6 +657,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeIndividualFlows() {
                 flowAccLatency[source][flowId] 				  = 0;
                 flowAvgLatency[source][flowId] 				  = 0;
                 flowIdealAvgLatency[source][flowId]           = 0;
+                flowAccIdealLatency[source][flowId]      = 0;
                 flowAccLatencyMinusAvgLatency[source][flowId] = 0;
                 flowStdevLatency[source][flowId] 			  = 0;
                 flowMinLatency[source][flowId] 				  = ULONG_MAX;

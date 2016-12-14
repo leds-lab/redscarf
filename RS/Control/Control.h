@@ -39,12 +39,17 @@
 #define __CONTROL_H__
 
 #include <QObject>
+#include <QColor>
 
 // Forward declaration classes
 // View
 class MainWindow;
 class AnalysisOptions;
 // Model
+class SystemConfiguration;
+class Experiment;
+class SystemOperation;
+class SystemExecution;
 class DataReport;
 // Control
 class SimulationPerformer;
@@ -70,26 +75,31 @@ const QString RESULT_SIMULATION_DIRS_FILENAME = "SimulationFolders.dir";
 
 class Control : public QObject {
     Q_OBJECT
-
 private:
     // View
     MainWindow* mainWindow;
 
-    bool analysisOk;
     // Control
     QFile* configFile;
-    EnvironmentConfiguration* conf;
+    EnvironmentConfiguration* environmentConfiguration;
+
+    QList<SystemExecution> executions;
 
     QList<SimulationPerformer *>* exes;
     ThreadManager* threadManager;
     enum FinishCode{ Success = 0,ExecuteFailed, InputsError, Cancel};
 
+    bool analysisOk;
     // Dirs and legends of experiments performed
     QList<QString>* simulationFolders;
     QStringList legends;
     QString workDirSimulationLoaded;
 
     QElapsedTimer* timer;
+
+    QColor informationColor;
+    QColor warningColor;
+    QColor errorColor;
 
     // Control( (this) with view signals)
     void establishConnections();
@@ -100,7 +110,7 @@ private:
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 
-    bool inputsOk();
+    bool inputsOk(const QList<SystemConfiguration>& sysConfs,const QList<Experiment>& experiments,const SystemOperation& sysOp);
 
     void finishSimulation(FinishCode code);
 

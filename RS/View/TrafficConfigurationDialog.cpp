@@ -30,6 +30,7 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Window);
+    this->setAttribute(Qt::WA_DeleteOnClose);
 
     this->scene = new QGraphicsScene();
     this->scene->setBackgroundBrush( QBrush(Qt::transparent) );
@@ -132,7 +133,6 @@ void TrafficConfigurationDialog::itemClicked(QListWidgetItem *item) {
 }
 
 TrafficConfigurationDialog::~TrafficConfigurationDialog() {
-
     this->clearScene();
     delete ui;
 }

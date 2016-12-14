@@ -74,6 +74,7 @@
 #include "Model/System/SystemParameters.h"
 #include "Model/System/SystemConfiguration.h"
 #include "Model/System/SystemOperation.h"
+#include "Model/System/SystemExecution.h"
 #include "Model/System/Experiment.h"
 #include "Model/System/SystemDefines.h"
 #include "Model/Traffic/TrafficModelGenerator.h"
@@ -98,12 +99,16 @@ Control::Control(QObject *parent) :
     this->timer = new QElapsedTimer();
 
     this->configFile = NULL;
-    this->conf = new EnvironmentConfiguration(this,true);
+    this->environmentConfiguration = new EnvironmentConfiguration(this,true);
 
     this->simulationFolders = NULL;
     this->threadManager = NULL;
 
     this->analysisOk = false;
+
+    this->informationColor = Qt::black;
+    this->warningColor = Qt::darkYellow;
+    this->errorColor = Qt::red;
 }
 
 Control::~Control() {
@@ -122,8 +127,8 @@ Control::~Control() {
 
     delete this->exes;
     delete this->timer;
-    conf->writeSetup();
-    delete conf;
+    environmentConfiguration->writeSetup();
+    delete environmentConfiguration;
     if( this->threadManager != NULL ) {
         threadManager->stopThreads();
         delete threadManager;
@@ -149,12 +154,11 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(exitApplication(QCloseEvent*)),this,SLOT(exitApplication(QCloseEvent*)));
     connect(this->mainWindow,SIGNAL(editOptions()),this,SLOT(editOptions()));
     connect(this->mainWindow,SIGNAL(changeLanguage(QString)),this,SLOT(changeLanguage(QString)));
-    connect(this->conf,SIGNAL(languageChanged(QStringList)),mainWindow,SLOT(translate(QStringList)) );
+    connect(this->environmentConfiguration,SIGNAL(languageChanged(QStringList)),mainWindow,SLOT(translate(QStringList)) );
     connect(this->mainWindow,SIGNAL(loadSimulationResults()),this,SLOT(loadSimulationResults()));
     connect(this->mainWindow,SIGNAL(saveSimulationResults()),this,SLOT(saveSimulationResults()));
     connect(this->mainWindow,SIGNAL(generateCSVSimulationReport(AnalysisOptions*)),this,SLOT(generateCSVSimulationReport(AnalysisOptions*)));
 
-    // TODO TEMP
     connect(this->mainWindow,&MainWindow::generateTCF,this,&Control::generateTrafficConfigurationFile);
 
     connect(this->mainWindow,&MainWindow::runSimulation,this,&Control::runSimulations);
@@ -195,7 +199,7 @@ void Control::startApp() {
         this->setParent(mainWindow);
     }
 
-    this->mainWindow->configureLanguages(conf);
+    this->mainWindow->configureLanguages(environmentConfiguration);
 
     this->establishConnections();
 
@@ -220,19 +224,19 @@ void Control::startApp() {
     this->mainWindow->clearConsole();
     this->mainWindow->initConsole();
 
-    if( conf->getSimulatorLocation().isEmpty() ) {
+    if( environmentConfiguration->getSimulatorLocation().isEmpty() ) {
         QString simulatorLocation = this->mainWindow->dialogLoadFile(trUtf8("Select Simulator executable"),"");
         simulatorLocation = simulatorLocation.trimmed();
         if(simulatorLocation.isEmpty()) {
             this->mainWindow->printConsole(trUtf8("Simulator executable not configured\n"
                                                   "The simulation wouldn't run!"),Qt::red);
         } else {
-            conf->setSimulatorLocation( simulatorLocation );
+            environmentConfiguration->setSimulatorLocation( simulatorLocation );
         }
     }
 
-    if( conf->getPluginsFolder().isEmpty() ) {
-        conf->setPluginsFolder( this->dirSetup(
+    if( environmentConfiguration->getPluginsFolder().isEmpty() ) {
+        environmentConfiguration->setPluginsFolder( this->dirSetup(
             trUtf8("Select simulator plugins folder"),
             trUtf8("Plugins folder not configured."
                    "\nMaybe the simulator wouldn't run!")) );
@@ -284,7 +288,7 @@ bool Control::loadConfiguration() {
         return false;
     }
 
-    /// Carregar
+    /// Load
     XmlConfigParser* parser = new XmlConfigParser();
     parser->loadXML(configFile);
     QList<SystemConfiguration> sysConfs = parser->getSystemsConfigured();
@@ -361,126 +365,112 @@ bool Control::saveAsConfiguration() {
 
 /**
  * @brief Verify if:
- *  (1) There are some traffic pattern configured and active;
- *  (2) There are some identical experiment configuration;
- *  (3) The system parameters are Ok
+ *  (1) There are a valid system configuration;
+ *  (2) There are traffic configured for the system configurations or a file specified in the system.ini;
+ *  (3) There are some identical experiment configuration defined;
+ *  (4) The system operation are Ok
  */
-bool Control::inputsOk() {
+bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
+                       const QList<Experiment> &experiments,
+                       const SystemOperation &sysOp) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::inputsOk" << std::endl;
 #endif
 
-    bool padroesAtivos = false;
+    int i;
+    bool validConfiguration = false;
+    bool hasValidConfigurationWithTraffic = false;
+
+    for( i = 0; i < sysConfs.size(); i++ ) {
+        SystemConfiguration conf = sysConfs.at(i);
+        if( !conf.isValid() ) {
+            this->mainWindow->printConsole(tr("The configuration at index %1 is not valid!").arg(i+1),warningColor);
+            continue;
+        } else {
+            validConfiguration = true;
+        }
+        if( conf.hasTraffic() ) {
+            hasValidConfigurationWithTraffic = true;
+        } else {
+            this->mainWindow->printConsole(tr("The configuration at index %1 has no traffic configured!").arg(i+1),warningColor);
+        }
+    }
+
+    if(!validConfiguration) {
+        this->mainWindow->printConsole(tr("There is no valid configuration!"),errorColor);
+        return false;
+    }
+
     QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
     settings.beginGroup("Traffic_Parameters");
     bool useDefault = settings.value("useDefault",true).toBool();
     QString alternativeFile = settings.value("alternative",QString()).toString();
     settings.endGroup();
 
-    if(useDefault) {
-        // Verificar se há padrões de tráfico ativos
-// TODO fazer
-//        for(unsigned int x = 0; x < this->systemParameters->getXSize(); x++) {
-//            for(unsigned int y = 0; y < this->systemParameters->getYSize(); y++) {
-//                for(unsigned int z = 0; z < this->systemParameters->getZSize(); z++) {
-//                    Node* no = this->trafficPatternManager->getNode(COORDINATE_3D_TO_ID(x,y,z,
-//                                                                                        systemParameters->getXSize(),
-//                                                                                        systemParameters->getYSize()));
-//                    if( no != NULL ) {
-//                        for(unsigned int pattern = 0; pattern < MAX_PATTERNS; pattern++) {
-//                            if( no->isPatternActive(pattern) ) {
-//                                padroesAtivos = true;
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    if(padroesAtivos){
-//                       break;
-//                    }
-//                }
-//                if(padroesAtivos) {
-//                    break;
-//                }
-//            }
-//            if(padroesAtivos){
-//               break;
-//            }
-//        }
 
-        if(!padroesAtivos) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>There is no traffic pattern defined</font>"));
+    if(useDefault) { // Use default method for traffic configuration - RedScarf generate the traffic model(configuration) file .tcf
+        if( !hasValidConfigurationWithTraffic ) {
+            this->mainWindow->printConsole(tr("There is no valid configuration with traffic defined!"),errorColor);
             return false;
         }
-    } else {
+    } else { // Alternative method try use the file defined in the system.ini
         if(alternativeFile.isNull() || alternativeFile.isEmpty()) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>The alternative file isn't defined.<br />Please verify the section 'Traffic_Parameters' in system.ini file</font>"));
+            this->mainWindow->printConsole(trUtf8("The alternative file isn't defined.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
             return false;
         } else {
             QFile file(alternativeFile);
             if( !file.exists() ) {
-                this->mainWindow->printConsole(trUtf8("<font color=red>The alternative file defined don't exists.<br />Please verify the section 'Traffic_Parameters' in system.ini file</font>"));
+                this->mainWindow->printConsole(trUtf8("The alternative file defined don't exists.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
                 return false;
             }
         }
+        this->mainWindow->printConsole(tr("Using traffic configuration file defined in system.ini"),informationColor);
     }
 
-    // Verificar se há algum experimento repetido
-// TODO fazer
-    for(unsigned int i = 1; i < 5; i++) {
-        // TODO
-        Experiment* exp1 = 0;// this->experimentManager->getExperiment(i);
-        if(exp1 != NULL) {
-            if(exp1->isActive()) {
-                for(unsigned int x = i+1; x < 6; x++) {
-                    // TODO
-                    Experiment* exp2 = 0;//this->experimentManager->getExperiment(x);
-                    if(exp2 != NULL) {
-                        if( exp2->isActive() && exp1->equals(exp2) ) {
-                            this->mainWindow->printConsole(trUtf8("<font color=red>Configuration #%1 is identical to configuration #%2 (this is not allowed)</font>").arg(i).arg(x));
-                            return false;
-                        }
-                    }
+    // Verify if exist some repeated experiment configuration
+    for( i = 0; i < experiments.size()-1; i++) {
+        Experiment exp1 = experiments.at(i);
+        if(exp1.isActive()) {
+            for(int x = i+1; x < experiments.size(); x++) {
+                Experiment exp2 = experiments.at(x);
+                if( exp2.isActive() && exp1.equals(&exp2) ) {
+                    this->mainWindow->printConsole(trUtf8("The Experiment #%1 and Experiment #%2 configuration are identical (this is not allowed)").arg(i+1).arg(x+1),errorColor);
+                    return false;
                 }
             }
         }
     }
 
 
-    // TODO Verificar se os parâmetros FClk estão OK
-//    unsigned int fClkStepType = this->systemParameters->getfClkStepType();
-//    float fClkFirst = this->systemParameters->getfClkFirst();
-//    float fClkLast = this->systemParameters->getfClkLast();
-//    float fClkStep = this->systemParameters->getfClkStep();
-    SystemOperation sop = this->mainWindow->getSystemOperation();
-    unsigned int fClkStepType = sop.fClkStepType;
-    float fClkFirst = sop.fClkFirst;
-    float fClkLast = sop.fClkLast;
-    float fClkStep = sop.fClkStep;
+    unsigned int fClkStepType = sysOp.fClkStepType;
+    float fClkFirst = sysOp.fClkFirst;
+    float fClkLast = sysOp.fClkLast;
+    float fClkStep = sysOp.fClkStep;
 
     if ( fClkStepType == 0) {
         if (( fClkFirst <  fClkLast) && (fClkStep <  0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>If First_Fclk less than Last_Fclk, step value (inc) must be greather than 0</font>"));
+            this->mainWindow->printConsole(trUtf8("If First_FClk less than Last_FClk, step value (inc) must be greather than 0"),errorColor);
             return false;
         }
         if ((fClkFirst >  fClkLast) && (fClkStep >  0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>If First_Fclk greather than Last_Fclk, step value (inc) must be less than 0</font>"));
+            this->mainWindow->printConsole(trUtf8("If First_FClk greather than Last_FClk, step value (inc) must be less than 0"),errorColor);
             return false;
         }
         if ((fClkFirst != fClkLast) && (fClkStep == 0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>Step value (inc) must be different of 0</font>"));
+            this->mainWindow->printConsole(trUtf8("Step value (inc) must be different of 0"),errorColor);
             return false;
         }
     } else if(fClkStepType == 1) {
         if ((fClkFirst <  fClkLast) && (fClkStep >  0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>If First_Fclk less than Last_Fclk, step value (exp) must be less than 0</font>"));
+            this->mainWindow->printConsole(trUtf8("If First_FClk less than Last_FClk, step value (exp) must be less than 0"),errorColor);
             return false;
         }
         if ((fClkFirst >  fClkLast) && (fClkStep <  0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>If First_Fclk greather than Last_Fclk, step value (exp) must be greather than 0</font>"));
+            this->mainWindow->printConsole(trUtf8("If First_FClk greather than Last_FClk, step value (exp) must be greather than 0"),errorColor);
             return false;
         }
         if ((fClkFirst != fClkLast) && (fClkStep == 0)) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>Step value (exp) must be different of 0</font>"));
+            this->mainWindow->printConsole(trUtf8("Step value (exp) must be different of 0"),errorColor);
             return false;
         }
     }
@@ -688,7 +678,7 @@ void Control::finishSimulation(FinishCode code) {
 
     switch (code) {
         case Control::ExecuteFailed :
-            mainWindow->printConsole(trUtf8("<font color=red>Execute Failed</font>"));
+            mainWindow->printConsole(trUtf8("<b>!!!Execute Failed!!!</b>"),errorColor,Qt::AlignHCenter);
             if(simulationFolders != NULL) {
                 simulationFolders->clear();
                 delete simulationFolders;
@@ -853,7 +843,7 @@ void Control::viewWaveform() {
             }
 
             if(ok && !item.isEmpty()) {
-                QString waveTool = conf->getWaveformTool();
+                QString waveTool = environmentConfiguration->getWaveformTool();
                 QStringList args = waveTool.split(" ");
                 args.removeFirst();
                 WaveformViewer* waveViewer = new ExternalWaveformViewer(waveTool,args,this);
@@ -1092,7 +1082,7 @@ void Control::editOptions() {
     std::cout << "Control/Control::editOptions" << std::endl;
 #endif
 
-    ConfigDialog* configDial = new ConfigDialog(conf,mainWindow);
+    ConfigDialog* configDial = new ConfigDialog(environmentConfiguration,mainWindow);
     configDial->setLocale( mainWindow->locale() );
     connect(configDial,SIGNAL(applyConfiguration(EnvironmentConfiguration*,QString)),
             this,SLOT(applySettings(EnvironmentConfiguration*,QString)));
@@ -1107,7 +1097,7 @@ void Control::changeLanguage(QString languageName) {
     std::cout << "Control/Control::editOptions" << std::endl;
 #endif
 
-    conf->setLanguageSelected(languageName);
+    environmentConfiguration->setLanguageSelected(languageName);
 
 }
 
@@ -1116,13 +1106,13 @@ void Control::applySettings(EnvironmentConfiguration *env,QString languageName) 
     std::cout << "Control/Control::applySettings" << std::endl;
 #endif
 
-    conf->setLanguageSelected( languageName );
-    conf->setPluginsFolder( env->getPluginsFolder() );
-    conf->setSimulatorLocation( env->getSimulatorLocation() );
-    conf->setThreadNumber( env->getThreadNumber() );
-    conf->setWorkFolder( env->getWorkFolder() );
-    conf->setWaveformTool(env->getWaveformTool());
-    conf->writeSetup();
+    environmentConfiguration->setLanguageSelected( languageName );
+    environmentConfiguration->setPluginsFolder( env->getPluginsFolder() );
+    environmentConfiguration->setSimulatorLocation( env->getSimulatorLocation() );
+    environmentConfiguration->setThreadNumber( env->getThreadNumber() );
+    environmentConfiguration->setWorkFolder( env->getWorkFolder() );
+    environmentConfiguration->setWaveformTool(env->getWaveformTool());
+    environmentConfiguration->writeSetup();
 
 }
 
@@ -1159,7 +1149,7 @@ void Control::loadSimulationResults() {
     // Get a string with date and time in ISO format
     QString dateTimeDir = dateTime.toString(Qt::ISODate);
     dateTimeDir.replace(':','-');
-    workDirSimulationLoaded = conf->getWorkFolder() + "/SimulationsLoaded/@" + dateTimeDir + "/";
+    workDirSimulationLoaded = environmentConfiguration->getWorkFolder() + "/SimulationsLoaded/@" + dateTimeDir + "/";
     FolderCompressor* fc = new FolderCompressor( FolderCompressor::Decompress,
                         filename, workDirSimulationLoaded );
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
@@ -1485,14 +1475,9 @@ void Control::generateTrafficConfigurationFile() {
 
     QList<Experiment> experiments = this->mainWindow->getAllExperiments();
     Experiment experiment = experiments.at(0);
-    unsigned int flowControl = experiment.getFlowControl();
-    if( flowControl == 0 ) { // Hand-shake
-        flowControl = 4; // Cycles per flit
-    } else { // Credit-based
-        flowControl = 1; // Cycles per flit
-    }
+    SystemDefines::FlowControl flowControl = SystemDefines::getInstance()->findFlowControl(experiment.getFlowControl());
 
-    TrafficModelGenerator* tmg = new TrafficModelGenerator(sysConf,freqs.at(0),flowControl);
+    TrafficModelGenerator* tmg = new TrafficModelGenerator(sysConf,freqs.at(0),flowControl.getCyclesPerFlit());
 
     try {
         tmg->generateTraffic( outDir.toStdString().c_str() );
@@ -1513,13 +1498,19 @@ void Control::runSimulations() {
     std::cout << "Control/Control::runSimulations" << std::endl;
 #endif
 
-    if( !inputsOk() ) {
+    // Clear the list of previous executions
+    this->executions.clear();
+
+    // Get all the window parameters for the experiments
+    QList<SystemConfiguration> systemConfs = this->mainWindow->getAllConfiguration();
+    QList<Experiment> experiments = this->mainWindow->getAllExperiments();
+    SystemOperation systemOp = this->mainWindow->getSystemOperation();
+
+    // Verify if all inputs are ok
+    if( !inputsOk(systemConfs,experiments,systemOp) ) {
         finishSimulation( Control::InputsError );
         return;
     }
-
-// TODO verificar
-//    this->copySystemParameters(); Mudar de copy para store run
 
     if( simulationFolders != NULL ) {
         simulationFolders->clear();
@@ -1535,30 +1526,28 @@ void Control::runSimulations() {
     QString dateTimeDir = dateTime.toString(Qt::ISODate);
     dateTimeDir.replace(':','-');
     // To manipulate the folders that will be used
-    QDir dirWork = QDir(conf->getWorkFolder() + "/" + dateTimeDir);
-    // Criar diretório de trabalho
+    QDir dirWork = QDir(environmentConfiguration->getWorkFolder() + "/" + dateTimeDir);
+    // Create work dir
     if(!dirWork.exists()) {
         dirWork.mkpath(".");
         this->mainWindow->printConsole(trUtf8("- Work directory created"));
     }
 
-    threadManager = new ThreadManager( (int) conf->getThreadNumber() , this );
+    threadManager = new ThreadManager( (int) environmentConfiguration->getThreadNumber() , this );
 
     connect(threadManager,SIGNAL(allFinished()),this,SLOT(finishExecution()));
     connect(threadManager,SIGNAL(threadFinished(int)),this,SLOT(updateStatusExecution(int)));
 
     int numberOfExperiments = 0;
 
-    QList<SystemConfiguration> sysConfs = this->mainWindow->getAllConfiguration();
-    QList<Experiment> experiments = this->mainWindow->getAllExperiments();
-    SystemOperation sysOp = this->mainWindow->getSystemOperation();
     QList<float> opFreqs = this->mainWindow->getOperationFrequencies();
-    unsigned int runCountPerExperiment = opFreqs.size(); // Alterar
+    unsigned int runCountPerExperiment = opFreqs.size();
 
+    // Getting option of traffic model use - RedScarf generates the traffic conf or copy an existent file
     QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
     settings.beginGroup("Traffic_Parameters");
     bool useDefaultTraffic = settings.value("useDefault",true).toBool();
-    QString alternativeFile = settings.value("alternative",QString()).toString();
+    QString alternativeTrafficFile = settings.value("alternative",QString()).toString();
     settings.endGroup();
 
     settings.beginGroup("Input_Buffers");
@@ -1567,210 +1556,245 @@ void Control::runSimulations() {
 
     SystemDefines* def = SystemDefines::getInstance();
 
-    // For each experiment - create a folder
-    for( int i = 0; i < experiments.size(); i++ ) {
-        Experiment* experiment = &experiments[i];
-            if(experiment->isActive()) {
-                numberOfExperiments++;
+    // For each experiment - create a folder only in valid configurations
+    for( int expIndex = 0; expIndex < experiments.size(); expIndex++ ) { // Each experiment
+        Experiment* experiment = &experiments[expIndex];
+        if(experiment->isActive()) {
+            SystemDefines::Topology topology = def->findTopology(experiment->getTopology());
+            SystemDefines::Routing routing = def->findRoutingAlgorithm(topology.getTopology());
+            SystemDefines::FlowControl flowControl = def->findFlowControl(experiment->getFlowControl());
+            SystemDefines::PriorityGenerator pg = def->findArbiterPG(experiment->getArbiterType());
+            QString vcOption = def->findVcOption(experiment->getVCOption());
+            QString strRouting = routing.getRoutingAlgorithm( experiment->getRoutingAlgorithm() );
 
-                SystemDefines::Topology topology = def->findTopology(experiment->getTopology());
-                SystemDefines::Routing routing = def->findRoutingAlgorithm(topology.getTopology());
-                SystemDefines::FlowControl flowControl = def->findFlowControl(experiment->getFlowControl());
-                SystemDefines::PriorityGenerator pg = def->findArbiterPG(experiment->getArbiterType());
-                QString vcOption = def->findVcOption(experiment->getVCOption());
-                QString strRouting = routing.getRoutingAlgorithm( experiment->getRoutingAlgorithm() );
-
-                QString dirGenerated = QString("dir_%1_%2_%3_%4_VC%5_IN%6_OUT%7")
-                        .arg( topology.getTopology() )
-                        .arg( strRouting )
-                        .arg( flowControl.getFlowControl() )
-                        .arg( pg.getPG() )
-                        .arg( vcOption )
-                        .arg(experiment->getInputBufferSize())
-                        .arg(experiment->getOutputBufferSize());
-                QString dirExperiment = dirWork.absolutePath() + "/" + dirGenerated;
-                dirWork.mkdir( dirExperiment );
-
-                /*
-                 * Generate stopsim.par on work dir (dir to set of experiments - root experiments dir)
-                 */
-                QFile* stopSimPar = new QFile( dirWork.absolutePath()+"/stopsim.par");
-                if(!stopSimPar->open(QIODevice::WriteOnly)) {
-                    this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
-                                                        .arg(stopSimPar->fileName()),Qt::red);
-                    return;
-                }
-
-                switch(sysOp.stopOption) {
-                    case 0: // Number of packets
-                        sysOp.stopTime_cycles = 0;
-                        sysOp.stopTime_ns = 0;
-                        break;
-                    case 1: // Cycles
-                        sysOp.stopTime_cycles = sysOp.stopTime_ns / sysOp.tClk; // TODO verificar
-                        break;
-                    case 2: // Nanoseconds
-                        sysOp.stopTime_ns = sysOp.stopTime_cycles * sysOp.tClk; // TODO verificar
-                        break;
-                }
-                QString stopSimParContent = QString("%1\t%2")
-                        .arg(sysOp.stopTime_cycles)
-                        .arg(sysOp.stopTime_ns);
-                stopSimPar->write(stopSimParContent.toUtf8());
-                stopSimPar->close();
-                delete stopSimPar;
-                /*
-                 * End stopsim.par
-                 */
-
-                SystemConfiguration sys = sysConfs.at(0); // TODO verificar configuração e topologia do experimento - relacionar
+            bool hasTopologyCompliant = false;
+            for( int sysConfIndex = 0; sysConfIndex < systemConfs.size(); sysConfIndex++ ) { // Each System Configuration
+                SystemConfiguration sys = systemConfs.at(sysConfIndex);
                 SystemParameters sysParam = sys.getSystemParameters();
-                SystemOperation* sop = new SystemOperation(sysOp);
-                for(unsigned int x = 0; x < runCountPerExperiment; x++) {
-                    float fClk = opFreqs.at(x);
-                    /*
-                     * Generate Traffic conf file on simulation dir (root_experiment_dir/experiment/fClk/)
-                     */
-                    QDir dirSimulation = QDir( dirExperiment );
-                    QString dirFreqOp = QString("%1MHz").arg(fClk);
-                    dirSimulation.mkdir(dirFreqOp);
-                    dirSimulation.cd(dirFreqOp);
-                    QString strDirSimul = dirSimulation.absolutePath();
-                    this->simulationFolders->append(strDirSimul);
+                if( SystemParameters::getTopologyType(topology.getTopologyType()) == sysParam.getTopologyType() ) {
+                    // Valid configuration of topology for the current experiment - generate de simulation configuration
 
-                    // TODO verificar - mudar, verificar se a topologia do experimento atual é condizente para a configuração que gerará o modelo de tráfego
-                    TrafficModelGenerator* trafficGen =
-                            new TrafficModelGenerator(sys,fClk,flowControl.getCyclesPerFlit());
-                    try {
-                        if( useDefaultTraffic ) {
-                            trafficGen->generateTraffic( strDirSimul.toStdString().c_str() );
-                        } else {
-                            QFile::copy(alternativeFile,strDirSimul+"/traffic.tcf");
+                    // Increment the number of experiments
+                    numberOfExperiments++;
+
+                    // Set valid
+                    hasTopologyCompliant = true;
+
+                    // Build the directory of the current experiment
+                    QString sysConfDir = sysParam.getFormattedString();
+                    sysConfDir = sysConfDir.remove("- Data Width: ");
+                    sysConfDir = sysConfDir.replace(' ',"_");
+                    sysConfDir = sysConfDir.replace("_-_","_");
+                    QString dirGenerated = QString("%1/exp_%2_%3_%4_%5_VC%6_IN%7_OUT%8")
+                            .arg( sysConfDir )
+                            .arg( topology.getTopology() )
+                            .arg( strRouting )
+                            .arg( flowControl.getFlowControl() )
+                            .arg( pg.getPG() )
+                            .arg( vcOption )
+                            .arg(experiment->getInputBufferSize())
+                            .arg(experiment->getOutputBufferSize());
+                    QString dirExperiment = dirWork.absolutePath() + "/" + dirGenerated;
+                    dirWork.mkpath( dirExperiment );
+
+                    for( unsigned int fClkIndex = 0; fClkIndex < runCountPerExperiment; fClkIndex++) { // Each operation frequency
+                        float fClk = opFreqs.at(fClkIndex);
+                        float tClk = (1.0f / fClk ) * 1000.0f;
+
+                        // Build the execution directory of the simulation
+                        QDir dirSimulation = QDir( dirExperiment );
+                        QString dirFreqOp = QString("%1MHz").arg(fClk);
+                        dirSimulation.mkdir(dirFreqOp);
+                        dirSimulation.cd(dirFreqOp);
+                        QString strDirSimulation = dirSimulation.absolutePath();
+
+                        // Add the directory to list of simulation folders
+                        this->simulationFolders->append(strDirSimulation);
+                        // Add the current configuration to list of executions
+                        SystemExecution sysExe;
+                        sysExe.setExperiment(*experiment);
+                        sysExe.setOperationFrequency(fClk);
+                        sysExe.setSystemConfiguration(sys);
+                        sysExe.setWorkFolder(strDirSimulation);
+                        this->executions.append(sysExe);
+
+
+                        /*
+                         * Generate stopsim.par on simulation dir (work experiment dir)
+                         */
+                        QFile* stopSimPar = new QFile( strDirSimulation+"/stopsim.par");
+                        if(!stopSimPar->open(QIODevice::WriteOnly)) {
+                            this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                                                                .arg(stopSimPar->fileName()),errorColor);
+                            this->finishSimulation( ExecuteFailed );
+                            return;
                         }
-                        delete trafficGen;
-                    } catch (const char* exception) {
-                        this->mainWindow->printConsole(trUtf8("Error in generate traffic model: %1")
-                                                       .arg(QString::fromStdString(exception)),Qt::red);
-                        delete trafficGen;
-                        delete sop;
-                        return;
-                    }
-                    /*
-                     * End generate traffic.tcf
-                     */
 
-                    /*
-                     * Generate simconf.conf - file with specified plugins
-                     */
-                    QFile* simConf = new QFile( strDirSimul+"/"+SIMULATOR_CONF_FILE);
-                    if(!simConf->open(QIODevice::WriteOnly)) {
-                        this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
-                                                            .arg(simConf->fileName()),Qt::red);
-                        return;
-                    }
+                        switch(systemOp.stopOption) {
+                            case 0: // Number of packets
+                                systemOp.stopTime_cycles = 0;
+                                systemOp.stopTime_ns = 0;
+                                break;
+                            case 1: // Cycles
+                                systemOp.stopTime_cycles = systemOp.stopTime_ns / tClk; // TODO verificar tClk
+                                break;
+                            case 2: // Nanoseconds
+                                systemOp.stopTime_ns = systemOp.stopTime_cycles * tClk; // TODO verificar tClk
+                                break;
+                        }
+                        QString stopSimParContent = QString("%1\t%2")
+                                .arg(systemOp.stopTime_cycles)
+                                .arg(systemOp.stopTime_ns);
+                        stopSimPar->write(stopSimParContent.toUtf8());
+                        stopSimPar->close();
+                        delete stopSimPar;
+                        /*
+                         * End stopsim.par
+                         */
 
+                        /*
+                         * Generate Traffic conf file on simulation dir (root_experiment_dir/sytemconfiguration/experiment/fClk/)
+                         */
+                        TrafficModelGenerator* trafficGen =
+                                new TrafficModelGenerator(sys,fClk,flowControl.getCyclesPerFlit());
+                        try {
+                            if( useDefaultTraffic ) {
+                                trafficGen->generateTraffic( strDirSimulation.toStdString().c_str() );
+                            } else {
+                                if(QFile::copy(alternativeTrafficFile,strDirSimulation+"/traffic.tcf")) {
+                                    throw tr("It is not possible copy the configured traffic file defined in system.ini to work dir.").toStdString().c_str();
+                                }
+                            }
+                            delete trafficGen;
+                        } catch (const char* exception) {
+                            this->mainWindow->printConsole(trUtf8("Error in generate traffic model: %1")
+                                                           .arg(QString::fromStdString(exception)),errorColor);
+                            delete trafficGen;
+                            this->finishSimulation( ExecuteFailed );
+                            return;
+                        }
+                        /*
+                         * End generate traffic.tcf
+                         */
 
-                    QString simConfContent =
-                            QString("noc = %1\n"
-                                    "router = %2\n"
-                                    "routing = %3\n"
-                                    "flowcontrol = %4\n"
-                                    "memory = %5\n"
-                                    "prioritygenerator = %6")
-                            .arg(topology.getNoCPlugin())
-                            .arg(topology.getRouterPlugin())
-                            .arg(routing.getRoutingPlugin(experiment->getRoutingAlgorithm()))
-                            .arg(flowControl.getPlugin())
-                            .arg(memPlugin)
-                            .arg(pg.getPlugin());
-
-                    simConf->write(simConfContent.toUtf8());
-                    simConf->close();
-                    delete simConf;
-                    /*
-                     * End simconf.conf
-                     */
-
-                    /*
-                     * Setup arguments to the simulator executable (passing through command-line arguments)
-                     */
-                    float TClk = (1.0f/ fClk) * 1000.0f;
-                    QStringList args;
-                    args.append(QString("%1").arg(TClk));
-                    args.append(QString("%1").arg(strDirSimul));
-                    args.append( conf->getPluginsFolder() );
-                    switch (sysParam.getTopologyType()) {
-                        case SystemParameters::NonOrthogonal:
-                            args.append("-nelements");
-                            args.append( QString::number( sysParam.getNumberElements() ) );
-                            break;
-                        case SystemParameters::Orthogonal3D:
-                            args.append("-zsize");
-                            args.append(QString::number(sysParam.getZSize()));
-                        case SystemParameters::Orthogonal2D:
-                            args.append("-xsize");
-                            args.append(QString::number(sysParam.getXSize()));
-                            args.append("-ysize");
-                            args.append(QString::number(sysParam.getYSize()));
-                            break;
-                    }
-                    args.append("-datawidth");
-                    args.append(QString::number(sysParam.getDataWidth()));
-                    args.append("-fifoin");
-                    args.append(QString::number(experiment->getInputBufferSize()));
-                    args.append("-fifoout");
-                    args.append(QString::number(experiment->getOutputBufferSize()));
-                    if( experiment->getVCOption() > 0 ) {
-                        args.append( "-vc" );
-                        args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
-                    }
-
-                    if( sysOp.vcdOption ) {
-                        args.append("-trace");
-                    }
-                    /*
-                     * End setup command-line arguments
-                     */
+                        /*
+                         * Generate simconf.conf - file with specified plugins
+                         */
+                        QFile* simConf = new QFile( strDirSimulation+"/"+SIMULATOR_CONF_FILE);
+                        if(!simConf->open(QIODevice::WriteOnly)) {
+                            this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                                                                .arg(simConf->fileName()),Qt::red);
+                            this->finishSimulation( ExecuteFailed );
+                            return;
+                        }
 
 
-                    /*
-                     * Generate a simulation performer (that run the simulator) and its separated thread
-                     */
-                    SimulationPerformer* exeSystem = new SimulationPerformer(TClk,strDirSimul,
-                                                                             conf->getSimulatorLocation(),
-                                                                             args);
+                        QString simConfContent =
+                                QString("noc = %1\n"
+                                        "router = %2\n"
+                                        "routing = %3\n"
+                                        "flowcontrol = %4\n"
+                                        "memory = %5\n"
+                                        "prioritygenerator = %6")
+                                .arg(topology.getNoCPlugin())
+                                .arg(topology.getRouterPlugin())
+                                .arg(routing.getRoutingPlugin(experiment->getRoutingAlgorithm()))
+                                .arg(flowControl.getPlugin())
+                                .arg(memPlugin)
+                                .arg(pg.getPlugin());
 
-                    exeSystem->setObjectName(QString("Execution%1").arg(x));
-                    QThread* threadExecucao = new QThread(this);
-                    threadExecucao->setObjectName(QString("Execution%1").arg(strDirSimul));
-                    connect(threadExecucao,SIGNAL(started()),exeSystem,SLOT(execute()));
-                    connect(threadExecucao,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
-                    connect(exeSystem,SIGNAL(destroyed(QObject*)),this,SLOT(removeExe(QObject*)));
-                    connect(exeSystem,SIGNAL(finished()),threadExecucao,SLOT(quit()));
-                    connect(exeSystem,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
-        /// Dividir simuladores
-                    connect(exeSystem,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
-        /// Feedback individual para o usuário
-                    connect(exeSystem,SIGNAL(unsuccessfullyExecution()),this,SLOT(executeUnsuccessful()));
-                    exeSystem->moveToThread(threadExecucao);
+                        simConf->write(simConfContent.toUtf8());
+                        simConf->close();
+                        delete simConf;
+                        /*
+                         * End simconf.conf
+                         */
 
-                    threadManager->addPool( threadExecucao );
-                    this->exes->append( exeSystem );
-                    /*
-                     * End generate simulation performer
-                     */
 
-                } // for(unsigned int x = 0; x < runCountPerExperiment; x++)
-                delete sop;
-            } // if(experiment->isActive())
-    } // for( unsigned int i = 1; i <= 5; i++ )
+                        /*
+                         * Setup arguments to the simulator executable (passing through command-line arguments)
+                         */
+                        QStringList args;
+                        args.append(QString("%1").arg(tClk));
+                        args.append(QString("%1").arg(strDirSimulation));
+                        args.append( environmentConfiguration->getPluginsFolder() );
+                        switch (sysParam.getTopologyType()) {
+                            case SystemParameters::NonOrthogonal:
+                                args.append("-nelements");
+                                args.append( QString::number( sysParam.getNumberElements() ) );
+                                break;
+                            case SystemParameters::Orthogonal3D:
+                                args.append("-zsize");
+                                args.append(QString::number(sysParam.getZSize()));
+                            case SystemParameters::Orthogonal2D:
+                                args.append("-xsize");
+                                args.append(QString::number(sysParam.getXSize()));
+                                args.append("-ysize");
+                                args.append(QString::number(sysParam.getYSize()));
+                                break;
+                        }
+                        args.append("-datawidth");
+                        args.append(QString::number(sysParam.getDataWidth()));
+                        args.append("-fifoin");
+                        args.append(QString::number(experiment->getInputBufferSize()));
+                        args.append("-fifoout");
+                        args.append(QString::number(experiment->getOutputBufferSize()));
+                        if( experiment->getVCOption() > 0 ) {
+                            args.append( "-vc" );
+                            args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
+                        }
+
+                        if( systemOp.vcdOption ) {
+                            args.append("-trace");
+                        }
+                        /*
+                         * End setup command-line arguments
+                         */
+
+                        /*
+                         * Generate a simulation performer (that run the simulator) in a separated thread
+                         */
+                        SimulationPerformer* exeSystem = new SimulationPerformer(tClk,strDirSimulation,
+                                                                                 environmentConfiguration->getSimulatorLocation(),
+                                                                                 args);
+
+                        exeSystem->setObjectName(QString("Execution_%1_%2_%3").arg(expIndex).arg(sysConfIndex).arg(fClkIndex));
+                        QThread* executionThread = new QThread(this);
+                        executionThread->setObjectName(QString("Execution%1").arg(strDirSimulation));
+                        connect(executionThread,SIGNAL(started()),exeSystem,SLOT(execute()));
+                        connect(executionThread,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
+                        connect(exeSystem,SIGNAL(destroyed(QObject*)),this,SLOT(removeExe(QObject*)));
+                        connect(exeSystem,SIGNAL(finished()),executionThread,SLOT(quit()));
+                        connect(exeSystem,SIGNAL(finished()),exeSystem,SLOT(deleteLater()));
+            /// Connect the signal sendMessage(QString) in different views to individual simulation feedback. Not implemented
+                        connect(exeSystem,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
+            /// Feedback individual de cada execução
+                        connect(exeSystem,SIGNAL(unsuccessfullyExecution()),this,SLOT(executeUnsuccessful()));
+                        exeSystem->moveToThread(executionThread);
+
+                        threadManager->addPool( executionThread );
+                        this->exes->append( exeSystem );
+                        /*
+                         * End generate simulation performer
+                         */
+                    } // End - Each operaration frequency
+
+                } // End - Valid configuration: Experiment topology == System Configuration topology
+
+            } // End - Each System configuration
+            if( !hasTopologyCompliant ) {
+                this->mainWindow->printConsole(tr("There is no valid configuration for the active experiment: %1").arg(expIndex+1),errorColor);
+                this->finishSimulation( ExecuteFailed );
+                return;
+            }
+        } // End - Active Experiment - if(experiment->isActive())
+    } // End - for( unsigned int i = 1; i <= 5; i++ )
 
     unsigned int nExp = runCountPerExperiment*numberOfExperiments;
     this->mainWindow->setLimitsProgressBar( 0, nExp);
 
-    this->mainWindow->printConsole( trUtf8("- Number of simulations to be run: %1").arg(nExp) );
+    this->mainWindow->printConsole( trUtf8("- Number of simulations to be run: %1").arg(nExp),Qt::green );
 
     timer->start();
     threadManager->runThreads();
-
 }
