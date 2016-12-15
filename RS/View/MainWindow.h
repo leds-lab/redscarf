@@ -140,6 +140,7 @@ public slots:
     void runAnalysis();
 
 private slots:
+    void setAppModified();
 
     // Actions
     // File menu

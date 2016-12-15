@@ -200,6 +200,8 @@ void Control::startApp() {
 
     this->establishConnections();
 
+    this->mainWindow->setWindowModified(false);
+
     QStringList files = QApplication::arguments().filter(".rsf");
     if( files.size() > 0 ) {
         QString file = files.at(0);

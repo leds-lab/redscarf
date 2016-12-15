@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 #endif
     ui->setupUi(this); // Setup the mainwindown graphical form
 
-
+    // Regisger type to use as variant value
     qRegisterMetaType< QList<QVariant> >( "QList<QVariant>" );
 
     // Center the window on the center - disabled - the OS manager define the most adequated position
@@ -346,8 +346,6 @@ void MainWindow::establishConnections() {
 
     connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(fClkFirstUpdate(double)));
     connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(fClkLastUpdate(double)));
-//    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(fClkStepUpdate(double)));
-//    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(fClkStepTypeUpdate(int)));
 
     connect(ui->buttonCancel,SIGNAL(clicked()),this,SIGNAL(cancel()));
     connect(ui->buttonRunSimulation,SIGNAL(clicked()),this,SLOT(run()));
@@ -382,6 +380,56 @@ void MainWindow::establishConnections() {
     connect(ui->actionGenerateCSV,SIGNAL(triggered()),this,SLOT(generateCSVClicked()));
 
     connect(ui->toolButtonClearConsole,SIGNAL(clicked()),this,SLOT(initConsole()));
+
+
+    // All changes that modify the configuration
+    // Routing
+    connect(ui->comboInRoutingAlgorithmExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInRoutingAlgorithmExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInRoutingAlgorithmExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInRoutingAlgorithmExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInRoutingAlgorithmExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    // Flow Control
+    connect(ui->comboInSwitchingExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInSwitchingExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInSwitchingExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInSwitchingExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInSwitchingExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    // Arbiter
+    connect(ui->comboInArbiterTypeExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInArbiterTypeExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInArbiterTypeExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInArbiterTypeExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInArbiterTypeExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    // VC
+    connect(ui->comboInVCExp1,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInVCExp2,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInVCExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInVCExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->comboInVCExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    // Buffers
+    connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInInputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInInputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInInputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInOutputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInOutputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInOutputBuffersExp3,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInOutputBuffersExp4,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinInOutputBuffersExp5,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    // Others
+    connect(ui->comboInSimulationStopMethod,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinBoxStopTimeCycles,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinBoxStopTimeNs,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(setAppModified()));
+    connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(setAppModified()));
+    connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->doubleSpinInStep,SIGNAL(valueChanged(double)),this,SLOT(setAppModified()));
+}
+
+void MainWindow::setAppModified() {
+    this->setWindowModified(true);
 }
 
 void MainWindow::configureLanguages(EnvironmentConfiguration *conf) {
@@ -1335,6 +1383,7 @@ void MainWindow::experimentChangeState() {
             ui->toolButtonColorCurve5->setEnabled(checked);
             break;
     }
+    this->setAppModified();
 }
 
 void MainWindow::topologyExpChange(int newValue) {
@@ -1376,6 +1425,7 @@ void MainWindow::topologyExpChange(int newValue) {
         QString alg = routing.getRoutingAlgorithm(x);
         routingCombo->insertItem(qint32(x),alg);
     }
+    this->setAppModified();
 
 }
 
@@ -1434,7 +1484,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             break;
     }
-
+    this->setAppModified();
 }
 
 void MainWindow::copyPreviousExperimentActive() {
@@ -1479,6 +1529,7 @@ void MainWindow::copyPreviousExperimentActive() {
     QSpinBox* outputBufferDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
     outputBufferDst->setValue( outputBufferSrc->value() );
 
+    this->setAppModified();
 }
 
 void MainWindow::stopOptionUpdate(int pos) {
@@ -1502,17 +1553,14 @@ void MainWindow::fClkFirstUpdate(double value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkFirstUpdated" << std::endl;
 #endif
-
     ui->doubleSpinInChannelTclkRange->setValue( (1.0 / value ) * 1000.0);
     ui->doubleSpinInChannelBWRange->setValue( value * ui->inDataWidth->value() );
-
 }
 
 void MainWindow::fClkLastUpdate(double value) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::fClkLastUpdated" << std::endl;
 #endif
-
     ui->doubleSpinInChannelTclkRange_2->setValue( (1.0 / value) * 1000.0 );
     ui->doubleSpinInChannelBWRange_2->setValue( value * ui->inDataWidth->value() );
 }
@@ -1646,6 +1694,7 @@ void MainWindow::addSystemConfiguration() {
         QVariant parameters;
         parameters.setValue(sp);
         item->setData(Qt::UserRole,parameters);
+        this->setAppModified();
     }
 
 }
@@ -1679,7 +1728,7 @@ void MainWindow::removeSelectedItems() {
                 QListWidgetItem* item = items.at(i);
                 delete item;
             }
-
+            this->setWindowModified(true);
         }
     }
 }
@@ -1729,4 +1778,5 @@ void MainWindow::setupTraffic(QList<QVariant> configuration) {
         QListWidgetItem* sysConf = systemSelected.at(i);
         sysConf->setData(Qt::UserRole+1,configuration);
     }
+    this->setAppModified();
 }
