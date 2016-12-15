@@ -91,7 +91,7 @@ private:
 
     bool analysisOk;
     // Dirs and legends of experiments performed
-    QList<QString>* simulationFolders;
+    QStringList simulationFolders;
     QStringList legends;
     QString workDirSimulationLoaded;
 

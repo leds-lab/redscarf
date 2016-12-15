@@ -101,7 +101,6 @@ Control::Control(QObject *parent) :
     this->configFile = NULL;
     this->environmentConfiguration = new EnvironmentConfiguration(this,true);
 
-    this->simulationFolders = NULL;
     this->threadManager = NULL;
 
     this->analysisOk = false;
@@ -133,10 +132,8 @@ Control::~Control() {
         threadManager->stopThreads();
         delete threadManager;
     }
-    if(simulationFolders != NULL) {
-        simulationFolders->clear();
-        delete simulationFolders;
-    }
+
+    simulationFolders.clear();
     SystemDefines* defSis = SystemDefines::getInstance();
     delete defSis;
 }
@@ -679,11 +676,7 @@ void Control::finishSimulation(FinishCode code) {
     switch (code) {
         case Control::ExecuteFailed :
             mainWindow->printConsole(trUtf8("<b>!!!Execute Failed!!!</b>"),errorColor,Qt::AlignHCenter);
-            if(simulationFolders != NULL) {
-                simulationFolders->clear();
-                delete simulationFolders;
-                simulationFolders = NULL;
-            }
+            simulationFolders.clear();
             delete this->threadManager;
             threadManager = NULL;
             break;
@@ -740,16 +733,13 @@ void Control::generateAnalysis(float lower, float upper) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::generateAnalysis" << std::endl;
 #endif
-    if(simulationFolders == NULL) { // No simulation results
-        this->mainWindow->printConsole( trUtf8("<font color=red>Impossible generate analysis because there is no system simulation results</font>") );
+    if( simulationFolders.isEmpty() ) { // No simulation results
+        this->mainWindow->printConsole( trUtf8("Impossible generate analysis. There is no system simulation results"),errorColor );
         return;
     }
 
-    int size = simulationFolders->size();
-    QStringList items;
-    for(int i = 0; i < size; i++) {
-        items.append( simulationFolders->at(i) );
-    }
+    QStringList items = simulationFolders; // Copy
+    int size = items.size();
 
     for( int i = 0; i < size; i++ ) {
         QString item = items.at(i);
@@ -777,9 +767,9 @@ void Control::generateAnalysis(float lower, float upper) {
     this->mainWindow->setActionGenerateCSVEnabled(false);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(trUtf8("<font color=green><br />Analyzing simulation results</font>"));
+    this->mainWindow->printConsole(trUtf8("<br />Analyzing simulation results"),Qt::green);
     // The number of elements and data width are extracted from the folder string
-    Analyzer* analyzer = new Analyzer(this->simulationFolders,0,0,lower,upper);
+    Analyzer* analyzer = new Analyzer(&this->simulationFolders,0,0,lower,upper);
     QThread* threadAnalisador = new QThread(this);
     threadAnalisador->setObjectName("Analyzer");
     connect(threadAnalisador,SIGNAL(started()),analyzer,SLOT(analyze()));
@@ -816,21 +806,15 @@ void Control::viewWaveform() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::viewWaveform" << std::endl;
 #endif
-    if( simulationFolders != NULL ) {
-        int size = simulationFolders->size();
-        if( size == 0 ) {
-            this->mainWindow->printConsole( trUtf8("Impossible show waveform. There is not system simulation results"),errorColor );
-            return;
-        }
+    if( !simulationFolders.isEmpty() ) {
+        int size = simulationFolders.size();
+
         QString item;
         bool ok = true;
         if( size == 1 ) {
-            item = simulationFolders->at(0);
+            item = simulationFolders.at(0);
         } else {
-            QStringList dirs;
-            for(int i = 0; i < size; i++) {
-                dirs.append( simulationFolders->at(i) );
-            }
+            QStringList dirs = simulationFolders; // Copy
             QStringList items = AnalysisOptions::getVisibleStrings(dirs);
             item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
             item = dirs.at(items.indexOf(item));
@@ -847,11 +831,11 @@ void Control::viewWaveform() {
                 connect(waveViewer,SIGNAL(sendMessage(QString)),mainWindow,SLOT(printConsole(QString)));
                 waveViewer->viewWaveform(file.fileName());
             } else {
-                this->mainWindow->printConsole(tr("Impossible show waveform. VCD file didn't generated!"),errorColor);
+                this->mainWindow->printConsole(tr("Impossible to show waveform. VCD file didn't generated!"),errorColor);
             }
         }
     } else {
-        this->mainWindow->printConsole( trUtf8("Impossible show waveform. There is not system simulation results"),errorColor );
+        this->mainWindow->printConsole( trUtf8("Impossible to show waveform. There is no system simulation results"),errorColor );
     }
 }
 
@@ -861,11 +845,11 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 #endif
 
     if( !analysisOk ) {
-        this->mainWindow->printConsole( trUtf8("<font color=red>Impossible plot graphic because there is not analysis results</font>") );
+        this->mainWindow->printConsole( trUtf8("Impossible plot graphic. there is no analysis results"),errorColor );
     } else {
         QVector<QList<DataReport *> *> *data = getReportData(aop);
         if(data == NULL) {
-            mainWindow->printConsole( trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
+            mainWindow->printConsole( trUtf8("Report file unavailable or this flow is null (no packet was transfered)"),errorColor);
             return;
         }
 
@@ -899,12 +883,9 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
     std::cout << "Control/Control::getReportData" << std::endl;
 #endif
 
-    int size = simulationFolders->size();
     // Get simulation folders
-    QStringList folders;
-    for(int i = 0; i < size; i++) {
-        folders.append( simulationFolders->at(i) );
-    }
+    QStringList folders = simulationFolders; // Copy
+    int size = folders.size();
 
     // Identifying what directories must be analyzed according with analysis type
     if( aop->isLatencyDistribution() ) {
@@ -1114,8 +1095,6 @@ void Control::loadSimulationResults() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::loadSimulationResults" << std::endl;
 #endif
-    // TODO: Refatorar e criar classe para tratar apenas do arquivamento e carregamento de simulações realizadas
-
     if( this->mainWindow->isWindowModified() ) {
         switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
@@ -1161,16 +1140,10 @@ void Control::saveSimulationResults() {
     std::cout << "Control/Control::saveSimulationResults" << std::endl;
 #endif
 
-    if( this->simulationFolders == NULL ) { // There are no simulation results
+    if( this->simulationFolders.isEmpty() ) { // There are no simulation results
+        this->mainWindow->printConsole(tr("There are no simulation results"),errorColor);
         return;
     }
-
-    QString dir0 = this->simulationFolders->at(0);
-    // Up 2 level in directory tree
-    dir0 = dir0.left( dir0.lastIndexOf("/") );
-    dir0 = dir0.left( dir0.lastIndexOf("/") );
-
-    QString workDir = dir0 + "/";
 
     QString filename = mainWindow->dialogSaveFile(trUtf8("Save a simulation file"),
                                                   trUtf8("RedScarf simulation(*.redsim)"),
@@ -1182,11 +1155,20 @@ void Control::saveSimulationResults() {
         filename += ".redsim";
     }
 
+    QString dir0 = this->simulationFolders.at(0);
+    // Up 3 level in directory tree
+    dir0 = dir0.left( dir0.lastIndexOf("/") ); // Up from FClk simulation dir
+    dir0 = dir0.left( dir0.lastIndexOf("/") ); // Up from Experiment configuration simulation dir
+    dir0 = dir0.left( dir0.lastIndexOf("/") ); // Up from System Configuration simulation dir
+
+    QString workDir = dir0 + "/";
+
     QFile* tmp = configFile;
     configFile = new QFile( workDir + RESULT_SIMLATION_SETUP_FILENAME );
 
     if( !this->saveConfiguration() ) {
-        this->mainWindow->printConsole(trUtf8("<font color=red>It is not possible save results.</font>"));
+        this->mainWindow->printConsole(trUtf8("It is not possible save results configuration file."),errorColor);
+        delete configFile;
         configFile = tmp;
         return;
     }
@@ -1196,15 +1178,15 @@ void Control::saveSimulationResults() {
     tmp = new QFile( workDir + RESULT_SIMULATION_DIRS_FILENAME );
 
     if( !tmp->open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        this->mainWindow->printConsole(trUtf8("<font color=red>It is not possible save results.</font>"));
+        this->mainWindow->printConsole(trUtf8("It is not possible save results directories file."),errorColor);
         delete tmp;
         return;
     }
 
     QTextStream ts(*&tmp);
-    int dirsSize = this->simulationFolders->size();
+    int dirsSize = this->simulationFolders.size();
     for( int i = 0; i < dirsSize; i++) {
-        QString dir = simulationFolders->at(i);
+        QString dir = simulationFolders.at(i);
         dir.remove( workDir );
         ts << dir;
         ts << "\n";
@@ -1218,7 +1200,8 @@ void Control::saveSimulationResults() {
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(trUtf8("<b>Saving the experiment results. This can take some minutes. Do not close RedScarf!</b>"));
+    this->mainWindow->printConsole(trUtf8("<b>Saving the experiment results."
+                                          "This can take some minutes. Do not close RedScarf!</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
     this->mainWindow->setOptionsSimulationEnabled(false);
     QThreadPool::globalInstance()->start(fc);
@@ -1250,7 +1233,6 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
     this->mainWindow->printConsole( (success ? successMsg : failureMsg) );
 
     if( opType == 2 ) { // Decompress operation
-
         if( configFile ) {
             delete configFile;
         }
@@ -1261,7 +1243,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         if( this->loadConfiguration() ) {
             this->mainWindow->setWindowModified(false);
         } else {
-            this->mainWindow->printConsole(trUtf8("<font color=red>The parameters load failed.</font>"));
+            this->mainWindow->printConsole(trUtf8("The parameters load failed."),errorColor);
             recoverFolders = false;
         }
         delete configFile;
@@ -1270,7 +1252,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         QFile* tmp = new QFile( workDirSimulationLoaded + RESULT_SIMULATION_DIRS_FILENAME );
 
         if( !tmp->open(QIODevice::ReadOnly | QIODevice::Text) ) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>It is not possible load results.</font>"));
+            this->mainWindow->printConsole(trUtf8("It is not possible load results directories file."),errorColor);
             recoverFolders = false;
         }
 
@@ -1290,20 +1272,14 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
             }
             dirs.removeLast();
 
-            if(simulationFolders != NULL) {
-                simulationFolders->clear();
-                delete simulationFolders;
-                simulationFolders = NULL;
-            }
-            simulationFolders = new QList<QString>();
+            simulationFolders.clear();
+
             for( int i = 0; i < dirs.size(); i++ ) {
                 QString dir = QString( workDirSimulationLoaded + dirs.at(i) );
-                simulationFolders->append( dir );
+                simulationFolders.append( dir );
             }
         }
         tmp->close();
-// TODO verificar
-//        this->copySystemParameters();
         delete tmp;
     }
 
@@ -1506,13 +1482,7 @@ void Control::runSimulations() {
         return;
     }
 
-    if( simulationFolders != NULL ) {
-        simulationFolders->clear();
-        delete simulationFolders;
-        simulationFolders = NULL;
-    }
-
-    this->simulationFolders = new QList<QString>();
+    simulationFolders.clear();
 
     // Get date and time
     QDateTime dateTime = QDateTime::currentDateTime();
@@ -1603,7 +1573,7 @@ void Control::runSimulations() {
                         QString strDirSimulation = dirSimulation.absolutePath();
 
                         // Add the directory to list of simulation folders
-                        this->simulationFolders->append(strDirSimulation);
+                        this->simulationFolders.append(strDirSimulation);
                         // Add the current configuration to list of executions
                         SystemExecution sysExe;
                         sysExe.setExperiment(*experiment);
