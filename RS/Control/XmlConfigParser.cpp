@@ -61,7 +61,7 @@ XmlConfigParser::~XmlConfigParser() {
     std::cout << "Destructor Control/XmlConfigParser" << std::endl;
 #endif
 }
-
+#include <QDebug>
 TrafficParameters XmlConfigParser::parseTrafficPattern(QXmlStreamReader *xml) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/XmlConfigParser::parseTrafficPattern" << std::endl;
@@ -82,7 +82,7 @@ TrafficParameters XmlConfigParser::parseTrafficPattern(QXmlStreamReader *xml) {
     xml->readNextStartElement();
     attributes = xml->attributes();
     xml->skipCurrentElement();
-    tp.setSpatialDistribution( tp.indexOfSpatialDistribution( attributes.value("SpatialDistribution").toString() ) );
+    tp.setSpatialDistribution( tp.indexOfSpatialDistribution( attributes.value("type").toString() ) );
 
     // Traffic Class
     xml->readNextStartElement();
@@ -386,7 +386,7 @@ void XmlConfigParser::saveXML(QFile *file) {
     xml->writeComment(QString("Traffic pattern range in %1: 0 <-> 3").arg(APPLICATION_NAME));
     xml->writeComment(QString("Spatial Distribution in %1: Specified Address, Bit-reversal, Perfect Shuffle, Butterfly, Matrix Transpose, Complement, Uniform, Non-uniform 1 (1, 1/2, 1/4,...), Non-uniform 2 (1, 1/2), Local").arg(APPLICATION_NAME));
     xml->writeComment(QString("Traffic Class in %1: RT0-Signalling , RT1-Audio/Video, nRT0-Read/Write, nRT1-Block Transfer").arg(APPLICATION_NAME));
-    xml->writeComment(QString("Type injection in %1: Constante Injection, Variable idle time - Fix message size, Variable message size - Fix idle time, Variable message size - Fix message inter-arrival, Variable message interarrival - Fix message size, Variable burst size - Fix message interarrival").arg(APPLICATION_NAME));
+    xml->writeComment(QString("Type injection in %1: Constante Injection, Variable idle time - Fix message size, Variable message size - Fix idle time, Variable message size - Fix message interval, Variable message interval - Fix message size, Variable burst size - Fix message interval").arg(APPLICATION_NAME));
     xml->writeComment(QString("Switching Technique in %1: Wormhole Switching, Circuit Switching").arg(APPLICATION_NAME));
     xml->writeComment(QString("Number packets per flow range in %1: 0 - 1000000").arg(APPLICATION_NAME));
     xml->writeComment(QString("Deadline range in %1: 0 - 100000000").arg(APPLICATION_NAME));

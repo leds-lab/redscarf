@@ -174,7 +174,7 @@ void TrafficModelGenerator::removeZeroPayloadPacket(TrafficParameters *tp) {
                 temp = (1.0f/tp->requiredBandwidthArray[i]-1.0f);
                 tp->setPayloadLength( (unsigned int) (tp->getIdleTime() / (numberCyclesPerFlit * (temp)))-1 );
                 break;
-            case 3: // Variable message size - Fix message inter-arrival
+            case 3: // Variable message size - Fix message interval
                 tp->setPayloadLength( (unsigned int) ((tp->getIntervalTime()*tp->requiredBandwidthArray[i])/numberCyclesPerFlit) - 1 );
                 break;
         }
@@ -274,13 +274,13 @@ void TrafficModelGenerator::adjustParameters() {
             case 2: // Variable packet size, fixed idle period
                 idle = tp->getIdleTime();
                 break;
-            case 3: // Variable packet size, fixed inter-arrival
+            case 3: // Variable packet size, fixed interval
                 iat = tp->getIntervalTime();
                 break;
-            case 4: // Variable idle inter-arrival time, fixed packet size
+            case 4: // Variable idle interval time, fixed packet size
                 payloadLength = tp->getMessageSize();
                 break;
-            case 5: // Variable burst size, fixed idle inter-arrival time
+            case 5: // Variable burst size, fixed idle interval time
                 payloadLength = tp->getMessageSize();
                 iat = tp->getIntervalTime();
                 break;
@@ -453,7 +453,7 @@ void TrafficModelGenerator::generateFlow(TrafficParameters *tp) {
                             }
                             tp->setIdleTime( tp->getIntervalTime() - (tp->getPayloadLength() * numberCyclesPerFlit) );
                             break;
-                        case 4: // VAR_IAT_FIX_PCK // It determines the inter-arrival time and the number if idle cycles
+                        case 4: // VAR_IAT_FIX_PCK // It determines the interval time and the number if idle cycles
                             tp->setIntervalTime( this->calculateInterArrivalBasedOnPayloadLength(tp->getPayloadLength(),
                                                                                                  tp->requiredBandwidthArray[i]) );
 
@@ -646,7 +646,7 @@ void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio
     fprintf(outFile,"\n 7  Required bandwidth");
     fprintf(outFile,"\n 8  Payload Length");
     fprintf(outFile,"\n 9  Idle Cycles");
-    fprintf(outFile,"\n10  Inter-arrival");
+    fprintf(outFile,"\n10  Out Interval Time");
     fprintf(outFile,"\n11  Burst Size");
     fprintf(outFile,"\n12  Last Payload Length");
     fprintf(outFile,"\n13  Pareto - Alfa On");

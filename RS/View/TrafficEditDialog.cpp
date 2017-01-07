@@ -68,96 +68,32 @@ void TrafficEditDialog::loadDefaultValues() {
 
 void TrafficEditDialog::loadSpatialsDistributions() {
 
-    QStringList destinarionOptions;
-    destinarionOptions << tr("Specified Address")
-                       << tr("Bit-reversal")
-                       << tr("Perfect Shuffle")
-                       << tr("Butterfly")
-                       << tr("Matrix Transpose")
-                       << tr("Complement")
-                       << tr("Uniform")
-                       << tr("Non-uniform (1, 1/2)")
-                       << tr("Local");
+    QStringList destinarionOptions = TrafficParameters::availableSpatialDistributions();
 
     ui->comboInDestinationNode->insertItems(0,destinarionOptions);
-/*
-    TrafficPatternDefines* d = TrafficPatternDefines::getInstance();
-    unsigned int qtd = d->sizeSpatialDistribution();
-    for( unsigned int i = 0; i < qtd  ; i++) {
-        std::string v = d->findSpatialDistribution(i);
-        ui->comboInDestinationNode->insertItem(qint32(i),QString::fromStdString(v));
-    }
-*/
 }
 
 void TrafficEditDialog::loadTrafficClasses() {
 
-    QStringList trafficClasses;
-    trafficClasses << tr("RT0 - Signalling")
-                   << tr("RT1 - Audio/Video")
-                   << tr("nRT0 - Read/Write")
-                   << tr("nRT1 - Block Transfers");
+    QStringList trafficClasses = TrafficParameters::availableTrafficClasses();
     ui->comboInTrafficClass->insertItems(0,trafficClasses);
-/*
-    TrafficPatternDefines* d = TrafficPatternDefines::getInstance();
-    unsigned int qtd = d->sizeTrafficClass();
-    for( unsigned int i = 0; i < qtd; i++ ) {
-        std::string v = d->findTrafficClass(i);
-        ui->comboInTrafficClass->insertItem(qint32(i),QString::fromStdString(v));
-    }
-*/
 }
 
 void TrafficEditDialog::loadTypesInjection() {
 
-    QStringList injectionTypes;
-    injectionTypes << tr("Constant")
-                   << tr("Variable idle time - Fix message size")
-                   << tr("Variable message size - Fix idle time")
-                   << tr("Variable message size - Fix message inter-arrival")
-                   << tr("Variable message inter-arrival - Fix message size")
-                   << tr("Variable burst size - Fix message inter-arrival");
+    QStringList injectionTypes = TrafficParameters::availableInjectionTypes();
     ui->comboInTypeInjection->insertItems(0,injectionTypes);
-/*
-    TrafficPatternDefines* d = TrafficPatternDefines::getInstance();
-    unsigned int qtd = d->sizeTypeInjection();
-    for( unsigned int i = 0; i < qtd; i++ ) {
-        std::string v = d->findTypeInjection(i);
-        ui->comboInTypeInjection->insertItem(qint32(i),QString::fromStdString(v));
-    }
-*/
 }
 
 void TrafficEditDialog::loadSwitchingTechniques() {
-    QStringList switchingTechniques;
-    switchingTechniques << tr("Wormhole Switching")
-                        << tr("Circuit Switching");
+    QStringList switchingTechniques = TrafficParameters::availableSwitchingTechniques();
     ui->comboInSwitchingTechnique->insertItems(0,switchingTechniques);
-/*
-    TrafficPatternDefines* d = TrafficPatternDefines::getInstance();
-    unsigned int qtd = d->sizeSwitchingTechnique();
-    for( unsigned int i = 0; i < qtd; i++ ) {
-        std::string v = d->findSwitchingTechnique(i);
-        ui->comboInSwitchingTechnique->insertItem(qint32(i),QString::fromStdString(v));
-    }
-*/
 }
 
 void TrafficEditDialog::loadFunctionProbability() {
 
-    QStringList probabilityFunction;
-    probabilityFunction << tr("Normal")
-                        << tr("Exponential")
-                        << tr("Pareto");
+    QStringList probabilityFunction = TrafficParameters::availableProbabilityFunctions();
     ui->comboInFunctionProbability->insertItems(0,probabilityFunction);
-/*
-    TrafficPatternDefines* d = TrafficPatternDefines::getInstance();
-    unsigned int qtd = d->sizeFunctionsProbability();
-    for( unsigned int i = 0; i < qtd; i++ ) {
-        std::string v = d->findFunctionProbability(i);
-        ui->comboInFunctionProbability->insertItem(qint32(i),QString::fromStdString(v));
-    }
-*/
 }
 
 void TrafficEditDialog::setConfiguration(TrafficParameters *tp) {
@@ -227,7 +163,7 @@ void TrafficEditDialog::updateTypeInjection(int value) {
             ui->labelMessageInterval       ->setEnabled(false);
             ui->spinInMessageInterval      ->setEnabled(false);
             break;
-        case 3: // Variable message size - Fix message inter-arrival
+        case 3: // Variable message size - Fix message inteval
             ui->labelFunctionProbability   ->setEnabled(true );
             ui->comboInFunctionProbability ->setEnabled(true );
             ui->labelMessageSize           ->setEnabled(false);
@@ -237,7 +173,7 @@ void TrafficEditDialog::updateTypeInjection(int value) {
             ui->labelMessageInterval       ->setEnabled(true );
             ui->spinInMessageInterval      ->setEnabled(true );
             break;
-        case 4: // Variable message inter-arrival - Fix message size
+        case 4: // Variable message interval - Fix message size
             ui->labelFunctionProbability   ->setEnabled(true );
             ui->comboInFunctionProbability ->setEnabled(true );
             ui->labelMessageSize           ->setEnabled(true );
@@ -247,7 +183,7 @@ void TrafficEditDialog::updateTypeInjection(int value) {
             ui->labelMessageInterval       ->setEnabled(false);
             ui->spinInMessageInterval      ->setEnabled(false);
             break;
-        case 5: // Variable burst size - Fix message inter-arrival
+        case 5: // Variable burst size - Fix message interval
             ui->labelFunctionProbability   ->setEnabled(true );
             ui->comboInFunctionProbability ->setEnabled(true );
             ui->labelMessageSize           ->setEnabled(true );

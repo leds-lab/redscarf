@@ -21,7 +21,7 @@ private:
     unsigned int      messageSize                  ;  // Message size
     unsigned int      payloadLength                ;  // Number of flits in the payload (including the trailer)
     unsigned int      idleTime                     ;  // Number of idle cycles between two packets
-    unsigned int      intervalTime                 ;  // Inter-arrival time (in cycles) between two adjacent packets
+    unsigned int      intervalTime                 ;  // Interval time (in cycles) between two adjacent packets
     unsigned int      probabilityFunction          ;  // Type of probailistic function to be used (e.g. Normal)
     float             requiredBandwidthStdDeviation;  // Standard deviation for required_bw
     float             alfaOn                       ;  // Parameter for Pareto ON-OFF (e.g. 1.9)
@@ -76,19 +76,25 @@ public:
     inline float             getRequiredBandwidthStdDeviation() const
         { return this->requiredBandwidthStdDeviation ; }
 
+
+    static QStringList availableSpatialDistributions();
     QString getSpatialDistributionName(SpatialDistribution::Distribution dist) const;
     QString getSpatialDistributionName(int index) const;
     QString getSpatialDistributionName() const;
 
+    static QStringList availableTrafficClasses();
     QString getTrafficClassName() const;
     QString getTrafficClassName(int index) const;
 
+    static QStringList availableInjectionTypes();
     QString getInjectionTypeName() const;
     QString getInjectionTypeName(int index) const;
 
+    static QStringList availableSwitchingTechniques();
     QString getSwitchingTechniqueName() const;
     QString getSwitchingTechniqueName(int index) const;
 
+    static QStringList availableProbabilityFunctions();
     QString getProbabilityFunctionName(int index) const;
     QString getProbabilityFunctionName() const;
 

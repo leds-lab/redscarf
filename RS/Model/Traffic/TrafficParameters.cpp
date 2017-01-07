@@ -130,32 +130,13 @@ void TrafficParameters::setSpatialDistribution(int index) {
 }
 
 QString TrafficParameters::getSpatialDistributionName(SpatialDistribution::Distribution dist) const {
-    switch (dist) {
-        case SpatialDistribution::Specific_Address:
-            return tr("Specific");
-        case SpatialDistribution::Bit_Reversal:
-            return tr("Bit-Reversal");
-        case SpatialDistribution::Perfect_Shuffle:
-            return tr("Perfect Shuffle");
-        case SpatialDistribution::Butterfly:
-            return tr("Butterfly");
-        case SpatialDistribution::Matrix_Transpose:
-            return tr("Matrix Transpose");
-        case SpatialDistribution::Complement:
-            return tr("Complement");
-        case SpatialDistribution::Uniform:
-            return tr("Uniform");
-        case SpatialDistribution::Non_Uniform:
-            return tr("Non-Uniform");
-        case SpatialDistribution::Local:
-            return tr("Local");
-    }
-    return QString();
+    int i = static_cast<int>(dist);
+    return getSpatialDistributionName(i);
 }
 
 QString TrafficParameters::getSpatialDistributionName(int index) const {
-    SpatialDistribution::Distribution dist = static_cast<SpatialDistribution::Distribution>(index);
-    return this->getSpatialDistributionName( dist );
+    QStringList dists = availableSpatialDistributions();
+    return dists.at(index);
 }
 
 QString TrafficParameters::getSpatialDistributionName() const {
@@ -163,36 +144,8 @@ QString TrafficParameters::getSpatialDistributionName() const {
 }
 
 int TrafficParameters::indexOfSpatialDistribution(QString name) const {
-
-    if( name.compare(tr("Specific")) == 0 ) {
-        return 0;
-    }
-    if( name.compare(tr("Bit-Reversal")) == 0 ) {
-        return 1;
-    }
-    if( name.compare(tr("Perfect Shuffle")) == 0 ) {
-        return 2;
-    }
-    if( name.compare(tr("Butterfly")) == 0 ) {
-        return 3;
-    }
-    if( name.compare(tr("Matrix Transpose")) == 0 ) {
-        return 4;
-    }
-    if( name.compare(tr("Complement")) == 0 ) {
-        return 5;
-    }
-    if( name.compare(tr("Uniform")) == 0 ) {
-        return 6;
-    }
-    if( name.compare(tr("Non-Uniform")) == 0 ) {
-        return 7;
-    }
-    if( name.compare(tr("Local")) == 0 ) {
-        return 8;
-    }
-
-    return -1; // Not found
+    QStringList dists = availableSpatialDistributions();
+    return dists.indexOf(name);
 }
 
 bool TrafficParameters::isValidForSystem(unsigned int numElements) {
@@ -205,20 +158,8 @@ bool TrafficParameters::isValidForSystem(unsigned int numElements) {
 }
 
 QString TrafficParameters::getTrafficClassName(int index) const {
-    switch (index) {
-        case 0:
-            return tr("RT0 - Signalling");
-        case 1:
-            return tr("RT1 - Audio/Video");
-        case 2:
-            return tr("nRT0 - Read/Write");
-        case 3:
-            return tr("nRT1 - Block Transfers");
-        default:
-            break;
-    }
-    return QString();
-
+    QStringList classes = availableTrafficClasses();
+    return classes.at(index);
 }
 
 QString TrafficParameters::getTrafficClassName() const {
@@ -226,40 +167,13 @@ QString TrafficParameters::getTrafficClassName() const {
 }
 
 int TrafficParameters::indexOfTrafficClass(QString name) const {
-
-    if( name.compare(tr("RT0 - Signalling")) == 0 ) {
-        return 0;
-    }
-    if( name.compare(tr("RT1 - Audio/Video")) == 0 ) {
-        return 1;
-    }
-    if( name.compare(tr("nRT0 - Read/Write")) == 0 ) {
-        return 2;
-    }
-    if( name.compare(tr("nRT1 - Block Transfers")) == 0 ) {
-        return 3;
-    }
-    return -1; // Not found
+    QStringList classes = availableTrafficClasses();
+    return classes.indexOf(name);
 }
 
 QString TrafficParameters::getInjectionTypeName(int index) const {
-
-    switch (index) {
-        case 0:
-            return tr("Constant");
-        case 1:
-            return tr("Variable idle time - Fix message size");
-        case 2:
-            return tr("Variable message size - Fix idle time");
-        case 3:
-            return tr("Variable message size - Fix message inter-arrival");
-        case 4:
-            return tr("Variable message inter-arrival - Fix message size");
-        case 5:
-            return tr("Variable burst size - Fix message inter-arrival");
-        default:break;
-    }
-    return QString();
+    QStringList types = availableInjectionTypes();
+    return types.at(index);
 }
 
 QString TrafficParameters::getInjectionTypeName() const {
@@ -267,37 +181,13 @@ QString TrafficParameters::getInjectionTypeName() const {
 }
 
 int TrafficParameters::indexOfInjectionType(QString name) const {
-
-    if( name.compare(tr("Constant")) == 0 ) {
-        return 0;
-    }
-    if( name.compare(tr("Variable idle time - Fix message size")) == 0 ) {
-        return 1;
-    }
-    if( name.compare(tr("Variable message size - Fix idle time")) == 0 ) {
-        return 2;
-    }
-    if( name.compare(tr("Variable message size - Fix message inter-arrival")) == 0 ) {
-        return 3;
-    }
-    if( name.compare(tr("Variable message inter-arrival - Fix message size")) == 0 ) {
-        return 4;
-    }
-    if( name.compare(tr("Variable burst size - Fix message inter-arrival")) == 0 ) {
-        return 5;
-    }
-    return -1; // Not found
+    QStringList types = availableInjectionTypes();
+    return types.indexOf(name);
 }
 
 QString TrafficParameters::getSwitchingTechniqueName(int index) const {
-    switch (index) {
-        case 0:
-            return tr("Wormhole Switching");
-        case 1:
-            return tr("Circuit Switching");
-        default:break;
-    }
-    return QString();
+    QStringList techs = availableSwitchingTechniques();
+    return techs.at(index);
 }
 
 QString TrafficParameters::getSwitchingTechniqueName() const {
@@ -305,26 +195,13 @@ QString TrafficParameters::getSwitchingTechniqueName() const {
 }
 
 int TrafficParameters::indexOfSwitchingTechnique(QString name) const {
-    if( name.compare(tr("Wormhole Switching")) == 0 ) {
-        return 0;
-    }
-    if( name.compare(tr("Circuit Switching")) == 0 ) {
-        return 1;
-    }
-    return -1; // Not found
+    QStringList techs = availableSwitchingTechniques();
+    return techs.indexOf(name);
 }
 
 QString TrafficParameters::getProbabilityFunctionName(int index) const {
-    switch(index) {
-        case 0:
-            return tr("Normal");
-        case 1:
-            return tr("Exponential");
-        case 2:
-            return tr("Pareto");
-        default:break;
-    }
-    return QString();
+    QStringList functions = availableProbabilityFunctions();
+    return functions.at(index);
 }
 
 QString TrafficParameters::getProbabilityFunctionName() const {
@@ -332,15 +209,58 @@ QString TrafficParameters::getProbabilityFunctionName() const {
 }
 
 int TrafficParameters::indexOfProbabilityFunction(QString name) const {
-    if( name.compare(tr("Normal")) == 0 ) {
-        return 0;
-    }
-    if( name.compare(tr("Exponential")) == 0 ) {
-        return 1;
-    }
-    if( name.compare(tr("Pareto")) == 0 ) {
-        return 2;
-    }
-    return -1; // Not found
+    QStringList functions = availableProbabilityFunctions();
+    functions.indexOf(name);
+}
 
+QStringList TrafficParameters::availableSpatialDistributions() {
+    QStringList distributions;
+
+    distributions << tr("Specific")
+                  << tr("Bit-Reversal")
+                  << tr("Perfect Shuffle")
+                  << tr("Butterfly")
+                  << tr("Matrix Transpose")
+                  << tr("Complement")
+                  << tr("Uniform")
+                  << tr("Non-Uniform")
+                  << tr("Local");
+
+    return distributions;
+}
+
+QStringList TrafficParameters::availableTrafficClasses() {
+    QStringList classes;
+    classes << tr("RT0 - Signalling")
+            << tr("RT1 - Audio/Video")
+            << tr("nRT0 - Read/Write")
+            << tr("nRT1 - Block Transfers");
+    return classes;
+}
+
+QStringList TrafficParameters::availableInjectionTypes() {
+
+    QStringList types;
+    types << tr("Constant")
+          << tr("Variable idle time - Fix message size")
+          << tr("Variable message size - Fix idle time")
+          << tr("Variable message size - Fix message interval")
+          << tr("Variable message interval - Fix message size")
+          << tr("Variable burst size - Fix message interval");
+    return types;
+}
+
+QStringList TrafficParameters::availableSwitchingTechniques() {
+    QStringList techs;
+    techs << tr("Wormhole Switching")
+          << tr("Circuit Switching");
+    return techs;
+}
+
+QStringList TrafficParameters::availableProbabilityFunctions() {
+    QStringList functions;
+    functions << tr("Normal")
+              << tr("Exponential")
+              << tr("Pareto");
+    return functions;
 }
