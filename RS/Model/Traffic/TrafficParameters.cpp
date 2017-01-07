@@ -210,7 +210,7 @@ QString TrafficParameters::getProbabilityFunctionName() const {
 
 int TrafficParameters::indexOfProbabilityFunction(QString name) const {
     QStringList functions = availableProbabilityFunctions();
-    functions.indexOf(name);
+    return functions.indexOf(name);
 }
 
 QStringList TrafficParameters::availableSpatialDistributions() {
