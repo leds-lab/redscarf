@@ -45,7 +45,7 @@ private slots:
 
     void removeSelectedTraffic();
 
-    void apply(QAbstractButton* );
+    void apply();
 
     void zoomRestore();
 private:

@@ -55,7 +55,7 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
     ui->listTraffic->addAction(deleteItem);
     connect(deleteItem,SIGNAL(triggered(bool)),this,SLOT(removeSelectedTraffic()));
 
-    connect(ui->dialogButtons,SIGNAL(clicked(QAbstractButton*)),this,SLOT(apply(QAbstractButton*)));
+    connect(ui->dialogButtons->button(QDialogButtonBox::Apply),SIGNAL(clicked(bool)),this,SLOT(apply()));
     connect(ui->dialogButtons,SIGNAL(rejected()),this,SLOT(reject()));
 
     for( int i = 0; i < items.size(); i++ ) {
@@ -99,7 +99,7 @@ void TrafficConfigurationDialog::loadExistentConfigurations() {
     }
 }
 
-void TrafficConfigurationDialog::apply(QAbstractButton *){
+void TrafficConfigurationDialog::apply(){
 
     QList<QVariant> trafficConfList;
 
