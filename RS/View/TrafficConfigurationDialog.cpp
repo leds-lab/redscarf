@@ -477,6 +477,12 @@ void TrafficConfigurationDialog::removeSelectedTraffic() {
 
 void TrafficConfigurationDialog::trafficItemDoubleClick(QModelIndex modelIndex) {
 
+    if( currentNumberElements == 0 ) {
+        QMessageBox::information(this,tr("Select a configuration"),tr("Select a topology configuration to edit"
+                                                                      "\nthe traffic configuration"));
+        return;
+    }
+
     QVariant trafficParameterVar = modelIndex.data(Qt::UserRole);
 
     TrafficParameters tp = trafficParameterVar.value<TrafficParameters>();
