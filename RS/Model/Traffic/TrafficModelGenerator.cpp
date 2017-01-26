@@ -30,8 +30,6 @@
 * 11/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-
-
 #include "Model/Traffic/TrafficModelGenerator.h"
 #include "Model/Traffic/MathFunction.h"
 
@@ -198,9 +196,8 @@ unsigned int TrafficModelGenerator::calculateIdleBasedOnPayloadLength(unsigned i
 // that 100% of the channel bandwidth is required (none idle cycle is inserted)
 
     float tmp = (float) ( this->channelBW / requiredBw ) - 1.0f;
-
     if( tmp < 0 ) {
-        tmp = 0;
+        tmp = 0.f;
     }
 
     return ( (unsigned int) ( payloadLength * numberCyclesPerFlit * tmp ) );
@@ -426,14 +423,17 @@ void TrafficModelGenerator::generateFlow(TrafficParameters *tp) {
             }
             this->writeFlow( tp, tp->getInjectionType() );
         } else {
+            float tmpChannelBW = channelBW;
+            channelBW = 1.0f;
             for( unsigned int i = 0; i < tp->getNumberRates() ; i++ ) {
                 if( tp->packageToSendArray[i] != 0 ) {
                     unsigned int burstSize = 0;
                     switch( injType ) {
-                        case 1: // VAR_IDL_FIX_PCK // It determines the number of idle cycles
-                            tp->setIdleTime(this->calculateIdleBasedOnPayloadLength( tp->getPayloadLength(),
-                                                                                     tp->requiredBandwidthArray[i] ) );
+                        case 1:{ // VAR_IDL_FIX_PCK // It determines the number of idle cycles
+                            tp->setIdleTime(calculateIdleBasedOnPayloadLength(tp->getPayloadLength(),
+                                                                              tp->requiredBandwidthArray[i] ));
                             break;
+                        }
                         case 2: // VAR_PCK_FIX_IDL // It determines the payload length
                             tp->setPayloadLength( this->calculatePayloadLengthBasedOnIdle( tp->getIdleTime(),
                                                                                            tp->requiredBandwidthArray[i]) );
@@ -508,7 +508,7 @@ void TrafficModelGenerator::generateFlow(TrafficParameters *tp) {
                             break;
                         }
                     }
-                    requiredBw = tp->requiredBandwidthArray[i] * channelBW;
+                    requiredBw = tp->requiredBandwidthArray[i] * tmpChannelBW;
                     this->pck2Send = tp->packageToSendArray[i];
                     this->writeFlow( tp,0,burstSize );
                 }
