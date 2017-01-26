@@ -67,7 +67,7 @@ protected:
 
     void writeFlow(TrafficParameters* tp, unsigned int type = 0, unsigned int burstSize=0);
 
-    void createFileTrafficConfiguration(const char* diretorio) throw (const char*);
+    void createFileTrafficConfiguration(const char* diretorio);
 
     // gtr_functions
     virtual int functionProbability(TrafficParameters* tp);
@@ -79,14 +79,14 @@ protected:
 
     // gtr2
     virtual void adjustParameters();
-    virtual void generateVariableRate() throw (const char*);
+    virtual void generateVariableRate();
     virtual void generateTrafficModel();
 
     virtual void generateFlow(TrafficParameters* tp);
 public:
     TrafficModelGenerator(SystemConfiguration sysConf, float fClk, unsigned short numberCyclesPerFlit);
 
-    virtual void generateTraffic(const char* diretorio) throw (const char* );
+    virtual void generateTraffic(const char* diretorio);
 
     virtual ~TrafficModelGenerator();
 

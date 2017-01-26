@@ -324,7 +324,7 @@ void TrafficModelGenerator::adjustParameters() {
 
 }
 
-void TrafficModelGenerator::generateVariableRate() throw (const char*) {
+void TrafficModelGenerator::generateVariableRate() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateVariableRate" << std::endl;
 #endif
@@ -536,7 +536,7 @@ void TrafficModelGenerator::generateTrafficModel() {
 
 }
 
-void TrafficModelGenerator::generateTraffic(const char *diretorio) throw (const char*) {
+void TrafficModelGenerator::generateTraffic(const char *diretorio) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::generateTraffic" << std::endl;
 #endif
@@ -605,7 +605,7 @@ void TrafficModelGenerator::generateTraffic(const char *diretorio) throw (const 
 
 }
 
-void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio) throw (const char*) {
+void TrafficModelGenerator::createFileTrafficConfiguration(const char *diretorio) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/TrafficPattern/TrafficModelGenerator::createFileTrafficConfiguration" << std::endl;
 #endif
