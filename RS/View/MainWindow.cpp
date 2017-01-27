@@ -983,7 +983,7 @@ QList<SystemConfiguration> MainWindow::getAllConfiguration() const {
     QList<SystemConfiguration> configurations;
     for( int i = 0; i < ui->listConf->count(); i++ ) {
         SystemConfiguration sysConf = this->getConfiguration(i);
-        if( sysConf.isValid() && sysConf.hasTraffic() ) {
+        if( sysConf.isValid() ) { // && sysConf.hasTraffic() ) {
             configurations.append(sysConf);
         }
     }

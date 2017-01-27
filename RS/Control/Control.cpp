@@ -380,11 +380,21 @@ bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
     bool validConfiguration = false;
     bool hasValidConfigurationWithTraffic = false;
 
+    QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
+    settings.beginGroup("Traffic_Parameters");
+    bool useDefault = settings.value("useDefault",true).toBool();
+    QString alternativeFile = settings.value("alternative",QString()).toString();
+    settings.endGroup();
+
     for( i = 0; i < sysConfs.size(); i++ ) {
         SystemConfiguration conf = sysConfs.at(i);
-        if( !conf.isValid() ) {
-            this->mainWindow->printConsole(tr("The configuration at index %1 is not valid!").arg(i+1),warningColor);
-            continue;
+        if(useDefault) {
+            if( !conf.isValid() ) {
+                this->mainWindow->printConsole(tr("The configuration at index %1 is not valid!").arg(i+1),warningColor);
+                continue;
+            } else {
+                validConfiguration = true;
+            }
         } else {
             validConfiguration = true;
         }
@@ -399,13 +409,6 @@ bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
         this->mainWindow->printConsole(tr("There is no valid configuration!"),errorColor);
         return false;
     }
-
-    QSettings settings(qApp->applicationDirPath()+"/etc/system.ini",QSettings::IniFormat);
-    settings.beginGroup("Traffic_Parameters");
-    bool useDefault = settings.value("useDefault",true).toBool();
-    QString alternativeFile = settings.value("alternative",QString()).toString();
-    settings.endGroup();
-
 
     if(useDefault) { // Use default method for traffic configuration - RedScarf generate the traffic model(configuration) file .tcf
         if( !hasValidConfigurationWithTraffic ) {
@@ -1536,6 +1539,9 @@ void Control::runSimulations() {
             bool hasTopologyCompliant = false;
             for( int sysConfIndex = 0; sysConfIndex < systemConfs.size(); sysConfIndex++ ) { // Each System Configuration
                 SystemConfiguration sys = systemConfs.at(sysConfIndex);
+                if(useDefaultTraffic && !sys.hasTraffic()) {
+                    continue;
+                }
                 SystemParameters sysParam = sys.getSystemParameters();
                 if( SystemParameters::getTopologyType(topology.getTopologyType()) == sysParam.getTopologyType() ) {
                     // Valid configuration of topology for the current experiment - generate de simulation configuration
@@ -1636,7 +1642,7 @@ void Control::runSimulations() {
                             if( useDefaultTraffic ) {
                                 trafficGen->generateTraffic( strDirSimulation.toStdString().c_str() );
                             } else {
-                                if(QFile::copy(alternativeTrafficFile,strDirSimulation+"/traffic.tcf")) {
+                                if(!QFile::copy(alternativeTrafficFile,strDirSimulation+"/traffic.tcf")) {
                                     throw tr("It is not possible copy the configured traffic file defined in system.ini to work dir.").toStdString().c_str();
                                 }
                             }
