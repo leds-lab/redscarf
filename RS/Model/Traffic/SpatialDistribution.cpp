@@ -1,5 +1,6 @@
 #include "Model/Traffic/SpatialDistribution.h"
 #include <cmath>
+#include <QString>
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

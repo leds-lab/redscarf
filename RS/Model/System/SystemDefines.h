@@ -37,6 +37,7 @@
 #include <QString>
 #include <QMap>
 #include <QVector>
+#include <QStringList>
 
 // Singleton
 class SystemDefines {
