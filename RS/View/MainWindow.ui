@@ -1348,6 +1348,11 @@
                   <string>After a specified number of cycles:</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>After a specified number of packets delivered</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>
@@ -1373,6 +1378,19 @@
                 </property>
                 <property name="maximum">
                  <number>100000000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxStopNumberOfPacketsDelivered">
+                <property name="suffix">
+                 <string> packets</string>
+                </property>
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>1000000</number>
                 </property>
                </widget>
               </item>
@@ -2910,7 +2928,7 @@ distribution</string>
      <x>0</x>
      <y>0</y>
      <width>1322</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -34,7 +34,6 @@
 #include "Model/Traffic/MathFunction.h"
 
 #include "Model/System/Defines.h"
-#include "Model/System/SystemOperation.h"
 #include "Model/System/Experiment.h"
 
 #include <cstdio>
@@ -48,7 +47,8 @@
     #include <iostream>
 #endif
 
-TrafficModelGenerator::TrafficModelGenerator(SystemConfiguration sysConf, float fClk, unsigned short numberCyclesPerFlit) {
+TrafficModelGenerator::TrafficModelGenerator(SystemConfiguration sysConf,
+                                             float fClk, unsigned short numberCyclesPerFlit) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/TrafficPattern/TrafficModelGenerator" << std::endl;
 #endif

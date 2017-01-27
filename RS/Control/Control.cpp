@@ -1598,20 +1598,28 @@ void Control::runSimulations() {
                         }
 
                         switch(systemOp.stopOption) {
-                            case 0: // Number of packets
+                            case 0: // All packets delivered
                                 systemOp.stopTime_cycles = 0;
                                 systemOp.stopTime_ns = 0;
+                                systemOp.stopNumPackets = 0;
                                 break;
                             case 1: // Cycles
                                 systemOp.stopTime_cycles = systemOp.stopTime_ns / tClk;
+                                systemOp.stopNumPackets = 0;
                                 break;
                             case 2: // Nanoseconds
                                 systemOp.stopTime_ns = systemOp.stopTime_cycles * tClk;
+                                systemOp.stopNumPackets = 0;
+                                break;
+                            case 3: // Number of packets
+                                systemOp.stopTime_cycles = 0;
+                                systemOp.stopTime_ns = 0;
                                 break;
                         }
-                        QString stopSimParContent = QString("%1\t%2")
+                        QString stopSimParContent = QString("%1\t%2\t%3")
                                 .arg(systemOp.stopTime_cycles)
-                                .arg(systemOp.stopTime_ns);
+                                .arg(systemOp.stopTime_ns)
+                                .arg(systemOp.stopNumPackets);
                         stopSimPar->write(stopSimParContent.toUtf8());
                         stopSimPar->close();
                         delete stopSimPar;

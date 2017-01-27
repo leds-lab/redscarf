@@ -110,9 +110,10 @@ void MainWindow::configureWidgets() {
     ui->listConf->addAction(deleteItem);
     connect(deleteItem,SIGNAL(triggered(bool)),this,SLOT(removeSelectedItems()));
 
-    // Desabilitando o spin de stop time da simulação, por padrão a opção de parada é até entregar todos os pacotes
+    // Disable spin boxes of stop options - The default option is until all packets are delivered
     ui->spinBoxStopTimeNs->setVisible(false);
     ui->spinBoxStopTimeCycles->setVisible(false);
+    ui->spinBoxStopNumberOfPacketsDelivered->setVisible(false);
 
     // Desabilitando a barra de progresso da execuçao
     ui->progressBar->setVisible(false);
@@ -422,6 +423,7 @@ void MainWindow::establishConnections() {
     connect(ui->comboInSimulationStopMethod,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
     connect(ui->spinBoxStopTimeCycles,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
     connect(ui->spinBoxStopTimeNs,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->spinBoxStopNumberOfPacketsDelivered,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));;
     connect(ui->doubleSpinInChannelFclkRange,SIGNAL(valueChanged(double)),this,SLOT(setAppModified()));
     connect(ui->doubleSpinInChannelFclkRange_2,SIGNAL(valueChanged(double)),this,SLOT(setAppModified()));
     connect(ui->comboInStep,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
@@ -733,7 +735,8 @@ void MainWindow::changeEvent(QEvent *event) {
 
 }
 
-void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experiment> experiments, SystemOperation sop) {
+void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experiment> experiments,
+                            SystemOperation sop) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::updateView" << std::endl;
 #endif
@@ -834,6 +837,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
     // System operation
     ui->spinBoxStopTimeCycles->setValue( sop.stopTime_cycles );
     ui->spinBoxStopTimeNs->setValue( sop.stopTime_ns );
+    ui->spinBoxStopNumberOfPacketsDelivered->setValue( sop.stopNumPackets );
     ui->comboInSimulationStopMethod->setCurrentIndex( sop.stopOption );
 
     ui->comboInGenerateVCD->setCurrentIndex( sop.vcdOption );
@@ -1178,6 +1182,7 @@ SystemOperation MainWindow::getSystemOperation() const {
     sysOp.fClkStepType = ui->comboInStep->currentIndex();
     sysOp.stopOption = ui->comboInSimulationStopMethod->currentIndex();
     sysOp.stopTime_cycles = ui->spinBoxStopTimeCycles->value();
+    sysOp.stopNumPackets = ui->spinBoxStopNumberOfPacketsDelivered->value();
     sysOp.stopTime_ns = ui->spinBoxStopTimeNs->value();
     sysOp.vcdOption = ui->comboInGenerateVCD->currentIndex();
 
@@ -1537,15 +1542,26 @@ void MainWindow::stopOptionUpdate(int pos) {
     std::cout << "View/MainWindow::stopOptionUpdated" << std::endl;
 #endif
 
-    if(pos == 1) {
-        this->ui->spinBoxStopTimeCycles->setVisible(false);
-        this->ui->spinBoxStopTimeNs->setVisible(true);
-    } else if( pos == 2 ) {
-        this->ui->spinBoxStopTimeCycles->setVisible(true);
-        this->ui->spinBoxStopTimeNs->setVisible(false);
-    } else {
-        this->ui->spinBoxStopTimeCycles->setVisible(false);
-        this->ui->spinBoxStopTimeNs->setVisible(false);
+    switch( pos ) {
+        case 1: // Stop by time (ns)
+            this->ui->spinBoxStopTimeCycles->setVisible(false);
+            this->ui->spinBoxStopTimeNs->setVisible(true);
+            this->ui->spinBoxStopNumberOfPacketsDelivered->setVisible(false);
+            break;
+        case 2: // Stop by cycles
+            this->ui->spinBoxStopTimeCycles->setVisible(true);
+            this->ui->spinBoxStopTimeNs->setVisible(false);
+            this->ui->spinBoxStopNumberOfPacketsDelivered->setVisible(false);
+            break;
+        case 3: // Stop by number of packets delivered
+            this->ui->spinBoxStopTimeCycles->setVisible(false);
+            this->ui->spinBoxStopTimeNs->setVisible(false);
+            this->ui->spinBoxStopNumberOfPacketsDelivered->setVisible(true);
+            break;
+        default: // Stop when all packets are delivered
+            this->ui->spinBoxStopTimeCycles->setVisible(false);
+            this->ui->spinBoxStopTimeNs->setVisible(false);
+            this->ui->spinBoxStopNumberOfPacketsDelivered->setVisible(false);
     }
 }
 

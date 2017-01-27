@@ -61,7 +61,7 @@ XmlConfigParser::~XmlConfigParser() {
     std::cout << "Destructor Control/XmlConfigParser" << std::endl;
 #endif
 }
-#include <QDebug>
+
 TrafficParameters XmlConfigParser::parseTrafficPattern(QXmlStreamReader *xml) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/XmlConfigParser::parseTrafficPattern" << std::endl;
@@ -362,6 +362,7 @@ void XmlConfigParser::saveXML(QFile *file) {
     xml->writeAttribute("option",QString::number(this->sysOp.stopOption));
     xml->writeAttribute("stopTime_ns",QString::number(sysOp.stopTime_ns));
     xml->writeAttribute("stopTime_cycles",QString::number(sysOp.stopTime_cycles));
+    xml->writeAttribute("stopNumPackets",QString::number(sysOp.stopNumPackets));
     // End - Stop option
     xml->writeEndElement();
 
@@ -497,6 +498,7 @@ void XmlConfigParser::loadXML(QFile *file) {
                 sysOp.stopOption = attributes.value("option").toString().toInt();
                 sysOp.stopTime_ns = attributes.value("stopTime_ns").toString().toInt();
                 sysOp.stopTime_cycles = attributes.value("stopTime_cycles").toString().toInt();
+                sysOp.stopNumPackets = attributes.value("stopNumPackets").toString().toInt();
             }
 
             // VCD Option
