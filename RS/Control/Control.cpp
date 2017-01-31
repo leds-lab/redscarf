@@ -162,7 +162,7 @@ void Control::establishConnections() {
 
     connect(this->mainWindow,SIGNAL(cancel()),this,SLOT(cancelSimulation()));
 
-    connect(this->mainWindow,SIGNAL(generateAnalysis(float,float)),this,SLOT(generateAnalysis(float,float)));
+    connect(this->mainWindow,SIGNAL(generateAnalysis(float,float,int)),this,SLOT(generateAnalysis(float,float,int)));
     connect(this->mainWindow,SIGNAL(viewWaveform()),this,SLOT(viewWaveform()));
     connect(this->mainWindow,SIGNAL(viewGraphic(AnalysisOptions*)),this,SLOT(viewGraphic(AnalysisOptions*)));
     connect(this->mainWindow,SIGNAL(viewReport(AnalysisOptions*)),this,SLOT(viewReport(AnalysisOptions*)));
@@ -734,7 +734,7 @@ void Control::removeExe(QObject *obj) {
     this->exes->removeOne( exe );
 }
 
-void Control::generateAnalysis(float lower, float upper) {
+void Control::generateAnalysis(float lower, float upper, int type) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::generateAnalysis" << std::endl;
 #endif
@@ -774,7 +774,7 @@ void Control::generateAnalysis(float lower, float upper) {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(trUtf8("<br />Analyzing simulation results"),Qt::green);
     // The number of elements and data width are extracted from the folder string
-    Analyzer* analyzer = new Analyzer(&this->simulationFolders,0,0,lower,upper);
+    Analyzer* analyzer = new Analyzer(&this->simulationFolders,0,0,lower,upper,type);
     QThread* threadAnalisador = new QThread(this);
     threadAnalisador->setObjectName("Analyzer");
     connect(threadAnalisador,SIGNAL(started()),analyzer,SLOT(analyze()));
@@ -793,7 +793,6 @@ void Control::analysisEnd(bool success) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::analysisEnd" << std::endl;
 #endif
-
     this->analysisOk = success;
     this->mainWindow->setActionGenerateCSVEnabled(success);
     this->mainWindow->setAnalysisOptionsEnabled(true);

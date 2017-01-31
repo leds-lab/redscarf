@@ -199,7 +199,7 @@ private slots:
     void executeUnsuccessful();
 
     // Performance analysis
-    void generateAnalysis(float lower,float upper);
+    void generateAnalysis(float lower,float upper,int type);
     void viewWaveform();
     void viewGraphic(AnalysisOptions* aop);
     void viewReport(AnalysisOptions* aop);

@@ -55,6 +55,7 @@ private:
     unsigned int dataWidth;
     float lower;
     float upper;
+    int analyzerType;
 
 public:
     /*!
@@ -68,7 +69,7 @@ public:
      * \param parent QObject parent of this Analyzer
      */
     explicit Analyzer(QList<QString> *analysisFolders, unsigned short numElements,
-                      unsigned int dataWidth, float lower,float upper, QObject *parent = 0);
+                      unsigned int dataWidth, float lower,float upper, int analyzerType, QObject *parent = 0);
     ~Analyzer();
 
 signals:

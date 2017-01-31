@@ -34,6 +34,7 @@
 #include "Control/Analyzer.h"
 #include "Model/Analysis/PerformanceAnalysis.h"
 #include "Model/System/SystemDefines.h"
+#include "Model/Analysis/NewTrafficAnalyzer.h"
 
 #include <QDir>
 
@@ -44,7 +45,7 @@
 Analyzer::Analyzer(QList<QString> *analysisFolders,
                    unsigned short numElements,
                    unsigned int dataWidth,
-                   float lower,float upper,
+                   float lower, float upper, int analyzerType,
                    QObject* parent)
     : QObject(parent) {
 #ifdef DEBUG_POINTS_METHODS
@@ -55,6 +56,7 @@ Analyzer::Analyzer(QList<QString> *analysisFolders,
     this->dataWidth = dataWidth;
     this->lower = lower;
     this->upper = upper;
+    this->analyzerType = analyzerType;
 
     this->analysisFolders = analysisFolders;
 }
@@ -114,34 +116,51 @@ void Analyzer::analyze() {
         const char* resultado = byteArrayResultado.constData();
 
         // Realizar a análise
-        TrafficAnalysis* analyzer = new PerformanceAnalysis(
-                    numElements, dataWidth, lower, upper, fClk,
-                    fifoOutDepth, flowControlType, analise, resultado);
-        TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
-        falhaAnalise = true;
-        QString dirAnalyzed = diretorioAnalise.mid( diretorioExperimento.lastIndexOf("/") + 5 );
-        dirAnalyzed.replace("_"," ");
-        dirAnalyzed.replace("/"," @ ");
-        switch (resultAnalysis) {
-            case TrafficAnalysis::NoInputFile:
-                this->sendMessage(trUtf8("<font color=red>There is no input file for analysis (maybe "
-                                      "simulation was not run) in %1</font>").arg(dirAnalyzed));
+        TrafficAnalysis* analyzer = NULL;
+
+        switch (analyzerType) {
+            case 0: // Default Analyzer
+                analyzer = new PerformanceAnalysis(
+                        numElements, dataWidth, lower, upper, fClk,
+                        fifoOutDepth, flowControlType, analise, resultado);
+
                 break;
-            case TrafficAnalysis::Ok:  // Analysis successfully
-                this->sendMessage(trUtf8("<font color=black>- %1</font>")
-                            .arg(dirAnalyzed));
-                falhaAnalise = false;
+            case 1: // New Analyzer
+                analyzer = new NewTrafficAnalyzer(numElements,dataWidth,lower,upper,fClk,
+                                                  fifoOutDepth,flowControlType,analise,resultado);
                 break;
-            case TrafficAnalysis::NoPacketsDelivered:
-                this->sendMessage(trUtf8("<font color=red>Simulation time too short. None packet was "
-                                      "delivered in %1</font>").arg(dirAnalyzed));
-                break;
-            case TrafficAnalysis::NoOutputFile:
-                this->sendMessage(trUtf8("<font color=red>Impossible create result file in %1</font>")
-                                  .arg(dirAnalyzed));
-                break;
+            default: break; // Not implemented
         }
-        delete analyzer;
+
+        falhaAnalise = true;
+        if( analyzer == NULL ) {
+            this->sendMessage(trUtf8("<font color=red>No analyzer defined!</font>"));
+        } else {
+            TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
+            QString dirAnalyzed = diretorioAnalise.mid( diretorioExperimento.lastIndexOf("/") + 5 );
+            dirAnalyzed.replace("_"," ");
+            dirAnalyzed.replace("/"," @ ");
+            switch (resultAnalysis) {
+                case TrafficAnalysis::NoInputFile:
+                    this->sendMessage(trUtf8("<font color=red>There is no input file for analysis (maybe "
+                                          "simulation was not run) in %1</font>").arg(dirAnalyzed));
+                    break;
+                case TrafficAnalysis::Ok:  // Analysis successfully
+                    this->sendMessage(trUtf8("<font color=black>- %1</font>")
+                                .arg(dirAnalyzed));
+                    falhaAnalise = false;
+                    break;
+                case TrafficAnalysis::NoPacketsDelivered:
+                    this->sendMessage(trUtf8("<font color=red>Simulation time too short. None packet was "
+                                          "delivered in %1</font>").arg(dirAnalyzed));
+                    break;
+                case TrafficAnalysis::NoOutputFile:
+                    this->sendMessage(trUtf8("<font color=red>Impossible create result file in %1</font>")
+                                      .arg(dirAnalyzed));
+                    break;
+            }
+            delete analyzer;
+        }
         if (falhaAnalise) {
             emit this->finished(false);
             return;

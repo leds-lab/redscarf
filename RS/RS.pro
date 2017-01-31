@@ -108,7 +108,8 @@ SOURCES +=  \
     Model/System/SystemParameters.cpp \
     Model/System/SystemOperation.cpp \
     Model/System/SystemConfiguration.cpp \
-    Model/System/SystemExecution.cpp
+    Model/System/SystemExecution.cpp \
+    Model/Analysis/NewTrafficAnalyzer.cpp
 
 # Application Headers files
 HEADERS += \
@@ -156,7 +157,8 @@ HEADERS += \
     Model/System/SystemParameters.h \
     Model/System/SystemOperation.h \
     Model/System/SystemConfiguration.h \
-    Model/System/SystemExecution.h
+    Model/System/SystemExecution.h \
+    Model/Analysis/NewTrafficAnalyzer.h
 
 # Application configurations support
 CONFIG += qt

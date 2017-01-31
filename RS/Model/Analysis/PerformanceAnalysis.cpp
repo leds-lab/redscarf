@@ -33,15 +33,12 @@
 
 #include "Model/Analysis/PerformanceAnalysis.h"
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdio>
 #include <math.h>
 #include <limits.h>
-#include <string.h>
-#include <clocale>
 
 #ifdef DEBUG_POINTS_METHODS
-#include <iostream>
+    #include <iostream>
 #endif
 
 PerformanceAnalysis::PerformanceAnalysis(unsigned short numElements, unsigned short dataWidth,
@@ -54,9 +51,6 @@ PerformanceAnalysis::PerformanceAnalysis(unsigned short numElements, unsigned sh
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor Class Model/Analysis/PerformanceAnalysis" << std::endl;
 #endif
-
-    std::setlocale(LC_ALL, "en_US.UTF-8");
-
     this->packets.resize(numElements);
 
     flowAccNbOfPck.resize(numElements);
@@ -175,97 +169,6 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::makeAnalysis() {
 
     // Analyze individual flows
     return this->analyzeIndividualFlows();
-}
-
-TrafficAnalysis::StatusAnalysis PerformanceAnalysis::readLogsFiles() {
-#ifdef DEBUG_POINTS_METHODS
-    std::cout << "Mode/Analysis/PerformanceAnalysis::readLogsFiles" << std::endl;
-#endif
-
-    FILE* fpIn;
-    char filenameIn[512];
-
-    unsigned long long receivedPacketId = 0;
-    unsigned int       source = 0;
-    unsigned int       destination = 0;
-    unsigned int       hops;
-    unsigned int       flowId = 0;
-    unsigned int       trafficClass = 0;
-    unsigned long      deadline = 0;
-    unsigned long long cycleCreationPacket = 0;
-    unsigned long long cycleReceivedHeader = 0;
-    unsigned long long cycleReceivedTrailer = 0;
-    unsigned int       packetSize = 0;
-    float              requiredBandwidth = 0;
-
-    for( unsigned int elementId = 0; elementId < numberOfElements; elementId++ ) {
-        // Open the simulation report file
-        sprintf(filenameIn,"%s/ext_%u_out",workDir,elementId);
-        if( (fpIn = fopen(filenameIn,"rt")) == NULL ) {
-            return TrafficAnalysis::NoInputFile;
-        }
-
-        int scanResult = 0;
-        // It looks for the marker of begining of table of measures
-        do {
-            scanResult = fscanf(fpIn,"%s",str);
-        } while( strcmp(str,"#") != 0 );
-
-
-        // It extracts information related to each packet received
-        do {
-            scanResult = fscanf(fpIn,"%s", str);
-            if ((strcmp(str,"#") != 0)) {
-                receivedPacketId = (unsigned long int) atoll(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                source = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                destination = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                hops = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                flowId = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                trafficClass = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                deadline = (unsigned long long int) atol(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                cycleCreationPacket = (unsigned long long int) atoll(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                cycleReceivedHeader = (unsigned long long int) atoll(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                cycleReceivedTrailer = (unsigned long long int) atoll(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                packetSize = (unsigned int) atoi(str);
-
-                scanResult = fscanf(fpIn,"%s", str);
-                requiredBandwidth = (float) atof(str);
-
-                PacketInfo* pckInfo = new PacketInfo(receivedPacketId,source,destination,hops,flowId,
-                                                     trafficClass,deadline,cycleCreationPacket,cycleReceivedHeader,
-                                                     cycleReceivedTrailer,packetSize,requiredBandwidth);
-
-                this->packets[elementId].push_back(pckInfo);
-                scanResult++;
-            }
-        } while ((strcmp(str,"#") != 0));
-
-        fclose(fpIn);
-
-    }
-
-    return TrafficAnalysis::Ok;
-
 }
 
 void PerformanceAnalysis::initSystemVariables() {

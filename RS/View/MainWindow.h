@@ -126,7 +126,7 @@ signals:
     void cancel();
 
     // Performance Analysis
-    void generateAnalysis(float lower,float upper);
+    void generateAnalysis(float lower,float upper,int type);
     void viewWaveform();
     void viewGraphic(AnalysisOptions* aop);
     void viewReport(AnalysisOptions* aop);
@@ -138,6 +138,7 @@ public slots:
 
     // Tab Performance Analysis
     void runAnalysis();
+    void runNewAnalysis(); // EXPERIMENTAL
 
 private slots:
     void setAppModified();
@@ -169,6 +170,8 @@ private slots:
 
     // Tab Performance Analysis
     void flowSelectionUpdated(int);
+    void lowerLimitAnalysisChange(int);
+    void upperLimitAnalysisChange(int);
     void buttonCheckUncheckAllClicked();
     void toolButtonCurveClicked();
     void plotGraphic();
