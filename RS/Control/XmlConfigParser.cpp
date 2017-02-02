@@ -415,14 +415,6 @@ void XmlConfigParser::loadXML(QFile *file) {
 
     SystemDefines* def = SystemDefines::getInstance();
 
-//    fClkStepType = DefaultValuesSystem::DEFAULT_FCLK_STEP_TYPE;
-//    stopOption = DefaultValuesSystem::DEFAULT_STOP_OPTION;
-//    stopTime_ns = DefaultValuesSystem::DEFAULT_STOP_TIME_NS;
-//    stopTime_cycles = DefaultValuesSystem::DEFAULT_STOP_TIME_CYCLES;
-//    vcdOption = DefaultValuesSystem::DEFAULT_VCD_OPTION;
-//    fClk1 = DefaultValuesSystem::DEFAULT_FCLK_FIRST;
-//    fClk2 = DefaultValuesSystem::DEFAULT_FCLK_LAST;
-//    fClkStep = DefaultValuesSystem::DEFAULT_FCLK_STEP_VALUE;
     while (!xml->atEnd() && !xml->hasError()) {
         // Reading elements
         QXmlStreamReader::TokenType token = xml->readNext();
@@ -489,7 +481,6 @@ void XmlConfigParser::loadXML(QFile *file) {
                 experiment.setRoutingAlgorithm( option == SystemDefines::ERROR ? 0 : option );
                 option = def->getKeyTopology( attributes.value("topology").toString() );
                 experiment.setTopology( option == SystemDefines::ERROR ? 0 : option );
-
                 this->exps.insert(attributes.value("index").toString().toInt(),experiment);
             }
 

@@ -275,13 +275,12 @@ QPair<int,int> SystemDefines::getKeyRoutingAlgorithm(QString value) const {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/SystemConfiguration/SystemDefines::getKeyRoutingAlgorithm" << std::endl;
 #endif
+
     QMap<unsigned int, Routing>::const_iterator it;
     for( it = routingAlgorithms.begin(); it != routingAlgorithms.end(); it++ ) {
         Routing routing = it.value();
-        for( int i = 0; i < routing.algorithmsCount(); i++ ) {
-            if( routing.containsAlgorithm(value) ) {
-                return QPair<int,int>(it.key(),i);
-            }
+        if( routing.containsAlgorithm(value) ) {
+            return QPair<int,int>(it.key(),routing.getRoutingAlgorithmIndex(value));
         }
     }
     return QPair<int,int>(-1,ERROR);
