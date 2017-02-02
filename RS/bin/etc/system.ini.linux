@@ -85,8 +85,8 @@ size=7
 ;-------------------------------------------------------------------------
 [Routing_Algorithms]
 1\Topology=Mesh-2D
-1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast
-1\Plugins=librouting_xy.so,librouting_wf.so,librouting_nf.so,librouting_nl.so
+1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast, OddEven
+1\Plugins=librouting_xy.so,librouting_wf.so,librouting_nf.so,librouting_nl.so,librouting_oe.so
 2\Topology=Switch-Bus
 2\Algorithms=none
 2\Plugins=librouting_crossbar.so
