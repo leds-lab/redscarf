@@ -48,6 +48,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include <math.h>
+#include <chrono>
 
 // Control
 #include "Control/Control.h"
@@ -1524,6 +1525,9 @@ void Control::runSimulations() {
 
     SystemDefines* def = SystemDefines::getInstance();
 
+    unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    seed /= 2;
+
     // For each experiment - create a folder only in valid configurations
     for( int expIndex = 0; expIndex < experiments.size(); expIndex++ ) { // Each experiment
         Experiment* experiment = &experiments[expIndex];
@@ -1727,6 +1731,8 @@ void Control::runSimulations() {
                         if( systemOp.vcdOption ) {
                             args.append("-trace");
                         }
+                        args.append("-seed");
+                        args.append(QString::number(seed));
                         /*
                          * End setup command-line arguments
                          */
