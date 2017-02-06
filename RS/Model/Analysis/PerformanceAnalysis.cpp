@@ -336,7 +336,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::analyzeAllFlows() {
                 }
             }
 
-            if( i+1 <= ((unsigned long int)(upper * totalNbOfPckRcvd)) ) {
+            if( i+1 <= ((unsigned long int)(upper * nbOfPacketsReceived)) ) {
                 endCycle = pckInf->getCycleReceivedTrailer();
                 if( endCycle > biggestEndCycle ) {
                     biggestEndCycle = endCycle;
