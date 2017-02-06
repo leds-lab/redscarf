@@ -1006,6 +1006,7 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
         if(dataReport != NULL) {
             // Converting C stl standard list to QList
             data = new QList<DataReport *>( QList<DataReport *>::fromStdList(*dataReport) );
+            delete dataReport; // TODO VERIFICAR
         }
 
         if( data == NULL ) {

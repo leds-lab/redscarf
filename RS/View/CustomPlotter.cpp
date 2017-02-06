@@ -165,7 +165,7 @@ void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOp
         QPen pen = QPen(QBrush(cor), aop->getLineWidth(), penStyle);
         plotter->graph(i)->setPen(pen);
 
-        if( aop->isLatencyDistribution() ) {
+        if( aop->isLatencyDistribution() ) { // Define the style of Latency Histogram
             plotter->graph(i)->setLineStyle(QCPGraph::lsImpulse);
         }
         // end

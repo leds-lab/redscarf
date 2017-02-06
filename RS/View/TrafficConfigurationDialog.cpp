@@ -372,9 +372,11 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
                     parameters.setValue(trafficConf);
                     newItem->setData(Qt::UserRole,parameters);
                 } else {
-                    QMessageBox::information(this,tr("Invalid configuration"),tr("For this spatial distribution at node %1"
-                                                                                 "\n an invalid destination was generated.\n"
-                                                                                 "Not added!").arg(trafficConf.getSource()));
+                    if( trafficConf.getSpatialDistribution() == SpatialDistribution::Specific_Address ) {
+                        QMessageBox::information(this,tr("Invalid configuration"),tr("For this spatial distribution at node %1"
+                                                                                     "\n an invalid destination was generated.\n"
+                                                                                     "Not added!").arg(trafficConf.getSource()));
+                    }
                 }
                 break;
             } // End default:

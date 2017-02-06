@@ -38,6 +38,7 @@ DataReport::DataReport() {}
 void DataReport::debugGeneral() {
 
     std::cout << "FCLK: "                   << fClk
+              << "\nPckAnalyzed: " << accNbOfPck
               << "\navgRequiredBwNorm   : " << avgRequiredBwNorm
               << "\nacceptedTrafficFlits: " << acceptedTrafficFlits
               << "\nidealAvgLatency     : " << idealAvgLatency
