@@ -64,6 +64,8 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
         ui->listConf->addItem( newItem );
     }
     this->loadExistentConfigurations();
+    this->itemClicked( ui->listConf->item(0) );
+    ui->listConf->item(0)->setSelected(true);
 }
 
 void TrafficConfigurationDialog::loadExistentConfigurations() {

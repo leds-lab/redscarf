@@ -769,6 +769,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
             item->setData(Qt::UserRole+1,trafficsVar);
         }
     }
+    ui->listConf->item(0)->setSelected(true);
 
     // Experiments
     for(int i = 0u; i < experiments.size(); i++) {
@@ -1712,6 +1713,7 @@ void MainWindow::addSystemConfiguration() {
         QVariant parameters;
         parameters.setValue(sp);
         item->setData(Qt::UserRole,parameters);
+        item->setSelected(true);
         this->setAppModified();
     }
 
