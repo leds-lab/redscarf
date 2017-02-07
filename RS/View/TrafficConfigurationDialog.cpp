@@ -167,9 +167,12 @@ void TrafficConfigurationDialog::clearScene() {
         QGraphicsItem* item = graphicItems.at(i);
         delete item;
     }
-    this->ui->graphicsView->resetCachedContent();
-    this->ui->graphicsView->resetMatrix();
-    this->ui->graphicsView->resetTransform();
+
+    delete scene;
+    this->scene = new QGraphicsScene();
+    this->scene->setBackgroundBrush( QBrush(Qt::transparent) );
+    this->ui->graphicsView->setScene(scene);
+    connect(scene,SIGNAL(selectionChanged()),this,SLOT(graphicSelectionChange()));
 }
 
 void TrafficConfigurationDialog::repaintGraphics() {
