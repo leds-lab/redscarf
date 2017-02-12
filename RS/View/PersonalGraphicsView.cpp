@@ -3,10 +3,18 @@
 #include <QApplication>
 #include <QWheelEvent>
 
+#include <QGraphicsItem>
+
 PersonalGraphicsView::PersonalGraphicsView(QWidget *parent)
     : QGraphicsView(parent),
       zoomFactor(0.15f)
-{
+{}
+
+void PersonalGraphicsView::selectAllItems() {
+    QList<QGraphicsItem *> allItems = this->items();
+    for( int i = 0; i < allItems.size(); i++ ) {
+        allItems.at(i)->setSelected(true);
+    }
 }
 
 void PersonalGraphicsView::wheelEvent(QWheelEvent *event) {

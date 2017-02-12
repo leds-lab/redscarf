@@ -854,7 +854,9 @@ void Control::viewGraphic(AnalysisOptions *aop) {
     } else {
         QVector<QList<DataReport *> *> *data = getReportData(aop);
         if(data == NULL) {
-            mainWindow->printConsole( trUtf8("Report file unavailable or this flow is null (no packet was transfered)"),errorColor);
+            if( !aop->isLatencyDistribution() ) {
+                mainWindow->printConsole( trUtf8("Report file unavailable or this flow is null (no packet was transfered)"),errorColor);
+            }
             return;
         }
 

@@ -16,6 +16,7 @@ public slots:
     void zoomOut();
 
     void setZoomFactor(double newFactor);
+    void selectAllItems();
 
 protected:
     void wheelEvent(QWheelEvent*);

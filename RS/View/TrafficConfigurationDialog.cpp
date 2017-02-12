@@ -35,6 +35,7 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
     this->scene = new QGraphicsScene();
     this->scene->setBackgroundBrush( QBrush(Qt::transparent) );
     this->ui->graphicsView->setScene(scene);
+    connect(ui->buttonSelectAllNodes,SIGNAL(clicked(bool)),ui->graphicsView,SLOT(selectAllItems()));
 
     connect(ui->listConf,SIGNAL(itemClicked(QListWidgetItem*)),
             this,SLOT(itemClicked(QListWidgetItem*)));
