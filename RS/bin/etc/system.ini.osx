@@ -118,10 +118,10 @@ size=7
 [Flow_Controls]
 1\FlowControl=HS-(WH)
 1\Plugin=libfc_handshake.dylib
-1\CyclePerFlit=4
+1\CyclesPerFlit=4
 2\FlowControl=CB-(WH)
 2\Plugin=libfc_creditbased.dylib
-2\CyclePerFlit=1
+2\CyclesPerFlit=1
 size=2
 
 ;-------------------------- Arbiter_Types --------------------------------
