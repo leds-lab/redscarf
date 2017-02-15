@@ -820,7 +820,19 @@ void Control::viewWaveform() {
             item = simulationFolders.at(0);
         } else {
             QStringList dirs = simulationFolders; // Copy
-            QStringList items = AnalysisOptions::getVisibleStrings(dirs);
+            QStringList items;
+            for( int i = 0; i < dirs.size(); i++ ) {
+                QString allDir = dirs.at(i);
+                QString woFClk = allDir.left( allDir.lastIndexOf("/") );
+                QString expDir = woFClk.right( woFClk.size() - woFClk.lastIndexOf("/") );
+                QString fClk = allDir.right( allDir.size() - allDir.lastIndexOf("/") );
+                expDir.remove(0,5);
+                expDir.replace("_"," ");
+                fClk.remove(0,1);
+                QString dirShow = QString("%1 @ %2").arg(expDir).arg(fClk);
+                items.append(dirShow);
+            }
+
             item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
             item = dirs.at(items.indexOf(item));
         }
