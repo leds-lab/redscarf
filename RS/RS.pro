@@ -5,7 +5,7 @@
 #-------------------------------------------------
 #
 # RS.pro
-# Copyright (C) 2014 LEDS - Univali <zeferino@univali.br>
+# Copyright (C) 2014 - 2016 LEDS - Univali <zeferino@univali.br>
 # Laboratory of Embedded and Distributed Systems
 # University of Vale do Itajaí
 #
@@ -30,13 +30,17 @@
 # Date       - Version - Author                      | Description
 # ----------------------------------------------------------------------------
 # 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
-#
+# ----------------------------------------------------------------------------
+# 09/07/2016 - 1.1     - Eduardo Alves da Silva      | First refactoring
+# ----------------------------------------------------------------------------
+# 09/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
+# ----------------------------------------------------------------------------
 #
 
 
 # Qt Modules
 QT       = core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # Qt 5
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport # Qt 5
 
 
 # Template default for applications
@@ -48,7 +52,7 @@ DESTDIR = bin
 TARGET = RedScarf
 
 # Application version
-VERSION = 1.0
+VERSION = 2.0
 
 
 # Folders for compiled files (include pre-compiled)
@@ -60,133 +64,116 @@ OBJECTS_DIR = $$_PRO_FILE_PWD_/build/objs        # C++ object files (.o)
 
 # Application Sources files
 SOURCES +=  \
-    src/Model/Util.cpp \
-    src/Model/Traffic/MathFunction.cpp \
-    src/Model/Traffic/Node.cpp \
-    src/Model/Traffic/TrafficModelGenerator.cpp \
-    src/Model/Traffic/TrafficParameters.cpp \
-    src/Model/Traffic/TrafficPatternDefines.cpp \
-    src/Model/Traffic/TrafficPatternManager.cpp \
-    src/Model/System/Defines.cpp \
-    src/Model/System/Experiment.cpp \
-    src/Model/System/GSoC.cpp \
-    src/Model/System/GSoCIN2VcStrategy.cpp \
-    src/Model/System/GSoCINStrategy.cpp \
-    src/Model/System/SoCINGenerationStrategy.cpp \
-    src/Model/System/SystemParameters.cpp \
-    src/Model/System/SystemDefines.cpp \
-    src/Model/System/ExperimentManager.cpp \
-    src/Model/Analysis/DataReport.cpp \
-    src/Model/Analysis/PacketInfo.cpp \
-    src/Model/Analysis/PerformanceAnalysis.cpp \
-    src/Model/Analysis/TrafficAnalysis.cpp \
-    src/View/DefaultPreviewTrafficConfiguration.cpp \
-    src/View/XMLPreviewTrafficConfiguration.cpp \
-    src/View/AnalysisOptions.cpp \
-    src/View/QwtPlotter.cpp \
-    src/View/PersonalQwtPlotPicker.cpp \
-    src/View/ConfigDialog.cpp \
-    src/View/Pages.cpp \
-    src/View/AboutWindow.cpp \
-    src/View/GetSelectedItemsDialog.cpp \
-    src/View/ReportDialog.cpp \
-    src/View/TrafficConfigurationDialog.cpp \
-    src/View/MainWindow.cpp \
-    src/Control/Builder.cpp \
-    src/Control/GnuPlotPlotter.cpp \
-    src/Control/Plotter.cpp \
-    src/Control/ThreadManager.cpp \
-    src/Control/WaveformViewer.cpp \
-    src/Control/Analyzer.cpp \
-    src/Control/FolderCompressor.cpp \
-    src/Control/EnvironmentConfiguration.cpp \
-    src/Control/ExternalWaveformViewer.cpp \
-    src/Control/Control.cpp \
-    src/Control/SimulationPerformer.cpp \
-    src/Main.cpp
+    Model/Traffic/MathFunction.cpp \
+    Model/Traffic/TrafficModelGenerator.cpp \
+    Model/System/Defines.cpp \
+    Model/System/Experiment.cpp \
+    Model/System/SystemDefines.cpp \
+    Model/Analysis/DataReport.cpp \
+    Model/Analysis/PacketInfo.cpp \
+    Model/Analysis/PerformanceAnalysis.cpp \
+    Model/Analysis/TrafficAnalysis.cpp \
+    Model/Analysis/ReportReader.cpp \
+    View/AnalysisOptions.cpp \
+    View/ConfigDialog.cpp \
+    View/Pages.cpp \
+    View/AboutWindow.cpp \
+    View/GetSelectedItemsDialog.cpp \
+    View/ReportDialog.cpp \
+    View/MainWindow.cpp \
+    View/Plotter.cpp \
+    View/CustomPlotter.cpp \
+    Control/ThreadManager.cpp \
+    Control/WaveformViewer.cpp \
+    Control/Analyzer.cpp \
+    Control/FolderCompressor.cpp \
+    Control/EnvironmentConfiguration.cpp \
+    Control/ExternalWaveformViewer.cpp \
+    Control/Control.cpp \
+    Control/SimulationPerformer.cpp \
+    Control/XmlConfigParser.cpp \
+    Main.cpp \
+    View/qcustomplot.cpp \
+    View/CustomPlotZoom.cpp \
+    Model/FolderOperation.cpp \
+    Model/TimeOperation.cpp \
+    View/Arc.cpp \
+    View/Edge.cpp \
+    View/PersonalGraphicsView.cpp \
+    View/TrafficConfigurationDialog.cpp \
+    View/TrafficEditDialog.cpp \
+    View/Vertice.cpp \
+    Model/Traffic/SpatialDistribution.cpp \
+    Model/Traffic/TrafficParameters.cpp \
+    Model/System/SystemParameters.cpp \
+    Model/System/SystemOperation.cpp \
+    Model/System/SystemConfiguration.cpp \
+    Model/System/SystemExecution.cpp
 
 # Application Headers files
 HEADERS += \
-    include/Model/Util.h \
-    include/Model/Traffic/MathFunction.h \
-    include/Model/Traffic/Node.h \
-    include/Model/Traffic/TrafficModelGenerator.h \
-    include/Model/Traffic/TrafficParameters.h \
-    include/Model/Traffic/TrafficPatternDefines.h \
-    include/Model/Traffic/TrafficPatternManager.h \
-    include/Model/System/Defines.h \
-    include/Model/System/Experiment.h \
-    include/Model/System/GNoC.h \
-    include/Model/System/GSoC.h \
-    include/Model/System/GSoCIN2VcStrategy.h \
-    include/Model/System/GSoCINStrategy.h \
-    include/Model/System/SoCINGenerationStrategy.h \
-    include/Model/System/SystemParameters.h \
-    include/Model/System/SystemDefines.h \
-    include/Model/System/ExperimentManager.h \
-    include/Model/Analysis/DataReport.h \
-    include/Model/Analysis/PacketInfo.h \
-    include/Model/Analysis/PerformanceAnalysis.h \
-    include/Model/Analysis/TrafficAnalysis.h \
-    include/View/AnalysisOptions.h \
-    include/View/DefaultPreviewTrafficConfiguration.h \
-    include/View/XMLPreviewTrafficConfiguration.h \
-    include/View/QwtPlotter.h \
-    include/View/PersonalQwtPlotPicker.h \
-    include/View/ConfigDialog.h \
-    include/View/Pages.h \
-    include/View/AboutWindow.h \
-    include/View/GetSelectedItemsDialog.h \
-    include/View/ReportDialog.h \
-    include/View/PreviewDialog.h \
-    include/View/TrafficConfigurationDialog.h \
-    include/View/MainWindow.h \
-    include/Control/Builder.h \
-    include/Control/GnuPlotPlotter.h \
-    include/Control/Plotter.h \
-    include/Control/ThreadManager.h \
-    include/Control/WaveformViewer.h \
-    include/Control/Analyzer.h \
-    include/Control/FolderCompressor.h \
-    include/Control/EnvironmentConfiguration.h \
-    include/Control/ExternalWaveformViewer.h \
-    include/Control/Control.h \
-    include/Control/SimulationPerformer.h \
-    include/Main.h
+    Model/Traffic/MathFunction.h \
+    Model/Traffic/TrafficModelGenerator.h \
+    Model/System/Defines.h \
+    Model/System/Experiment.h \
+    Model/System/SystemDefines.h \
+    Model/Analysis/DataReport.h \
+    Model/Analysis/PacketInfo.h \
+    Model/Analysis/PerformanceAnalysis.h \
+    Model/Analysis/TrafficAnalysis.h \
+    Model/Analysis/ReportReader.h \
+    View/AnalysisOptions.h \
+    View/ConfigDialog.h \
+    View/Pages.h \
+    View/AboutWindow.h \
+    View/GetSelectedItemsDialog.h \
+    View/ReportDialog.h \
+    View/MainWindow.h \
+    View/Plotter.h \
+    View/CustomPlotter.h \
+    Control/ThreadManager.h \
+    Control/WaveformViewer.h \
+    Control/Analyzer.h \
+    Control/FolderCompressor.h \
+    Control/EnvironmentConfiguration.h \
+    Control/ExternalWaveformViewer.h \
+    Control/Control.h \
+    Control/SimulationPerformer.h \
+    Control/XmlConfigParser.h \
+    Main.h \
+    View/qcustomplot.h \
+    View/CustomPlotZoom.h \
+    Model/FolderOperation.h \
+    Model/TimeOperation.h \
+    View/Arc.h \
+    View/Edge.h \
+    View/PersonalGraphicsView.h \
+    View/TrafficConfigurationDialog.h \
+    View/TrafficEditDialog.h \
+    View/Vertice.h \
+    Model/Traffic/SpatialDistribution.h \
+    Model/Traffic/TrafficParameters.h \
+    Model/System/SystemParameters.h \
+    Model/System/SystemOperation.h \
+    Model/System/SystemConfiguration.h \
+    Model/System/SystemExecution.h
 
 # Application configurations support
 CONFIG += qt
 CONFIG += exceptions
 CONFIG += thread
-
-# Qwt graphics root folder
-QWT_PATH =
-isEmpty(QWT_PATH){
-# Show error message if QWT_PATH is no defined
-    error("QWT library path not defined in file RS.pro line 163")
-} else {
-# Show a message with QWT_PATH defined
-    message(Qwt Path: $$QWT_PATH)
-}
-include($${QWT_PATH}/features/qwt.prf)
-
-#DEPENDPATH += $${QWT_PATH}/lib
-#mac {
-#    INCLUDEPATH += $${QWT_PATH}/lib/qwt.framework/Headers/
-#    LIBS += -F$${QWT_PATH}/lib -framework qwt
-#} else {
-#    INCLUDEPATH += $${QWT_PATH}/include
-#    LIBS += -L$${QWT_PATH}/lib -lqwt
-#}
+CONFIG += c++11
 
 # Graphics forms (.ui)
 FORMS  += \
-    forms/AboutWindow.ui \
-    forms/PreviewDialog.ui \
-    forms/TrafficConfigurationDialog.ui \
-    forms/FoldersConfigurationPage.ui \
-    forms/GeneralConfigurationPage.ui \
-    forms/MainWindow.ui
+    View/AboutWindow.ui \
+    View/PreviewDialog.ui \
+    View/FoldersConfigurationPage.ui \
+    View/GeneralConfigurationPage.ui \
+    View/MainWindow.ui \
+    View/Plotter.ui \
+    View/TrafficConfigurationDialog.ui \
+    View/TrafficEditDialog.ui
 
 # Application resources files (.qrc)
 RESOURCES += resources/Icons.qrc
@@ -194,7 +181,7 @@ RESOURCES += resources/Icons.qrc
 # OS X specific settings
 mac {
     ICON = resources/icons/RedScarf_icon.icns
-    FRAMEWORK_HEADERS.version = "1.0"
+    FRAMEWORK_HEADERS.version = $$[VERSION]
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 }
 
@@ -203,7 +190,7 @@ win32 {
     QMAKE_TARGET_COMPANY = "LEDS - Laboratory of Embedded and Distributed Systems"
     QMAKE_TARGET_PRODUCT = RedScarf
     QMAKE_TARGET_DESCRIPTION = "Network-on-Chip Simulator"
-    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2015 LEDS - Univali"
+    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2014 - 2017 LEDS - Univali"
     RC_ICONS = resources/icons/RedScarf_icon.ico
 }
 
@@ -227,9 +214,9 @@ CONFIG(release, debug|release) {
     TARGET  = RedScarf
     CONFIG -= debug release
     CONFIG += release
-    DEFINES += QT_NO_DEBUG_OUTPUT
-    DEFINES -= QT_NO_WARNING_OUTPUT
-    DEFINES += QT_NO_DEBUG
+#    DEFINES += QT_NO_DEBUG_OUTPUT
+#    DEFINES -= QT_NO_WARNING_OUTPUT
+#    DEFINES += QT_NO_DEBUG
 }
 
 # Debug options. Active methods traceability

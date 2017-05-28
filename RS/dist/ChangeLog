@@ -5,3 +5,19 @@ The initial version of RedScarf
 
 July 14th, 2015
 -----------------------------------------------
+
+-------------- First refactoring --------------
+Version 1.1
+Released by Eduardo Alves da Silva & 
+            Sérgio Vargas Júnior
+First refactoring on RedScarf
+- The class Control was refactored.
+- The class XmlConfigParser was created.
+- The Control::getReportData was created and 
+duplicate code in: Control::viewReport,
+Control::generateCSVSimulationReport and
+QwtPlotter::viewGraphic was removed.
+- The class ReportReader was created.
+
+May 31th, 2016
+-----------------------------------------------

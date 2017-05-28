@@ -5,7 +5,7 @@
 #-------------------------------------------------
 #
 # RedScarf.pro
-# Copyright (C) 2014-2015 LEDS - Univali <zeferino@univali.br>
+# Copyright (C) 2014-2017 LEDS - Univali <zeferino@univali.br>
 # Laboratory of Embedded and Distributed Systems
 # University of Vale do Itajaí
 #
@@ -30,11 +30,11 @@
 # Date       - Version - Author                      | Description
 # ----------------------------------------------------------------------------
 # 13/06/2015 - 1.0     - Eduardo Alves da Silva      | Initial release
+# 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 #
 #
 
 TEMPLATE = subdirs
 SUBDIRS = RS \
           RS/test \
-          RS/dist \
-          RS/bin/system
+          RS/dist

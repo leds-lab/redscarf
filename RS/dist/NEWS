@@ -15,3 +15,14 @@ Contains all the features designed for the first release
 Produced by Eduardo Alves da Silva
 July 14th, 2015
 ------------------------------------
+------------------------------------
+Version 1.1
+------------------------------------
+First refactoring.
+ * ReportReader class implemented
+ * XmlConfigParser class implemented
+ * Control class refactored
+
+Produced by Eduardo Alves da Silva
+May 31th, 2016
+------------------------------------

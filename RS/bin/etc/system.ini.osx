@@ -1,0 +1,186 @@
+;* system.ini
+;* Copyright (C) 2015 - 2017 LEDS - Univali <zeferino@univali.br>
+;* Laboratory of Embedded and Distributed Systems
+;* University of Vale do Itajaí
+;*
+;* Authors: Laboratory of Embedded and Distributed Systems (LEDS)
+;*
+;* Contact: Profº Dr. Cesar Albenes Zeferino {zeferino@univali.br}
+;*
+;* RedScarf is free software: you can redistribute it and/or modify it
+;* under the terms of the GNU General Public License as published by the
+;* Free Software Foundation, either version 3 of the License, or
+;* (at your option) any later version.
+;*
+;* RedScarf is distributed in the hope that it will be useful, but
+;* WITHOUT ANY WARRANTY; without even the implied warranty of
+;* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+;* See the GNU General Public License for more details.
+;*
+;* You should have received a copy of the GNU General Public License along
+;* with this program.  If not, see <http://www.gnu.org/licenses/>.
+;*
+;* ------------------------------ Reviews -------------------------------------
+;* Date       - Version - Author                      | Description
+;* ----------------------------------------------------------------------------
+;* 14/05/2015 - 1.0     - Eduardo Alves da Silva      | Initial release
+;* ----------------------------------------------------------------------------
+;* 12/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
+;*
+;*/
+
+;-----------------------------------------------------------------------
+; This file contains all initialize configurations for the RedScarf app
+;-----------------------------------------------------------------------
+
+;---------------------------- Topologies ---------------------------------
+; This section defines all topologies available in Network model of the Simulator.
+; This parameters define the items in the graphical interface of RedScarf app.
+; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
+;-------------------------------------------------------------------------
+[Topologies]
+1\Topology=Mesh-2D
+1\Alias=SoCIN
+1\NoCPlugin=libnoc_SoCIN.dylib
+1\RouterPlugin=librouter_ParIS.dylib
+1\Type=Orthogonal2D
+2\Topology=Switch-Bus
+2\Alias=SoCIN-Hub
+2\NoCPlugin=libnoc_unit.dylib
+2\RouterPlugin=libbus_ParIS.dylib
+2\Type=NonOrthogonal
+3\Topology=Switch-Crossbar
+3\Alias=SoCIN-Crossbar
+3\NoCPlugin=libnoc_unit.dylib
+3\RouterPlugin=librouter_ParIS.dylib
+3\Type=NonOrthogonal
+4\Topology=Ring
+4\Alias=SoCIN-Ring
+4\NoCPlugin=libnoc_SoCIN_Ring.dylib
+4\RouterPlugin=librouter_ParIS.dylib
+4\Type=NonOrthogonal
+5\Topology=Chordal-Ring
+5\Alias=SoCIN-Spidergon
+5\NoCPlugin=libnoc_SoCIN_Spider.dylib
+5\RouterPlugin=librouter_ParIS.dylib
+5\Type=NonOrthogonal
+6\Topology=Torus-2D
+6\Alias=SoCIN-Torus-2D
+6\NoCPlugin=libnoc_SoCIN_Torus.dylib
+6\RouterPlugin=librouter_ParIS.dylib
+6\Type=Orthogonal2D
+7\Topology=Mesh-3D
+7\Alias=SoCIN-3D
+7\NoCPlugin=libnoc_SoCIN_3D.dylib
+7\RouterPlugin=librouter_ParIS.dylib
+7\Type=Orthogonal3D
+size=7
+
+;------------------------ Routing_Algorithms -----------------------------
+; This section defines all routing algorithms available in Network model.
+; The "Topology" parameter must be identical to that defined  in the section
+; topologies.
+; This parameters define the items in the graphical interface of RedScarf app.
+; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
+;-------------------------------------------------------------------------
+[Routing_Algorithms]
+1\Topology=Mesh-2D
+1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast, OddEven
+1\Plugins=librouting_xy.dylib,librouting_wf.dylib,librouting_nf.dylib,librouting_nl.dylib,librouting_oe.dylib
+2\Topology=Switch-Bus
+2\Algorithms=none
+2\Plugins=librouting_crossbar.dylib
+3\Topology=Switch-Crossbar
+3\Algorithms=DirectAddressing
+3\Plugins=librouting_crossbar.dylib
+4\Topology=Ring
+4\Algorithms=Minimal(Clock-or-Anticlockwise),NonZero
+4\Plugins=librouting_ring.dylib,librouting_ring_zero.dylib
+5\Topology=Chordal-Ring
+5\Algorithms=Cross-First
+5\Plugins=librouting_crossfirst.dylib
+6\Topology=Torus-2D
+6\Algorithms=DOR
+6\Plugins=librouting_dor_torus.dylib
+7\Topology=Mesh-3D
+7\Algorithms=XYZ
+7\Plugins=librouting_xyz.dylib
+size=7
+
+; NOTE: For Switch-Bus it is not necessary a routing algorithm but a plugin
+; must be defined with the same NoC topology support - Non-Orthogonal.
+
+;-------------------------- Flow_Controls --------------------------------
+; This section defines all flow controls available in Network model.
+; This parameters define the items in the graphical interface of RedScarf app.
+; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
+;-------------------------------------------------------------------------
+[Flow_Controls]
+1\FlowControl=HS-(WH)
+1\Plugin=libfc_handshake.dylib
+1\CyclesPerFlit=4
+2\FlowControl=CB-(WH)
+2\Plugin=libfc_creditbased.dylib
+2\CyclesPerFlit=1
+size=2
+
+;-------------------------- Arbiter_Types --------------------------------
+; This section defines all priority generator for the arbiter types available 
+; in Network model.
+; This parameters define the items in the graphical interface of RedScarf app.
+; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
+;-------------------------------------------------------------------------
+[Arbiter_PGs]
+1\PriorityGenerator=Static
+1\Plugin=libpg_static.dylib
+2\PriorityGenerator=Rotative
+2\Plugin=libpg_rotative.dylib
+3\PriorityGenerator=Round-Robin
+3\Plugin=libpg_roundrobin.dylib
+size=3
+
+;--------------------- Virtual Channel Options ---------------------------
+; This section defines all virtual channels options available in Network model.
+; This parameters define the items in the graphical interface of RedScarf app.
+; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
+;-------------------------------------------------------------------------
+[VirtualChannel_Options]
+1\Option=None
+2\Option=2
+3\Option=4
+4\Option=8
+5\Option=16
+6\Option=32
+size=6
+
+;-------------------------- Input_Buffers --------------------------------
+; This section defines the minimum and maximum size of depth input buffers.
+; Also it is needed to point the memory plugin.
+; This parameters define the limits in the graphical interface of RedScarf app.
+; WARNING: DON'T USE decimals numbers
+;-------------------------------------------------------------------------
+[Input_Buffers]
+minSize=2
+maxSize=1024
+plugin=libmem_fifo.dylib
+
+;-------------------------- Output_Buffers -------------------------------
+; This section defines the minimum and maximum size of depth output buffers.
+; This parameters define the limits in the graphical interface of RedScarf app.
+; WARNING: DON'T USE decimals numbers
+;-------------------------------------------------------------------------
+[Output_Buffers]
+minSize=0
+maxSize=256
+
+;------------------------ Traffic Parameters -----------------------------
+; This section defines the possibility of use of an alternative traffic configuration file.
+; If useDefault is true, the application generates normally the traffic 
+; configuration file according with its configuration. If useDefault is false
+; the application copy the file defined in "alternative" (add this parameter
+; e.g. alternative=/home/RedScarf/TrafficFile1.tcf) to use with traffic file
+; configuration.
+; WARNING: DON'T USE any spaces (" ") on "alternative" path file
+;-------------------------------------------------------------------------
+[Traffic_Parameters]
+useDefault=true
