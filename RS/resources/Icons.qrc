@@ -5,8 +5,6 @@
         <file>icons/color_picker_icon.png</file>
         <file>icons/plot_graphic_icon.png</file>
         <file>icons/latency_distribution_icon.png</file>
-        <file>icons/icon_clear.png</file>
-        <file>icons/icon_edit.png</file>
         <file>icons/icon_open.png</file>
         <file>icons/icon_open_default.png</file>
         <file>icons/icon_save.png</file>
@@ -15,8 +13,6 @@
         <file>icons/icon_exit.png</file>
         <file>icons/icon_copy.png</file>
         <file>icons/qt_icon.png</file>
-        <file>icons/icon_preview.png</file>
-        <file>icons/icon_preview_xml.png</file>
         <file>icons/Rede.png</file>
         <file>icons/RedScarf_icon.png</file>
         <file>icons/icon_tool.png</file>
@@ -26,5 +22,9 @@
         <file>icons/icon_play.png</file>
         <file>icons/icon_stop.png</file>
         <file>icons/apresentacao.png</file>
+        <file>icons/zoomin.png</file>
+        <file>icons/zoomout.png</file>
+        <file>icons/zoomrestore.png</file>
+        <file>icons/icon_clear.png</file>
     </qresource>
 </RCC>

@@ -85,8 +85,8 @@ size=7
 ;-------------------------------------------------------------------------
 [Routing_Algorithms]
 1\Topology=Mesh-2D
-1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast
-1\Plugins=routing_xy.dll,routing_wf.dll,routing_nf.dll,routing_nl.dll
+1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast, OddEven
+1\Plugins=routing_xy.dll,routing_wf.dll,routing_nf.dll,routing_nl.dll,routing_oe.dll
 2\Topology=Switch-Bus
 2\Algorithms=none
 2\Plugins=routing_crossbar.dll
@@ -94,8 +94,8 @@ size=7
 3\Algorithms=DirectAddressing
 3\Plugins=routing_crossbar.dll
 4\Topology=Ring
-4\Algorithms=Minimal(Clock-or-Anticlockwise), NonZero
-4\Plugins=routing_ring.dll,routing_ring_zero.dll
+4\Algorithms=Minimal(Clock-or-Anticlockwise),NonZero
+4\Plugins=routing_ring.dll,routing_zero.dll
 5\Topology=Chordal-Ring
 5\Algorithms=Cross-First
 5\Plugins=routing_crossfirst.dll
@@ -118,10 +118,10 @@ size=7
 [Flow_Controls]
 1\FlowControl=HS-(WH)
 1\Plugin=fc_handshake.dll
-1\CyclePerFlit=4
+1\CyclesPerFlit=4
 2\FlowControl=CB-(WH)
 2\Plugin=fc_creditbased.dll
-2\CyclePerFlit=1
+2\CyclesPerFlit=1
 size=2
 
 ;-------------------------- Arbiter_Types --------------------------------
