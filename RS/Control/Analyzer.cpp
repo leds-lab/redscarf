@@ -34,7 +34,6 @@
 #include "Control/Analyzer.h"
 #include "Model/Analysis/PerformanceAnalysis.h"
 #include "Model/System/SystemDefines.h"
-#include "Model/Analysis/NewTrafficAnalyzer.h"
 
 #include <QDir>
 
@@ -124,10 +123,6 @@ void Analyzer::analyze() {
                         numElements, dataWidth, lower, upper, fClk,
                         fifoOutDepth, flowControlType, analise, resultado);
 
-                break;
-            case 1: // New Analyzer
-                analyzer = new NewTrafficAnalyzer(numElements,dataWidth,lower,upper,fClk,
-                                                  fifoOutDepth,flowControlType,analise,resultado);
                 break;
             default: break; // Not implemented
         }

@@ -138,7 +138,6 @@ public slots:
 
     // Tab Performance Analysis
     void runAnalysis();
-    void runNewAnalysis(); // EXPERIMENTAL
 
 private slots:
     void setAppModified();
