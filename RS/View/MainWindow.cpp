@@ -48,7 +48,6 @@
 
 #include "Control/EnvironmentConfiguration.h"
 
-#include <cmath>
 
 #include <QMessageBox>
 #include <QDesktopWidget>
@@ -356,6 +355,7 @@ void MainWindow::establishConnections() {
     connect(ui->buttonRunAnalysis,SIGNAL(clicked()),this,SLOT(runAnalysis()));
     connect(ui->spinBoxInitPacketsAnalyze,SIGNAL(valueChanged(int)),this,SLOT(lowerLimitAnalysisChange(int)));
     connect(ui->spinBoxEndPacketsAnalyze,SIGNAL(valueChanged(int)),this,SLOT(upperLimitAnalysisChange(int)));
+    connect(ui->buttonNewAnalysis,SIGNAL(clicked(bool)),this,SLOT(runNewAnalysis())); // EXPERIMENTAL
     connect(ui->comboFlowSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(flowSelectionUpdated(int)));
     connect(ui->buttonCheckUncheckAll, SIGNAL(clicked()),this,SLOT(buttonCheckUncheckAllClicked()));
     connect(ui->toolButtonColorCurve1,SIGNAL(clicked()),this,SLOT(toolButtonCurveClicked()));
@@ -1798,6 +1798,16 @@ void MainWindow::setupTraffic(QList<QVariant> configuration) {
         sysConf->setData(Qt::UserRole+1,configuration);
     }
     this->setAppModified();
+}
+
+void MainWindow::runNewAnalysis() {
+
+    float lower = ui->spinBoxInitPacketsAnalyze->value();
+    lower /= 100.0;
+    float upper = ui->spinBoxEndPacketsAnalyze->value();
+    upper /= 100.0;
+
+    emit generateAnalysis(lower,upper,1); // 1 - New Analyzer
 }
 
 void MainWindow::lowerLimitAnalysisChange(int newValue) {
