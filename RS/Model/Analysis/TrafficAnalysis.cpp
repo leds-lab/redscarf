@@ -86,7 +86,7 @@ TrafficAnalysis::~TrafficAnalysis() {
 
 }
 
-TrafficAnalysis::StatusAnalysis TrafficAnalysis::readLogsFiles() {
+TrafficAnalysis::StatusAnalysis TrafficAnalysis::readLogsFiles(char fileFormat[], unsigned int numberOfFiles) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/Analysis/TrafficAnalysis::readLogsFiles" << std::endl;
 #endif
@@ -98,7 +98,7 @@ TrafficAnalysis::StatusAnalysis TrafficAnalysis::readLogsFiles() {
     unsigned long long receivedPacketId = 0;
     unsigned int       source = 0;
     unsigned int       destination = 0;
-    unsigned int       hops;
+    unsigned int       hops = 0;
     unsigned int       flowId = 0;
     unsigned int       trafficClass = 0;
     unsigned long      deadline = 0;
@@ -108,9 +108,10 @@ TrafficAnalysis::StatusAnalysis TrafficAnalysis::readLogsFiles() {
     unsigned int       packetSize = 0;
     float              requiredBandwidth = 0;
 
-    for( unsigned int elementId = 0; elementId < numberOfElements; elementId++ ) {
+    for( unsigned int elementId = 0; elementId < numberOfFiles; elementId++ ) {
         // Open the simulation report file
-        sprintf(filenameIn,"%s/ext_%u_out",workDir,elementId);
+//        sprintf(filenameIn,"%s/ext_%u_out",workDir,elementId);
+        sprintf(filenameIn,fileFormat,workDir,elementId);
         if( (fpIn = fopen(filenameIn,"rt")) == NULL ) {
             return TrafficAnalysis::NoInputFile;
         }

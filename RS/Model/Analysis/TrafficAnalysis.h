@@ -63,7 +63,7 @@ protected:
      * and store objects for will be manipulated.
      * \return The status from read files
      */
-    virtual StatusAnalysis readLogsFiles();
+    virtual StatusAnalysis readLogsFiles(char fileFormat[], unsigned int numberOfFiles);
 
 public:
 

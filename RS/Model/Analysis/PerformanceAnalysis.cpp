@@ -147,7 +147,7 @@ TrafficAnalysis::StatusAnalysis PerformanceAnalysis::makeAnalysis() {
 #endif
 
     // Read simulation logs
-    StatusAnalysis status = this->readLogsFiles();
+    StatusAnalysis status = this->readLogsFiles("%s/ext_%u_out", numberOfElements);
     if( status != TrafficAnalysis::Ok ) {
         return status;
     }
