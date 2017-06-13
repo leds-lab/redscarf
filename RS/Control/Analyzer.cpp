@@ -34,6 +34,15 @@
 #include "Control/Analyzer.h"
 #include "Model/Analysis/PerformanceAnalysis.h"
 #include "Model/System/SystemDefines.h"
+#include "Model/Analysis/InternalAnalysis.h"
+#include "Model/System/Topology.h"
+
+#include "Model/System/Topologies/ChordalRing.h"
+#include "Model/System/Topologies/Mesh2D.h"
+#include "Model/System/Topologies/Mesh3D.h"
+#include "Model/System/Topologies/Ring.h"
+#include "Model/System/Topologies/Switch.h"
+#include "Model/System/Topologies/Torus2D.h"
 
 #include <QDir>
 
@@ -65,12 +74,11 @@ Analyzer::~Analyzer() {
     std::cout << "Destructor Class Control/Analyzer" << std::endl;
 #endif
 }
-
+#include <QDebug>
 void Analyzer::analyze() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Analyzer::analyze" << std::endl;
 #endif
-
     for (int i = 0; i < analysisFolders->size(); i++) {
         bool falhaAnalise;
         QString diretorioAnalise = analysisFolders->at(i);
@@ -92,6 +100,23 @@ void Analyzer::analyze() {
         QString numElementsStr = listToExtractData.at(1);
         numElements = numElementsStr.toUShort();
 
+        QString dimensionsStr = listToExtractData.at(2);
+//        QString dimensionsStr = dirConfiguration.section("\(([0-9]+x[0-9]+(x[0-9]+)?)\)",0);
+        qDebug() << dimensionsStr;
+
+//        QStringList listSizes = dimensionsStr.split('x');
+        int n = 0, x = 0, y = 0, z = 0;
+        if(dimensionsStr.compare("elements")==0){ //TODO: fix Non-Orthogonal condition to check for empty regex result
+            n = numElements;
+        }else{
+            QString strAux = dimensionsStr.midRef(1,dimensionsStr.length()-2).toString();
+            QStringList list = strAux.split("x");
+            x = list.at(0).toInt();
+            y = list.at(1).toInt();
+            if(list.size()==3)
+                z = list.at(2).toInt();
+        }
+
         QString dataWidthStr = listToExtractData.last();
         dataWidthStr = dataWidthStr.remove("-bit");
         dataWidth = dataWidthStr.toUInt();
@@ -100,11 +125,44 @@ void Analyzer::analyze() {
         float fClk = diretorioAnalise.mid(lio + 1, diretorioAnalise.size() - lio - 4).toFloat();
         QString auxiliarExperimento = diretorioExperimento.right(
                     diretorioExperimento.size() - 1 -
-                    diretorioExperimento.lastIndexOf("/"));  // Extrair controle de fluxo e
-        // profundidade dos buffers de saída
+                    diretorioExperimento.lastIndexOf("/"));  // Extrair controle de fluxo,
+        // profundidade dos buffers de saída e topologia
         listToExtractData = auxiliarExperimento.split("_");
         unsigned int flowControlType =
                 SystemDefines::getInstance()->getKeyFlowControl(listToExtractData.at(3));
+
+        QString topologyName =  listToExtractData.at(1);
+        qDebug() << "\nTopologia: " << topologyName;
+        SystemDefines *def = SystemDefines::getInstance();
+        Topology *topology;
+//        enum ETopology{ Mesh2D = 1,
+//                        SwitchBus,
+//                        SwitchCrossbar = SwitchBus,
+//                        Ring,
+//                        ChordalRing,
+//                        Torus2D,
+//                        Mesh3D
+        switch(Topology::indexToEnum(def->getKeyTopology(topologyName))){
+            case Topology::Mesh2D:
+                topology = new Mesh2D(x,y);
+            break;
+            case Topology::SwitchBus: //or SwitchCrossbar
+                topology = new Switch(n);
+            break;
+            case Topology::Ring:
+                topology = new Ring(n);
+            break;
+            case Topology::ChordalRing:
+                topology = new ChordalRing(n);
+            break;
+            case Topology::Torus2D:
+                topology = new Torus2D(x,y);
+            break;
+            case Topology::Mesh3D:
+                topology = new Mesh3D(x,y,z);
+            break;
+        }
+
         auxiliarExperimento = listToExtractData.at(7);
         auxiliarExperimento = auxiliarExperimento.remove(0, 3);
         unsigned int fifoOutDepth = auxiliarExperimento.toUInt();
@@ -160,6 +218,12 @@ void Analyzer::analyze() {
             emit this->finished(false);
             return;
         }
+
+        InternalAnalysis* internalAnalyzer =
+                new InternalAnalysis(numElements, dataWidth, lower, upper, fClk, fifoOutDepth,
+                                     flowControlType, analise, resultado, topology);
+        internalAnalyzer->makeAnalysis();
+
     }
 
     emit this->finished(true);

@@ -108,7 +108,14 @@ SOURCES +=  \
     Model/System/SystemParameters.cpp \
     Model/System/SystemOperation.cpp \
     Model/System/SystemConfiguration.cpp \
-    Model/System/SystemExecution.cpp
+    Model/System/SystemExecution.cpp \
+    Model/Analysis/InternalAnalysis.cpp \
+    Model/System/Topologies/Mesh2D.cpp \
+    Model/System/Topologies/ChordalRing.cpp \
+    Model/System/Topologies/Mesh3D.cpp \
+    Model/System/Topologies/Ring.cpp \
+    Model/System/Topologies/Switch.cpp \
+    Model/System/Topologies/Torus2D.cpp
 
 # Application Headers files
 HEADERS += \
@@ -156,7 +163,16 @@ HEADERS += \
     Model/System/SystemParameters.h \
     Model/System/SystemOperation.h \
     Model/System/SystemConfiguration.h \
-    Model/System/SystemExecution.h
+    Model/System/SystemExecution.h \
+    Model/Analysis/NewTrafficAnalyzer.h \
+    Model/Analysis/InternalAnalysis.h \
+    Model/System/Topology.h \
+    Model/System/Topologies/Mesh2D.h \
+    Model/System/Topologies/ChordalRing.h \
+    Model/System/Topologies/Mesh3D.h \
+    Model/System/Topologies/Ring.h \
+    Model/System/Topologies/Switch.h \
+    Model/System/Topologies/Torus2D.h
 
 # Application configurations support
 CONFIG += qt
