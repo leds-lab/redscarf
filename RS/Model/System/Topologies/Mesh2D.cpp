@@ -1,7 +1,7 @@
 #include "Model/System/Topologies/Mesh2D.h"
 #include "Model/System/Defines.h"
 #include <QDebug>
-#define INTERNAL_COORDINATE_2D_TO_ID(x,y,X_SIZE) (y * X_SIZE + x)
+
 Mesh2D::Mesh2D(int xSize, int ySize) : Topology(Topology::Mesh2D)
 {
     adjacencyMatrix = QVector<QVector<int> >(xSize*ySize,QVector<int>(xSize*ySize,0));
