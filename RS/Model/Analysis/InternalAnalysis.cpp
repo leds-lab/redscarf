@@ -40,38 +40,44 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::makeAnalysis() {
     switch(topology->getTopologyType()){
         case SystemParameters::Orthogonal3D:
             numX = (xSize-1) * ySize * zSize;
-            status = this->readLogsFiles("%s/int_x_n_%u", numX);
+            packets.resize(numX);
+            status = this->readLogsFiles("%s/int_x_e_%u", numX);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
-            status = this->readLogsFiles("%s/int_x_s_%u", numX);
+            packets.resize(numX);
+            status = this->readLogsFiles("%s/int_x_w_%u", numX);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
             numY = (ySize-1) * xSize * zSize;
-            status = this->readLogsFiles("%s/int_y_e_%u", numY);
+            packets.resize(numY);
+            status = this->readLogsFiles("%s/int_y_n_%u", numY);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
-            status = this->readLogsFiles("%s/int_y_w_%u", numY);
+            packets.resize(numY);
+            status = this->readLogsFiles("%s/int_y_s_%u", numY);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
             numZ = (zSize-1) * xSize * ySize;
+            packets.resize(numZ);
             status = this->readLogsFiles("%s/int_z_u_%u", numZ);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
+            packets.resize(numZ);
             status = this->readLogsFiles("%s/int_z_d_%u", numZ);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
@@ -87,25 +93,29 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::makeAnalysis() {
                 numX = xSize * ySize;
                 numY = numX;
             }
-            status = this->readLogsFiles("%s/int_x_n_%u", numX);
+            packets.resize(numX);
+            status = this->readLogsFiles("%s/int_x_e_%u", numX);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
-            status = this->readLogsFiles("%s/int_x_s_%u", numX);
+            packets.resize(numX);
+            status = this->readLogsFiles("%s/int_x_w_%u", numX);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
-            status = this->readLogsFiles("%s/int_y_e_%u", numY);
+            packets.resize(numY);
+            status = this->readLogsFiles("%s/int_y_n_%u", numY);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
-            status = this->readLogsFiles("%s/int_y_w_%u", numY);
+            packets.resize(numY);
+            status = this->readLogsFiles("%s/int_y_s_%u", numY);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
@@ -113,12 +123,14 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::makeAnalysis() {
             packets.clear();
             break;
         default:
+            packets.resize(numberOfElements);
             status = this->readLogsFiles("%s/int_cw_%u", numberOfElements);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
             }
             internalPackets.push_back(packets);
             packets.clear();
+            packets.resize(numberOfElements);
             status = this->readLogsFiles("%s/int_ccw_%u", numberOfElements);
             if( status != TrafficAnalysis::Ok ) {
                 return status;
@@ -126,6 +138,7 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::makeAnalysis() {
             internalPackets.push_back(packets);
             packets.clear();
             if( topology->getTopology() == Topology::ChordalRing ){
+                packets.resize(numberOfElements);
                 status = this->readLogsFiles("%s/int_a_%u", numberOfElements);
                 if( status != TrafficAnalysis::Ok ) {
                     return status;
@@ -147,6 +160,7 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::makeAnalysis() {
         return status;
     }
 
+    return TrafficAnalysis::Ok;
 }
 
 void InternalAnalysis::initSystemVariables() {
@@ -162,53 +176,65 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::analyzeAllLinks() {
     std::cout << "Model/Analysis/InternalAnalysis::analyzeAllLinks" << std::endl;
 #endif
 
-    for(unsigned int dim = 0; dim < internalPackets.size(); dim++){
-        for(unsigned int link = 0; link < internalPackets[dim].size(); link++){
+    this->acceptedTraffic.resize(internalPackets.size());
+    this->linkAvCpF.resize(internalPackets.size());
+    this->linkAvgBandwidth.resize(internalPackets.size());
+    this->linkThroughput.resize(internalPackets.size());
 
+    for(unsigned int dim = 0; dim < internalPackets.size(); dim++){
+        this->acceptedTraffic[dim].resize(internalPackets[dim].size());
+        this->linkAvCpF[dim].resize(internalPackets[dim].size());
+        this->linkAvgBandwidth[dim].resize(internalPackets[dim].size());
+        this->linkThroughput[dim].resize(internalPackets[dim].size());
+
+        for(unsigned int link = 0; link < internalPackets[dim].size(); link++){
             PacketInfo* aux;
 
             float avcpf = 0;
             float abw = 0;
             float thr = 0;
-            aux = internalPackets[dim][link][0];
-            unsigned long long tsfint = aux->getCycleReceivedHeader();
-            aux = internalPackets[dim][link][internalPackets[dim][link].size()-1];
-            unsigned long long tslint = aux->getCycleReceivedTrailer();
+            if(internalPackets[dim][link].size() > 0){ //TODO: verify if it's bad that it can be 0
+                aux = internalPackets[dim][link][0];
+                unsigned long long tsfint = aux->getCycleReceivedHeader();
+                aux = internalPackets[dim][link][internalPackets[dim][link].size()-1];
+                unsigned long long tslint = aux->getCycleReceivedTrailer();
 
-            for(unsigned int p = 0; p < internalPackets[dim][link].size(); p++){
+                this->acceptedTraffic[dim][link].resize(internalPackets[dim][link].size());
 
-                PacketInfo* packet = internalPackets[dim][link][p];
+                for(unsigned int p = 0; p < internalPackets[dim][link].size(); p++){
+                    PacketInfo* packet = internalPackets[dim][link][p];
 
-                unsigned long long tpfint = packet->getCycleReceivedHeader();
-                unsigned long long tplint = packet->getCycleReceivedTrailer();
-                unsigned int pcksize = packet->getPacketSize();
+                    unsigned long long tpfint = packet->getCycleReceivedHeader();
+                    unsigned long long tplint = packet->getCycleReceivedTrailer();
+                    unsigned int pcksize = packet->getPacketSize();
 
-                //Cycles per flit (part 1)
-                avcpf += (tplint - tpfint)/(float) pcksize;
+                    //Cycles per flit (part 1)
+                    avcpf += (tplint - tpfint)/(float) pcksize;
 
-                //Accepted traffic
-                if(p < internalPackets[dim][link].size() - 1){
-                    PacketInfo* nextPacket = internalPackets[dim][link][p+1];
-                    unsigned long long nexttpfint = nextPacket->getCycleReceivedHeader();
-                    this->acceptedTraffic[dim][link][p] = pcksize/(float) (nexttpfint - tpfint);
+                    //Accepted traffic
+                    if(p < internalPackets[dim][link].size() - 1){
+                        PacketInfo* nextPacket = internalPackets[dim][link][p+1];
+                        unsigned long long nexttpfint = nextPacket->getCycleReceivedHeader();
+                        this->acceptedTraffic[dim][link][p] = pcksize/(float) (nexttpfint - tpfint);
+                    }
+
+                    //Average bandwidth (part 1)
+                    abw += tplint - tpfint;
+
+                    //Throughput (part 1)
+                    thr += pcksize;
+                    //thrbps?
+
                 }
-
-                //Average bandwidth (part 1)
-                abw += tplint - tpfint;
-
-                //Throughput (part 1)
-                thr += pcksize;
-                //thrbps?
-
+                //Cycles per flit (part 2)
+                this->linkAvCpF[dim][link] = avcpf/internalPackets[dim][link].size();
+                //Average bandwidth (part 2)
+                this->linkAvgBandwidth[dim][link] = abw/(tslint - tsfint);
+                //Throughput (part 2)
+                unsigned long long nsimc = tslint - tsfint; //TODO: check nsimc
+                unsigned int flitsize = aux->getPacketSize()*1; //TODO: check flit size
+                this->linkThroughput[dim][link] = thr*flitsize / nsimc;
             }
-            //Cycles per flit (part 2)
-            this->linkAvCpF[dim][link] = avcpf;
-            //Average bandwidth (part 2)
-            this->linkAvgBandwidth[dim][link] = abw/(tslint - tsfint);
-            //Throughput (part 2)
-            unsigned long long nsimc = tslint - tsfint; //TODO: check nsimc
-            unsigned int flitsize = aux->getPacketSize()*1; //TODO: check flit size
-            this->linkThroughput[dim][link] = thr*flitsize / nsimc;
         }
     }
 
@@ -245,6 +271,7 @@ TrafficAnalysis::StatusAnalysis InternalAnalysis::createReportsForAllLinks() {
                         i++;
                     }while(str[i] != '\0');
                     fprintf(fpOut,"%s\n",str);
+                    //TODO: add path of each packet
                     fclose(fpOut);
                 }
             }
