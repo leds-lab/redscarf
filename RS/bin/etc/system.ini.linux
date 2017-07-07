@@ -156,7 +156,7 @@ size=2
 3\Plugin=libpg_random.so
 4\PriorityGenerator=Round-Robin
 4\Plugin=libpg_roundrobin.so
-size=3
+size=4
 
 ;--------------------- Virtual Channel Options ---------------------------
 ; This section defines all virtual channels options available in Network model.

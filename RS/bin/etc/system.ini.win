@@ -156,7 +156,7 @@ size=2
 3\Plugin=pg_random.dll
 4\PriorityGenerator=Round-Robin
 4\Plugin=pg_roundrobin.dll
-size=3
+size=4
 
 ;--------------------- Virtual Channel Options ---------------------------
 ; This section defines all virtual channels options available in Network model.
