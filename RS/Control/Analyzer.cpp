@@ -31,7 +31,7 @@
 *
 */
 
-#include "Control/Analyzer.h"
+#include "Analyzer.h"
 #include "Model/Analysis/PerformanceAnalysis.h"
 #include "Model/System/SystemDefines.h"
 

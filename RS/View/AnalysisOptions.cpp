@@ -31,7 +31,7 @@
 *
 */
 
-#include "View/AnalysisOptions.h"
+#include "AnalysisOptions.h"
 
 #include <cstdlib>
 #include <ctime>

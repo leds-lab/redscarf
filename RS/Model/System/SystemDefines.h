@@ -26,6 +26,7 @@
 * Date       - Version - Author                      | Description
 * ----------------------------------------------------------------------------
 * 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ____________________________________________________________________________
 * 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 *
 */

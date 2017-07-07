@@ -30,14 +30,14 @@
 * 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#include "Model/Analysis/TrafficAnalysis.h"
+#include "TrafficAnalysis.h"
 
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <clocale>
 
-#include "Model/Analysis/PacketInfo.h"
+#include "PacketInfo.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

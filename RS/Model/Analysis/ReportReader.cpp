@@ -31,8 +31,8 @@
 *
 */
 
-#include "Model/Analysis/ReportReader.h"
-#include "Model/Analysis/DataReport.h"
+#include "ReportReader.h"
+#include "DataReport.h"
 
 #include <cstdio>
 #include <cstdlib>

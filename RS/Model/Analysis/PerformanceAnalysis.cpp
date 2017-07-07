@@ -31,7 +31,7 @@
 *
 */
 
-#include "Model/Analysis/PerformanceAnalysis.h"
+#include "PerformanceAnalysis.h"
 
 #include <cstdio>
 #include <math.h>

@@ -1,4 +1,4 @@
-#include "View/Vertice.h"
+#include "Vertice.h"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 

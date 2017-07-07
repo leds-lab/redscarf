@@ -29,7 +29,7 @@
 *
 */
 
-#include "Control/ExternalWaveformViewer.h"
+#include "ExternalWaveformViewer.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

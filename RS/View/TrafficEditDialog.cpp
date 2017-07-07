@@ -1,5 +1,5 @@
 #include "ui_TrafficEditDialog.h"
-#include "View/TrafficEditDialog.h"
+#include "TrafficEditDialog.h"
 
 #include "Model/Traffic/TrafficParameters.h"
 

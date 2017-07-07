@@ -29,8 +29,8 @@
 *
 */
 
-#include "View/Plotter.h"
-#include "View/AnalysisOptions.h"
+#include "Plotter.h"
+#include "AnalysisOptions.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

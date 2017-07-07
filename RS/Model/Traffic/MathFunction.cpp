@@ -29,7 +29,7 @@
 *
 */
 
-#include "Model/Traffic/MathFunction.h"
+#include "MathFunction.h"
 
 #include <math.h>
 

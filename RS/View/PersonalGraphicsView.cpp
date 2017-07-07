@@ -1,4 +1,4 @@
-#include "View/PersonalGraphicsView.h"
+#include "PersonalGraphicsView.h"
 
 #include <QApplication>
 #include <QWheelEvent>

@@ -32,11 +32,11 @@
 */
 
 #include "ui_MainWindow.h"
-#include "View/MainWindow.h"
+#include "MainWindow.h"
 
-#include "View/TrafficConfigurationDialog.h"
-#include "View/AboutWindow.h"
-#include "View/AnalysisOptions.h"
+#include "TrafficConfigurationDialog.h"
+#include "AboutWindow.h"
+#include "AnalysisOptions.h"
 
 #include "Model/System/Defines.h"
 #include "Model/System/SystemDefines.h"

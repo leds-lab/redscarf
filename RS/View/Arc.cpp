@@ -1,5 +1,5 @@
-#include "View/Arc.h"
-#include "View/Vertice.h"
+#include "Arc.h"
+#include "Vertice.h"
 
 #include <QPainter>
 

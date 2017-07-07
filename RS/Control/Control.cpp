@@ -51,15 +51,15 @@
 #include <chrono>
 
 // Control
-#include "Control/Control.h"
-#include "Control/XmlConfigParser.h"
-#include "Control/SimulationPerformer.h"
-#include "Control/ThreadManager.h"
-#include "Control/WaveformViewer.h"
-#include "Control/ExternalWaveformViewer.h"
-#include "Control/Analyzer.h"
-#include "Control/EnvironmentConfiguration.h"
-#include "Control/FolderCompressor.h"
+#include "Control.h"
+#include "XmlConfigParser.h"
+#include "SimulationPerformer.h"
+#include "ThreadManager.h"
+#include "WaveformViewer.h"
+#include "ExternalWaveformViewer.h"
+#include "Analyzer.h"
+#include "EnvironmentConfiguration.h"
+#include "FolderCompressor.h"
 
 // View
 #include "View/MainWindow.h"

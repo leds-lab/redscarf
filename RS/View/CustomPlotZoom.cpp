@@ -1,5 +1,5 @@
 #include <QRubberBand>
-#include "View/CustomPlotZoom.h"
+#include "CustomPlotZoom.h"
 
 CustomPlotZoom::CustomPlotZoom(QWidget * parent)
     : QCustomPlot(parent)

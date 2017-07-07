@@ -31,7 +31,7 @@
 */
 
 #include "ui_PreviewDialog.h"
-#include "View/ReportDialog.h"
+#include "ReportDialog.h"
 #include "Model/Analysis/DataReport.h"
 
 #include <QLabel>

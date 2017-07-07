@@ -30,7 +30,7 @@
 * 01/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#include "Model/Analysis/PacketInfo.h"
+#include "PacketInfo.h"
 
 #include <stdio.h>
 #include <stdlib.h>

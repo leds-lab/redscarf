@@ -112,15 +112,19 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>428</width>
-            <height>287</height>
+            <width>407</width>
+            <height>389</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using Qt framework) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.&lt;/p&gt;&lt;p&gt;&lt;b&gt; &amp;#169; 2014 - 2017 LEDS - Univali. All rights reserved.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using Qt framework) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.
+&lt;p&gt;RedScarf is product of the Graduation Work: &lt;b&gt;RedScarf&lt;/b&gt;: ambiente para avaliação de desempenho de Rede-em-Chip&lt;/p&gt;
+&lt;p&gt; The second version, with the new simulator models, is product of the Master Thesis: &lt;b&gt;A Simulation-based Comparative Performance Analysis of Network-on-Chip Architectures&lt;/b&gt; (only in portuguese)&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;b&gt; &amp;#169; 2014 - 2017 LEDS - Univali. All rights reserved.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>

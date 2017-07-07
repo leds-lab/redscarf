@@ -1,5 +1,5 @@
-#include "View/Edge.h"
-#include "View/Vertice.h"
+#include "Edge.h"
+#include "Vertice.h"
 
 #include <QPainter>
 
