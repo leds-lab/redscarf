@@ -32,10 +32,6 @@
 &lt;p&gt;&lt;b&gt; &amp;#169; 2014 LEDS - Univali. Todos os direitos reservados.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source>Version 1.0</source>
-        <translation type="vanished">Versão 1.0</translation>
-    </message>
-    <message>
         <location filename="../View/AboutWindow.ui" line="75"/>
         <source>A SystemC-based Simulator for Performance Evaluation of Networks-on-Chip</source>
         <translation>Um simulador baseado em SystemC para avaliação de desempenho de Redes-em-Chip</translation>
@@ -46,14 +42,6 @@
         <translation>Sobre</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using Qt framework) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.&lt;/p&gt;&lt;p&gt;&lt;b&gt; &amp;#169; 2014 LEDS - Univali. All rights reserved.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Um Simulaodor de NoC&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Visão Geral&lt;/p&gt;&lt;p&gt;O RedScarf é um ambiente integrado baseado em SystemC que permite avaliar diferentes configurações de uma NoC por meio da simulação. O simulador inclui uma interface (escrita em C++ utilizando o framework Qt) que automatiza a configuração e execução de experimentos. Também possui instrumentos para avaliação de desempenho com a utilização de ferramentas gráficas que facilitam a análise dos resultados.&lt;/p&gt;&lt;p&gt;&lt;b&gt; &amp;#169; 2014 LEDS - Univali. Todos os direitos reservados.&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;A NoC Simulator&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Overview&lt;/p&gt;&lt;p&gt;RedScarf is an integrated environment based on SystemC that allows evaluating different configurations of a NoC by means of simulation. The simulator includes an interface (write c++ using framewort Qt) that automates the configuration and execution of experiments. It also provides instruments for performance evalutation by using graphical tools which make easier the analysis of results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Um Simulaodor de NoC&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/icons/icons/Rede.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;Visão Geral&lt;/p&gt;&lt;p&gt;O RedScarf é um ambiente integrado baseado em SystemC que permite avaliar diferentes configurações de uma NoC por meio da simulação. O simulador inclui uma interface (escrita em C++ utilizando o framework Qt) que automatiza a configuração e execução de experimentos. Também possui instrumentos para avaliação de desempenho com a utilização de ferramentas gráficas que facilitam a análise dos resultados.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <location filename="../View/AboutWindow.ui" line="142"/>
         <source>Authors</source>
         <translation>Autores</translation>
@@ -62,10 +50,6 @@
         <location filename="../View/AboutWindow.ui" line="184"/>
         <source>Close</source>
         <translation>Fechar</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Maintener and Developer&lt;/b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Mantedor e Desenvolvedor&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../View/AboutWindow.cpp" line="76"/>
@@ -117,85 +101,6 @@
     </message>
 </context>
 <context>
-    <name>Builder</name>
-    <message>
-        <source>Directory system created</source>
-        <translation type="vanished">Diretório system criado</translation>
-    </message>
-    <message>
-        <source>Makefile already exists</source>
-        <translation type="vanished">O Makefile já existe</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Library not found in SystemC folder&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Biblioteca SystemC não encontrada no diretório especificado&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;The etc/system.ini configuration file isn&apos;t defined. Please correct&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O arquivo de configuração etc/system.ini não está definido. Por favor corrija&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Error in generate Makefile. Without write file permission&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Error ao gerar Makefile. Sem permissão de escrita de arquivo&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>- Makefile successfully created</source>
-        <translation type="vanished">- Makefile criado com sucesso</translation>
-    </message>
-    <message>
-        <source>- Work directory created</source>
-        <translation type="vanished">- Diretório de trabalho criado</translation>
-    </message>
-    <message>
-        <source>&lt;font color=green&gt;&lt;br /&gt;Building the simulator for Configuration #%1&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=green&gt;&lt;br /&gt;Construindo simulador para a configuração #%1&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>- NoC Model generated</source>
-        <translation type="vanished">- Modelo da NoC gerado</translation>
-    </message>
-    <message>
-        <source>- SoC model generated</source>
-        <translation type="vanished">- Modelo do SoC gerado</translation>
-    </message>
-    <message>
-        <source>- Compiling the simulator . . .</source>
-        <translation type="vanished">- Compilando o simulador . . .</translation>
-    </message>
-    <message>
-        <source>- Simulator generated</source>
-        <translation type="vanished">- Simulador gerado</translation>
-    </message>
-    <message>
-        <source>&lt;br /&gt;&lt;font color=green&gt;Launching the Simulators&lt;/font&gt;</source>
-        <translation type="vanished">&lt;br /&gt;&lt;font color=green&gt;Iniciando os Simuladores&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=blue&gt;- Traffic Models generated&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=blue&gt;- Modelos de Tráfego gerados&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>Error in generate NoC: %1 of experiment: %2</source>
-        <translation type="vanished">Erro ao gerar NoC: %1 do experimento: %2</translation>
-    </message>
-    <message>
-        <source>Error in generate SoC: %1 of experiment: %2</source>
-        <translation type="vanished">Erro ao gerar SoC: %1 do experimento: %2</translation>
-    </message>
-    <message>
-        <source>Make failed in experiment %1: %2</source>
-        <translation type="vanished">A construção falhou no experimento %1: %2</translation>
-    </message>
-    <message>
-        <source>Impossible to open file  %1. Aborted. </source>
-        <translation type="vanished">Não é possível abrir o arquivo  %1. Abortado. </translation>
-    </message>
-    <message>
-        <source>Error in generate traffic model: %1</source>
-        <translation type="vanished">Erro ao gerar modelo de tráfego: %1</translation>
-    </message>
-</context>
-<context>
     <name>ConfigDialog</name>
     <message>
         <location filename="../View/ConfigDialog.cpp" line="79"/>
@@ -226,26 +131,6 @@
 <context>
     <name>Control</name>
     <message>
-        <source>Select SystemC library folder</source>
-        <translation type="vanished">Selecione o diretório da biblioteca SystemC</translation>
-    </message>
-    <message>
-        <source>SystemC folder not configured
-The simulator is not run!</source>
-        <translation type="vanished">Diretório SystemC não configurado
-O simulador não irá executar!</translation>
-    </message>
-    <message>
-        <source>Select MinGW compiler folder</source>
-        <translation type="vanished">Selecione o diretório do compilador MinGW</translation>
-    </message>
-    <message>
-        <source>MinGW folder not configured
-The simulator is not run!</source>
-        <translation type="vanished">Diretório do MinGW não configurado
-O simulador não irá executar!</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="275"/>
         <location filename="../Control/Control.cpp" line="534"/>
         <source>Open a setup file</source>
@@ -274,37 +159,9 @@ O simulador não irá executar!</translation>
         <translation>Arquivo de configuração salvo com sucesso</translation>
     </message>
     <message>
-        <source>Traffic patterns clean</source>
-        <translation type="vanished">Padrões de tráfego limpos</translation>
-    </message>
-    <message>
-        <source>There is no traffic pattern defined</source>
-        <translation type="vanished">Não há padrões de tráfego definidos</translation>
-    </message>
-    <message>
-        <source>Configuration #%1 is identical to configuration #%2 (this is not allowed)</source>
-        <translation type="vanished">Configuração #%1 é idêntica a configuração #%2 (isto não é permitido)</translation>
-    </message>
-    <message>
-        <source>If First_Fclk less than Last_Fclk, step value (inc) must be greather than 0</source>
-        <translation type="vanished">Se Primeiro_Fclk for menor que o Último_Fclk, o valor do passo (inc) deve ser maior do que 0</translation>
-    </message>
-    <message>
-        <source>If First_Fclk greather than Last_Fclk, step value (inc) must be less than 0</source>
-        <translation type="vanished">Se Primeiro_Fclk for maior que o Último_Fclk, o valor do passo (inc) deve ser menor do que 0</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="463"/>
         <source>Step value (inc) must be different of 0</source>
         <translation>O valor do passo (inc) deve ser diferente de 0</translation>
-    </message>
-    <message>
-        <source>If First_Fclk less than Last_Fclk, step value (exp) must be less than 0</source>
-        <translation type="vanished">Se Primeiro_Fclk for menor que o Último_Fclk, o valor do passo (exp) deve ser menor do que 0</translation>
-    </message>
-    <message>
-        <source>If First_Fclk greather than Last_Fclk, step value (exp) must be greather than 0</source>
-        <translation type="vanished">Se Primeiro_Fclk for maior que o Último_Fclk, o valor do passo (exp) deve ser maior do que 0</translation>
     </message>
     <message>
         <location filename="../Control/Control.cpp" line="476"/>
@@ -323,22 +180,6 @@ Do you want to save your changes?</source>
 Deseja salvar suas mudanças?</translation>
     </message>
     <message>
-        <source>Traffic configuration applied</source>
-        <translation type="vanished">Configuração de tráfego aplicada</translation>
-    </message>
-    <message>
-        <source>Traffic configuration applied and replicated</source>
-        <translation type="vanished">Configuração de tráfego aplicada e replicada</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Build Failed&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;A construção falhou&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Execute Failed&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;A execução falhou&lt;/font&gt;</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="690"/>
         <source>&lt;font color=red&gt;Inputs error&lt;/font&gt;</source>
         <translation>&lt;font color=red&gt;Erro nas entradas&lt;/font&gt;</translation>
@@ -349,18 +190,6 @@ Deseja salvar suas mudanças?</translation>
         <translation>&lt;font color=red&gt;Simulação cancelada&lt;/font&gt;</translation>
     </message>
     <message>
-        <source>&lt;font color=red&gt;Impossible generate analysis because there is no system simulation results&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível gerar análise pois não há resultados da simulação&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;No VCD file available&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não há arquivo VCD disponível&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Impossible view waveform because there is not system simulation results&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível visualizar as formas de ondas pois não há resultados da simulação&lt;/font&gt;</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="836"/>
         <source>Choice Simulation</source>
         <translation>Escolha a simulação</translation>
@@ -369,10 +198,6 @@ Deseja salvar suas mudanças?</translation>
         <location filename="../Control/Control.cpp" line="836"/>
         <source>Choice the simulation you want view</source>
         <translation>Escolha a simulação que deseja visualizar</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Impossible plot graphic because there is not analysis results&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível gerar gráficos pois não há resultados da análise&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../Control/Control.cpp" line="914"/>
@@ -400,57 +225,9 @@ Deseja salvar suas mudanças?</translation>
         <translation>Arquivo de simulação do RedScarf (*.redsim)</translation>
     </message>
     <message>
-        <source>&lt;font color=red&gt;It is not possible save results.&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível salvar os resultados.&lt;/font&gt;</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="1168"/>
         <source>Save a simulation file</source>
         <translation>Salvar um arquivo de simulação</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;There is no traffic pattern defined&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não há padrão de tráfego definido&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;The alternative file isn&apos;t defined.&lt;br /&gt;Please verify the section &apos;Traffic_Parameters&apos; in system.ini file&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O arquivo alternativo não está definido.&lt;br /&gt;Por favor verifique a seção &apos;Traffic_Parameters&apos; no arquivo system.ini&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;The alternative file defined don&apos;t exists.&lt;br /&gt;Please verify the section &apos;Traffic_Parameters&apos; in system.ini file&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O arquivo alternativo não existe.&lt;br /&gt;Por favor verifique a seção &apos;Traffic_Parameters&apos; no arquivo system.ini&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Configuration #%1 is identical to configuration #%2 (this is not allowed)&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;A configuração#%1 é idêntica a configuração #%2 (isto não é permitido)&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;If First_Fclk less than Last_Fclk, step value (inc) must be greather than 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Se First_Fclk for menor que Last_Fclk, o valor do passo (inc) deve ser maior que 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;If First_Fclk greather than Last_Fclk, step value (inc) must be less than 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Se First_Fclk for maior que Last_Fclk, o valor do passo (inc) deve ser menor que 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Step value (inc) must be different of 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O valor do passo (inc) deve ser diferente de 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;If First_Fclk less than Last_Fclk, step value (exp) must be less than 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Se First_Fclk for menor que Last_Fclk, o valor do passo (exp) deve ser menor que 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;If First_Fclk greather than Last_Fclk, step value (exp) must be greather than 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Se First_Fclk for maior que Last_Fclk, o valor do passo (exp) deve ser maior que 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Step value (exp) must be different of 0&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O valor do passo (exp) deve ser diferente de 0&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=&apos;green&apos;&gt;Building simulator(s)&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=&apos;green&apos;&gt;Construindo simulador(es)&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../Control/Control.cpp" line="1797"/>
@@ -463,18 +240,6 @@ Deseja salvar suas mudanças?</translation>
         <translation>&lt;font color=blue&gt;&lt;br /&gt;Todas simulações executadas em %1&lt;/font&gt;</translation>
     </message>
     <message>
-        <source>&lt;font color=green&gt;&lt;br /&gt;Analyzing simulation results&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=green&gt;&lt;br /&gt;Analizando resultados da simulação&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;br /&gt;&lt;font color=blue&gt;&lt;b&gt;DONE !!!&lt;/b&gt;&lt;/font&gt;</source>
-        <translation type="vanished">&lt;br /&gt;&lt;font color=blue&gt;&lt;b&gt;CONCLUÍDO !!!&lt;/b&gt;&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=blue&gt;Now you can use the performance analysis tools&lt;/font&gt; &lt;br /&gt; &lt;br /&gt;</source>
-        <translation type="vanished">&lt;font color=blue&gt;Agora você pode usar as ferramentas de análise de desempenho&lt;/font&gt; &lt;br /&gt; &lt;br /&gt;</translation>
-    </message>
-    <message>
         <location filename="../Control/Control.cpp" line="1151"/>
         <source>&lt;b&gt;Wait . . .&lt;/b&gt;</source>
         <translation>&lt;b&gt;Aguarde . . .&lt;/b&gt;</translation>
@@ -483,10 +248,6 @@ Deseja salvar suas mudanças?</translation>
         <location filename="../Control/Control.cpp" line="1169"/>
         <source>RedScarf simulation(*.redsim)</source>
         <translation>Simulação RedScarf(*.redsim)</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Saving the experiment results. This can take some minutes. Do not close RedScarf!&lt;/b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Salvando os resultados do experimento. Isto pode levar alguns minutos. Não feche o RedScarf!&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../Control/Control.cpp" line="1240"/>
@@ -507,14 +268,6 @@ Deseja salvar suas mudanças?</translation>
         <location filename="../Control/Control.cpp" line="1247"/>
         <source>&lt;font color=red&gt;Problem occurred in load simulation results.&lt;br /&gt;Please verify the work folder permissions and try again.&lt;/font&gt;</source>
         <translation>&lt;font color=red&gt;Problema ao carregar resultados de simulação.&lt;br /&gt;Por favor verifique as permissões do diretório de trabalho e tente novamente.&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;The parameters load failed.&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;O carregamento dos parâmetros falhou.&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;It is not possible load results.&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível carregar os resultados.&lt;/font&gt;</translation>
     </message>
     <message>
         <location filename="../Control/Control.cpp" line="1326"/>
@@ -871,99 +624,6 @@ Maybe the simulator wouldn&apos;t run!</source>
     </message>
 </context>
 <context>
-    <name>DefaultPreviewTrafficConfiguration</name>
-    <message>
-        <source>Source
-Node</source>
-        <translation type="vanished">Nodo
-Fonte</translation>
-    </message>
-    <message>
-        <source>Destination
-Node</source>
-        <translation type="vanished">Nodo
-Destino</translation>
-    </message>
-    <message>
-        <source>Traffic
-Class</source>
-        <translation type="vanished">Classe de
-Tráfego</translation>
-    </message>
-    <message>
-        <source>Injection
-Type</source>
-        <translation type="vanished">Tipo de
-Injeção</translation>
-    </message>
-    <message>
-        <source>Switching
-Type</source>
-        <translation type="vanished">Tipo de
-Chaveamento</translation>
-    </message>
-    <message>
-        <source>Packets
-to send</source>
-        <translation type="vanished">Pacotes
-para enviar</translation>
-    </message>
-    <message>
-        <source>Deadline
-(ns)</source>
-        <translation type="vanished">Prazo
-(ns)</translation>
-    </message>
-    <message>
-        <source>Required
-Bandwidth
-(Mbps)</source>
-        <translation type="vanished">Largura
-de banda
-requerida
-(Mbps)</translation>
-    </message>
-    <message>
-        <source>Message
-Size
-(bits)</source>
-        <translation type="vanished">Tamanho da
-mensagem
-(bits)</translation>
-    </message>
-    <message>
-        <source>Idle
-Time
-(ns)</source>
-        <translation type="vanished">Tempo
-Ocioso
-(ns)</translation>
-    </message>
-    <message>
-        <source>Message
-Interval
-(ns)</source>
-        <translation type="vanished">Intervalo de
-Mensagens
-(ns)</translation>
-    </message>
-    <message>
-        <source>Probability
-Function</source>
-        <translation type="vanished">Função de
-Probabilidade</translation>
-    </message>
-    <message>
-        <source>Standard
-Deviation
-(% Req. BW)</source>
-        <translation type="vanished">Desvio
-Padrão
-(% Larg. de
-banda req.)</translation>
-    </message>
-</context>
-<context>
     <name>EnvironmentConfiguration</name>
     <message>
         <location filename="../Control/EnvironmentConfiguration.cpp" line="84"/>
@@ -1052,14 +712,6 @@ banda req.)</translation>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Não use espaços em branco nos nomes dos diretório e arquivos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source>Source Folders</source>
-        <translation type="vanished">Diretório Fonte</translation>
-    </message>
-    <message>
-        <source>SystemC Folder:</source>
-        <translation type="vanished">Diretório SystemC:</translation>
-    </message>
-    <message>
         <location filename="../View/FoldersConfigurationPage.ui" line="45"/>
         <location filename="../View/FoldersConfigurationPage.ui" line="70"/>
         <location filename="../View/FoldersConfigurationPage.ui" line="95"/>
@@ -1068,33 +720,9 @@ banda req.)</translation>
         <translation></translation>
     </message>
     <message>
-        <source>MinGW Folder:</source>
-        <translation type="vanished">Diretório MinGW:</translation>
-    </message>
-    <message>
-        <source>Waveform Tool:</source>
-        <translation type="vanished">Ferramenta formas de ondas:</translation>
-    </message>
-    <message>
         <location filename="../View/FoldersConfigurationPage.ui" line="120"/>
         <source>Destination Folders</source>
         <translation>Diretório de Destino</translation>
-    </message>
-    <message>
-        <source>Work Folder:</source>
-        <translation type="vanished">Diretório de Trabalho:</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Don&apos;t use white spaces in the folders&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Não use espaços em branco nos diretórios&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Select the SystemC folder</source>
-        <translation type="vanished">Selecione o diretório do SystemC</translation>
-    </message>
-    <message>
-        <source>Select the MinGW folder</source>
-        <translation type="vanished">Selecione o diretório do MinGW</translation>
     </message>
     <message>
         <location filename="../View/Pages.cpp" line="137"/>
@@ -1144,10 +772,6 @@ banda req.)</translation>
         <source>Execution threads:</source>
         <translation>Thread de execução:</translation>
     </message>
-    <message>
-        <source>Execution Threads:</source>
-        <translation type="vanished">Threads de Execução:</translation>
-    </message>
 </context>
 <context>
     <name>GetSelectedItemsDialog</name>
@@ -1155,13 +779,6 @@ banda req.)</translation>
         <location filename="../View/GetSelectedItemsDialog.cpp" line="56"/>
         <source>Items</source>
         <translation>Itens</translation>
-    </message>
-</context>
-<context>
-    <name>GnuPlotPlotter</name>
-    <message>
-        <source>&lt;font color=red&gt;Unable to open file to write graphic informations&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Não é possível abrir o arquivo para escrever informações do gráfico&lt;/font&gt;</translation>
     </message>
 </context>
 <context>
@@ -1182,25 +799,9 @@ banda req.)</translation>
         <translation>Configuração do Sistema</translation>
     </message>
     <message>
-        <source>Configure the system size</source>
-        <translation type="vanished">Configure o tamanho do sistema</translation>
-    </message>
-    <message>
-        <source>System Size</source>
-        <translation type="vanished">Tamanho do Sistema</translation>
-    </message>
-    <message>
-        <source>Number of columns of the 2-D mesh network</source>
-        <translation type="vanished">Número de colunas da rede em malha 2D</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="240"/>
         <source>X Size:</source>
         <translation>Tamanho em X:</translation>
-    </message>
-    <message>
-        <source>Number of rows of 2-D mesh network</source>
-        <translation type="vanished">Número de linhas da rede em malha 2D</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="195"/>
@@ -1209,138 +810,14 @@ banda req.)</translation>
         <translation>Tamanho em Y:</translation>
     </message>
     <message>
-        <source>Number of bits in the data channel.</source>
-        <translation type="vanished">Número de bits do canal de dados.</translation>
-    </message>
-    <message>
-        <source>Channel Width:</source>
-        <translation type="vanished">Largura do Canal:</translation>
-    </message>
-    <message>
-        <source>Preview of the cores in network</source>
-        <translation type="vanished">Visualização dos núcleos na rede</translation>
-    </message>
-    <message>
-        <source>Nodes</source>
-        <translation type="vanished">Nodos</translation>
-    </message>
-    <message>
-        <source>Configure the traffic paterns</source>
-        <translation type="vanished">Configurar os padrões de tráfego</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="370"/>
         <source>Traffic Configuration</source>
         <translation>Configuração de Tráfego</translation>
     </message>
     <message>
-        <source>Configure the source node of the traffic pattern</source>
-        <translation type="vanished">Configure o nodo fonte do padrão de tráfego</translation>
-    </message>
-    <message>
-        <source>Source node:</source>
-        <translation type="vanished">Nodo fonte:</translation>
-    </message>
-    <message>
-        <source>X coordinate of the source node.</source>
-        <translation type="vanished">Coordenada X do nodo fonte.</translation>
-    </message>
-    <message>
-        <source>Y coordinate of the source node.</source>
-        <translation type="vanished">Coordenada Y do nodo fonte.</translation>
-    </message>
-    <message>
-        <source>Configure traffic patterns</source>
-        <translation type="vanished">Configure os padrões de tráfego</translation>
-    </message>
-    <message>
-        <source>Traffic Paterns</source>
-        <translation type="vanished">Padrões de Tráfego</translation>
-    </message>
-    <message>
-        <source>Enable/Disable traffic pattern 0</source>
-        <translation type="vanished">Ativar/Desativar padrão de tráfego 0</translation>
-    </message>
-    <message>
-        <source>Traffic pattern 0</source>
-        <translation type="vanished">Padrão de tráfego 0</translation>
-    </message>
-    <message>
-        <source>Edit traffic patern 0</source>
-        <translation type="vanished">Editar padrão de tráfego 0</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="2959"/>
         <source>Edit</source>
         <translation>Editar</translation>
-    </message>
-    <message>
-        <source>Enable/Disable traffic pattern 1</source>
-        <translation type="vanished">Ativar/Desativar padrão de tráfego 1</translation>
-    </message>
-    <message>
-        <source>Traffic pattern 1</source>
-        <translation type="vanished">Padrão de tráfego 1</translation>
-    </message>
-    <message>
-        <source>Edit traffic patern 1</source>
-        <translation type="vanished">Editar padrão de tráfego 1</translation>
-    </message>
-    <message>
-        <source>Enable/Disable traffic pattern 2</source>
-        <translation type="vanished">Ativar/Desativar padrão de tráfego 2</translation>
-    </message>
-    <message>
-        <source>Traffic pattern 2</source>
-        <translation type="vanished">Padrão de tráfego 2</translation>
-    </message>
-    <message>
-        <source>Edit traffic patern 2</source>
-        <translation type="vanished">Editar padrão de tráfego 2</translation>
-    </message>
-    <message>
-        <source>Enable/Disable traffic pattern 3</source>
-        <translation type="vanished">Ativar/Desativar padrão de tráfego 3</translation>
-    </message>
-    <message>
-        <source>Traffic pattern 3</source>
-        <translation type="vanished">Padrão de tráfego 3</translation>
-    </message>
-    <message>
-        <source>Edit traffic patern 3</source>
-        <translation type="vanished">Editar padrão de tráfego 3</translation>
-    </message>
-    <message>
-        <source>Preview options</source>
-        <translation type="vanished">Opções de visualização</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation type="vanished">Visualização</translation>
-    </message>
-    <message>
-        <source>Preview traffic configuration in default style</source>
-        <translation type="vanished">Visualizar configuração de tráfego no estilo padrão de lista</translation>
-    </message>
-    <message>
-        <source>Preview
-Traffic
-Configuration</source>
-        <translation type="vanished">Visualização da
-Configuração
-de Tráfego</translation>
-    </message>
-    <message>
-        <source>Preview traffic configuration in xml style (tree view)</source>
-        <translation type="vanished">Visualizar configuração de tráfego no estilo XML (visão em árvore)</translation>
-    </message>
-    <message>
-        <source>XML View
-Traffic
-Configuration</source>
-        <translation type="vanished">Visualização XML
-da Configuração
-de Tráfego</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="402"/>
@@ -1372,14 +849,6 @@ de Tráfego</translation>
         <translation>Profundidade dos buffers do canal de saída</translation>
     </message>
     <message>
-        <source>Output buffers (flits):</source>
-        <translation type="vanished">Buffers de saída (flits):</translation>
-    </message>
-    <message>
-        <source>Define router architecture for experiment 1</source>
-        <translation type="vanished">Definir arquitetura do roteador para o experimento 1</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="537"/>
         <source>Define routing algorithm for experiment 3</source>
         <translation>Definir algoritmo de roteamento para o experimento 3</translation>
@@ -1393,10 +862,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="522"/>
         <source>#5</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Define router architecture for experiment 3</source>
-        <translation type="vanished">Definir arquitetura do roteador para o experimento 3</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="1106"/>
@@ -1415,10 +880,6 @@ de Tráfego</translation>
         <translation>Copiar</translation>
     </message>
     <message>
-        <source>Input buffers (flits):</source>
-        <translation type="vanished">Buffers de entrada (flits):</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="507"/>
         <source>Routing algorithm:</source>
         <translation>Algoritmo de roteamento:</translation>
@@ -1431,18 +892,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="942"/>
         <source>Depth of the buffers of the input channels</source>
         <translation>Profundidade dos buffers do canal de entrada</translation>
-    </message>
-    <message>
-        <source>Define router architecture for experiment 2</source>
-        <translation type="vanished">Definir arquitetura do roteador para o experimento 2</translation>
-    </message>
-    <message>
-        <source>Router architecture:</source>
-        <translation type="vanished">Arquitetura do roteador:</translation>
-    </message>
-    <message>
-        <source>Define router architecture for experiment 5</source>
-        <translation type="vanished">Definir arquitetura do roteador para o experimento 5</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="567"/>
@@ -1470,10 +919,6 @@ de Tráfego</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Define router architecture for experiment 4</source>
-        <translation type="vanished">Definir arquitetura do roteador para o experimento 4</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="552"/>
         <source>Define routing algorithm for experiment 2</source>
         <translation>Definir algoritmo de roteamento para o experimento 2</translation>
@@ -1487,10 +932,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="651"/>
         <source>Define flow control for experiment 5</source>
         <translation>Definir controle de fluxo para o experimento 5</translation>
-    </message>
-    <message>
-        <source>Flow control (Switching):</source>
-        <translation type="vanished">Controle de fluxo (chaveamento):</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="1080"/>
@@ -1572,10 +1013,6 @@ de Tráfego</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Simulation Stop Method:</source>
-        <translation type="vanished">Método de parada da simulação:</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="1338"/>
         <source>When all the packets are delivered</source>
         <translation>Quandos todos pacotes entregues</translation>
@@ -1601,53 +1038,9 @@ de Tráfego</translation>
         <translation> ciclos</translation>
     </message>
     <message>
-        <source>VCD generation options:</source>
-        <translation type="vanished">Opções de geração VCD:</translation>
-    </message>
-    <message>
-        <source>Do not generate VCD</source>
-        <translation type="vanished">Não gerar VCD</translation>
-    </message>
-    <message>
-        <source>Generate an empty VCD</source>
-        <translation type="vanished">Gerar um VCD vazio</translation>
-    </message>
-    <message>
-        <source>Show clock only</source>
-        <translation type="vanished">Exibir somente clock</translation>
-    </message>
-    <message>
-        <source>Show clock and data</source>
-        <translation type="vanished">Exibir clock e dados</translation>
-    </message>
-    <message>
-        <source>Show clock, data and flow control</source>
-        <translation type="vanished">Exibir clock, dados e controle de fluxo</translation>
-    </message>
-    <message>
-        <source>Show all the signals</source>
-        <translation type="vanished">Exibir todos os sinais</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="1786"/>
         <source>Channel Fclk range:</source>
         <translation>Intervalo do canal Fclk:</translation>
-    </message>
-    <message>
-        <source>MHz To</source>
-        <translation type="vanished">MHz até</translation>
-    </message>
-    <message>
-        <source>MHz, step=</source>
-        <translation type="vanished">MHz, passo=</translation>
-    </message>
-    <message>
-        <source>Channel Tclk range:</source>
-        <translation type="vanished">Intervalo do canal Tclk:</translation>
-    </message>
-    <message>
-        <source>ns To</source>
-        <translation type="vanished">ns até</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="1662"/>
@@ -1658,14 +1051,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="1701"/>
         <source>Channel BW range:</source>
         <translation>Intervalo Largura de Banda Req.:</translation>
-    </message>
-    <message>
-        <source>Mbps To</source>
-        <translation type="vanished">Mbps até</translation>
-    </message>
-    <message>
-        <source>Mbps (for HS flow control, divide by 4)</source>
-        <translation type="vanished">Mbps (para constrole de fluxo HS, dividido por 4)</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="1831"/>
@@ -1686,10 +1071,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="1891"/>
         <source>Configuration</source>
         <translation>Configuração</translation>
-    </message>
-    <message>
-        <source>Analyze packets from</source>
-        <translation type="vanished">Analisar pacotes de</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="1919"/>
@@ -1750,26 +1131,6 @@ de Tráfego</translation>
         <location filename="../View/MainWindow.ui" line="2063"/>
         <source>Flow parameters:</source>
         <translation>Parâmetros dos fluxo:</translation>
-    </message>
-    <message>
-        <source>X Source:</source>
-        <translation type="vanished">Fonte X:</translation>
-    </message>
-    <message>
-        <source>Y Source:</source>
-        <translation type="vanished">Fonte Y:</translation>
-    </message>
-    <message>
-        <source>X Destination:</source>
-        <translation type="vanished">Destino X:</translation>
-    </message>
-    <message>
-        <source>Y Destination:</source>
-        <translation type="vanished">Destino Y:</translation>
-    </message>
-    <message>
-        <source>Traffic Pattern:</source>
-        <translation type="vanished">Padrão de Tráfego:</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="2138"/>
@@ -2280,46 +1641,6 @@ de &amp;ondas</translation>
         <translation>&amp;Gerar CSV</translation>
     </message>
     <message>
-        <source>Router Architecture</source>
-        <translation type="vanished">Arquitetura do Roteador</translation>
-    </message>
-    <message>
-        <source>Routing Algorithm</source>
-        <translation type="vanished">Algoritmo de Roteamento</translation>
-    </message>
-    <message>
-        <source>Flow Control (Switching)</source>
-        <translation type="vanished">Controle de Fluxo (Chaveamento)</translation>
-    </message>
-    <message>
-        <source>Arbiter Type</source>
-        <translation type="vanished">Tipo de Árbitro</translation>
-    </message>
-    <message>
-        <source>Input Buffers Depth</source>
-        <translation type="vanished">Profundidade dos Buffers de entrada</translation>
-    </message>
-    <message>
-        <source>Output Buffers Depth</source>
-        <translation type="vanished">Profundidade dos Buffers de saída</translation>
-    </message>
-    <message>
-        <source>Check/Uncheck All</source>
-        <translation type="vanished">Marcar/Desmarcar todos</translation>
-    </message>
-    <message>
-        <source>Graphic Options:</source>
-        <translation type="vanished">Opções do Gráfico:</translation>
-    </message>
-    <message>
-        <source>Line Width:</source>
-        <translation type="vanished">Largura da Linha:</translation>
-    </message>
-    <message>
-        <source>Point Size:</source>
-        <translation type="vanished">Tamanho do Ponto:</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="2450"/>
         <source>Curve #1:</source>
         <translation>Curva #1:</translation>
@@ -2354,28 +1675,6 @@ de &amp;ondas</translation>
         <translation>Curva #5:</translation>
     </message>
     <message>
-        <source>Plot Selected
-&amp;Graphic</source>
-        <translation type="vanished">Exibir &amp;Gráfico
-Selecionado</translation>
-    </message>
-    <message>
-        <source>Plot &amp;Latency
-Distribution</source>
-        <translation type="vanished">Exibir Distribuição
-de &amp;Latências</translation>
-    </message>
-    <message>
-        <source>Plot &amp;Waveforms</source>
-        <translation type="vanished">Exibir Formas
-de &amp;Ondas</translation>
-    </message>
-    <message>
-        <source>View &amp;Report</source>
-        <translation type="vanished">Visualizar
-&amp;Relatório</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="2841"/>
         <source>Console output messages</source>
         <translation>Console de saída de mensagens</translation>
@@ -2391,10 +1690,6 @@ de &amp;Ondas</translation>
         <translation>Menu arquivo</translation>
     </message>
     <message>
-        <source>File</source>
-        <translation type="vanished">Arquivo</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="2952"/>
         <source>Help</source>
         <translation>Ajuda</translation>
@@ -2405,25 +1700,9 @@ de &amp;Ondas</translation>
         <translation>Selecionar o idioma do ambiente</translation>
     </message>
     <message>
-        <source>Language</source>
-        <translation type="vanished">Idioma</translation>
-    </message>
-    <message>
-        <source>Simulation</source>
-        <translation type="vanished">Simulação</translation>
-    </message>
-    <message>
-        <source>View</source>
-        <translation type="vanished">Visualizar</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="2995"/>
         <source>Status bar</source>
         <translation>Barra de estado</translation>
-    </message>
-    <message>
-        <source>New</source>
-        <translation type="vanished">Novo</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3015"/>
@@ -2437,10 +1716,6 @@ de &amp;Ondas</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Open</source>
-        <translation type="vanished">Abrir</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3033"/>
         <location filename="../View/MainWindow.ui" line="3036"/>
         <source>Open a system configuration file</source>
@@ -2452,10 +1727,6 @@ de &amp;Ondas</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Load Default</source>
-        <translation type="vanished">Carregar Padrões</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3051"/>
         <source>Load default system configuration including the network and traffic parameters</source>
         <translation>Carregar configuração padrão do sistema incluindo a rede e os parâmetros de tráfego</translation>
@@ -2464,10 +1735,6 @@ de &amp;Ondas</translation>
         <location filename="../View/MainWindow.ui" line="3054"/>
         <source>Load default parameters of configuration</source>
         <translation>Carregar parâmetros padrões da configuração</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="vanished">Salvar</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3066"/>
@@ -2485,14 +1752,6 @@ de &amp;Ondas</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Save As...</source>
-        <translation type="vanished">Salvar Como...</translation>
-    </message>
-    <message>
-        <source>Save As a system configuration including the network and traffic parameters</source>
-        <translation type="vanished">Salvar como uma configuração do sistema incluindo a rede e os parâmetros de tráfego</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3087"/>
         <source>Save as a configuration file</source>
         <translation>Salvar como um arquivo de configuração</translation>
@@ -2503,29 +1762,9 @@ de &amp;Ondas</translation>
         <translation></translation>
     </message>
     <message>
-        <source>Save As Default</source>
-        <translation type="vanished">Salvar Como Padrão</translation>
-    </message>
-    <message>
-        <source>Save As Default a current system configuration including the network and traffic parameters</source>
-        <translation type="vanished">Salvar Como Padrão a configuração atual do sistema incluindo a rede e os parâmetros de tráfego</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3105"/>
         <source>Save as default a configuration file</source>
         <translation>Salvar como padrão um arquivo de configuração</translation>
-    </message>
-    <message>
-        <source>Clear All Traffic Patterns</source>
-        <translation type="vanished">Limpar todos Padrões de Tráfego</translation>
-    </message>
-    <message>
-        <source>Clear All the traffic patterns configured for the system</source>
-        <translation type="vanished">Limpar Todos os padrões de tráfego configurados para o sistema</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="vanished">Sair</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3120"/>
@@ -2538,10 +1777,6 @@ de &amp;Ondas</translation>
         <translation>Encerrar o programa</translation>
     </message>
     <message>
-        <source>About</source>
-        <translation type="vanished">Sobre</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3138"/>
         <source>About application</source>
         <translation>Sobre a aplicação</translation>
@@ -2552,39 +1787,15 @@ de &amp;Ondas</translation>
         <translation>Sobre o RedScarf</translation>
     </message>
     <message>
-        <source>About Qt</source>
-        <translation type="vanished">Sobre o Qt</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3156"/>
         <source>About Qt framework that was used to build this environment</source>
         <translation>Sobre o framework Qt que foi utilizado para construir este ambiente</translation>
-    </message>
-    <message>
-        <source>Preview Traffic Configuration</source>
-        <translation type="vanished">Visualizar Configuração de Tráfego</translation>
-    </message>
-    <message>
-        <source>XML View Traffic Configuration</source>
-        <translation type="vanished">Visualização XML da Configuração de Tráfego</translation>
-    </message>
-    <message>
-        <source>Preview Traffic Configuration in XML Style (tree view)</source>
-        <translation type="vanished">Visualizar configuração de tráfego em formato XML (visão em árvore)</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">Opções</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3171"/>
         <location filename="../View/MainWindow.ui" line="3174"/>
         <source>Edit RedScarf options</source>
         <translation>Editar as opções do RedScarf</translation>
-    </message>
-    <message>
-        <source>Save Simulation</source>
-        <translation type="vanished">Salvar Simulação</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3186"/>
@@ -2597,10 +1808,6 @@ de &amp;Ondas</translation>
         <translation>Salvar os resultados da simulação</translation>
     </message>
     <message>
-        <source>Load Simulation</source>
-        <translation type="vanished">Carregar Simulação</translation>
-    </message>
-    <message>
         <location filename="../View/MainWindow.ui" line="3201"/>
         <source>Load previous simulation</source>
         <translation>Carregar simulação anterior</translation>
@@ -2609,10 +1816,6 @@ de &amp;Ondas</translation>
         <location filename="../View/MainWindow.ui" line="3204"/>
         <source>Load previous generated simulation results</source>
         <translation>Carregar resultados de simulação anterior</translation>
-    </message>
-    <message>
-        <source>Generate CSV</source>
-        <translation type="vanished">Gerar CSV</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.ui" line="3216"/>
@@ -2703,10 +1906,6 @@ Config.: %1 tem %2 elementos e a Config.: %3 tem %4 elementos</translation>
         <location filename="../View/MainWindow.cpp" line="1783"/>
         <source>ATTENTION on the traffic setup!</source>
         <translation>ATENÇÃO na configuração de tráfego!</translation>
-    </message>
-    <message>
-        <source>&lt;br /&gt;All rights reserved &amp;#169; 2014 LEDS - University of Vale do Itajaí&lt;br/&gt;- Laboratory of Embedded and Distributed Systems</source>
-        <translation type="vanished">&lt;br /&gt;Todos os direitos reservados &amp;#169; 2014 LEDS - Universidade do Vale do Itajaí&lt;br/&gt;- Laboratório de Sistemas Embarcados e Distribuídos</translation>
     </message>
     <message>
         <location filename="../View/MainWindow.cpp" line="666"/>
@@ -2808,31 +2007,6 @@ Config.: %1 tem %2 elementos e a Config.: %3 tem %4 elementos</translation>
         <location filename="../View/PreviewDialog.ui" line="17"/>
         <source>Traffic Pattern</source>
         <translation>Padrão de Tráfego</translation>
-    </message>
-</context>
-<context>
-    <name>QwtPlotter</name>
-    <message>
-        <source>QwtPlotter Tool Bar</source>
-        <translation type="vanished">Barra de ferramentas do QwtPlotter</translation>
-    </message>
-    <message>
-        <source>Export</source>
-        <translation type="vanished">Exportar</translation>
-    </message>
-    <message>
-        <source>&lt;font color=red&gt;Report file %1 unavailable or this flow is null (no packet was transfered)&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=red&gt;Arquivo de relatório %1 indisponível ou este fluxo é nulo (sem pacotes transferidos)&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>Attention</source>
-        <translation type="vanished">Atenção</translation>
-    </message>
-    <message>
-        <source>When you select the file type (PDF, SVG, PostScript, Image)
-Add the file type (.pdf, .svg, .ps, .jpg) in the name file</source>
-        <translation type="vanished">Quando seleciar o tipo de arquivo (PDF, SVG,PostScript,Imagem)
-Adicione a extensão ao nome do arquivo (.pdf, .svg, .ps, .jpg)</translation>
     </message>
 </context>
 <context>
@@ -3105,219 +2279,6 @@ Atendidos
 </context>
 <context>
     <name>TrafficConfigurationDialog</name>
-    <message>
-        <source>Node Address: </source>
-        <translation type="vanished">Endereço do nodo:</translation>
-    </message>
-    <message>
-        <source>Apply this configuration for this node in network</source>
-        <translation type="vanished">Aplicar esta configuração para este nodo na rede</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation type="vanished">Aplicar</translation>
-    </message>
-    <message>
-        <source>Cancel the configuration, the configuration is lost</source>
-        <translation type="vanished">Cancelar a configuração, a configuração será perdida</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Cancelar</translation>
-    </message>
-    <message>
-        <source>Function of probability:</source>
-        <translation type="vanished">Função de probabilidade:</translation>
-    </message>
-    <message>
-        <source>Define a required bandwidth</source>
-        <translation type="vanished">Definir uma largura de banda requerida</translation>
-    </message>
-    <message>
-        <source>Type of injection:</source>
-        <translation type="vanished">Tipo de injeção:</translation>
-    </message>
-    <message>
-        <source>Define a type of spatial distribution</source>
-        <translation type="vanished">Definir um tipo de distribuição espacial</translation>
-    </message>
-    <message>
-        <source>Define a target in position X in traffic with destination</source>
-        <translation type="vanished">Definir um alvo na posição X no tráfego com destino</translation>
-    </message>
-    <message>
-        <source>Define a target in position Y in traffic with destination</source>
-        <translation type="vanished">Definir um alvo na posição Y no tráfego com destino</translation>
-    </message>
-    <message>
-        <source>Indicates the source node in position X and position Y in network</source>
-        <translation type="vanished">Indicar o nodo fonte na posição X e Y na rede</translation>
-    </message>
-    <message>
-        <source>Source Node:</source>
-        <translation type="vanished">Nodo Fonte:</translation>
-    </message>
-    <message>
-        <source>Traffic class:</source>
-        <translation type="vanished">Classe de tráfego:</translation>
-    </message>
-    <message>
-        <source>Destination Node(s):</source>
-        <translation type="vanished">Nodo(s) de destino:</translation>
-    </message>
-    <message>
-        <source>Pareto - alfa off:</source>
-        <translation type="vanished">Pareto - alfa inativo:</translation>
-    </message>
-    <message>
-        <source>Define a switching technique</source>
-        <translation type="vanished">Definir uma técnica de chaveamento</translation>
-    </message>
-    <message>
-        <source>Required bandwidth (Mbps):</source>
-        <translation type="vanished">Larg. de banda requerida (Mbps):</translation>
-    </message>
-    <message>
-        <source>Pareto - alfa on:</source>
-        <translation type="vanished">Pareto - alfa ativo:</translation>
-    </message>
-    <message>
-        <source>Define a deadline if exists. If not exists value = 0</source>
-        <translation type="vanished">Definir um prazo se existir. Se não existir manter valor como= 0</translation>
-    </message>
-    <message>
-        <source>Define a function of probability</source>
-        <translation type="vanished">Definir uma função de probabilidade</translation>
-    </message>
-    <message>
-        <source>Message size (bits):</source>
-        <translation type="vanished">Tamanho da mensagem (bits):</translation>
-    </message>
-    <message>
-        <source>Number of packets per flow:</source>
-        <translation type="vanished">Número de pacotes por fluxo:</translation>
-    </message>
-    <message>
-        <source>Message interval (ns):</source>
-        <translation type="vanished">Intervalo de mensagens (ns):</translation>
-    </message>
-    <message>
-        <source>Idle time (ns):</source>
-        <translation type="vanished">Tempo ocioso (ns):</translation>
-    </message>
-    <message>
-        <source>Define a standard deviation in relation to % of required bandwidth</source>
-        <translation type="vanished">Definir um desvio padrão em relação ao % da largura de banda requerida</translation>
-    </message>
-    <message>
-        <source>Define a type of injection of data</source>
-        <translation type="vanished">Definir um tipo de injeção de dados</translation>
-    </message>
-    <message>
-        <source>Define a number of packets per flow</source>
-        <translation type="vanished">Definir um número de pacotes por fluxo</translation>
-    </message>
-    <message>
-        <source>Define pareto alfa on</source>
-        <translation type="vanished">Definir pareto alfa ativo</translation>
-    </message>
-    <message>
-        <source>Define a traffic class</source>
-        <translation type="vanished">Definir uma classe de tráfego</translation>
-    </message>
-    <message>
-        <source>Define a message size in bits</source>
-        <translation type="vanished">Definir um tamanho de mensagem em bits</translation>
-    </message>
-    <message>
-        <source>Apply and replicate this configuration of traffic for all others nodes in network</source>
-        <translation type="vanished">Aplicar e replicar esta configuração de tráfego para todos os nodos da rede</translation>
-    </message>
-    <message>
-        <source>Apply and Replicate</source>
-        <translation type="vanished">Aplicar e Replicar</translation>
-    </message>
-    <message>
-        <source>Define pareto alfa off</source>
-        <translation type="vanished">Definir pareto alfa inativo</translation>
-    </message>
-    <message>
-        <source>Std. deviation (% of req. bw):</source>
-        <translation type="vanished">Desvio padrão (% da larg. banda req.):</translation>
-    </message>
-    <message>
-        <source>Deadline (ns):</source>
-        <translation type="vanished">Prazo (ns):</translation>
-    </message>
-    <message>
-        <source>Define a message interval in nanoseconds</source>
-        <translation type="vanished">Definir um intervalo de mensagens em nanosegundos</translation>
-    </message>
-    <message>
-        <source>Switching Technique:</source>
-        <translation type="vanished">Técnica de chaveamento:</translation>
-    </message>
-    <message>
-        <source>Define a idle time in nanoseconds</source>
-        <translation type="vanished">Definir um tempo ocioso em nanosegundos</translation>
-    </message>
-    <message>
-        <source>Traffic Pattern %1</source>
-        <translation type="vanished">Padrão de Tráfego %1</translation>
-    </message>
-    <message>
-        <source>Review Input(s)</source>
-        <translation type="vanished">Revisar entrada(s)</translation>
-    </message>
-    <message>
-        <source>Number of packets per flow 
-must be greater than 0</source>
-        <translation type="vanished">O número de pacotes por fluxo
-deve ser maior do que 0</translation>
-    </message>
-    <message>
-        <source>Required bandwidth 
-must be greater than 0</source>
-        <translation type="vanished">A largura de banda requerida
-deve ser maior do que 0</translation>
-    </message>
-    <message>
-        <source>Message size must
-have at least %1 bits
-(i.e. %2 flits)</source>
-        <translation type="vanished">O tamanho da mensagem deve ter
-ao menos %1 bits (ex.: %2 flits)</translation>
-    </message>
-    <message>
-        <source>Idle interval must
-be greater than 0</source>
-        <translation type="vanished">O intervalo ocioso deve
-ser maior do que 0</translation>
-    </message>
-    <message>
-        <source>Message interval must
-be greater than 0</source>
-        <translation type="vanished">O intervalo de mensagens 
-deve ser maior do que 0</translation>
-    </message>
-    <message>
-        <source>Sorry!
-Traffic Generator not implemented for this function probability
-with this spatial distribution (Non-Uniform 1,2 or Local).</source>
-        <translation type="vanished">Desculpe-nos!
-O gerador de tráfego não foi implementado para esta função de 
-probabilidade com esta distribuição espacial (Não-Uniforme 1, 2 ou Local).</translation>
-    </message>
-    <message>
-        <source>Confirm Apply and Replicate</source>
-        <translation type="vanished">Confirmar Aplicar e Replicar</translation>
-    </message>
-    <message>
-        <source>Do you confirm apply and replicate this configuration for all nodes in network?
-Previous configurations are lost!</source>
-        <translation type="vanished">Você confirma aplicar e replicar esta configuração para todos os nodos na rede?
-Configurações anteriores serão descartadas!</translation>
-    </message>
     <message>
         <location filename="../View/TrafficConfigurationDialog.ui" line="14"/>
         <location filename="../View/TrafficConfigurationDialog.ui" line="116"/>
@@ -3770,7 +2731,7 @@ Número de taxas: %6</translation>
     <message>
         <location filename="../Model/Traffic/TrafficParameters.cpp" line="260"/>
         <source>Local</source>
-        <translation></translation>
+        <translation>Local</translation>
     </message>
     <message>
         <location filename="../Model/Traffic/TrafficParameters.cpp" line="267"/>
@@ -3846,85 +2807,6 @@ Número de taxas: %6</translation>
         <location filename="../Model/Traffic/TrafficParameters.cpp" line="297"/>
         <source>Pareto</source>
         <translation></translation>
-    </message>
-</context>
-<context>
-    <name>XMLPreviewTrafficConfiguration</name>
-    <message>
-        <source>Property</source>
-        <translation type="vanished">Propriedade</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation type="vanished">Valor</translation>
-    </message>
-    <message>
-        <source>Source Node</source>
-        <translation type="vanished">Nodo Fonte</translation>
-    </message>
-    <message>
-        <source>Traffic Pattern</source>
-        <translation type="vanished">Padrão de Tráfego</translation>
-    </message>
-    <message>
-        <source>Spatial Distribution</source>
-        <translation type="vanished">Distribuição Espacial</translation>
-    </message>
-    <message>
-        <source>Specified Address -&gt; X Dest.: %1	Y Dest.: %2</source>
-        <translation type="vanished">Endereço Específico -&gt; X Dest.: %1	Y Dest.: %2</translation>
-    </message>
-    <message>
-        <source>Traffic Class</source>
-        <translation type="vanished">Classe de Tráfego</translation>
-    </message>
-    <message>
-        <source>Type Injection</source>
-        <translation type="vanished">Tipo de Injeção</translation>
-    </message>
-    <message>
-        <source>Switching Technique</source>
-        <translation type="vanished">Técnica de Chaveamento</translation>
-    </message>
-    <message>
-        <source>Number Packets Per Flow</source>
-        <translation type="vanished">Número de Pacotes por Fluxo</translation>
-    </message>
-    <message>
-        <source>Deadline</source>
-        <translation type="vanished">Prazo</translation>
-    </message>
-    <message>
-        <source>Required Bandwidth</source>
-        <translation type="vanished">Largura de Banda Requerida</translation>
-    </message>
-    <message>
-        <source>Message size</source>
-        <translation type="vanished">Tamanho da Mensagem</translation>
-    </message>
-    <message>
-        <source>Idle Time</source>
-        <translation type="vanished">Tempo Ocioso</translation>
-    </message>
-    <message>
-        <source>Message Interval</source>
-        <translation type="vanished">Intervalo de Mensagens</translation>
-    </message>
-    <message>
-        <source>Function Probability</source>
-        <translation type="vanished">Função de Probabilidade</translation>
-    </message>
-    <message>
-        <source>Standard Deviation</source>
-        <translation type="vanished">Desvio Padrão</translation>
-    </message>
-    <message>
-        <source>Alfa On</source>
-        <translation type="vanished">Alfa Ativo</translation>
-    </message>
-    <message>
-        <source>Alfa Off</source>
-        <translation type="vanished">Alfa Inativo</translation>
     </message>
 </context>
 </TS>
