@@ -20,6 +20,11 @@
 #include "View/Arc.h"
 #include "View/Edge.h"
 
+#ifdef DEBUG_POINTS_METHODS
+    #include <iostream>
+#endif
+
+
 TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QListWidgetItem *> items) :
     QDialog(parent),
     ui(new Ui::TrafficConfigurationDialog),
@@ -27,6 +32,10 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
     currentNumberElements(0),
     currentDataWidth(0)
 {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Constructor View/TrafficConfigurationDialog" << std::endl;
+#endif
+
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Window);
@@ -70,6 +79,9 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
 }
 
 void TrafficConfigurationDialog::loadExistentConfigurations() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::loadExistentConfigurations" << std::endl;
+#endif
 
     int i;
     QList<TrafficParameters> confs;
@@ -103,6 +115,9 @@ void TrafficConfigurationDialog::loadExistentConfigurations() {
 }
 
 void TrafficConfigurationDialog::apply(){
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::apply" << std::endl;
+#endif
 
     QList<QVariant> trafficConfList;
 
@@ -122,10 +137,17 @@ void TrafficConfigurationDialog::apply(){
 }
 
 void TrafficConfigurationDialog::zoomRestore() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::zoomRestore" << std::endl;
+#endif
+
     ui->graphicsView->resetMatrix();
 }
 
 void TrafficConfigurationDialog::itemClicked(QListWidgetItem *item) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::itemClicked" << std::endl;
+#endif
 
     QVariant data = item->data(Qt::UserRole);
     SystemParameters sp = data.value<SystemParameters>();
@@ -136,11 +158,18 @@ void TrafficConfigurationDialog::itemClicked(QListWidgetItem *item) {
 }
 
 TrafficConfigurationDialog::~TrafficConfigurationDialog() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Destructor View/TrafficConfigurationDialog" << std::endl;
+#endif
+
     this->clearScene();
     delete ui;
 }
 
 void TrafficConfigurationDialog::configureGraphics(SystemParameters *sp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::configureGraphics" << std::endl;
+#endif
 
     this->clearScene();
 
@@ -160,6 +189,10 @@ void TrafficConfigurationDialog::configureGraphics(SystemParameters *sp) {
 }
 
 void TrafficConfigurationDialog::clearScene() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::clearScene" << std::endl;
+#endif
+
     QList<QGraphicsItem *> graphicItems = this->scene->items();
     vertices.clear();
     flowConnections.clear();
@@ -177,10 +210,17 @@ void TrafficConfigurationDialog::clearScene() {
 }
 
 void TrafficConfigurationDialog::repaintGraphics() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::repaintGraphics" << std::endl;
+#endif
+
     this->scene->invalidate();
 }
 
 void TrafficConfigurationDialog::drawRing(SystemParameters *sp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::drawRing" << std::endl;
+#endif
 
     unsigned short numElements = sp->getNumberElements();
     float angleOffset = 360.f/(float)numElements;
@@ -209,6 +249,9 @@ void TrafficConfigurationDialog::drawRing(SystemParameters *sp) {
 }
 
 void TrafficConfigurationDialog::draw2DMesh(SystemParameters *sp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::draw2DMesh" << std::endl;
+#endif
 
     unsigned int id = 0;
     for(unsigned int y = 0; y < sp->getYSize(); y++) {
@@ -227,6 +270,9 @@ void TrafficConfigurationDialog::draw2DMesh(SystemParameters *sp) {
 }
 
 void TrafficConfigurationDialog::draw3DMesh(SystemParameters *sp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::draw3DMesh" << std::endl;
+#endif
 
     QColor colors[4];
     colors[0] = Qt::darkCyan;
@@ -280,6 +326,9 @@ void TrafficConfigurationDialog::draw3DMesh(SystemParameters *sp) {
 }
 
 void TrafficConfigurationDialog::graphicSelectionChange() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::graphicSelectionChange" << std::endl;
+#endif
 
     QList<QGraphicsItem *> itemsSelected = this->scene->selectedItems();
 
@@ -310,6 +359,9 @@ void TrafficConfigurationDialog::graphicSelectionChange() {
 }
 
 void TrafficConfigurationDialog::addTrafficConfiguration() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::addTrafficConfiguration" << std::endl;
+#endif
 
     QList<QGraphicsItem *> sourcesSelected = this->scene->selectedItems();
 
@@ -334,6 +386,9 @@ void TrafficConfigurationDialog::addTrafficConfiguration() {
 }
 
 void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::applyTrafficParameters" << std::endl;
+#endif
 
     QList<QGraphicsItem *> sourcesSelected = this->scene->selectedItems();
 
@@ -395,6 +450,9 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
 }
 
 void TrafficConfigurationDialog::drawFlowsSelectedVertices(QList<Vertice *> selectedVertices) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::drawFlowsSelectedVertices" << std::endl;
+#endif
 
     unsigned int trafficConfCount = ui->listTraffic->count();
 
@@ -425,6 +483,9 @@ void TrafficConfigurationDialog::drawFlowsSelectedVertices(QList<Vertice *> sele
 }
 
 void TrafficConfigurationDialog::trafficListSelectionChange() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::trafficListSelectionChange" << std::endl;
+#endif
 
     if( ui->listTraffic->hasFocus() ) {
         QList<QListWidgetItem* > selectedItems = ui->listTraffic->selectedItems();
@@ -450,6 +511,9 @@ void TrafficConfigurationDialog::trafficListSelectionChange() {
 }
 
 void TrafficConfigurationDialog::clearConnections() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::clearConnections" << std::endl;
+#endif
 
     for( int i = 0; i < flowConnections.size(); i++ ) {
         Arc* arc = flowConnections.at(i);
@@ -460,6 +524,10 @@ void TrafficConfigurationDialog::clearConnections() {
 }
 
 void TrafficConfigurationDialog::removeSelectedTraffic() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::removeSelectedTraffic" << std::endl;
+#endif
+
     QList<QListWidgetItem *> items = this->ui->listTraffic->selectedItems();
 
     if( items.size() != 0 ) {
@@ -484,6 +552,9 @@ void TrafficConfigurationDialog::removeSelectedTraffic() {
 }
 
 void TrafficConfigurationDialog::trafficItemDoubleClick(QModelIndex modelIndex) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/TrafficConfigurationDialog::trafficItemDoubleClick" << std::endl;
+#endif
 
     if( currentNumberElements == 0 ) {
         QMessageBox::information(this,tr("Select a configuration"),tr("Select a topology configuration to edit"

@@ -1861,49 +1861,49 @@ Contact the development team to fix.</source>
 Contate a equipe de desenvolvimento para solucionar.</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1708"/>
+        <location filename="../View/MainWindow.cpp" line="1714"/>
         <source>Configuration already exists</source>
         <translation>A configuração já existe</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1709"/>
+        <location filename="../View/MainWindow.cpp" line="1715"/>
         <source>Duplicated configuration... not added</source>
         <translation>Configuração duplicada... não adicionado</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1742"/>
+        <location filename="../View/MainWindow.cpp" line="1754"/>
         <source>Confirm remove</source>
         <translation>Confirmar remoção</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1743"/>
+        <location filename="../View/MainWindow.cpp" line="1755"/>
         <source>Are you sure to remove the selected items?</source>
         <translation>Estás certo de que desejas remover os itens selecionados?</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1760"/>
+        <location filename="../View/MainWindow.cpp" line="1775"/>
         <source>Message</source>
         <translation>Mensagem</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1760"/>
+        <location filename="../View/MainWindow.cpp" line="1775"/>
         <source>None configuration selected.</source>
         <translation>Nenhuma configuração selecionada.</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1762"/>
+        <location filename="../View/MainWindow.cpp" line="1777"/>
         <source>Different number of elements on the selected configurations!</source>
         <translation>Diferente número de elementos nas configurações selecionadas!</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1773"/>
+        <location filename="../View/MainWindow.cpp" line="1788"/>
         <source>
 Config.: %1 has %2 elements and Config.: %3 has %4 elements</source>
         <translation>
 Config.: %1 tem %2 elementos e a Config.: %3 tem %4 elementos</translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1783"/>
+        <location filename="../View/MainWindow.cpp" line="1798"/>
         <source>ATTENTION on the traffic setup!</source>
         <translation>ATENÇÃO na configuração de tráfego!</translation>
     </message>
@@ -2259,22 +2259,22 @@ Atendidos
     <message>
         <location filename="../Model/System/SystemParameters.cpp" line="51"/>
         <source>Non-Orthogonal - %1 elements</source>
-        <translation>Não-ortogonal - %1 elementos</translation>
+        <translation>Não-Ortogonal - %1 elementos</translation>
     </message>
     <message>
         <location filename="../Model/System/SystemParameters.cpp" line="55"/>
         <source>2D-Orthogonal - %1 (%2x%3) elements</source>
-        <translation>Ortogonal-2D - %1 (%2x%3) elementos</translation>
+        <translation>2D-Ortogonal - %1 (%2x%3) elementos</translation>
     </message>
     <message>
         <location filename="../Model/System/SystemParameters.cpp" line="61"/>
         <source>3D-Orthogonal - %1 (%2x%3x%4) elements</source>
-        <translation>Ortogonal-3D - %1 (%2x%3x%4) elementos</translation>
+        <translation>3D-Ortogonal - %1 (%2x%3x%4) elementos</translation>
     </message>
     <message>
         <location filename="../Model/System/SystemParameters.cpp" line="69"/>
         <source> - Data Width: %1-bit</source>
-        <translation> - Largura do Canal: %1-bits</translation>
+        <translation> - Largura do canal de dados: %1-bits</translation>
     </message>
 </context>
 <context>
@@ -2297,7 +2297,7 @@ Atendidos
     </message>
     <message>
         <location filename="../View/TrafficConfigurationDialog.ui" line="131"/>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="299"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="348"/>
         <source>None</source>
         <translation>Nenhum</translation>
     </message>
@@ -2312,27 +2312,27 @@ Atendidos
         <translation>Adicionar Tráfego</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="111"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="126"/>
         <source>No traffic configured</source>
         <translation>Sem tráfego configurado</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="111"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="126"/>
         <source>None traffic defined for these systems</source>
         <translation>Nenhum tráfego definido para esses sistemas</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="305"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="354"/>
         <source>**Multiple Selection**</source>
         <translation>**Múltipla Seleção**</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="382"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="437"/>
         <source>Invalid configuration</source>
         <translation>Configuração Inválida</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="382"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="437"/>
         <source>For this spatial distribution at node %1
  an invalid destination was generated.
 Not added!</source>
@@ -2341,22 +2341,22 @@ um destino inválido foi gerado.
 Não adicionado!</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="468"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="536"/>
         <source>Confirm remove</source>
         <translation>Confirmar remoção</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="469"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="537"/>
         <source>Are you sure to remove the selected items?</source>
         <translation>Desejas realmente remover os itens selecionados?</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="489"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="560"/>
         <source>Select a configuration</source>
         <translation>Selecione uma configuração</translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="489"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="560"/>
         <source>Select a topology configuration to edit
 the traffic configuration</source>
         <translation>Selecione uma configuração de topologia 
@@ -2687,126 +2687,6 @@ Número de taxas: %6</translation>
         <location filename="../Model/Traffic/TrafficParameters.cpp" line="155"/>
         <source> - Req. BW(Mbps): %1</source>
         <translation> - Larg. banda requerida (Mbps): %1</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="252"/>
-        <source>Specific</source>
-        <translation>Específico</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="253"/>
-        <source>Bit-Reversal</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="254"/>
-        <source>Perfect Shuffle</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="255"/>
-        <source>Butterfly</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="256"/>
-        <source>Matrix Transpose</source>
-        <translation>Matriz transposta</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="257"/>
-        <source>Complement</source>
-        <translation>Complemento</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="258"/>
-        <source>Uniform</source>
-        <translation>Uniforme</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="259"/>
-        <source>Non-Uniform</source>
-        <translation>Não-Uniforme</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="260"/>
-        <source>Local</source>
-        <translation>Local</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="267"/>
-        <source>RT0 - Signalling</source>
-        <translation>RT0 - Sinalização</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="268"/>
-        <source>RT1 - Audio/Video</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="269"/>
-        <source>nRT0 - Read/Write</source>
-        <translation>nRT0 - Leitura/Escrita</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="270"/>
-        <source>nRT1 - Block Transfers</source>
-        <translation>nRT1 - Transferência de blocos</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="277"/>
-        <source>Constant</source>
-        <translation>Constante</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="278"/>
-        <source>Variable idle time - Fix message size</source>
-        <translation>Variar tempo ocioso - fixar tamanho da mensagem</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="279"/>
-        <source>Variable message size - Fix idle time</source>
-        <translation>Variar tamanho da mensagem - Fixar tempo ocioso</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="280"/>
-        <source>Variable message size - Fix message interval</source>
-        <translation>Variar tamanho da mensagem - Fixar intervalo de mensagens</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="281"/>
-        <source>Variable message interval - Fix message size</source>
-        <translation>Variar intervalo de mensagens - Fixar tamanho da mensagem</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="282"/>
-        <source>Variable burst size - Fix message interval</source>
-        <translation>Variar tamanho da rajada - Fixar intervalo das mensagens</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="288"/>
-        <source>Wormhole Switching</source>
-        <translation>Chavemanto Wormhole</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="289"/>
-        <source>Circuit Switching</source>
-        <translation>Chaveamento por Circuito</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="295"/>
-        <source>Normal</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="296"/>
-        <source>Exponential</source>
-        <translation>Exponencial</translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="297"/>
-        <source>Pareto</source>
-        <translation></translation>
     </message>
 </context>
 </TS>

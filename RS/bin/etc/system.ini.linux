@@ -36,6 +36,13 @@
 ;---------------------------- Topologies ---------------------------------
 ; This section defines all topologies available in Network model of the Simulator.
 ; This parameters define the items in the graphical interface of RedScarf app.
+; The attributes are:
+; * Topology: Name showed in the second tab
+; * Alias: Not used yet
+; * NoCPlugin: The network library name in the plugins folder (platform dependent [.dll|.so|.dylib])
+; * RouterPlugin: Router plugin name of the used router for the network model (platform dependent)
+; * Type: The network classification for setup in the graphical interface. 
+;         Available current types: NonOrthogonal, Orthogonal2D and Orthogonal3D
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Topologies]
@@ -81,6 +88,12 @@ size=7
 ; The "Topology" parameter must be identical to that defined  in the section
 ; topologies.
 ; This parameters define the items in the graphical interface of RedScarf app.
+; The attributes are:
+; * Topology: Topology (name defined in the previous section) 
+;             which the routing was developed
+; * Algorithms: Name of the routing (showed in the GUI)
+; * Plugins: Name of the plugin which implements the routing - 
+;            associated by order with "Algorithms" attribute (platform dependent)
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Routing_Algorithms]
@@ -113,6 +126,10 @@ size=7
 ;-------------------------- Flow_Controls --------------------------------
 ; This section defines all flow controls available in Network model.
 ; This parameters define the items in the graphical interface of RedScarf app.
+; The attributes are:
+; * FlowControl: Name showed in the GUI
+; * Plugin: name of the plugin
+; * CyclesPerFlit: Number of the cycles spent to transfer a flit over the link
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Flow_Controls]
@@ -135,8 +152,10 @@ size=2
 1\Plugin=libpg_static.so
 2\PriorityGenerator=Rotative
 2\Plugin=libpg_rotative.so
-3\PriorityGenerator=Round-Robin
-3\Plugin=libpg_roundrobin.so
+3\PriorityGenerator=Random
+3\Plugin=libpg_random.so
+4\PriorityGenerator=Round-Robin
+4\Plugin=libpg_roundrobin.so
 size=3
 
 ;--------------------- Virtual Channel Options ---------------------------

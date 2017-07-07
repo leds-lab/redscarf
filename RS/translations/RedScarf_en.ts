@@ -1851,48 +1851,48 @@ Contact the development team to fix.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1708"/>
+        <location filename="../View/MainWindow.cpp" line="1714"/>
         <source>Configuration already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1709"/>
+        <location filename="../View/MainWindow.cpp" line="1715"/>
         <source>Duplicated configuration... not added</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1742"/>
+        <location filename="../View/MainWindow.cpp" line="1754"/>
         <source>Confirm remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1743"/>
+        <location filename="../View/MainWindow.cpp" line="1755"/>
         <source>Are you sure to remove the selected items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1760"/>
+        <location filename="../View/MainWindow.cpp" line="1775"/>
         <source>Message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1760"/>
+        <location filename="../View/MainWindow.cpp" line="1775"/>
         <source>None configuration selected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1762"/>
+        <location filename="../View/MainWindow.cpp" line="1777"/>
         <source>Different number of elements on the selected configurations!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1773"/>
+        <location filename="../View/MainWindow.cpp" line="1788"/>
         <source>
 Config.: %1 has %2 elements and Config.: %3 has %4 elements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/MainWindow.cpp" line="1783"/>
+        <location filename="../View/MainWindow.cpp" line="1798"/>
         <source>ATTENTION on the traffic setup!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2249,7 +2249,7 @@ Latency
     </message>
     <message>
         <location filename="../View/TrafficConfigurationDialog.ui" line="131"/>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="299"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="348"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2264,49 +2264,49 @@ Latency
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="111"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="126"/>
         <source>No traffic configured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="111"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="126"/>
         <source>None traffic defined for these systems</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="305"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="354"/>
         <source>**Multiple Selection**</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="382"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="437"/>
         <source>Invalid configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="382"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="437"/>
         <source>For this spatial distribution at node %1
  an invalid destination was generated.
 Not added!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="468"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="536"/>
         <source>Confirm remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="469"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="537"/>
         <source>Are you sure to remove the selected items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="489"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="560"/>
         <source>Select a configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../View/TrafficConfigurationDialog.cpp" line="489"/>
+        <location filename="../View/TrafficConfigurationDialog.cpp" line="560"/>
         <source>Select a topology configuration to edit
 the traffic configuration</source>
         <translation type="unfinished"></translation>
@@ -2610,126 +2610,6 @@ Number rates: %6</source>
     <message>
         <location filename="../Model/Traffic/TrafficParameters.cpp" line="155"/>
         <source> - Req. BW(Mbps): %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="252"/>
-        <source>Specific</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="253"/>
-        <source>Bit-Reversal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="254"/>
-        <source>Perfect Shuffle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="255"/>
-        <source>Butterfly</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="256"/>
-        <source>Matrix Transpose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="257"/>
-        <source>Complement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="258"/>
-        <source>Uniform</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="259"/>
-        <source>Non-Uniform</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="260"/>
-        <source>Local</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="267"/>
-        <source>RT0 - Signalling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="268"/>
-        <source>RT1 - Audio/Video</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="269"/>
-        <source>nRT0 - Read/Write</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="270"/>
-        <source>nRT1 - Block Transfers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="277"/>
-        <source>Constant</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="278"/>
-        <source>Variable idle time - Fix message size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="279"/>
-        <source>Variable message size - Fix idle time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="280"/>
-        <source>Variable message size - Fix message interval</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="281"/>
-        <source>Variable message interval - Fix message size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="282"/>
-        <source>Variable burst size - Fix message interval</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="288"/>
-        <source>Wormhole Switching</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="289"/>
-        <source>Circuit Switching</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="295"/>
-        <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="296"/>
-        <source>Exponential</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Model/Traffic/TrafficParameters.cpp" line="297"/>
-        <source>Pareto</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
