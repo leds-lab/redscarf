@@ -5,7 +5,7 @@
 ////      Univali - University of Vale do Itajai              ////
 ////                   Brazil - Santa Catarina                ////
 //// Mainteiner: Cesar Albenes Zeferino {zeferino@univali.br} ////
-////Copyright(C) 2014 - 2016 LEDS-Univali. All rights reserved////
+////Copyright(C) 2014 - 2017 LEDS-Univali. All rights reserved////
 //////////////////////////////////////////////////////////////////
 
 
@@ -33,19 +33,7 @@ The project mainteiner is professor Cesar Albenes Zeferino, PhD.
 ---------------------
 REQUIREMENTS
 ---------------------
- * SystemC library compiled
- * MinGW, GNU C++ Compiler or CLang++
- * Waveform viewer VCD (Value Change Dump) compliant
-
----------------------
-CONFIGURATIONS
----------------------
-  * Number of Threads to simulation
-  * Language from system
-  * SystemC root folder
-  * MinGW root folder (only Windows)
-  * Work folder (with user write permission)
-  * Binary of Waveform Viewer tool
+ * Waveform viewer VCD (Value Change Dump) compliant (only view waveforms)
 
 ---------------------
 TROUBLESHOOTING
