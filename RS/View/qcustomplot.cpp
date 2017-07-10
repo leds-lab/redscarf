@@ -23,7 +23,7 @@
 **          Version: 1.3.2                                                **
 ****************************************************************************/
 
-#include "View/qcustomplot.h"
+#include "qcustomplot.h"
 
 
 

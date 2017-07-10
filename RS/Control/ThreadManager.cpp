@@ -29,7 +29,7 @@
 *
 */
 
-#include "Control/ThreadManager.h"
+#include "ThreadManager.h"
 #include <QThread>
 
 #ifdef DEBUG_POINTS_METHODS

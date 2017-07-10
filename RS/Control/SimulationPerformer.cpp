@@ -31,7 +31,7 @@
 *
 */
 
-#include "Control/SimulationPerformer.h"
+#include "SimulationPerformer.h"
 #include "Model/TimeOperation.h"
 #include <QElapsedTimer>
 #include <QFile>

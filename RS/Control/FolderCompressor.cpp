@@ -29,7 +29,7 @@
 *
 */
 
-#include "Control/FolderCompressor.h"
+#include "FolderCompressor.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

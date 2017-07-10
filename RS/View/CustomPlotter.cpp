@@ -1,6 +1,6 @@
-#include "View/CustomPlotter.h"
-#include "View/CustomPlotZoom.h"
-#include "View/AnalysisOptions.h"
+#include "CustomPlotter.h"
+#include "CustomPlotZoom.h"
+#include "AnalysisOptions.h"
 #include "Model/Analysis/DataReport.h"
 
 #include <QCheckBox>

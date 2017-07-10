@@ -37,8 +37,8 @@
 
 #include <QtWidgets>
 
-#include "View/ConfigDialog.h"
-#include "View/Pages.h"
+#include "ConfigDialog.h"
+#include "Pages.h"
 
 #include "Control/EnvironmentConfiguration.h"
 #include "Control/Control.h"

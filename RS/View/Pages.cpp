@@ -33,7 +33,7 @@
 #include "ui_GeneralConfigurationPage.h"
 #include "ui_FoldersConfigurationPage.h"
 
-#include "View/Pages.h"
+#include "Pages.h"
 
 #include "Control/EnvironmentConfiguration.h"
 

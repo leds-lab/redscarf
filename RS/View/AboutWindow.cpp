@@ -33,7 +33,7 @@
 * 11/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#include "View/AboutWindow.h"
+#include "AboutWindow.h"
 #include "ui_AboutWindow.h"
 
 #ifdef DEBUG_POINTS_METHODS

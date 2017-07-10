@@ -33,8 +33,8 @@
 
 #include "ui_PreviewDialog.h"
 
-#include "View/AnalysisOptions.h"
-#include "View/GetSelectedItemsDialog.h"
+#include "AnalysisOptions.h"
+#include "GetSelectedItemsDialog.h"
 
 #include <QDialogButtonBox>
 

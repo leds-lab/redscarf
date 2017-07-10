@@ -1,4 +1,37 @@
-#include "Model/Traffic/TrafficParameters.h"
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+* TrafficParameters.cpp
+* Copyright (C) 2014-2017 LEDS - Univali <zeferino@univali.br>
+* Laboratory of Embedded and Distributed Systems
+* University of Vale do Itajaí
+*
+* Authors: Laboratory of Embedded and Distributed Systems (LEDS)
+*
+* Contact: Profº Dr. Cesar Albenes Zeferino {zeferino@univali.br}
+*
+* RedScarf is free software: you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* RedScarf is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+* ------------------------------ Reviews -------------------------------------
+* Date       - Version - Author                      | Description
+* ----------------------------------------------------------------------------
+* 10/12/2014 - 1.0     - Eduardo Alves da Silva      | Initial release
+* ----------------------------------------------------------------------------
+* 20/11/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
+*
+*/
+
+#include "TrafficParameters.h"
 
 TrafficParameters::TrafficParameters() {
 
@@ -216,51 +249,51 @@ int TrafficParameters::indexOfProbabilityFunction(QString name) const {
 QStringList TrafficParameters::availableSpatialDistributions() {
     QStringList distributions;
 
-    distributions << tr("Specific")
-                  << tr("Bit-Reversal")
-                  << tr("Perfect Shuffle")
-                  << tr("Butterfly")
-                  << tr("Matrix Transpose")
-                  << tr("Complement")
-                  << tr("Uniform")
-                  << tr("Non-Uniform")
-                  << tr("Local");
+    distributions << "Specific"
+                  << "Bit-Reversal"
+                  << "Perfect Shuffle"
+                  << "Butterfly"
+                  << "Matrix Transpose"
+                  << "Complement"
+                  << "Uniform"
+                  << "Non-Uniform"
+                  << "Local";
 
     return distributions;
 }
 
 QStringList TrafficParameters::availableTrafficClasses() {
     QStringList classes;
-    classes << tr("RT0 - Signalling")
-            << tr("RT1 - Audio/Video")
-            << tr("nRT0 - Read/Write")
-            << tr("nRT1 - Block Transfers");
+    classes << "RT0 - Signalling"
+            << "RT1 - Audio/Video"
+            << "nRT0 - Read/Write"
+            << "nRT1 - Block Transfers";
     return classes;
 }
 
 QStringList TrafficParameters::availableInjectionTypes() {
 
     QStringList types;
-    types << tr("Constant")
-          << tr("Variable idle time - Fix message size")
-          << tr("Variable message size - Fix idle time")
-          << tr("Variable message size - Fix message interval")
-          << tr("Variable message interval - Fix message size")
-          << tr("Variable burst size - Fix message interval");
+    types << "Constant"
+          << "Variable idle time - Fix message size"
+          << "Variable message size - Fix idle time"
+          << "Variable message size - Fix message interval"
+          << "Variable message interval - Fix message size"
+          << "Variable burst size - Fix message interval";
     return types;
 }
 
 QStringList TrafficParameters::availableSwitchingTechniques() {
     QStringList techs;
-    techs << tr("Wormhole Switching")
-          << tr("Circuit Switching");
+    techs << "Wormhole"
+          << "Circuit";
     return techs;
 }
 
 QStringList TrafficParameters::availableProbabilityFunctions() {
     QStringList functions;
-    functions << tr("Normal")
-              << tr("Exponential")
-              << tr("Pareto");
+    functions << "Normal"
+              << "Exponential"
+              << "Pareto";
     return functions;
 }

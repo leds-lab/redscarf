@@ -32,7 +32,7 @@
 *
 */
 
-#include "Control/XmlConfigParser.h"
+#include "XmlConfigParser.h"
 
 #include <QFile>
 #include <QXmlStreamReader>
@@ -44,7 +44,7 @@
 #include "Model/System/SystemParameters.h"
 #include "Model/System/SystemOperation.h"
 #include "Model/System/Experiment.h"
-#include "Control/Control.h"
+#include "Control.h"
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>

@@ -30,8 +30,8 @@
 * 11/12/2016 - 2.0     - Eduardo Alves da Silva      | Back-end change
 */
 
-#include "Model/Traffic/TrafficModelGenerator.h"
-#include "Model/Traffic/MathFunction.h"
+#include "TrafficModelGenerator.h"
+#include "MathFunction.h"
 
 #include "Model/System/Defines.h"
 #include "Model/System/Experiment.h"

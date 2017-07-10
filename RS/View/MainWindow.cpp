@@ -32,11 +32,11 @@
 */
 
 #include "ui_MainWindow.h"
-#include "View/MainWindow.h"
+#include "MainWindow.h"
 
-#include "View/TrafficConfigurationDialog.h"
-#include "View/AboutWindow.h"
-#include "View/AnalysisOptions.h"
+#include "TrafficConfigurationDialog.h"
+#include "AboutWindow.h"
+#include "AnalysisOptions.h"
 
 #include "Model/System/Defines.h"
 #include "Model/System/SystemDefines.h"
@@ -1659,6 +1659,9 @@ void MainWindow::generateCSVClicked() {
 ////////////// NEW SIMULATOR //////////////
 
 void MainWindow::topologyChange(int newTop) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::topologyChange" << std::endl;
+#endif
 
     switch (newTop) {
         case 0: // Non-Orthogonal
@@ -1682,6 +1685,9 @@ void MainWindow::topologyChange(int newTop) {
 }
 
 void MainWindow::addSystemConfiguration() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::addSystemConfiguration" << std::endl;
+#endif
 
     SystemParameters sp;
     sp.setDataWidth( quint16(ui->inDataWidth->value()) );
@@ -1719,6 +1725,9 @@ void MainWindow::addSystemConfiguration() {
 }
 
 bool MainWindow::alreadyExists(SystemParameters *sp) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::alreadyExists" << std::endl;
+#endif
 
     int listSize = ui->listConf->count();
     for(int i = 0; i < listSize; i++) {
@@ -1734,6 +1743,9 @@ bool MainWindow::alreadyExists(SystemParameters *sp) {
 }
 
 void MainWindow::removeSelectedItems() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::removeSelectedItems" << std::endl;
+#endif
 
     QList<QListWidgetItem *> items = this->ui->listConf->selectedItems();
 
@@ -1753,6 +1765,9 @@ void MainWindow::removeSelectedItems() {
 }
 
 void MainWindow::editTrafficPatterns() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::editTrafficPatterns" << std::endl;
+#endif
 
     QList<QListWidgetItem *> items = this->ui->listConf->selectedItems();
 
@@ -1790,6 +1805,9 @@ void MainWindow::editTrafficPatterns() {
 }
 
 void MainWindow::setupTraffic(QList<QVariant> configuration) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::setupTraffic" << std::endl;
+#endif
 
     QList<QListWidgetItem *> systemSelected = ui->listConf->selectedItems();
 
@@ -1801,9 +1819,17 @@ void MainWindow::setupTraffic(QList<QVariant> configuration) {
 }
 
 void MainWindow::lowerLimitAnalysisChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::lowerLimitAnalysisChange" << std::endl;
+#endif
+
     ui->spinBoxEndPacketsAnalyze->setMinimum(newValue+1);
 }
 
 void MainWindow::upperLimitAnalysisChange(int newValue) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/MainWindow::upperLimitAnalysisChange" << std::endl;
+#endif
+
     ui->spinBoxInitPacketsAnalyze->setMaximum(newValue-1);
 }

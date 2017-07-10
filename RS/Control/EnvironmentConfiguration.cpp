@@ -31,8 +31,8 @@
 *
 */
 
-#include "Control/EnvironmentConfiguration.h"
-#include "Control/Control.h"
+#include "EnvironmentConfiguration.h"
+#include "Control.h"
 
 #include <QApplication>
 #include <QThread>
