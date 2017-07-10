@@ -26,3 +26,16 @@ First refactoring.
 Produced by Eduardo Alves da Silva
 May 31th, 2016
 ------------------------------------
+------------------------------------
+Version 2.0
+------------------------------------
+Second version of RedScarf.
+New back-end implemented
+ * Full-configurable - w/o compilation
+ * Network models in plugins approach
+ * New network models
+ * Master thesis work
+
+Produced by Eduardo Alves da Silva
+July 08th, 2017
+------------------------------------
