@@ -46,17 +46,17 @@
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Topologies]
-1\Topology=Mesh-2D
+1\Topology=2D-Mesh
 1\Alias=SoCIN
 1\NoCPlugin=libnoc_SoCIN.so
 1\RouterPlugin=librouter_ParIS.so
 1\Type=Orthogonal2D
-2\Topology=Switch-Bus
+2\Topology=Bus
 2\Alias=SoCIN-Hub
 2\NoCPlugin=libnoc_unit.so
 2\RouterPlugin=libbus_ParIS.so
 2\Type=NonOrthogonal
-3\Topology=Switch-Crossbar
+3\Topology=Crossbar
 3\Alias=SoCIN-Crossbar
 3\NoCPlugin=libnoc_unit.so
 3\RouterPlugin=librouter_ParIS.so
@@ -71,12 +71,12 @@
 5\NoCPlugin=libnoc_SoCIN_Spider.so
 5\RouterPlugin=librouter_ParIS.so
 5\Type=NonOrthogonal
-6\Topology=Torus-2D
+6\Topology=2D-Torus
 6\Alias=SoCIN-Torus-2D
 6\NoCPlugin=libnoc_SoCIN_Torus.so
 6\RouterPlugin=librouter_ParIS.so
 6\Type=Orthogonal2D
-7\Topology=Mesh-3D
+7\Topology=3D-Mesh
 7\Alias=SoCIN-3D
 7\NoCPlugin=libnoc_SoCIN_3D.so
 7\RouterPlugin=librouter_ParIS.so
@@ -97,13 +97,13 @@ size=7
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Routing_Algorithms]
-1\Topology=Mesh-2D
+1\Topology=2D-Mesh
 1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast, OddEven
 1\Plugins=librouting_xy.so,librouting_wf.so,librouting_nf.so,librouting_nl.so,librouting_oe.so
-2\Topology=Switch-Bus
+2\Topology=Bus
 2\Algorithms=none
 2\Plugins=librouting_crossbar.so
-3\Topology=Switch-Crossbar
+3\Topology=Crossbar
 3\Algorithms=DirectAddressing
 3\Plugins=librouting_crossbar.so
 4\Topology=Ring
@@ -112,10 +112,10 @@ size=7
 5\Topology=Chordal-Ring
 5\Algorithms=Cross-First
 5\Plugins=librouting_crossfirst.so
-6\Topology=Torus-2D
+6\Topology=2D-Torus
 6\Algorithms=DOR
 6\Plugins=librouting_dor_torus.so
-7\Topology=Mesh-3D
+7\Topology=3D-Mesh
 7\Algorithms=XYZ
 7\Plugins=librouting_xyz.so
 size=7
