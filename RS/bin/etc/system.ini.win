@@ -46,17 +46,17 @@
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Topologies]
-1\Topology=Mesh-2D
+1\Topology=2D-Mesh
 1\Alias=SoCIN
 1\NoCPlugin=noc_SoCIN.dll
 1\RouterPlugin=router_ParIS.dll
 1\Type=Orthogonal2D
-2\Topology=Switch-Bus
+2\Topology=Bus
 2\Alias=SoCIN-Hub
 2\NoCPlugin=noc_unit.dll
 2\RouterPlugin=bus_ParIS.dll
 2\Type=NonOrthogonal
-3\Topology=Switch-Crossbar
+3\Topology=Crossbar
 3\Alias=SoCIN-Crossbar
 3\NoCPlugin=noc_unit.dll
 3\RouterPlugin=router_ParIS.dll
@@ -71,12 +71,12 @@
 5\NoCPlugin=noc_SoCIN_Spider.dll
 5\RouterPlugin=router_ParIS.dll
 5\Type=NonOrthogonal
-6\Topology=Torus-2D
+6\Topology=2D-Torus
 6\Alias=SoCIN-Torus-2D
 6\NoCPlugin=noc_SoCIN_Torus.dll
 6\RouterPlugin=router_ParIS.dll
 6\Type=Orthogonal2D
-7\Topology=Mesh-3D
+7\Topology=3D-Mesh
 7\Alias=SoCIN-3D
 7\NoCPlugin=noc_SoCIN_3D.dll
 7\RouterPlugin=router_ParIS.dll
@@ -97,13 +97,13 @@ size=7
 ; WARNING: DON'T USE any spaces (" "), underlines ("_") and slash ("/").
 ;-------------------------------------------------------------------------
 [Routing_Algorithms]
-1\Topology=Mesh-2D
+1\Topology=2D-Mesh
 1\Algorithms=XY, WestFirst, NegativeFirst, NorthLast, OddEven
 1\Plugins=routing_xy.dll,routing_wf.dll,routing_nf.dll,routing_nl.dll,routing_oe.dll
-2\Topology=Switch-Bus
+2\Topology=Bus
 2\Algorithms=none
 2\Plugins=routing_crossbar.dll
-3\Topology=Switch-Crossbar
+3\Topology=Crossbar
 3\Algorithms=DirectAddressing
 3\Plugins=routing_crossbar.dll
 4\Topology=Ring
@@ -112,10 +112,10 @@ size=7
 5\Topology=Chordal-Ring
 5\Algorithms=Cross-First
 5\Plugins=routing_crossfirst.dll
-6\Topology=Torus-2D
+6\Topology=2D-Torus
 6\Algorithms=DOR
 6\Plugins=routing_dor_torus.dll
-7\Topology=Mesh-3D
+7\Topology=3D-Mesh
 7\Algorithms=XYZ
 7\Plugins=routing_xyz.dll
 size=7
