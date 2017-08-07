@@ -1572,7 +1572,8 @@ void Control::runSimulations() {
 
                     // Build the directory of the current experiment
                     QString sysConfDir = sysParam.getFormattedString();
-                    sysConfDir = sysConfDir.remove("- Data Width: ");
+                    // ATTENTION: According the translation - this regex can cause inconsistency
+                    sysConfDir = sysConfDir.remove( QRegExp("-[a-zA-Z ]*: ") );
                     sysConfDir = sysConfDir.replace(' ',"_");
                     sysConfDir = sysConfDir.replace("_-_","_");
                     QString dirGenerated = QString("%1/exp_%2_%3_%4_%5_VC%6_IN%7_OUT%8")
