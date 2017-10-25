@@ -72,6 +72,7 @@ public:
     static const unsigned int DEFAULT_VC_OPTION = 0;
     static const unsigned int DEFAULT_FIFO_IN_DEPTH = 4;
     static const unsigned int DEFAULT_FIFO_OUT_DEPTH = 0;
+    static const bool         DEFAULT_USE_CRYPTOGRAPHY = false;
 
     static const unsigned int DEFAULT_STOP_OPTION = 0;
     static const unsigned int DEFAULT_SAF_OPTION = 0;

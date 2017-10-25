@@ -62,8 +62,22 @@
 #include <QLibraryInfo>
 #include <QSettings>
 
+#define MAX_EXPERIMENTS 5 // Number of experiments that can be configured in Tab 2 (System Simulation)
 
-#define MAX_EXPERIMENTS 5
+#define NUM_ROWS_CONF_EXPERIMENTS 11
+/*
+ * #1 : Enable/Disable Experiment
+ * #2 : Topology
+ * #3 : Routing Algorithm
+ * #4 : Flow Control (Switching)
+ * #5 : Arbiter Type
+ * #6 : Virtual Channels
+ * #7 : Input buffers depth (flits)
+ * #8 : Output buffers depth (flits)
+ * #9 : Use Cryptography (SIMON)
+ * #10: Default configuration
+ * #11: Copy previous active experiment
+ */
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -206,6 +220,12 @@ void MainWindow::loadDefaultValues() {
     ui->comboInVCExp3->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
     ui->comboInVCExp4->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
     ui->comboInVCExp5->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION));
+
+    ui->checkUseCryptography1->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
+    ui->checkUseCryptography2->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
+    ui->checkUseCryptography3->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
+    ui->checkUseCryptography4->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
+    ui->checkUseCryptography5->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
 
     ui->spinInInputBuffersExp1->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
     ui->spinInInputBuffersExp2->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
@@ -411,6 +431,12 @@ void MainWindow::establishConnections() {
     connect(ui->comboInVCExp3,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
     connect(ui->comboInVCExp4,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
     connect(ui->comboInVCExp5,SIGNAL(currentIndexChanged(int)),this,SLOT(setAppModified()));
+    // Use Cryptography
+    connect(ui->checkUseCryptography1,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->checkUseCryptography2,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->checkUseCryptography3,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->checkUseCryptography4,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->checkUseCryptography5,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
     // Buffers
     connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
     connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
@@ -783,6 +809,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->comboInVCExp1->setCurrentIndex(experiment->getVCOption());
                     ui->spinInInputBuffersExp1->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp1->setValue( experiment->getOutputBufferSize() );
+                    ui->checkUseCryptography1->setEnabled( experiment->isActive() );
                     break;
                 case 2:
                     ui->comboInTopologyExp2->setCurrentIndex( experiment->getTopology() );
@@ -793,6 +820,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp2->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp2->setValue( experiment->getOutputBufferSize() );
 
+                    ui->checkUseCryptography2->setEnabled( experiment->isActive() );
                     ui->checkInExperiment2->setChecked(experiment->isActive());
 
                     break;
@@ -805,6 +833,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp3->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp3->setValue( experiment->getOutputBufferSize() );
 
+                    ui->checkUseCryptography3->setEnabled( experiment->isActive() );
                     ui->checkInExperiment3->setChecked(experiment->isActive());
 
                     break;
@@ -817,6 +846,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp4->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp4->setValue( experiment->getOutputBufferSize() );
 
+                    ui->checkUseCryptography4->setEnabled( experiment->isActive() );
                     ui->checkInExperiment4->setChecked(experiment->isActive());
 
                     break;
@@ -829,6 +859,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp5->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp5->setValue( experiment->getOutputBufferSize() );
 
+                    ui->checkUseCryptography5->setEnabled( experiment->isActive() );
                     ui->checkInExperiment5->setChecked(experiment->isActive());
 
                     break;
@@ -893,6 +924,8 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
     bool vcOp        = ui->checkBoxVcOption->isChecked();
     bool inBuffers   = ui->checkBoxInputBuffersDepth->isChecked();
     bool outBuffers  = ui->checkBoxOutputBuffersDepth->isChecked();
+    bool useCryptography=ui->checkBoxCryptography->isChecked();
+    // TODO mexer aqui, legenda dos gráficos
 
     float lineWidth = ui->doubleSpinBoxLineWidth->value();
     float pointSize = ui->doubleSpinBoxPointSize->value();
@@ -931,7 +964,7 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
         title = trUtf8("Report");
     }
     AnalysisOptions* gop = new AnalysisOptions(topology,routingAlg,flowControl,
-            arbiterType,vcOp,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
+            arbiterType,vcOp,useCryptography,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
             xLabel,yLabel,xAxis,yAxis,title,flowOps,
             graphLineColors,latencyDistribution);
 
@@ -1101,6 +1134,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
         QComboBox* vcOption = NULL;
         QSpinBox* inBuffers = NULL;
         QSpinBox* outBuffers = NULL;
+        QCheckBox* useCryptography = NULL;
         switch (i+1) {
             case 1: {
                 active = true;
@@ -1111,6 +1145,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 vcOption = ui->comboInVCExp1;
                 inBuffers = ui->spinInInputBuffersExp1;
                 outBuffers = ui->spinInOutputBuffersExp1;
+                useCryptography = ui->checkUseCryptography1;
                 break;
             }
             case 2: {
@@ -1122,6 +1157,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 vcOption = ui->comboInVCExp2;
                 inBuffers = ui->spinInInputBuffersExp2;
                 outBuffers = ui->spinInOutputBuffersExp2;
+                useCryptography = ui->checkUseCryptography2;
                 break;
             }
             case 3: {
@@ -1133,6 +1169,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 vcOption = ui->comboInVCExp3;
                 inBuffers = ui->spinInInputBuffersExp3;
                 outBuffers = ui->spinInOutputBuffersExp3;
+                useCryptography = ui->checkUseCryptography3;
                 break;
             }
             case 4: {
@@ -1144,6 +1181,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 vcOption = ui->comboInVCExp4;
                 inBuffers = ui->spinInInputBuffersExp4;
                 outBuffers = ui->spinInOutputBuffersExp4;
+                useCryptography = ui->checkUseCryptography4;
                 break;
             }
             case 5: {
@@ -1155,6 +1193,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 vcOption = ui->comboInVCExp5;
                 inBuffers = ui->spinInInputBuffersExp5;
                 outBuffers = ui->spinInOutputBuffersExp5;
+                useCryptography = ui->checkUseCryptography5;
                 break;
             }
             default:
@@ -1168,6 +1207,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
         e.setRoutingAlgorithm(routing->currentIndex());
         e.setTopology(topology->currentIndex());
         e.setVCOption(vcOption->currentIndex());
+        e.setCryptographyEnabled(useCryptography->isChecked());
         experiments.append(e);
     }
     return experiments;
@@ -1233,15 +1273,16 @@ void MainWindow::buttonCheckUncheckAllClicked() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::buttonCheckUncheckAllClicked" << std::endl;
 #endif
-    const int nCHECKS = 7;
+    const int nCHECKS = 8;
     QCheckBox* checks[nCHECKS];
     checks[0] = ui->checkBoxTopology;
     checks[1] = ui->checkBoxRoutingAlgorithm;
     checks[2] = ui->checkBoxFlowControl;
     checks[3] = ui->checkBoxArbiterType;
     checks[4] = ui->checkBoxVcOption;
-    checks[5] = ui->checkBoxInputBuffersDepth;
-    checks[6] = ui->checkBoxOutputBuffersDepth;
+    checks[5] = ui->checkBoxCryptography;
+    checks[6] = ui->checkBoxInputBuffersDepth;
+    checks[7] = ui->checkBoxOutputBuffersDepth;
 
     bool checkeds = false;
     for( int i = 0; i < nCHECKS; i++ ) {
@@ -1359,7 +1400,7 @@ void MainWindow::experimentChangeState() {
 
     QGridLayout* layout = (QGridLayout* ) ui->groupBoxExperimentsConfiguration->layout();
 
-    for(int i = 1; i < 10; i++) {
+    for(int i = 1; i < NUM_ROWS_CONF_EXPERIMENTS; i++) {
         QLayoutItem* item = layout->itemAtPosition(i,numExp);
         if(item == NULL) {
             this->printConsole(trUtf8("Problem in layout of experiment modified!\n"
@@ -1454,6 +1495,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->comboInVCExp1->setCurrentIndex  (qint32(DefaultValuesSystem::DEFAULT_VC_OPTION      ));
             ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+            ui->checkUseCryptography1->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
             break;
         case 2:
             ui->comboInTopologyExp2->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1463,6 +1505,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->comboInArbiterTypeExp2->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
             ui->spinInInputBuffersExp2->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+            ui->checkUseCryptography2->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
             break;
         case 3:
             ui->comboInTopologyExp3->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1472,6 +1515,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->comboInArbiterTypeExp3->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
             ui->spinInInputBuffersExp3->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+            ui->checkUseCryptography3->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
             break;
         case 4:
             ui->comboInTopologyExp4->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1481,6 +1525,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->comboInArbiterTypeExp4->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
             ui->spinInInputBuffersExp4->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+            ui->checkUseCryptography4->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
             break;
         case 5:
             ui->comboInTopologyExp5->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1490,6 +1535,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->comboInArbiterTypeExp5->setCurrentIndex         (qint32(DefaultValuesSystem::DEFAULT_ARBITER_TYPE     ));
             ui->spinInInputBuffersExp5->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
+            ui->checkUseCryptography5->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
             break;
     }
     this->setAppModified();
@@ -1529,12 +1575,16 @@ void MainWindow::copyPreviousExperimentActive() {
     QComboBox* vcOptionDst = (QComboBox *) layout->itemAtPosition(5,numExp)->widget();
     vcOptionDst->setCurrentIndex( vcOptionSrc->currentIndex() );
 
-    QSpinBox* inputBufferSrc = (QSpinBox *) layout->itemAtPosition(6,previousExperiment)->widget();
-    QSpinBox* inputBufferDst = (QSpinBox *) layout->itemAtPosition(6,numExp)->widget();
+    QCheckBox* useCryptographySrc = (QCheckBox *) layout->itemAtPosition(6,previousExperiment)->widget();
+    QCheckBox* useCryptographyDst = (QCheckBox *) layout->itemAtPosition(6,numExp)->widget();
+    useCryptographyDst->setChecked( useCryptographySrc->isChecked() );
+
+    QSpinBox* inputBufferSrc = (QSpinBox *) layout->itemAtPosition(7,previousExperiment)->widget();
+    QSpinBox* inputBufferDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
     inputBufferDst->setValue( inputBufferSrc->value() );
 
-    QSpinBox* outputBufferSrc = (QSpinBox *) layout->itemAtPosition(7,previousExperiment)->widget();
-    QSpinBox* outputBufferDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
+    QSpinBox* outputBufferSrc = (QSpinBox *) layout->itemAtPosition(8,previousExperiment)->widget();
+    QSpinBox* outputBufferDst = (QSpinBox *) layout->itemAtPosition(8,numExp)->widget();
     outputBufferDst->setValue( outputBufferSrc->value() );
 
     this->setAppModified();

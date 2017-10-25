@@ -1576,7 +1576,7 @@ void Control::runSimulations() {
                     sysConfDir = sysConfDir.remove( QRegExp("-[a-zA-Z ]*: ") );
                     sysConfDir = sysConfDir.replace(' ',"_");
                     sysConfDir = sysConfDir.replace("_-_","_");
-                    QString dirGenerated = QString("%1/exp_%2_%3_%4_%5_VC%6_IN%7_OUT%8")
+                    QString dirGenerated = QString("%1/exp_%2_%3_%4_%5_VC%6_IN%7_OUT%8_%9")
                             .arg( sysConfDir )
                             .arg( topology.getTopology() )
                             .arg( strRouting )
@@ -1584,7 +1584,8 @@ void Control::runSimulations() {
                             .arg( pg.getPG() )
                             .arg( vcOption )
                             .arg(experiment->getInputBufferSize())
-                            .arg(experiment->getOutputBufferSize());
+                            .arg(experiment->getOutputBufferSize())
+                            .arg( (experiment->isCryptographyEnabled() ? "SIMON": "NoCrypt") );
                     QString dirExperiment = dirWork.absolutePath() + "/" + dirGenerated;
                     dirWork.mkpath( dirExperiment );
 
@@ -1744,11 +1745,16 @@ void Control::runSimulations() {
                             args.append( QString::number( pow(2,experiment->getVCOption()),'f',0 ) );
                         }
 
+                        if( experiment->isCryptographyEnabled() ) {
+                            args.append("-simon");
+                        }
+
                         if( systemOp.vcdOption ) {
                             args.append("-trace");
                         }
                         args.append("-seed");
                         args.append(QString::number(seed));
+
                         /*
                          * End setup command-line arguments
                          */

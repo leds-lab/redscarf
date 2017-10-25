@@ -48,6 +48,7 @@ private:
     unsigned int inputBufferSize;       // Depth of the input buffers
     unsigned int outputBufferSize;      // Depth of the output buffers
 
+    bool         useCryptography;       // SIMON
 public:
     Experiment(bool defaultValues = true);
 
@@ -60,6 +61,7 @@ public:
     inline void setVCOption          (unsigned int vcOp       ) { this->virtualChannelsOption = vcOp    ; }
     inline void setInputBufferSize   (unsigned int inputSize  ) { this->inputBufferSize    = inputSize  ; }
     inline void setOutputBufferSize  (unsigned int outputSize ) { this->outputBufferSize   = outputSize ; }
+    inline void setCryptographyEnabled(bool        use        ) { this->useCryptography    = use        ; }
 
     // Geters
     inline bool         isActive             () const { return this->active            ; }
@@ -70,6 +72,7 @@ public:
     inline unsigned int getVCOption          () const { return this->virtualChannelsOption; }
     inline unsigned int getInputBufferSize   () const { return this->inputBufferSize   ; }
     inline unsigned int getOutputBufferSize  () const { return this->outputBufferSize  ; }
+    inline bool         isCryptographyEnabled() const { return this->useCryptography   ; }
 
     // Display all configurations in string
     std::string toString() const;

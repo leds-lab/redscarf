@@ -43,19 +43,22 @@ public:
     enum FlowOptions { AllFlows=0, RT0, RT1, nRT0, nRT1,Specified };
 
     AnalysisOptions();
-    AnalysisOptions(bool topology,bool routingAlgorithm,bool flowControl,
-            bool arbiterType,bool vcOp,bool inputBuffers,bool outputBuffers,float lineWidth,
-            float pointSize,unsigned short source,unsigned short destination,
-            QString xAxisLabel,QString yAxisLabel,int xAxis,int yAxis,QString title,
-            FlowOptions flowOp,QColor* color[5],bool latencyDistribution);
+    AnalysisOptions(bool topology, bool routingAlgorithm, bool flowControl,
+            bool arbiterType, bool vcOp, bool useCryptography, bool inputBuffers,
+            bool outputBuffers, float lineWidth, float pointSize, unsigned short source,
+            unsigned short destination,
+            QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis, QString title,
+            FlowOptions flowOp, QColor* color[5], bool latencyDistribution);
 
     inline void setTopology(bool check) { this->topology = check; }
     inline void setRoutingAlgorithm(bool check) { this->routingAlgorithm = check; }
     inline void setFlowControl(bool check) { this->flowControl = check; }
     inline void setArbiterType(bool check) { this->arbiterType = check; }
     inline void setVcOp(bool check) { this->vcOp = check; }
+    inline void setUseCryptography(bool check) { this->useCryptography = check; }
     inline void setInputBuffers(bool check) { this->inputBuffers = check; }
     inline void setOutputBuffers(bool check) { this->outputBuffers = check; }
+
     inline void setLatencyDistribution(bool check) { this->latencyDistribution = check; }
     inline void setLineWidth(float width) { this->lineWidth = width; }
     inline void setPointSize(float size) { this->pointSize = size; }
@@ -74,8 +77,10 @@ public:
     inline bool isFlowControl() const { return this->flowControl; }
     inline bool isArbiterType() const { return this->arbiterType; }
     inline bool isVcOp() const { return this->vcOp; }
+    inline bool isUseCryptography() const { return this->useCryptography; }
     inline bool isInputBuffers() const { return this->inputBuffers; }
     inline bool isOutputBuffers() const { return this->outputBuffers; }
+
     inline bool isLatencyDistribution() const { return this->latencyDistribution; }
     inline float getLineWidth() const { return this->lineWidth; }
     inline float getPointSize() const { return this->pointSize; }
@@ -101,6 +106,7 @@ private:
     bool inputBuffers;
     bool outputBuffers;
     bool latencyDistribution;
+    bool useCryptography;
 
     float lineWidth;
     float pointSize;

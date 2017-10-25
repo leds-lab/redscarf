@@ -44,12 +44,14 @@ AnalysisOptions::AnalysisOptions() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor class View/GraphicOptions" << std::endl;
 #endif
-    vcOp = false;
     routingAlgorithm = false;
     flowControl = false;
     arbiterType = false;
+    vcOp = false;
+    useCryptography = false;
     inputBuffers = false;
     outputBuffers = false;
+
     latencyDistribution = false;
     lineWidth = 0.0f;
     pointSize = 0.0f;
@@ -68,7 +70,7 @@ AnalysisOptions::AnalysisOptions() {
 }
 
 AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
-        bool flowControl, bool arbiterType, bool vcOp, bool inputBuffers, bool outputBuffers,
+        bool flowControl, bool arbiterType, bool vcOp,bool useCryptography, bool inputBuffers, bool outputBuffers,
         float lineWidth, float pointSize, unsigned short source, unsigned short destination,
                                  QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis,
         QString title, FlowOptions flowOp, QColor *color[5], bool latencyDistribution) {
@@ -81,8 +83,10 @@ AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
     this->flowControl = flowControl;
     this->arbiterType = arbiterType;
     this->vcOp = vcOp;
+    this->useCryptography = useCryptography;
     this->inputBuffers = inputBuffers;
     this->outputBuffers = outputBuffers;
+
     this->latencyDistribution = latencyDistribution;
     this->lineWidth = lineWidth;
     this->pointSize = pointSize;
@@ -146,6 +150,7 @@ QString AnalysisOptions::getLegend(QString dir) const {
     legend += ( this->vcOp               ? " "+config.at(5) : "" );
     legend += ( this->inputBuffers       ? " "+config.at(6) : "" );
     legend += ( this->outputBuffers      ? " "+config.at(7) : "" );
+    legend += ( this->useCryptography      ? " "+config.at(8) : "" );
 
     if (legend.startsWith(" ")) {
         legend.remove(0,1);

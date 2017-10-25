@@ -54,6 +54,7 @@ Experiment::Experiment(bool defaultValues){
         this->virtualChannelsOption = DefaultValuesSystem::DEFAULT_VC_OPTION;
         this->inputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH;
         this->outputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH;
+        this->useCryptography    = DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY;
     } else {
         this->active = false;
         this->topology = 0;
@@ -63,6 +64,7 @@ Experiment::Experiment(bool defaultValues){
         this->virtualChannelsOption = 0;
         this->inputBufferSize = 0;
         this->outputBufferSize = 0;
+        this->useCryptography = false;
     }
 }
 
@@ -95,6 +97,10 @@ std::string Experiment::toString() const {
     str += "Virtual channels: "+valueToString.str()+"\n";
 
     valueToString.str("");
+    valueToString << this->useCryptography ? "Using SIMON" : "Not using SIMON";
+    str += valueToString.str()+"\n";
+
+    valueToString.str("");
     valueToString << this->inputBufferSize;
     str += "Input Buffers Size (flits): "+valueToString.str()+"\n";
 
@@ -114,13 +120,16 @@ bool Experiment::equals(Experiment *exp) const {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/SystemConfiguration/Experiment::equals" << std::endl;
 #endif
+
     if( this->topology           == exp->topology           &&
         this->routingAlgorithm   == exp->routingAlgorithm   &&
         this->flowControl        == exp->flowControl        &&
         this->arbiterType        == exp->arbiterType        &&
         this->virtualChannelsOption == exp->virtualChannelsOption &&
         this->inputBufferSize    == exp->inputBufferSize    &&
-        this->outputBufferSize   == exp->outputBufferSize ) {
+        this->outputBufferSize   == exp->outputBufferSize   &&
+        this->useCryptography      == exp->useCryptography
+            ) {
 
         return true;
     }
