@@ -40,6 +40,30 @@ CustomPlotter::CustomPlotter(QWidget* parent) : Plotter(parent) {
     connect(ui->actionExport,SIGNAL(triggered()),this,SLOT(exportGraphic()));
     connect(actionCopy,SIGNAL(triggered()),this,SLOT(copyGraphic()));
 
+    connect(plotter,SIGNAL(axisDoubleClick(QCPAxis*,QCPAxis::SelectablePart,QMouseEvent*)),
+            this,SLOT(setAxisLimits(QCPAxis*)));
+
+}
+
+void CustomPlotter::setAxisLimits(QCPAxis *axis) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "View/CustomPlotter::setAxisLimits" << std::endl;
+#endif
+    QString interval = QInputDialog::getText(this,tr("Set the limits"),tr("Set the limits (min,max) for the axis (e.g.: 0,5)"));
+
+    if(interval.isNull() || interval.isEmpty()) {
+        return;
+    }
+
+    QStringList limits = interval.split(',');
+
+    if( limits.size() != 2 ) {
+        QMessageBox::information(this,tr("Warning"),tr("Invalid input"));
+        return;
+    }
+
+    axis->setRange( limits[0].toDouble(),limits[1].toDouble() );
+    this->plotter->replot();
 }
 
 void CustomPlotter::viewGraphic(QVector<QList<DataReport *> *> *data, AnalysisOptions *aop, QStringList legends) {

@@ -5,6 +5,7 @@
 
 class QDialog;
 class CustomPlotZoom;
+class QCPAxis;
 
 class CustomPlotter : public Plotter {
     Q_OBJECT
@@ -22,6 +23,8 @@ private slots:
     void changeLegendPosition(int);
     void exportGraphic();
     void copyGraphic();
+
+    void setAxisLimits(QCPAxis*);
 
 };
 
