@@ -73,7 +73,7 @@ bool FolderOperation::folderExists(const char *path) {
     std::cout << "Model/FolderOperation::folderExists" << std::endl;
 #endif
 
-    if(path == NULL) {
+    if(path == nullptr) {
         return false;
     }
 
@@ -83,17 +83,18 @@ bool FolderOperation::folderExists(const char *path) {
 
     pDir = opendir(path);
 
-    if(pDir != NULL) {
+    if(pDir != nullptr) {
         exist = true;
         (void) closedir(pDir);
     }
 
     return exist;
 #else
-    if( _taccess_s( path, 0 ) == 0 ) {
-        struct _stat status;
-        _tstat( path, &status );
-        return (status.st_mode & S_IFDIR) != 0;
+    if( _access_s( path, 0 ) == 0 ) {
+//        struct _stat status;
+//        _tstat( path, &status );
+//        return (status.st_mode & S_IFDIR) != 0;
+        return true;
     }
 
     return false;
@@ -101,7 +102,7 @@ bool FolderOperation::folderExists(const char *path) {
 
 }
 
-bool FolderOperation::createFolder(const char *path) throw(const char* ) {
+bool FolderOperation::createFolder(const char *path) noexcept(false) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Model/FolderOperation::createFolder" << std::endl;
 #endif

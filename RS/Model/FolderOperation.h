@@ -44,7 +44,7 @@ private:
 
 public:
 
-    static bool createFolder(const char* path) throw(const char* );
+    static bool createFolder(const char* path) noexcept(false);
 
 };
 
