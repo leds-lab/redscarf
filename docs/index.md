@@ -9,3 +9,6 @@ The back-end is the simulator itself and agregates a set of architectural Networ
 
 ## Under dev
 This page is an initial public resource to incorporate informations about the RedScarf project.
+
+### Contact information
+Laboratory of Embedded and Distributed Systems - LEDS @ Univali.
