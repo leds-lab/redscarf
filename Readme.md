@@ -1,4 +1,4 @@
-#RedScarf
+# RedScarf
 
 A GUI-oriented Simulation Environment for the Performane Evaluation of Networks-on-Chip
 
