@@ -1,3 +1,4 @@
+![RS-logo](RS/doc/RedScarf_icon.png)
 # RedScarf
 
 A GUI-oriented Simulation Environment for the Performane Evaluation of Networks-on-Chip
