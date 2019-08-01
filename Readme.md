@@ -17,10 +17,8 @@ For contribute to RedScarf project, start with the follow steps:
 If the GUI open, you will need the *back-end* deployed to run the experiments!
 
 ### Prerequisites
-```
 * Compiler with support to C++11 (GCC, VisualStudio, Clang,...)
 * Qt SDK [qt.io](https://www.qt.io/)
-```
 ## About
 First release
 ```
@@ -36,7 +34,7 @@ By: Eduardo Alves da Silva
 ```
 
 ## Credits and Contacts
-RedScarf was developed and is maintened by LEDS - Laboratory of Embedded and Distributed Systems at [Univali - University of Vale do Itajaí](www.univali.br) - Brazil.
+RedScarf was developed and is maintened by LEDS - Laboratory of Embedded and Distributed Systems at [Univali - University of Vale do Itajaí](https://www.univali.br) - Brazil.
 For more information, please contact the professors:
 * Cesar Albenes Zeferino, PhD [LEDS coordinator](mailto:zeferino@univali.br)
 or
