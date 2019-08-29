@@ -49,6 +49,7 @@ AnalysisOptions::AnalysisOptions() {
     arbiterType = false;
     vcOp = false;
     useCryptography = false;
+    distKeyCore = false;
     inputBuffers = false;
     outputBuffers = false;
 
@@ -70,7 +71,7 @@ AnalysisOptions::AnalysisOptions() {
 }
 
 AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
-        bool flowControl, bool arbiterType, bool vcOp,bool useCryptography, bool inputBuffers, bool outputBuffers,
+        bool flowControl, bool arbiterType, bool vcOp,bool useCryptography,bool distKeyCore, bool inputBuffers, bool outputBuffers,
         float lineWidth, float pointSize, unsigned short source, unsigned short destination,
                                  QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis,
         QString title, FlowOptions flowOp, QColor *color[5], bool latencyDistribution) {
@@ -84,6 +85,7 @@ AnalysisOptions::AnalysisOptions(bool topology, bool routingAlgorithm,
     this->arbiterType = arbiterType;
     this->vcOp = vcOp;
     this->useCryptography = useCryptography;
+    this->distKeyCore = distKeyCore;
     this->inputBuffers = inputBuffers;
     this->outputBuffers = outputBuffers;
 
@@ -150,7 +152,8 @@ QString AnalysisOptions::getLegend(QString dir) const {
     legend += ( this->vcOp               ? " "+config.at(5) : "" );
     legend += ( this->inputBuffers       ? " "+config.at(6) : "" );
     legend += ( this->outputBuffers      ? " "+config.at(7) : "" );
-    legend += ( this->useCryptography      ? " "+config.at(8) : "" );
+    legend += ( this->useCryptography    ? " "+config.at(8) : "" );
+    legend += ( this->distKeyCore        ? " "+config.at(9) : "" );
 
     if (legend.startsWith(" ")) {
         legend.remove(0,1);

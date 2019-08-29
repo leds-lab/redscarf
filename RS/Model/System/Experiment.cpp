@@ -55,6 +55,7 @@ Experiment::Experiment(bool defaultValues){
         this->inputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH;
         this->outputBufferSize = DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH;
         this->useCryptography    = DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY;
+        this->distKeyCore = DefaultValuesSystem::DEFAULT_DIST_KEY_CORE;
     } else {
         this->active = false;
         this->topology = 0;
@@ -65,6 +66,7 @@ Experiment::Experiment(bool defaultValues){
         this->inputBufferSize = 0;
         this->outputBufferSize = 0;
         this->useCryptography = false;
+        this->distKeyCore = 1;
     }
 }
 
@@ -101,6 +103,10 @@ std::string Experiment::toString() const {
     str += valueToString.str()+"\n";
 
     valueToString.str("");
+    valueToString << this->distKeyCore;
+    str += "DistKeyCore: "+valueToString.str()+"\n";
+
+    valueToString.str("");
     valueToString << this->inputBufferSize;
     str += "Input Buffers Size (flits): "+valueToString.str()+"\n";
 
@@ -128,7 +134,8 @@ bool Experiment::equals(Experiment *exp) const {
         this->virtualChannelsOption == exp->virtualChannelsOption &&
         this->inputBufferSize    == exp->inputBufferSize    &&
         this->outputBufferSize   == exp->outputBufferSize   &&
-        this->useCryptography      == exp->useCryptography
+        this->useCryptography      == exp->useCryptography  &&
+        this->distKeyCore      == exp->distKeyCore
             ) {
 
         return true;

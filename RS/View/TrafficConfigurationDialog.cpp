@@ -9,6 +9,7 @@
 
 #include <QWheelEvent>
 #include <QMessageBox>
+#include <QAction>
 
 #include <cmath>
 

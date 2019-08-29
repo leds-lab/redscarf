@@ -44,7 +44,7 @@ public:
 
     AnalysisOptions();
     AnalysisOptions(bool topology, bool routingAlgorithm, bool flowControl,
-            bool arbiterType, bool vcOp, bool useCryptography, bool inputBuffers,
+            bool arbiterType, bool vcOp, bool useCryptography,bool distKeyCore, bool inputBuffers,
             bool outputBuffers, float lineWidth, float pointSize, unsigned short source,
             unsigned short destination,
             QString xAxisLabel, QString yAxisLabel, int xAxis, int yAxis, QString title,
@@ -56,6 +56,7 @@ public:
     inline void setArbiterType(bool check) { this->arbiterType = check; }
     inline void setVcOp(bool check) { this->vcOp = check; }
     inline void setUseCryptography(bool check) { this->useCryptography = check; }
+    inline void setDistKeyCore(bool check) { this->distKeyCore = check; }
     inline void setInputBuffers(bool check) { this->inputBuffers = check; }
     inline void setOutputBuffers(bool check) { this->outputBuffers = check; }
 
@@ -78,6 +79,7 @@ public:
     inline bool isArbiterType() const { return this->arbiterType; }
     inline bool isVcOp() const { return this->vcOp; }
     inline bool isUseCryptography() const { return this->useCryptography; }
+    inline bool isDistKeyCore() const { return this->distKeyCore; }
     inline bool isInputBuffers() const { return this->inputBuffers; }
     inline bool isOutputBuffers() const { return this->outputBuffers; }
 
@@ -107,6 +109,7 @@ private:
     bool outputBuffers;
     bool latencyDistribution;
     bool useCryptography;
+    bool distKeyCore;
 
     float lineWidth;
     float pointSize;

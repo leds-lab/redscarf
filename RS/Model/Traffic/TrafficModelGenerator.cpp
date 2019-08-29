@@ -288,6 +288,7 @@ void TrafficModelGenerator::adjustParameters() {
             switch(tp->getProbabilityFunction()) {
                 case 0: // Normal
                     requiredBwStdev = tp->getRequiredBandwidthStdDeviation();
+                    break;
                 case 1: // Exponential
                     numberRates = DefaultValuesTrafficGeneration::DEFAULT_NUMBER_RATES;
                     break;

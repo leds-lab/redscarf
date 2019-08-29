@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1322</width>
+    <width>1343</width>
     <height>986</height>
    </rect>
   </property>
@@ -58,7 +58,7 @@
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="systemConfiguration">
         <attribute name="title">
@@ -420,8 +420,28 @@
             <string>Experiments Configuration</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="3" column="2">
-             <widget class="QComboBox" name="comboInSwitchingExp2">
+            <item row="10" column="3">
+             <widget class="QPushButton" name="buttonDefaultExp3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 3</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="labelUseCryptography">
+              <property name="text">
+               <string>Use Cryptography (SIMON):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="4">
+             <widget class="QComboBox" name="comboInVCExp4">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -431,88 +451,12 @@
                </font>
               </property>
               <property name="statusTip">
-               <string>Define flow control for experiment 2</string>
+               <string>Define the number of virtual channels for experiment 4</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="labelConf1">
-              <property name="text">
-               <string>#1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="labelConfiguration">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="text">
-               <string>Configuration:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QCheckBox" name="checkInExperiment3">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Enable/disable experiment 3</string>
-              </property>
-              <property name="text">
-               <string>#3</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QCheckBox" name="checkInExperiment4">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Enable/disable experiment 4</string>
-              </property>
-              <property name="text">
-               <string>#4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QComboBox" name="comboInRoutingAlgorithmExp1">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define routing algorithm for experiment 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QCheckBox" name="checkInExperiment2">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Enable/disable experiment 2</string>
-              </property>
-              <property name="text">
-               <string>#2</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QComboBox" name="comboInRoutingAlgorithmExp2">
+            <item row="7" column="4">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp4">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -522,118 +466,10 @@
                </font>
               </property>
               <property name="statusTip">
-               <string>Define routing algorithm for experiment 2</string>
+               <string>Depth of the buffers of the output channels</string>
               </property>
-             </widget>
-            </item>
-            <item row="0" column="5">
-             <widget class="QCheckBox" name="checkInExperiment5">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Enable/disable experiment 5</string>
-              </property>
-              <property name="text">
-               <string>#5</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="3">
-             <widget class="QComboBox" name="comboInRoutingAlgorithmExp3">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define routing algorithm for experiment 3</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="labelRoutingAlgorithm">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="text">
-               <string>Routing algorithm:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="5">
-             <widget class="QComboBox" name="comboInRoutingAlgorithmExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define routing algorithm for experiment 5</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="labelSwitching">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="text">
-               <string>Flow control (switching):</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QComboBox" name="comboInRoutingAlgorithmExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define routing algorithm for experiment 4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QComboBox" name="comboInSwitchingExp1">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define flow control for experiment 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="5">
-             <widget class="QComboBox" name="comboInSwitchingExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define flow control for experiment 5</string>
+              <property name="maximum">
+               <number>256</number>
               </property>
              </widget>
             </item>
@@ -664,102 +500,49 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="4">
-             <widget class="QComboBox" name="comboInSwitchingExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define flow control for experiment 4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="2">
-             <widget class="QComboBox" name="comboInArbiterTypeExp2">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define arbiter type for experiment 2</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="3">
-             <widget class="QComboBox" name="comboInArbiterTypeExp3">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define arbiter type for experiment 3</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QComboBox" name="comboInArbiterTypeExp1">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define arbiter type for experiment 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="labelVirtualChannels">
+            <item row="0" column="0">
+             <widget class="QLabel" name="labelConfiguration">
               <property name="font">
                <font>
                 <italic>false</italic>
                </font>
               </property>
               <property name="text">
-               <string>Virtual Channels:</string>
+               <string>Configuration:</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="4">
-             <widget class="QComboBox" name="comboInArbiterTypeExp4">
-              <property name="enabled">
-               <bool>false</bool>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboInTopologyExp1">
+              <property name="statusTip">
+               <string>Define the topology for the experiment 1</string>
               </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="labelOutputBuffers">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Output buffers depth (flits):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QCheckBox" name="checkInExperiment4">
               <property name="font">
                <font>
                 <italic>false</italic>
                </font>
               </property>
               <property name="statusTip">
-               <string>Define arbiter type for experiment 4</string>
+               <string>Enable/disable experiment 4</string>
               </property>
-             </widget>
-            </item>
-            <item row="4" column="5">
-             <widget class="QComboBox" name="comboInArbiterTypeExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define arbiter type for experiment 5</string>
+              <property name="text">
+               <string>#4</string>
               </property>
              </widget>
             </item>
@@ -778,6 +561,38 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="2">
+             <widget class="QComboBox" name="comboInTopologyExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Define the topology for the experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QComboBox" name="comboInTopologyExp4">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Define the topology for the experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="comboInSwitchingExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 1</string>
+              </property>
+             </widget>
+            </item>
             <item row="5" column="3">
              <widget class="QComboBox" name="comboInVCExp3">
               <property name="enabled">
@@ -793,20 +608,8 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QComboBox" name="comboInVCExp1">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define the number of virtual channels for experiment 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="4">
-             <widget class="QComboBox" name="comboInVCExp4">
+            <item row="4" column="4">
+             <widget class="QComboBox" name="comboInArbiterTypeExp4">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -816,7 +619,37 @@
                </font>
               </property>
               <property name="statusTip">
-               <string>Define the number of virtual channels for experiment 4</string>
+               <string>Define arbiter type for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp4">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="5">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 5</string>
               </property>
              </widget>
             </item>
@@ -841,35 +674,42 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="5">
-             <widget class="QComboBox" name="comboInVCExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Define the number of virtual channels for experiment 5</string>
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Dist Key Core</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="labelInputBuffers">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
+            <item row="1" column="5">
+             <widget class="QComboBox" name="comboInTopologyExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Define the topology for the experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="2">
+             <widget class="QPushButton" name="buttonCopyExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Copy configuration previous experiment active</string>
               </property>
               <property name="text">
-               <string>Input buffers depth (flits):</string>
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
               </property>
              </widget>
             </item>
-            <item row="6" column="2">
-             <widget class="QSpinBox" name="spinInInputBuffersExp2">
+            <item row="4" column="2">
+             <widget class="QComboBox" name="comboInArbiterTypeExp2">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -879,34 +719,7 @@
                </font>
               </property>
               <property name="statusTip">
-               <string>Depth of the buffers of the input channels</string>
-              </property>
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>1024</number>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="4">
-             <widget class="QSpinBox" name="spinInInputBuffersExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Depth of the buffers of the input channels</string>
-              </property>
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>1024</number>
+               <string>Define arbiter type for experiment 2</string>
               </property>
              </widget>
             </item>
@@ -928,138 +741,37 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="5">
-             <widget class="QSpinBox" name="spinInInputBuffersExp5">
+            <item row="11" column="5">
+             <widget class="QPushButton" name="buttonCopyExp5">
               <property name="enabled">
                <bool>false</bool>
               </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
               <property name="statusTip">
-               <string>Depth of the buffers of the input channels</string>
-              </property>
-              <property name="minimum">
-               <number>2</number>
-              </property>
-              <property name="maximum">
-               <number>1024</number>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="2">
-             <widget class="QSpinBox" name="spinInOutputBuffersExp2">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Depth of the buffers of the output channels</string>
-              </property>
-              <property name="maximum">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="4">
-             <widget class="QSpinBox" name="spinInOutputBuffersExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Depth of the buffers of the output channels</string>
-              </property>
-              <property name="maximum">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QSpinBox" name="spinInOutputBuffersExp1">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Depth of the buffers of the output channels</string>
-              </property>
-              <property name="maximum">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="labelOutputBuffers">
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
+               <string>Copy configuration previous experiment active</string>
               </property>
               <property name="text">
-               <string>Output buffers depth (flits):</string>
+               <string>Copy</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../resources/Icons.qrc">
+                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
               </property>
              </widget>
             </item>
-            <item row="7" column="3">
-             <widget class="QSpinBox" name="spinInOutputBuffersExp3">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="font">
-               <font>
-                <italic>false</italic>
-               </font>
-              </property>
-              <property name="statusTip">
-               <string>Depth of the buffers of the output channels</string>
-              </property>
-              <property name="maximum">
-               <number>256</number>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="3">
-             <widget class="QPushButton" name="buttonDefaultExp3">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Load default values for experiment 3</string>
-              </property>
+            <item row="0" column="1">
+             <widget class="QLabel" name="labelConf1">
               <property name="text">
-               <string>Default</string>
+               <string>#1</string>
               </property>
              </widget>
             </item>
-            <item row="9" column="2">
-             <widget class="QPushButton" name="buttonDefaultExp2">
+            <item row="10" column="4">
+             <widget class="QPushButton" name="buttonDefaultExp4">
               <property name="enabled">
                <bool>false</bool>
               </property>
               <property name="statusTip">
-               <string>Load default values for experiment 2</string>
-              </property>
-              <property name="text">
-               <string>Default</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QPushButton" name="buttonDefaultExp1">
-              <property name="statusTip">
-               <string>Load default values for experiment 1</string>
+               <string>Load default values for experiment 4</string>
               </property>
               <property name="text">
                <string>Default</string>
@@ -1084,20 +796,49 @@
               </property>
              </widget>
             </item>
-            <item row="9" column="4">
-             <widget class="QPushButton" name="buttonDefaultExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Load default values for experiment 4</string>
+            <item row="6" column="0">
+             <widget class="QLabel" name="labelInputBuffers">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
               </property>
               <property name="text">
-               <string>Default</string>
+               <string>Input buffers depth (flits):</string>
               </property>
              </widget>
             </item>
-            <item row="9" column="5">
+            <item row="3" column="0">
+             <widget class="QLabel" name="labelSwitching">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Flow control (switching):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+              <property name="maximum">
+               <number>256</number>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="5">
              <widget class="QPushButton" name="buttonDefaultExp5">
               <property name="enabled">
                <bool>false</bool>
@@ -1110,24 +851,228 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="2">
-             <widget class="QPushButton" name="buttonCopyExp2">
+            <item row="4" column="1">
+             <widget class="QComboBox" name="comboInArbiterTypeExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QCheckBox" name="checkUseCryptography3">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QComboBox" name="comboInSwitchingExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QCheckBox" name="checkInExperiment3">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Enable/disable experiment 3</string>
+              </property>
+              <property name="text">
+               <string>#3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QComboBox" name="comboInVCExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define the number of virtual channels for experiment 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="5">
+             <widget class="QSpinBox" name="spinInInputBuffersExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>1024</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QComboBox" name="comboInTopologyExp3">
               <property name="enabled">
                <bool>false</bool>
               </property>
               <property name="statusTip">
-               <string>Copy configuration previous experiment active</string>
-              </property>
-              <property name="text">
-               <string>Copy</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources/Icons.qrc">
-                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
+               <string>Define the topology for the experiment 3</string>
               </property>
              </widget>
             </item>
-            <item row="10" column="3">
+            <item row="6" column="2">
+             <widget class="QSpinBox" name="spinInInputBuffersExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>1024</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QComboBox" name="comboInSwitchingExp4">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 4</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="4">
+             <widget class="QSpinBox" name="spinInInputBuffersExp4">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the input channels</string>
+              </property>
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <number>1024</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="5">
+             <widget class="QComboBox" name="comboInArbiterTypeExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp1">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+              <property name="maximum">
+               <number>256</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QCheckBox" name="checkInExperiment5">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Enable/disable experiment 5</string>
+              </property>
+              <property name="text">
+               <string>#5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="3">
              <widget class="QPushButton" name="buttonCopyExp3">
               <property name="enabled">
                <bool>false</bool>
@@ -1144,7 +1089,68 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="4">
+            <item row="5" column="5">
+             <widget class="QComboBox" name="comboInVCExp5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define the number of virtual channels for experiment 5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QComboBox" name="comboInArbiterTypeExp3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define arbiter type for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <widget class="QSpinBox" name="spinInOutputBuffersExp3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Depth of the buffers of the output channels</string>
+              </property>
+              <property name="maximum">
+               <number>256</number>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QPushButton" name="buttonDefaultExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="statusTip">
+               <string>Load default values for experiment 2</string>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="4">
              <widget class="QPushButton" name="buttonCopyExp4">
               <property name="enabled">
                <bool>false</bool>
@@ -1161,81 +1167,15 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="5">
-             <widget class="QPushButton" name="buttonCopyExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Copy configuration previous experiment active</string>
+            <item row="5" column="0">
+             <widget class="QLabel" name="labelVirtualChannels">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
               </property>
               <property name="text">
-               <string>Copy</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../resources/Icons.qrc">
-                <normaloff>:/icons/icons/icon_copy.png</normaloff>:/icons/icons/icon_copy.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QComboBox" name="comboInTopologyExp2">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Define the topology for the experiment 2</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="5">
-             <widget class="QComboBox" name="comboInTopologyExp5">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Define the topology for the experiment 5</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QComboBox" name="comboInTopologyExp4">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Define the topology for the experiment 4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="labelTopology">
-              <property name="text">
-               <string>Topology</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="comboInTopologyExp1">
-              <property name="statusTip">
-               <string>Define the topology for the experiment 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QComboBox" name="comboInTopologyExp3">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="statusTip">
-               <string>Define the topology for the experiment 3</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="labelUseCryptography">
-              <property name="text">
-               <string>Use Cryptography (SIMON):</string>
+               <string>Virtual Channels:</string>
               </property>
              </widget>
             </item>
@@ -1246,17 +1186,62 @@
               </property>
              </widget>
             </item>
-            <item row="8" column="2">
-             <widget class="QCheckBox" name="checkUseCryptography2">
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelRoutingAlgorithm">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
               <property name="text">
-               <string/>
+               <string>Routing algorithm:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="3">
-             <widget class="QCheckBox" name="checkUseCryptography3">
+            <item row="10" column="1">
+             <widget class="QPushButton" name="buttonDefaultExp1">
+              <property name="statusTip">
+               <string>Load default values for experiment 1</string>
+              </property>
               <property name="text">
-               <string/>
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QComboBox" name="comboInSwitchingExp2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define flow control for experiment 2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QCheckBox" name="checkInExperiment2">
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Enable/disable experiment 2</string>
+              </property>
+              <property name="text">
+               <string>#2</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="labelTopology">
+              <property name="text">
+               <string>Topology</string>
               </property>
              </widget>
             </item>
@@ -1271,6 +1256,90 @@
              <widget class="QCheckBox" name="checkUseCryptography5">
               <property name="text">
                <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QComboBox" name="comboInRoutingAlgorithmExp3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <italic>false</italic>
+               </font>
+              </property>
+              <property name="statusTip">
+               <string>Define routing algorithm for experiment 3</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QCheckBox" name="checkUseCryptography2">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QSpinBox" name="distKeyCore1">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="2">
+             <widget class="QSpinBox" name="distKeyCore2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="3">
+             <widget class="QSpinBox" name="distKeyCore3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="4">
+             <widget class="QSpinBox" name="distKeyCore4">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="5">
+             <widget class="QSpinBox" name="distKeyCore5">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -1338,6 +1407,12 @@
            <zorder>checkUseCryptography3</zorder>
            <zorder>checkUseCryptography4</zorder>
            <zorder>checkUseCryptography5</zorder>
+           <zorder>label_9</zorder>
+           <zorder>distKeyCore1</zorder>
+           <zorder>distKeyCore2</zorder>
+           <zorder>distKeyCore3</zorder>
+           <zorder>distKeyCore4</zorder>
+           <zorder>distKeyCore5</zorder>
           </widget>
          </item>
          <item>
@@ -2357,6 +2432,13 @@
                      </widget>
                     </item>
                     <item>
+                     <widget class="QCheckBox" name="checkBoxDistKeyCore">
+                      <property name="text">
+                       <string>Dist Key Core</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <widget class="QCheckBox" name="checkBoxCryptography">
                       <property name="text">
                        <string>Cryptography</string>
@@ -2982,8 +3064,8 @@ distribution</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1322</width>
-     <height>26</height>
+     <width>1343</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
