@@ -49,7 +49,7 @@ private:
     unsigned int outputBufferSize;      // Depth of the output buffers
     // SIMON
     bool         useCryptography;
-    unsigned int distKeyCore;           // Comentar aqui
+    unsigned int distKeyCore;           // Simon Key Generator Destination
 public:
     Experiment(bool defaultValues = true);
 
@@ -63,7 +63,7 @@ public:
     inline void setInputBufferSize   (unsigned int inputSize  ) { this->inputBufferSize    = inputSize  ; }
     inline void setOutputBufferSize  (unsigned int outputSize ) { this->outputBufferSize   = outputSize ; }
     inline void setCryptographyEnabled(bool        use        ) { this->useCryptography    = use        ; }
-    inline void setDistKeyCore       (unsigned int distKeyCore ) { this->distKeyCore   = distKeyCore    ; }
+    inline void setDestKeyCore       (unsigned int distKeyCore ) { this->distKeyCore   = distKeyCore    ; }
 
     // Geters
     inline bool         isActive             () const { return this->active            ; }
@@ -75,7 +75,7 @@ public:
     inline unsigned int getInputBufferSize   () const { return this->inputBufferSize   ; }
     inline unsigned int getOutputBufferSize  () const { return this->outputBufferSize  ; }
     inline bool         isCryptographyEnabled() const { return this->useCryptography   ; }
-    inline unsigned int getDistKeyCore       () const { return this->distKeyCore  ; }
+    inline unsigned int getDestKeyCore       () const { return this->distKeyCore  ; }
     // Display all configurations in string
     std::string toString() const;
     bool equals(Experiment* exp) const;

@@ -228,11 +228,11 @@ void MainWindow::loadDefaultValues() {
     ui->checkUseCryptography4->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
     ui->checkUseCryptography5->setChecked( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
 
-    ui->distKeyCore1->setValue( qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
-    ui->distKeyCore2->setValue( qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
-    ui->distKeyCore3->setValue( qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
-    ui->distKeyCore4->setValue( qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
-    ui->distKeyCore5->setValue( qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+    ui->destKeyCoreExp1->setValue( qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
+    ui->destKeyCoreExp2->setValue( qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
+    ui->destKeyCoreExp3->setValue( qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
+    ui->destKeyCoreExp4->setValue( qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
+    ui->destKeyCoreExp5->setValue( qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
 
     ui->spinInInputBuffersExp1->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
     ui->spinInInputBuffersExp2->setValue(qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH));
@@ -444,12 +444,12 @@ void MainWindow::establishConnections() {
     connect(ui->checkUseCryptography3,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
     connect(ui->checkUseCryptography4,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
     connect(ui->checkUseCryptography5,SIGNAL(stateChanged(int)),this,SLOT(setAppModified()));
-    // DistKeyCore
-    connect(ui->distKeyCore1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
-    connect(ui->distKeyCore2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
-    connect(ui->distKeyCore3,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
-    connect(ui->distKeyCore4,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
-    connect(ui->distKeyCore5,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    //Key Generator Core
+    connect(ui->destKeyCoreExp1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->destKeyCoreExp2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->destKeyCoreExp3,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->destKeyCoreExp4,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
+    connect(ui->destKeyCoreExp5,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
     // Buffers
     connect(ui->spinInInputBuffersExp1,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
     connect(ui->spinInInputBuffersExp2,SIGNAL(valueChanged(int)),this,SLOT(setAppModified()));
@@ -823,7 +823,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp1->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp1->setValue( experiment->getOutputBufferSize() );
                     ui->checkUseCryptography1->setEnabled( experiment->isActive() );
-                    ui->distKeyCore1->setValue(experiment->getDistKeyCore() );
+                    ui->destKeyCoreExp1->setValue(experiment->getDestKeyCore() );
                     break;
                 case 2:
                     ui->comboInTopologyExp2->setCurrentIndex( experiment->getTopology() );
@@ -834,9 +834,10 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInInputBuffersExp2->setValue( experiment->getInputBufferSize() );
                     ui->spinInOutputBuffersExp2->setValue( experiment->getOutputBufferSize() );
 
-                    ui->checkUseCryptography2->setEnabled( experiment->isActive() );
-                    ui->distKeyCore2->setEnabled( experiment->getDistKeyCore() );
+                    ui->checkUseCryptography2->setEnabled( experiment->isActive());
+                    ui->destKeyCoreExp2->setValue( experiment->getDestKeyCore());
                     ui->checkInExperiment2->setChecked(experiment->isActive());
+
 
                     break;
                 case 3:
@@ -849,7 +850,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInOutputBuffersExp3->setValue( experiment->getOutputBufferSize() );
 
                     ui->checkUseCryptography3->setEnabled( experiment->isActive() );
-                    ui->distKeyCore3->setEnabled( experiment->getDistKeyCore() );
+                    ui->destKeyCoreExp3->setValue( experiment->getDestKeyCore() );
                     ui->checkInExperiment3->setChecked(experiment->isActive());
 
                     break;
@@ -863,7 +864,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInOutputBuffersExp4->setValue( experiment->getOutputBufferSize() );
 
                     ui->checkUseCryptography4->setEnabled( experiment->isActive() );
-                    ui->distKeyCore4->setEnabled( experiment->getDistKeyCore() );
+                    ui->destKeyCoreExp4->setValue( experiment->getDestKeyCore() );
                     ui->checkInExperiment4->setChecked(experiment->isActive());
 
                     break;
@@ -877,7 +878,7 @@ void MainWindow::updateView(QList<SystemConfiguration> sysConfs, QList<Experimen
                     ui->spinInOutputBuffersExp5->setValue( experiment->getOutputBufferSize() );
 
                     ui->checkUseCryptography5->setEnabled( experiment->isActive() );
-                    ui->distKeyCore5->setEnabled( experiment->getDistKeyCore() );
+                    ui->destKeyCoreExp5->setValue( experiment->getDestKeyCore() );
                     ui->checkInExperiment5->setChecked(experiment->isActive());
 
                     break;
@@ -943,7 +944,7 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
     bool inBuffers   = ui->checkBoxInputBuffersDepth->isChecked();
     bool outBuffers  = ui->checkBoxOutputBuffersDepth->isChecked();
     bool useCryptography = ui->checkBoxCryptography->isChecked();
-    bool distKeyCore = ui->checkBoxDistKeyCore->isChecked();
+    bool destKeyCore = ui->checkBoxDestKeyCore->isChecked();
     // TODO mexer aqui, legenda dos gráficos
 
     float lineWidth = ui->doubleSpinBoxLineWidth->value();
@@ -983,7 +984,7 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
         title = trUtf8("Report");
     }
     AnalysisOptions* gop = new AnalysisOptions(topology,routingAlg,flowControl,
-            arbiterType,vcOp,useCryptography,distKeyCore,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
+            arbiterType,vcOp,useCryptography,destKeyCore,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
             xLabel,yLabel,xAxis,yAxis,title,flowOps,
             graphLineColors,latencyDistribution);
 
@@ -1154,7 +1155,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
         QSpinBox* inBuffers = NULL;
         QSpinBox* outBuffers = NULL;
         QCheckBox* useCryptography = NULL;
-        QSpinBox* distKeyCore = NULL;
+        QSpinBox* destKeyCore = NULL;
         switch (i+1) {
             case 1: {
                 active = true;
@@ -1166,7 +1167,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 inBuffers = ui->spinInInputBuffersExp1;
                 outBuffers = ui->spinInOutputBuffersExp1;
                 useCryptography = ui->checkUseCryptography1;
-                distKeyCore = ui->distKeyCore1;
+                destKeyCore = ui->destKeyCoreExp1;
                 break;
             }
             case 2: {
@@ -1179,7 +1180,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 inBuffers = ui->spinInInputBuffersExp2;
                 outBuffers = ui->spinInOutputBuffersExp2;
                 useCryptography = ui->checkUseCryptography2;
-                distKeyCore = ui->distKeyCore2;
+                destKeyCore = ui->destKeyCoreExp2;
                 break;
             }
             case 3: {
@@ -1192,7 +1193,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 inBuffers = ui->spinInInputBuffersExp3;
                 outBuffers = ui->spinInOutputBuffersExp3;
                 useCryptography = ui->checkUseCryptography3;
-                distKeyCore = ui->distKeyCore3;
+                destKeyCore = ui->destKeyCoreExp3;
                 break;
             }
             case 4: {
@@ -1205,7 +1206,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 inBuffers = ui->spinInInputBuffersExp4;
                 outBuffers = ui->spinInOutputBuffersExp4;
                 useCryptography = ui->checkUseCryptography4;
-                distKeyCore = ui->distKeyCore4;
+                destKeyCore = ui->destKeyCoreExp4;
                 break;
             }
             case 5: {
@@ -1218,7 +1219,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
                 inBuffers = ui->spinInInputBuffersExp5;
                 outBuffers = ui->spinInOutputBuffersExp5;
                 useCryptography = ui->checkUseCryptography5;
-                distKeyCore = ui->distKeyCore5;
+                destKeyCore = ui->destKeyCoreExp5;
                 break;
             }
             default:
@@ -1233,7 +1234,7 @@ QList<Experiment> MainWindow::getAllExperiments() const {
         e.setTopology(topology->currentIndex());
         e.setVCOption(vcOption->currentIndex());
         e.setCryptographyEnabled(useCryptography->isChecked());
-        e.setDistKeyCore(distKeyCore->value());
+        e.setDestKeyCore(destKeyCore->value());
         experiments.append(e);
     }
     return experiments;
@@ -1307,7 +1308,7 @@ void MainWindow::buttonCheckUncheckAllClicked() {
     checks[3] = ui->checkBoxArbiterType;
     checks[4] = ui->checkBoxVcOption;
     checks[5] = ui->checkBoxCryptography;
-    checks[6] = ui->checkBoxDistKeyCore;
+    checks[6] = ui->checkBoxDestKeyCore;
     checks[7] = ui->checkBoxInputBuffersDepth;
     checks[8] = ui->checkBoxOutputBuffersDepth;
 
@@ -1523,7 +1524,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInInputBuffersExp1->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp1->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             ui->checkUseCryptography1->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
-            ui->distKeyCore1->setEnabled(qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+            ui->destKeyCoreExp1->setValue(qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
             break;
         case 2:
             ui->comboInTopologyExp2->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1534,7 +1535,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInInputBuffersExp2->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp2->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             ui->checkUseCryptography2->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
-            ui->distKeyCore2->setEnabled(qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+            ui->destKeyCoreExp2->setValue(qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
             break;
         case 3:
             ui->comboInTopologyExp3->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1545,7 +1546,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInInputBuffersExp3->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp3->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             ui->checkUseCryptography3->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
-            ui->distKeyCore3->setEnabled(qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+            ui->destKeyCoreExp3->setValue(qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
             break;
         case 4:
             ui->comboInTopologyExp4->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1556,7 +1557,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInInputBuffersExp4->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp4->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             ui->checkUseCryptography4->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
-            ui->distKeyCore4->setEnabled(qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+            ui->destKeyCoreExp4->setValue(qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
             break;
         case 5:
             ui->comboInTopologyExp5->setCurrentIndex( qint32(DefaultValuesSystem::DEFAULT_TOPOLOGY) );
@@ -1567,7 +1568,7 @@ void MainWindow::loadDefaultValuesExperiment() {
             ui->spinInInputBuffersExp5->setValue                (qint32(DefaultValuesSystem::DEFAULT_FIFO_IN_DEPTH    ));
             ui->spinInOutputBuffersExp5->setValue               (qint32(DefaultValuesSystem::DEFAULT_FIFO_OUT_DEPTH   ));
             ui->checkUseCryptography5->setEnabled( DefaultValuesSystem::DEFAULT_USE_CRYPTOGRAPHY );
-            ui->distKeyCore5->setEnabled(qint32(DefaultValuesSystem::DEFAULT_DIST_KEY_CORE));
+            ui->destKeyCoreExp5->setValue(qint32(DefaultValuesSystem::DEFAULT_DEST_KEY_CORE));
             break;
     }
     this->setAppModified();
@@ -1611,9 +1612,9 @@ void MainWindow::copyPreviousExperimentActive() {
     QCheckBox* useCryptographyDst = (QCheckBox *) layout->itemAtPosition(6,numExp)->widget();
     useCryptographyDst->setChecked( useCryptographySrc->isChecked() );
 
-    QSpinBox* distKeyCoreSrc = (QSpinBox *) layout->itemAtPosition(7,previousExperiment)->widget();
-    QSpinBox* distKeyCoreDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
-    distKeyCoreDst->setValue( distKeyCoreSrc->value() );
+    QSpinBox* destKeyCoreSrc = (QSpinBox *) layout->itemAtPosition(7,previousExperiment)->widget();
+    QSpinBox* destKeyCoreDst = (QSpinBox *) layout->itemAtPosition(7,numExp)->widget();
+    destKeyCoreDst->setValue( destKeyCoreSrc->value() );
 
     QSpinBox* inputBufferSrc = (QSpinBox *) layout->itemAtPosition(8,previousExperiment)->widget();
     QSpinBox* inputBufferDst = (QSpinBox *) layout->itemAtPosition(8,numExp)->widget();

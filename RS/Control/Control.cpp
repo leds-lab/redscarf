@@ -1586,7 +1586,7 @@ void Control::runSimulations() {
                             .arg(experiment->getInputBufferSize())
                             .arg(experiment->getOutputBufferSize())
                             .arg( (experiment->isCryptographyEnabled() ? "SIMON": "NoCrypt"))
-                            .arg(experiment->getDistKeyCore());
+                            .arg(experiment->getDestKeyCore());
                     QString dirExperiment = dirWork.absolutePath() + "/" + dirGenerated;
                     dirWork.mkpath( dirExperiment );
 
@@ -1748,8 +1748,8 @@ void Control::runSimulations() {
 
                         if( experiment->isCryptographyEnabled() ) {
                             args.append("-simon");
-                            args.append("-distKeyCore");
-                            args.append(QString::number(experiment->getDistKeyCore()));
+                            args.append("-destKeyCore");
+                            args.append(QString::number(experiment->getDestKeyCore()));
                         }
 
                         if( systemOp.vcdOption ) {
