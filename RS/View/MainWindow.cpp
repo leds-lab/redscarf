@@ -64,7 +64,7 @@
 
 #define MAX_EXPERIMENTS 5 // Number of experiments that can be configured in Tab 2 (System Simulation)
 
-#define NUM_ROWS_CONF_EXPERIMENTS 11
+#define NUM_ROWS_CONF_EXPERIMENTS 12
 /*
  * #1 : Enable/Disable Experiment
  * #2 : Topology

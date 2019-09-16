@@ -1483,6 +1483,7 @@ void Control::generateTrafficConfigurationFile() {
     delete tmg;
 }
 
+#include <QDebug>
 void Control::runSimulations() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::runSimulations" << std::endl;
@@ -1748,7 +1749,7 @@ void Control::runSimulations() {
 
                         if( experiment->isCryptographyEnabled() ) {
                             args.append("-simon");
-                            args.append("-destKeyCore");
+                            qDebug() << experiment->getDestKeyCore();
                             args.append(QString::number(experiment->getDestKeyCore()));
                         }
 
