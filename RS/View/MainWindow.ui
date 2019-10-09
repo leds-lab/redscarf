@@ -2928,7 +2928,7 @@ distribution</string>
      <x>0</x>
      <y>0</y>
      <width>1322</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2978,6 +2978,8 @@ distribution</string>
     <addaction name="actionSaveSimulation"/>
     <addaction name="separator"/>
     <addaction name="actionGenerateCSV"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_simulation_dir"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -3214,6 +3216,21 @@ distribution</string>
    </property>
    <property name="statusTip">
     <string>Generate CSV simulation Report</string>
+   </property>
+  </action>
+  <action name="actionLoad_simulation_dir">
+   <property name="icon">
+    <iconset resource="../resources/Icons.qrc">
+     <normaloff>:/icons/icons/icon_open_default.png</normaloff>:/icons/icons/icon_open_default.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load simulation directory</string>
+   </property>
+   <property name="toolTip">
+    <string>Load simulation directory</string>
+   </property>
+   <property name="statusTip">
+    <string>Load a previous simulation runned based on directory</string>
    </property>
   </action>
  </widget>

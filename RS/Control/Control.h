@@ -181,11 +181,11 @@ private slots:
     void editOptions();
     void changeLanguage(QString languageName);
     void exitApplication(QCloseEvent* event);
+
     void loadSimulationResults();
     void saveSimulationResults();
     void generateCSVSimulationReport(AnalysisOptions* aop);
-
-    void folderCompressorWorkCompleted(bool success,int opType);
+    void loadSimulationDir();
 
     // System and traffic configuration
     void generateTrafficConfigurationFile();
@@ -207,6 +207,10 @@ private slots:
 
     // Environment Options
     void applySettings(EnvironmentConfiguration*, QString languageName);
+
+public slots:
+    void folderCompressorWorkCompleted(bool success,int opType);
+
 };
 
 #endif // CONTROL_H

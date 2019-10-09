@@ -60,6 +60,7 @@
 #include "Analyzer.h"
 #include "EnvironmentConfiguration.h"
 #include "FolderCompressor.h"
+#include "Archiver.h"
 
 // View
 #include "View/MainWindow.h"
@@ -156,6 +157,7 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(loadSimulationResults()),this,SLOT(loadSimulationResults()));
     connect(this->mainWindow,SIGNAL(saveSimulationResults()),this,SLOT(saveSimulationResults()));
     connect(this->mainWindow,SIGNAL(generateCSVSimulationReport(AnalysisOptions*)),this,SLOT(generateCSVSimulationReport(AnalysisOptions*)));
+    connect(this->mainWindow,SIGNAL(loadSimulationDir()),this,SLOT(loadSimulationDir()));
 
     connect(this->mainWindow,&MainWindow::generateTCF,this,&Control::generateTrafficConfigurationFile);
 
@@ -1137,22 +1139,17 @@ void Control::loadSimulationResults() {
         return;
     }
 
-    // Get date and time
-    QDateTime dateTime = QDateTime::currentDateTime();
-    // Get a string with date and time in ISO format
-    QString dateTimeDir = dateTime.toString(Qt::ISODate);
-    dateTimeDir.replace(':','-');
-    workDirSimulationLoaded = environmentConfiguration->getWorkFolder() + "/SimulationsLoaded/@" + dateTimeDir + "/";
-    FolderCompressor* fc = new FolderCompressor( FolderCompressor::Decompress,
-                        filename, workDirSimulationLoaded );
+    Archiver archiver(this);
+    FolderCompressor* fc = archiver.loadSimulationResults(filename,environmentConfiguration->getWorkFolder());
+    workDirSimulationLoaded = fc->getDestination();
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
+    connect(fc,SIGNAL(completed(bool,int)),fc,SLOT(deleteLater()));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(tr("<b>Wait . . .</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
     this->mainWindow->setOptionsSimulationEnabled(false);
     QThreadPool::globalInstance()->start(fc);
-
 }
 
 void Control::saveSimulationResults() {
@@ -1174,6 +1171,8 @@ void Control::saveSimulationResults() {
     if(!filename.endsWith(".redsim")) {
         filename += ".redsim";
     }
+
+    // Passar para o "Archiver"
 
     QString dir0 = this->simulationFolders.at(0);
     // Up 3 level in directory tree
@@ -1260,11 +1259,16 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
 
         bool recoverFolders = true;
 
-        if( this->loadConfiguration() ) {
-            this->mainWindow->setWindowModified(false);
+        if(configFile->exists()) {
+            if( this->loadConfiguration() ) {
+                this->mainWindow->setWindowModified(false);
+            } else {
+                this->mainWindow->printConsole(tr("The parameters load failed."),errorColor);
+                recoverFolders = false;
+            }
         } else {
-            this->mainWindow->printConsole(tr("The parameters load failed."),errorColor);
-            recoverFolders = false;
+            // TODO Tratar diretórios simulados sem o arquivo de configuração
+            this->mainWindow->printConsole(tr("Without RedScarf config file"));
         }
         delete configFile;
         configFile = NULL;
@@ -1307,6 +1311,39 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
     this->mainWindow->setOptionsSimulationEnabled(true);
     this->mainWindow->setActionGenerateCSVEnabled(analysisOk);
     QApplication::restoreOverrideCursor();
+}
+
+void Control::loadSimulationDir() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::loadSimulationDir" << std::endl;
+#endif
+    if( this->mainWindow->isWindowModified() ) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
+            case 0: // Save
+                if(!this->saveConfiguration()) {
+                    return;
+                }
+            case 1: // Discard
+                break;
+            case 2: // Cancel
+                return;
+        }
+    }
+
+    this->mainWindow->setWindowModified(false);
+
+    QString folder = this->mainWindow->selectSystemFolder(tr("Select a directory with data of simulation already done"));
+    if(folder.isEmpty()) {
+        return;
+    }
+
+    workDirSimulationLoaded = folder + '/';
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    this->mainWindow->printConsole(tr("<b>Wait . . .</b>"));
+    this->mainWindow->setAnalysisOptionsEnabled(false);
+    this->mainWindow->setOptionsSimulationEnabled(false);
+    this->folderCompressorWorkCompleted(true,2);
 }
 
 void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
