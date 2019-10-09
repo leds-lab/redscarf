@@ -1,3 +1,4 @@
+![RS-logo](RS/doc/RedScarf_icon.png)
 # RedScarf
 
 A GUI-oriented Simulation Environment for the Performane Evaluation of Networks-on-Chip
@@ -34,7 +35,7 @@ By: Eduardo Alves da Silva
 ```
 
 ## Credits and Contacts
-RedScarf was developed and is maintened by LEDS - Laboratory of Embedded and Distributed Systems at [Univali - University of Vale do Itajaí](https://www.univali.br) - Brazil.
+RedScarf was developed and is maintened by [LEDS - Laboratory of Embedded and Distributed Systems](https://www.instagram.com/leds.lab/) at [Univali - University of Vale do Itajaí](https://www.univali.br) - Brazil.
 For more information, please contact the professors:
 * Cesar Albenes Zeferino, PhD [LEDS coordinator](mailto:zeferino@univali.br)
 or
