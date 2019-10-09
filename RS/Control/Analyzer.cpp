@@ -129,7 +129,7 @@ void Analyzer::analyze() {
 
         falhaAnalise = true;
         if( analyzer == NULL ) {
-            this->sendMessage(trUtf8("<font color=red>No analyzer defined!</font>"));
+            this->sendMessage(tr("<font color=red>No analyzer defined!</font>"));
         } else {
             TrafficAnalysis::StatusAnalysis resultAnalysis = analyzer->makeAnalysis();
             QString dirAnalyzed = diretorioAnalise.mid( diretorioExperimento.lastIndexOf("/") + 5 );
@@ -137,20 +137,20 @@ void Analyzer::analyze() {
             dirAnalyzed.replace("/"," @ ");
             switch (resultAnalysis) {
                 case TrafficAnalysis::NoInputFile:
-                    this->sendMessage(trUtf8("<font color=red>There is no input file for analysis (maybe "
+                    this->sendMessage(tr("<font color=red>There is no input file for analysis (maybe "
                                           "simulation was not run) in %1</font>").arg(dirAnalyzed));
                     break;
                 case TrafficAnalysis::Ok:  // Analysis successfully
-                    this->sendMessage(trUtf8("<font color=black>- %1</font>")
+                    this->sendMessage(tr("<font color=black>- %1</font>")
                                 .arg(dirAnalyzed));
                     falhaAnalise = false;
                     break;
                 case TrafficAnalysis::NoPacketsDelivered:
-                    this->sendMessage(trUtf8("<font color=red>Simulation time too short. None packet was "
+                    this->sendMessage(tr("<font color=red>Simulation time too short. None packet was "
                                           "delivered in %1</font>").arg(dirAnalyzed));
                     break;
                 case TrafficAnalysis::NoOutputFile:
-                    this->sendMessage(trUtf8("<font color=red>Impossible create result file in %1</font>")
+                    this->sendMessage(tr("<font color=red>Impossible create result file in %1</font>")
                                       .arg(dirAnalyzed));
                     break;
             }

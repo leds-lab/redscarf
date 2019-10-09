@@ -130,7 +130,7 @@ void MainWindow::configureWidgets() {
     ui->actionGenerateCSV->setEnabled(false);
 
     // Transformando o console em um Widget Dockable
-    QDockWidget* consoleDockWidget = new QDockWidget(trUtf8("Console"),this);
+    QDockWidget* consoleDockWidget = new QDockWidget(tr("Console"),this);
     consoleDockWidget->setObjectName("consoleDock");
     consoleDockWidget->setWidget(ui->groupBoxConsole);
     addDockWidget(Qt::BottomDockWidgetArea,consoleDockWidget);
@@ -145,7 +145,7 @@ void MainWindow::configureToolBar() {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "View/MainWindow::configureToolBar" << std::endl;
 #endif
-    ui->toolBar->setWindowTitle(trUtf8("Toolbar"));
+    ui->toolBar->setWindowTitle(tr("Toolbar"));
     ui->toolBar->addAction( ui->actionNew );
     ui->toolBar->addAction( ui->actionOpen );
     ui->toolBar->addAction( ui->actionSave );
@@ -448,7 +448,7 @@ void MainWindow::configureLanguages(EnvironmentConfiguration *conf) {
         QString name = langs.at(i);
         QAction* action = new QAction(name,this);
         action->setObjectName(name);
-        action->setStatusTip(trUtf8("Change environment language to %1").arg(name));
+        action->setStatusTip(tr("Change environment language to %1").arg(name));
         connect(action,SIGNAL(triggered()),this,SLOT(translate()));
         ui->menuLanguage->addAction(action);
     }
@@ -629,10 +629,10 @@ void MainWindow::initConsole() {
 
     QTextBlockFormat headFormat = cursor.blockFormat();
     headFormat.setAlignment(Qt::AlignHCenter);
-    cursor.insertHtml(trUtf8("<b><font size=4>__/_/_/_/<font color=red> RedScarf </font>\\_\\_\\_\\__</font></b>"));
-    cursor.insertHtml(trUtf8("<br /><font color=black>The <i>bagual</i> NoC Simulator</font>"));
-    cursor.insertHtml(trUtf8("<br /><img src=\":/icons/icons/apresentacao.png\" />"));
-    cursor.insertHtml(trUtf8("<br />All rights reserved &#169; 2014 - 2017 LEDS - University of Vale do Itajaí<br/>- Laboratory of Embedded and Distributed Systems"));
+    cursor.insertHtml(tr("<b><font size=4>__/_/_/_/<font color=red> RedScarf </font>\\_\\_\\_\\__</font></b>"));
+    cursor.insertHtml(tr("<br /><font color=black>The <i>bagual</i> NoC Simulator</font>"));
+    cursor.insertHtml(tr("<br /><img src=\":/icons/icons/apresentacao.png\" />"));
+    cursor.insertHtml(tr("<br />All rights reserved &#169; 2014 - 2017 LEDS - University of Vale do Itajaí<br/>- Laboratory of Embedded and Distributed Systems"));
     cursor.setBlockFormat(headFormat);
 
     cursor.insertBlock();
@@ -663,7 +663,7 @@ void MainWindow::showOpenFileError(QString error) {
     std::cout << "View/MainWindow::openFileError" << std::endl;
 #endif
 
-    QMessageBox::information(this, trUtf8("Unable to open file"),   // Exibe mensagem de erro
+    QMessageBox::information(this, tr("Unable to open file"),   // Exibe mensagem de erro
         error);
 
 }
@@ -911,9 +911,9 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
 
     bool latencyDistribution = false;
     if( opcaoAnalise == LatencyDistribution ) {
-        xLabel = trUtf8("Latency (cycles)");
-        yLabel = trUtf8("Frequency");
-        title = trUtf8("Latency Distribution Histogram");
+        xLabel = tr("Latency (cycles)");
+        yLabel = tr("Frequency");
+        title = tr("Latency Distribution Histogram");
         latencyDistribution = true;
     } else if( opcaoAnalise == GraphicSelected ) {
         xLabel = ui->comboBoxXAxisGraphic->currentText();
@@ -928,7 +928,7 @@ AnalysisOptions* MainWindow::getAnalysisOptions(TypeAnalysis opcaoAnalise) {
                 .arg((iy == -1 ? yLabel : yLabel.left(iy-1)))
                 .arg((ix == -1 ? xLabel : xLabel.left(ix-1)));
     } else if(opcaoAnalise == Report) {
-        title = trUtf8("Report");
+        title = tr("Report");
     }
     AnalysisOptions* gop = new AnalysisOptions(topology,routingAlg,flowControl,
             arbiterType,vcOp,inBuffers,outBuffers,lineWidth,pointSize,source,destination,
@@ -1362,7 +1362,7 @@ void MainWindow::experimentChangeState() {
     for(int i = 1; i < 10; i++) {
         QLayoutItem* item = layout->itemAtPosition(i,numExp);
         if(item == NULL) {
-            this->printConsole(trUtf8("Problem in layout of experiment modified!\n"
+            this->printConsole(tr("Problem in layout of experiment modified!\n"
                                       "Contact the development team to fix."));
         } else {
             item->widget()->setEnabled(checked);

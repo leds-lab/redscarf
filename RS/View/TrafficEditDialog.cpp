@@ -267,7 +267,7 @@ bool TrafficEditDialog::inputsOk() {
     QMessageBox msg(this);// = QMessageBox(this);
     msg.setIcon( QMessageBox::Warning );
     msg.setStandardButtons( QMessageBox::Ok );
-    msg.setWindowTitle(trUtf8("Review Input(s)"));
+    msg.setWindowTitle(tr("Review Input(s)"));
 
     if( ui->comboInDestinationNode->currentIndex() == 0 ) { // Specified address
         if( ui->spinInSpecificNodeAddress->value() == source ) {
@@ -278,13 +278,13 @@ bool TrafficEditDialog::inputsOk() {
     }
 
     if( ui->spinInNumberPacketsFlow->value() <= 0 ) {
-        msg.setText(trUtf8("Number of packets per flow \nmust be greater than 0"));
+        msg.setText(tr("Number of packets per flow \nmust be greater than 0"));
         msg.exec();
         return false;
     }
 
     if( ui->doubleSpinInRequiredBandwidth->value() <= 0 ) {
-        msg.setText(trUtf8("Required bandwidth \nmust be greater than 0"));
+        msg.setText(tr("Required bandwidth \nmust be greater than 0"));
         msg.exec();
         return false;
     }
@@ -294,7 +294,7 @@ bool TrafficEditDialog::inputsOk() {
     if(typeInj == 0 || typeInj == 1 || typeInj == 4 || typeInj == 5) {
         unsigned int msgSizeMin = this->dataWidth;
         if( quint32(ui->spinInMessageSize->value()) < msgSizeMin ) {
-            msg.setText(trUtf8("Message size must\nhave at least %1 bits\n(i.e. %2 flit)")
+            msg.setText(tr("Message size must\nhave at least %1 bits\n(i.e. %2 flit)")
                          .arg(QString::number(msgSizeMin))
                          .arg(QString::number(1)));
             msg.exec();
@@ -302,7 +302,7 @@ bool TrafficEditDialog::inputsOk() {
         }
     } else if(typeInj == 2) {
         if(ui->spinInIdleTime->value() <= 0 ) {
-            msg.setText(trUtf8("Idle interval must\nbe greater than 0"));
+            msg.setText(tr("Idle interval must\nbe greater than 0"));
             msg.exec();
             return false;
         }
@@ -310,7 +310,7 @@ bool TrafficEditDialog::inputsOk() {
 
     if(typeInj == 3 || typeInj == 5) {
         if(ui->spinInMessageInterval->value() <= 0) {
-            msg.setText(trUtf8("Message interval must\nbe greater than 0"));
+            msg.setText(tr("Message interval must\nbe greater than 0"));
             msg.exec();
             return false;
         }
@@ -319,7 +319,7 @@ bool TrafficEditDialog::inputsOk() {
     int distSpatial = ui->comboInDestinationNode->currentIndex();
     if( ui->comboInFunctionProbability->currentIndex() == 2 && // FunctionProb. == PARETO &&
             (distSpatial >= 7 && distSpatial <= 9) ) { // DistSpatial == NON-UNIFORM 1 OR 2 OR LOCAL
-        msg.setText(trUtf8("Sorry!\nTraffic Generator not implemented for this function probability\nwith this spatial distribution (Non-Uniform 1,2 or Local)."));
+        msg.setText(tr("Sorry!\nTraffic Generator not implemented for this function probability\nwith this spatial distribution (Non-Uniform 1,2 or Local)."));
         msg.exec();
         return false;
     }

@@ -77,26 +77,26 @@ void ExternalWaveformViewer::erroOnExecute(QProcess::ProcessError error) {
 
     switch( error ) {
         case QProcess::FailedToStart:
-            typeError = trUtf8("Failed to start");
+            typeError = tr("Failed to start");
             break;
         case QProcess::Crashed:
-            typeError = trUtf8("Crashed");
+            typeError = tr("Crashed");
             break;
         case QProcess::Timedout:
-            typeError = trUtf8("Timedout");
+            typeError = tr("Timedout");
             break;
         case QProcess::WriteError:
-            typeError = trUtf8("Write error");
+            typeError = tr("Write error");
             break;
         case QProcess::ReadError:
-            typeError = trUtf8("Read error");
+            typeError = tr("Read error");
             break;
         case QProcess::UnknownError:
-            typeError = trUtf8("Unknown error");
+            typeError = tr("Unknown error");
             break;
     }
 
-    emit sendMessage( trUtf8("<font color=red>Waveform tool error: </font> %1")
+    emit sendMessage( tr("<font color=red>Waveform tool error: </font> %1")
             .arg(typeError));
 
 }
@@ -108,6 +108,6 @@ void ExternalWaveformViewer::readReady() {
 
     QProcess* tool = (QProcess* ) sender();
 
-    emit sendMessage( trUtf8("Waveform viewer: %1").arg(QString::fromUtf8(tool->readAll())) );
+    emit sendMessage( tr("Waveform viewer: %1").arg(QString::fromUtf8(tool->readAll())) );
 
 }

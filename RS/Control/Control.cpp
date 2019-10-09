@@ -225,10 +225,10 @@ void Control::startApp() {
     this->mainWindow->initConsole();
 
     if( environmentConfiguration->getSimulatorLocation().isEmpty() ) {
-        QString simulatorLocation = this->mainWindow->dialogLoadFile(trUtf8("Select Simulator executable"),"");
+        QString simulatorLocation = this->mainWindow->dialogLoadFile(tr("Select Simulator executable"),"");
         simulatorLocation = simulatorLocation.trimmed();
         if(simulatorLocation.isEmpty()) {
-            this->mainWindow->printConsole(trUtf8("Simulator executable not configured\n"
+            this->mainWindow->printConsole(tr("Simulator executable not configured\n"
                                                   "The simulation wouldn't run!"),Qt::red);
         } else {
             environmentConfiguration->setSimulatorLocation( simulatorLocation );
@@ -237,8 +237,8 @@ void Control::startApp() {
 
     if( environmentConfiguration->getPluginsFolder().isEmpty() ) {
         environmentConfiguration->setPluginsFolder( this->dirSetup(
-            trUtf8("Select simulator plugins folder"),
-            trUtf8("Plugins folder not configured."
+            tr("Select simulator plugins folder"),
+            tr("Plugins folder not configured."
                    "\nMaybe the simulator wouldn't run!")) );
     }
 
@@ -272,8 +272,8 @@ bool Control::loadConfiguration() {
 #endif
 
     if( !configFile ) {
-        QString fileName = this->mainWindow->dialogLoadFile(trUtf8("Open a setup file"),
-                                                            trUtf8("RedScarf(*.rsf)"),
+        QString fileName = this->mainWindow->dialogLoadFile(tr("Open a setup file"),
+                                                            tr("RedScarf(*.rsf)"),
                                                             QDir::homePath());
         if(fileName.isEmpty()) {
             return false;
@@ -299,7 +299,7 @@ bool Control::loadConfiguration() {
     delete parser;
 
     configFile->close();
-    this->mainWindow->printConsole(trUtf8("Configuration file successfuly loaded"));
+    this->mainWindow->printConsole(tr("Configuration file successfuly loaded"));
 
     return true;
 }
@@ -310,8 +310,8 @@ bool Control::saveConfiguration() {
 #endif
 
     if( !configFile ) {
-        QString fileName = this->mainWindow->dialogSaveFile(trUtf8("Save a setup file"),
-                                                            trUtf8("RedScarf(*.rsf)"),
+        QString fileName = this->mainWindow->dialogSaveFile(tr("Save a setup file"),
+                                                            tr("RedScarf(*.rsf)"),
                                                             QDir::homePath());
         if(fileName.isEmpty()) {
             return false;
@@ -342,7 +342,7 @@ bool Control::saveConfiguration() {
     delete parser;
 
     this->configFile->close();
-    this->mainWindow->printConsole(trUtf8("Configuration file successfully saved"));
+    this->mainWindow->printConsole(tr("Configuration file successfully saved"));
     return true;
 }
 
@@ -418,12 +418,12 @@ bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
         }
     } else { // Alternative method try use the file defined in the system.ini
         if(alternativeFile.isNull() || alternativeFile.isEmpty()) {
-            this->mainWindow->printConsole(trUtf8("The alternative file isn't defined.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
+            this->mainWindow->printConsole(tr("The alternative file isn't defined.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
             return false;
         } else {
             QFile file(alternativeFile);
             if( !file.exists() ) {
-                this->mainWindow->printConsole(trUtf8("The alternative file defined don't exists.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
+                this->mainWindow->printConsole(tr("The alternative file defined don't exists.<br />Please verify the section 'Traffic_Parameters' in system.ini file"),errorColor);
                 return false;
             }
         }
@@ -437,7 +437,7 @@ bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
             for(int x = i+1; x < experiments.size(); x++) {
                 Experiment exp2 = experiments.at(x);
                 if( exp2.isActive() && exp1.equals(&exp2) ) {
-                    this->mainWindow->printConsole(trUtf8("The Experiment #%1 and Experiment #%2 configuration are identical (this is not allowed)").arg(i+1).arg(x+1),errorColor);
+                    this->mainWindow->printConsole(tr("The Experiment #%1 and Experiment #%2 configuration are identical (this is not allowed)").arg(i+1).arg(x+1),errorColor);
                     return false;
                 }
             }
@@ -452,28 +452,28 @@ bool Control::inputsOk(const QList<SystemConfiguration> &sysConfs,
 
     if ( fClkStepType == 0) {
         if (( fClkFirst <  fClkLast) && (fClkStep <  0)) {
-            this->mainWindow->printConsole(trUtf8("If First_FClk less than Last_FClk, step value (inc) must be greather than 0"),errorColor);
+            this->mainWindow->printConsole(tr("If First_FClk less than Last_FClk, step value (inc) must be greather than 0"),errorColor);
             return false;
         }
         if ((fClkFirst >  fClkLast) && (fClkStep >  0)) {
-            this->mainWindow->printConsole(trUtf8("If First_FClk greather than Last_FClk, step value (inc) must be less than 0"),errorColor);
+            this->mainWindow->printConsole(tr("If First_FClk greather than Last_FClk, step value (inc) must be less than 0"),errorColor);
             return false;
         }
         if ((fClkFirst != fClkLast) && (fClkStep == 0)) {
-            this->mainWindow->printConsole(trUtf8("Step value (inc) must be different of 0"),errorColor);
+            this->mainWindow->printConsole(tr("Step value (inc) must be different of 0"),errorColor);
             return false;
         }
     } else if(fClkStepType == 1) {
         if ((fClkFirst <  fClkLast) && (fClkStep >  0)) {
-            this->mainWindow->printConsole(trUtf8("If First_FClk less than Last_FClk, step value (exp) must be less than 0"),errorColor);
+            this->mainWindow->printConsole(tr("If First_FClk less than Last_FClk, step value (exp) must be less than 0"),errorColor);
             return false;
         }
         if ((fClkFirst >  fClkLast) && (fClkStep <  0)) {
-            this->mainWindow->printConsole(trUtf8("If First_FClk greather than Last_FClk, step value (exp) must be greather than 0"),errorColor);
+            this->mainWindow->printConsole(tr("If First_FClk greather than Last_FClk, step value (exp) must be greather than 0"),errorColor);
             return false;
         }
         if ((fClkFirst != fClkLast) && (fClkStep == 0)) {
-            this->mainWindow->printConsole(trUtf8("Step value (exp) must be different of 0"),errorColor);
+            this->mainWindow->printConsole(tr("Step value (exp) must be different of 0"),errorColor);
             return false;
         }
     }
@@ -491,7 +491,7 @@ void Control::newSystem() {
 
     if( this->mainWindow->isWindowModified() ) {
         switch(this->mainWindow->saveChanges(APPLICATION_NAME,
-               trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
+               tr("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
                 if(!this->saveConfiguration()) {
                     return;
@@ -520,7 +520,7 @@ void Control::loadSystem() {
 #endif
 
     if(this->mainWindow->isWindowModified()) {
-        switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
                 if(!this->saveConfiguration()) {
                     return;
@@ -531,8 +531,8 @@ void Control::loadSystem() {
                 return;
         }
     }
-    QString fileName = this->mainWindow->dialogLoadFile(trUtf8("Open a setup file"),
-                                                        trUtf8("RedScarf(*.rsf)"),
+    QString fileName = this->mainWindow->dialogLoadFile(tr("Open a setup file"),
+                                                        tr("RedScarf(*.rsf)"),
                                                         QDir::homePath());
     if(fileName.isEmpty()) {
         return;
@@ -554,7 +554,7 @@ void Control::loadDefaultSystem() {
 #endif
 
     if( this->mainWindow->isWindowModified() ) {
-        switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
                 if(!this->saveConfiguration()) {
                     return;
@@ -628,7 +628,7 @@ void Control::exitApplication(QCloseEvent *event) {
 #endif
 
     if( this->mainWindow->isWindowModified() ) {
-        switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
                 if(!this->saveConfiguration()) {
                     event->ignore();
@@ -681,17 +681,17 @@ void Control::finishSimulation(FinishCode code) {
 
     switch (code) {
         case Control::ExecuteFailed :
-            mainWindow->printConsole(trUtf8("<b>!!!Execute Failed!!!</b>"),errorColor,Qt::AlignHCenter);
+            mainWindow->printConsole(tr("<b>!!!Execute Failed!!!</b>"),errorColor,Qt::AlignHCenter);
             simulationFolders.clear();
             delete this->threadManager;
             threadManager = NULL;
             break;
         case Control::InputsError :
-            mainWindow->printConsole(trUtf8("<font color=red>Inputs error</font>"));
+            mainWindow->printConsole(tr("<font color=red>Inputs error</font>"));
             break;
         case Control::Success: {
             char* tempo = TimeOperation::formatTime( qlonglong(timer->elapsed()) );
-            mainWindow->printConsole(trUtf8("<font color=blue><br />All the simulations were run in %1</font>").arg(tempo));
+            mainWindow->printConsole(tr("<font color=blue><br />All the simulations were run in %1</font>").arg(tempo));
             delete this->threadManager;
             threadManager = NULL;
             delete[] tempo;
@@ -699,7 +699,7 @@ void Control::finishSimulation(FinishCode code) {
             break;
         }
         case Control::Cancel:
-            mainWindow->printConsole( trUtf8("<font color=red>Simulation canceled</font>") );
+            mainWindow->printConsole( tr("<font color=red>Simulation canceled</font>") );
             for( int i = 0; i < exes->size(); i++ ) {
                 SimulationPerformer* exe = exes->at(i);
                 if( exe != NULL ) {
@@ -740,7 +740,7 @@ void Control::generateAnalysis(float lower, float upper, int type) {
     std::cout << "Control/Control::generateAnalysis" << std::endl;
 #endif
     if( simulationFolders.isEmpty() ) { // No simulation results
-        this->mainWindow->printConsole( trUtf8("Impossible generate analysis. There is no system simulation results"),errorColor );
+        this->mainWindow->printConsole( tr("Impossible generate analysis. There is no system simulation results"),errorColor );
         return;
     }
 
@@ -773,7 +773,7 @@ void Control::generateAnalysis(float lower, float upper, int type) {
     this->mainWindow->setActionGenerateCSVEnabled(false);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(trUtf8("<br />Analyzing simulation results"),Qt::green);
+    this->mainWindow->printConsole(tr("<br />Analyzing simulation results"),Qt::green);
     // The number of elements and data width are extracted from the folder string
     Analyzer* analyzer = new Analyzer(&this->simulationFolders,0,0,lower,upper,type);
     QThread* threadAnalisador = new QThread(this);
@@ -799,8 +799,8 @@ void Control::analysisEnd(bool success) {
     this->mainWindow->setAnalysisOptionsEnabled(true);
     this->mainWindow->setActionSaveSimulationEnabled(true);
     if( success ) {
-        this->mainWindow->printConsole(trUtf8("<br /><b>DONE !!!</b>"),Qt::blue);
-        this->mainWindow->printConsole(trUtf8("Now you can use the performance analysis tools<br /> <br />"),Qt::blue);
+        this->mainWindow->printConsole(tr("<br /><b>DONE !!!</b>"),Qt::blue);
+        this->mainWindow->printConsole(tr("Now you can use the performance analysis tools<br /> <br />"),Qt::blue);
     }
     QApplication::beep();
     QApplication::alert(mainWindow);
@@ -833,7 +833,7 @@ void Control::viewWaveform() {
                 items.append(dirShow);
             }
 
-            item = QInputDialog::getItem(mainWindow,trUtf8("Choice Simulation"),trUtf8("Choice the simulation you want view"),items,0,false,&ok);
+            item = QInputDialog::getItem(mainWindow,tr("Choice Simulation"),tr("Choice the simulation you want view"),items,0,false,&ok);
             item = dirs.at(items.indexOf(item));
         }
 
@@ -852,7 +852,7 @@ void Control::viewWaveform() {
             }
         }
     } else {
-        this->mainWindow->printConsole( trUtf8("Impossible to show waveform. There is no system simulation results"),errorColor );
+        this->mainWindow->printConsole( tr("Impossible to show waveform. There is no system simulation results"),errorColor );
     }
 }
 
@@ -862,12 +862,12 @@ void Control::viewGraphic(AnalysisOptions *aop) {
 #endif
 
     if( !analysisOk ) {
-        this->mainWindow->printConsole( trUtf8("Impossible plot graphic. there is no analysis results"),errorColor );
+        this->mainWindow->printConsole( tr("Impossible plot graphic. there is no analysis results"),errorColor );
     } else {
         QVector<QList<DataReport *> *> *data = getReportData(aop);
         if(data == NULL) {
             if( !aop->isLatencyDistribution() ) {
-                mainWindow->printConsole( trUtf8("Report file unavailable or this flow is null (no packet was transfered)"),errorColor);
+                mainWindow->printConsole( tr("Report file unavailable or this flow is null (no packet was transfered)"),errorColor);
             }
             return;
         }
@@ -911,11 +911,11 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
         // Latency distribution (Histogram)
         if( folders.size() > 1 ) {
             GetSelectedItemsDialog* selectHistogramItemsWindow = new GetSelectedItemsDialog(folders,mainWindow);
-            selectHistogramItemsWindow->setWindowTitle( trUtf8("Select items for latency distribution") );
+            selectHistogramItemsWindow->setWindowTitle( tr("Select items for latency distribution") );
             if( selectHistogramItemsWindow->exec() == QDialog::Accepted ) {
                 folders = selectHistogramItemsWindow->getSelectedItems();
                 if(folders.isEmpty()) {
-                    this->mainWindow->printConsole(trUtf8("<font color=red>No selected items</font>"));
+                    this->mainWindow->printConsole(tr("<font color=red>No selected items</font>"));
                     delete selectHistogramItemsWindow;
                     return NULL;
                 }
@@ -1056,11 +1056,11 @@ void Control::viewReport(AnalysisOptions *aop) {
 #endif
 
     if( !analysisOk ) {
-        this->mainWindow->printConsole( trUtf8("<font color=red>Impossible show report because there is not analysis results</font>") );
+        this->mainWindow->printConsole( tr("<font color=red>Impossible show report because there is not analysis results</font>") );
     } else {
         QVector<QList<DataReport* >* >* data = getReportData(aop);
         if( data == NULL) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
+            this->mainWindow->printConsole(tr("<font color=red>Report file unavailable or this flow is null (no packet was transfered)</font>"));
             return;
         } else {
             ReportDialog* repDial = new ReportDialog(legends,data,mainWindow);
@@ -1116,7 +1116,7 @@ void Control::loadSimulationResults() {
     std::cout << "Control/Control::loadSimulationResults" << std::endl;
 #endif
     if( this->mainWindow->isWindowModified() ) {
-        switch(this->mainWindow->saveChanges(APPLICATION_NAME,trUtf8("The configuration has been modified.\nDo you want to save your changes?"))) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
             case 0: // Save
                 if(!this->saveConfiguration()) {
                     return;
@@ -1130,8 +1130,8 @@ void Control::loadSimulationResults() {
 
     this->mainWindow->setWindowModified(false);
 
-    QString filename = this->mainWindow->dialogLoadFile(trUtf8("Open a simulation file"),
-                                                        trUtf8("RedScarf simulation file (*.redsim)"),
+    QString filename = this->mainWindow->dialogLoadFile(tr("Open a simulation file"),
+                                                        tr("RedScarf simulation file (*.redsim)"),
                                                         QDir::homePath());
     if(filename.isEmpty()) {
         return;
@@ -1148,7 +1148,7 @@ void Control::loadSimulationResults() {
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(trUtf8("<b>Wait . . .</b>"));
+    this->mainWindow->printConsole(tr("<b>Wait . . .</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
     this->mainWindow->setOptionsSimulationEnabled(false);
     QThreadPool::globalInstance()->start(fc);
@@ -1165,8 +1165,8 @@ void Control::saveSimulationResults() {
         return;
     }
 
-    QString filename = mainWindow->dialogSaveFile(trUtf8("Save a simulation file"),
-                                                  trUtf8("RedScarf simulation(*.redsim)"),
+    QString filename = mainWindow->dialogSaveFile(tr("Save a simulation file"),
+                                                  tr("RedScarf simulation(*.redsim)"),
                                                   QDir::homePath());
     if(filename.isEmpty()) {
         return;
@@ -1187,7 +1187,7 @@ void Control::saveSimulationResults() {
     configFile = new QFile( workDir + RESULT_SIMLATION_SETUP_FILENAME );
 
     if( !this->saveConfiguration() ) {
-        this->mainWindow->printConsole(trUtf8("It is not possible save results configuration file."),errorColor);
+        this->mainWindow->printConsole(tr("It is not possible save results configuration file."),errorColor);
         delete configFile;
         configFile = tmp;
         return;
@@ -1198,7 +1198,7 @@ void Control::saveSimulationResults() {
     tmp = new QFile( workDir + RESULT_SIMULATION_DIRS_FILENAME );
 
     if( !tmp->open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        this->mainWindow->printConsole(trUtf8("It is not possible save results directories file."),errorColor);
+        this->mainWindow->printConsole(tr("It is not possible save results directories file."),errorColor);
         delete tmp;
         return;
     }
@@ -1220,7 +1220,7 @@ void Control::saveSimulationResults() {
     connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(trUtf8("<b>Saving the experiment results."
+    this->mainWindow->printConsole(tr("<b>Saving the experiment results."
                                           "This can take some minutes. Do not close RedScarf!</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
     this->mainWindow->setOptionsSimulationEnabled(false);
@@ -1237,14 +1237,14 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
     QString failureMsg;
     switch (opType) {
         case 1:{ // Compress operation
-            successMsg = trUtf8("<font color=blue>Simulation results file successfully generated</font>");
-            failureMsg = trUtf8("<font color=red>Problem ocurred in generate simulation results file."
+            successMsg = tr("<font color=blue>Simulation results file successfully generated</font>");
+            failureMsg = tr("<font color=red>Problem ocurred in generate simulation results file."
                                 "<br />Please verify the work folder permissions and try again.</font>");
             break;
         }
         case 2:{ // Decompress operation
-            successMsg = trUtf8("<font color=blue>Simulation results successfully loaded to work folder</font>");
-            failureMsg = trUtf8("<font color=red>Problem occurred in load simulation results."
+            successMsg = tr("<font color=blue>Simulation results successfully loaded to work folder</font>");
+            failureMsg = tr("<font color=red>Problem occurred in load simulation results."
                                 "<br />Please verify the work folder permissions and try again.</font>");
             break;
         }
@@ -1263,7 +1263,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         if( this->loadConfiguration() ) {
             this->mainWindow->setWindowModified(false);
         } else {
-            this->mainWindow->printConsole(trUtf8("The parameters load failed."),errorColor);
+            this->mainWindow->printConsole(tr("The parameters load failed."),errorColor);
             recoverFolders = false;
         }
         delete configFile;
@@ -1272,7 +1272,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         QFile* tmp = new QFile( workDirSimulationLoaded + RESULT_SIMULATION_DIRS_FILENAME );
 
         if( !tmp->open(QIODevice::ReadOnly | QIODevice::Text) ) {
-            this->mainWindow->printConsole(trUtf8("It is not possible load results directories file."),errorColor);
+            this->mainWindow->printConsole(tr("It is not possible load results directories file."),errorColor);
             recoverFolders = false;
         }
 
@@ -1317,14 +1317,14 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
     QVector<QList<DataReport* >* >* data = getReportData(aop);
 
     if(data == NULL) {
-        this->mainWindow->printConsole(trUtf8("<font color=red>Report file unavailable or this flow is null (no packet was transfered)."
+        this->mainWindow->printConsole(tr("<font color=red>Report file unavailable or this flow is null (no packet was transfered)."
                                                               "</br >Therefore can not generate the CSV report.</font>"));
         delete aop;
         return;
     }
 
-    QString filename = mainWindow->dialogSaveFile(trUtf8("Save a CSV report file"),
-                                                  trUtf8("RedScarf CSV Report(*.csv)"),
+    QString filename = mainWindow->dialogSaveFile(tr("Save a CSV report file"),
+                                                  tr("RedScarf CSV Report(*.csv)"),
                                                   QDir::homePath());
     if(!filename.isEmpty())  {
         if(!filename.endsWith(".csv")) {
@@ -1334,7 +1334,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
         QFile file(filename);
 
         if( !file.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-            this->mainWindow->printConsole(trUtf8("<font color=red>It is not possible generate CSV."
+            this->mainWindow->printConsole(tr("<font color=red>It is not possible generate CSV."
                                                      "<br />Please verify write permissions in selected folder.</font>"));
         } else {
             QString csvText;
@@ -1346,7 +1346,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
             if( decPoint == ',' ) {
                 separator = ';';
             }
-            ts << trUtf8("RedScarf CSV Report") << separator
+            ts << tr("RedScarf CSV Report") << separator
                << separator << separator << separator << separator << separator << separator
                << separator << separator << separator << separator << separator << separator
                << separator << separator << separator << separator << separator << separator
@@ -1360,30 +1360,30 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << "\n";
-                    ts << separator << trUtf8("Experiment: ") << separator << legends.at(x)
+                    ts << separator << tr("Experiment: ") << separator << legends.at(x)
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << separator << separator << separator << separator << separator
                        << separator << "\n";
-                    ts << separator << separator <<trUtf8("Clock Frequency(MHz)")
-                       << separator << trUtf8("Analyzed Packets")
-                       << separator << trUtf8("Offered Traffic(norm)") << separator
-                       << trUtf8("Accepted Traffic(norm)") << separator
-                       << trUtf8("Ideal Average Latency(cycles)") << separator
-                       << trUtf8("Average Latency(cycles)") << separator
-                       << trUtf8("Standard Deviation Latency") << separator
-                       << trUtf8("Minimum Latency(cycles)") << separator
-                       << trUtf8("Maximum Latency(cycles)") << separator
-                       << trUtf8("Offered Traffic(Mbps/n)") << separator
-                       << trUtf8("Accepted Traffic(Mbps/n)") << separator
-                       << trUtf8("Ideal Average Latency(ns)") << separator
-                       << trUtf8("Average Latency(ns)") << separator
-                       << trUtf8("Minimun Latency(ns)") << separator
-                       << trUtf8("Maximum Latency(ns)") << separator
-                       << trUtf8("RT0 Met Deadlines(%)") << separator
-                       << trUtf8("RT1 Met Deadlines(%)") << separator
-                       << trUtf8("nRT0 Met Deadlines(%)") << separator
-                       << trUtf8("nRT1 Met Deadlines(%)") << "\n";
+                    ts << separator << separator <<tr("Clock Frequency(MHz)")
+                       << separator << tr("Analyzed Packets")
+                       << separator << tr("Offered Traffic(norm)") << separator
+                       << tr("Accepted Traffic(norm)") << separator
+                       << tr("Ideal Average Latency(cycles)") << separator
+                       << tr("Average Latency(cycles)") << separator
+                       << tr("Standard Deviation Latency") << separator
+                       << tr("Minimum Latency(cycles)") << separator
+                       << tr("Maximum Latency(cycles)") << separator
+                       << tr("Offered Traffic(Mbps/n)") << separator
+                       << tr("Accepted Traffic(Mbps/n)") << separator
+                       << tr("Ideal Average Latency(ns)") << separator
+                       << tr("Average Latency(ns)") << separator
+                       << tr("Minimun Latency(ns)") << separator
+                       << tr("Maximum Latency(ns)") << separator
+                       << tr("RT0 Met Deadlines(%)") << separator
+                       << tr("RT1 Met Deadlines(%)") << separator
+                       << tr("nRT0 Met Deadlines(%)") << separator
+                       << tr("nRT1 Met Deadlines(%)") << "\n";
                     for( int z = 0; z < listData->size(); z++ ) {
                         // Linha de dado
                         DataReport* d = listData->at(z);
@@ -1417,7 +1417,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
             QTextStream csvTs(&file);
             csvTs << csvText;
             file.close();
-            this->mainWindow->printConsole(trUtf8("<font color=blue>RedScarf CSV Report successfully generated!</font>"));
+            this->mainWindow->printConsole(tr("<font color=blue>RedScarf CSV Report successfully generated!</font>"));
         }
     }
 
@@ -1455,7 +1455,7 @@ void Control::generateTrafficConfigurationFile() {
         return;
     }
 
-    QString outDir = this->mainWindow->selectSystemFolder(trUtf8("Select the output dir to traffic conf"));
+    QString outDir = this->mainWindow->selectSystemFolder(tr("Select the output dir to traffic conf"));
 
     if(outDir.isEmpty()) {
         return;
@@ -1514,7 +1514,7 @@ void Control::runSimulations() {
     // Create work dir
     if(!dirWork.exists()) {
         dirWork.mkpath(".");
-        this->mainWindow->printConsole(trUtf8("- Work directory created"));
+        this->mainWindow->printConsole(tr("- Work directory created"));
     }
 
     threadManager = new ThreadManager( (int) environmentConfiguration->getThreadNumber() , this );
@@ -1616,7 +1616,7 @@ void Control::runSimulations() {
                          */
                         QFile* stopSimPar = new QFile( strDirSimulation+"/stopsim.par");
                         if(!stopSimPar->open(QIODevice::WriteOnly)) {
-                            this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                            this->mainWindow->printConsole(tr("Impossible to open file  %1. Aborted. ")
                                                                 .arg(stopSimPar->fileName()),errorColor);
                             this->finishSimulation( ExecuteFailed );
                             return;
@@ -1667,7 +1667,7 @@ void Control::runSimulations() {
                             }
                             delete trafficGen;
                         } catch (const char* exception) {
-                            this->mainWindow->printConsole(trUtf8("Error in generate traffic model: %1")
+                            this->mainWindow->printConsole(tr("Error in generate traffic model: %1")
                                                            .arg(QString::fromStdString(exception)),errorColor);
                             delete trafficGen;
                             this->finishSimulation( ExecuteFailed );
@@ -1682,7 +1682,7 @@ void Control::runSimulations() {
                          */
                         QFile* simConf = new QFile( strDirSimulation+"/"+SIMULATOR_CONF_FILE);
                         if(!simConf->open(QIODevice::WriteOnly)) {
-                            this->mainWindow->printConsole(trUtf8("Impossible to open file  %1. Aborted. ")
+                            this->mainWindow->printConsole(tr("Impossible to open file  %1. Aborted. ")
                                                                 .arg(simConf->fileName()),Qt::red);
                             this->finishSimulation( ExecuteFailed );
                             return;
@@ -1795,7 +1795,7 @@ void Control::runSimulations() {
     unsigned int nExp = runCountPerExperiment*numberOfExperiments;
     this->mainWindow->setLimitsProgressBar( 0, nExp);
 
-    this->mainWindow->printConsole( trUtf8("- Number of simulations to be run: %1").arg(nExp),Qt::green );
+    this->mainWindow->printConsole( tr("- Number of simulations to be run: %1").arg(nExp),Qt::green );
 
     timer->start();
     threadManager->runThreads();

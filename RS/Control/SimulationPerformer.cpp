@@ -80,12 +80,12 @@ void SimulationPerformer::execute() {
     executor->start(simulator,args);
 
     if(!executor->waitForFinished(-1)) {
-        emit this->sendMessage( trUtf8("<font color=red><br />Failed execution on:</font> %1").arg(workDir) );
+        emit this->sendMessage( tr("<font color=red><br />Failed execution on:</font> %1").arg(workDir) );
         emit this->unsuccessfullyExecution();
     } else {
         if( executor->exitStatus() == QProcess::NormalExit ) {
             if(executor->exitCode() != 0) {
-                emit sendMessage(trUtf8("<font color=red><br />Simulator exited with error code: %1</font>").arg(executor->exitCode()));
+                emit sendMessage(tr("<font color=red><br />Simulator exited with error code: %1</font>").arg(executor->exitCode()));
                 emit unsuccessfullyExecution();
             } else {
                 char* tempo = TimeOperation::formatTime( qulonglong(timer.elapsed()) );
@@ -93,9 +93,9 @@ void SimulationPerformer::execute() {
                 temp = workDir.mid( temp.lastIndexOf("/") + 5 );
                 temp.replace("/"," @ ");
                 temp.replace("_"," ");
-                emit sendMessage(trUtf8("<font color=green><br />Configuration %1</font>")
+                emit sendMessage(tr("<font color=green><br />Configuration %1</font>")
                                  .arg(temp));
-                emit sendMessage(trUtf8("<font color=black>- Simulation time: %1</font>")
+                emit sendMessage(tr("<font color=black>- Simulation time: %1</font>")
                                  .arg(tempo));
                 delete[] tempo;
                 unsigned long long simulatedTimeCycles = 0;
@@ -103,7 +103,7 @@ void SimulationPerformer::execute() {
                 if(stopOut.open(QIODevice::ReadOnly | QIODevice::Text) ) {
                     QTextStream ts(&stopOut);
                     ts >> simulatedTimeCycles;
-                    emit sendMessage( trUtf8("<font color=black>- Simulated  time: %1 cycles = %2 us</font>")
+                    emit sendMessage( tr("<font color=black>- Simulated  time: %1 cycles = %2 us</font>")
                                       .arg(simulatedTimeCycles)
                                       .arg(QString::number(simulatedTimeCycles * this->TClk/1000.0f,'f',2)) );
 
@@ -125,26 +125,26 @@ void SimulationPerformer::handleError(QProcess::ProcessError error) {
 
     switch( error ) {
         case QProcess::FailedToStart:
-            typeError = trUtf8("Failed to start");
+            typeError = tr("Failed to start");
             break;
         case QProcess::Crashed:
-            typeError = trUtf8("Crashed");
+            typeError = tr("Crashed");
             break;
         case QProcess::Timedout:
-            typeError = trUtf8("Timedout");
+            typeError = tr("Timedout");
             break;
         case QProcess::WriteError:
-            typeError = trUtf8("Write error");
+            typeError = tr("Write error");
             break;
         case QProcess::ReadError:
-            typeError = trUtf8("Read error");
+            typeError = tr("Read error");
             break;
         case QProcess::UnknownError:
-            typeError = trUtf8("Unknown error");
+            typeError = tr("Unknown error");
             break;
     }
 
-    emit sendMessage( trUtf8("<font color=red>%1 simulator on directory:</font> %2")
+    emit sendMessage( tr("<font color=red>%1 simulator on directory:</font> %2")
             .arg(typeError)
             .arg(workDir) );
 

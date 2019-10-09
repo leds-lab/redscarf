@@ -76,8 +76,8 @@ ConfigDialog::ConfigDialog(EnvironmentConfiguration *envConf, QWidget* parent) :
     menuSelected = new QLabel(this);
     menuSelected->setFont(font);
 
-    QPushButton *cancelButton = new QPushButton(trUtf8("Cancel"),this);
-    QPushButton *okButton     = new QPushButton(trUtf8("Ok"),this);
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"),this);
+    QPushButton *okButton     = new QPushButton(tr("Ok"),this);
     okButton->setDefault(true);
 
     // Adicionar itens (icones) das páginas de configurações
@@ -105,7 +105,7 @@ ConfigDialog::ConfigDialog(EnvironmentConfiguration *envConf, QWidget* parent) :
     mainLayout->addLayout(buttonsLayout);
     setLayout(mainLayout);
 
-    setWindowTitle(trUtf8("RedScarf options"));
+    setWindowTitle(tr("RedScarf options"));
 
 }
 
@@ -126,13 +126,13 @@ void ConfigDialog::createIcons() {
 
     QListWidgetItem *configButton = new QListWidgetItem(contentsWidget);
     configButton->setIcon(QIcon(":/icons/icons/icon_tool.png"));
-    configButton->setText(trUtf8("General"));
+    configButton->setText(tr("General"));
     configButton->setTextAlignment(Qt::AlignHCenter);
     configButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     QListWidgetItem *foldersButton = new QListWidgetItem(contentsWidget);
     foldersButton->setIcon(QIcon(":/icons/icons/icon_open.png"));
-    foldersButton->setText(trUtf8("Folders"));
+    foldersButton->setText(tr("Folders"));
     foldersButton->setTextAlignment(Qt::AlignHCenter);
     foldersButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 

@@ -134,7 +134,7 @@ void FoldersConfigurationPage::selectSimulator() {
     std::cout << "View/FoldersConfigurationPage::selectSimulator (Pages.h)" << std::endl;
 #endif
 
-    ui->inSimulator->setText( QFileDialog::getOpenFileName(this,trUtf8("Select the Simulator")) );
+    ui->inSimulator->setText( QFileDialog::getOpenFileName(this,tr("Select the Simulator")) );
 
 }
 
@@ -143,7 +143,7 @@ void FoldersConfigurationPage::selectPluginsFolder() {
     std::cout << "View/FoldersConfigurationPage::selectMinGWDir (Pages.h)" << std::endl;
 #endif
 
-    ui->inPlugins->setText( QFileDialog::getExistingDirectory(this,trUtf8("Select the Plugins folder")) );
+    ui->inPlugins->setText( QFileDialog::getExistingDirectory(this,tr("Select the Plugins folder")) );
 
 }
 
@@ -154,7 +154,7 @@ void FoldersConfigurationPage::selectWaveformTool() {
 
     QFileDialog dial(this);
     dial.setFilter(QDir::Files | QDir::Executable);
-    ui->lineEditWaveformTool->setText( dial.getOpenFileName(this,trUtf8("Select the Waveform viewer")) );
+    ui->lineEditWaveformTool->setText( dial.getOpenFileName(this,tr("Select the Waveform viewer")) );
 }
 
 void FoldersConfigurationPage::selectWorkDir() {
@@ -162,7 +162,7 @@ void FoldersConfigurationPage::selectWorkDir() {
     std::cout << "View/FoldersConfigurationPage::selectWorkDir (Pages.h)" << std::endl;
 #endif
 
-    ui->lineEditWorkFolder->setText(QFileDialog::getExistingDirectory(this,trUtf8("Select a Work folder"),QDir::homePath()));
+    ui->lineEditWorkFolder->setText(QFileDialog::getExistingDirectory(this,tr("Select a Work folder"),QDir::homePath()));
 
 }
 

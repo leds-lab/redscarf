@@ -25,7 +25,7 @@ CustomPlotter::CustomPlotter(QWidget* parent) : Plotter(parent) {
 
     setFontSize(ui->spinAxesFontSize->value());
 
-    QAction* actionCopy = new QAction(trUtf8("Copy"),this);
+    QAction* actionCopy = new QAction(tr("Copy"),this);
     actionCopy->setShortcut( QKeySequence::Copy );
     QIcon icon = QIcon( QStringLiteral(":/icons/icons/icon_copy.png") );
     actionCopy->setIcon( icon );
@@ -254,7 +254,7 @@ void CustomPlotter::exportGraphic(){
 #endif
 
     QString selectedFilter;
-    QString fileName = QFileDialog::getSaveFileName(this,trUtf8("Export graph"), QDir::homePath(),trUtf8("PNG image (*.png);;JPG image (*.jpg);;PDF document (*.pdf)"),&selectedFilter);
+    QString fileName = QFileDialog::getSaveFileName(this,tr("Export graph"), QDir::homePath(),tr("PNG image (*.png);;JPG image (*.jpg);;PDF document (*.pdf)"),&selectedFilter);
 
     if(fileName.isEmpty()) {
         return;

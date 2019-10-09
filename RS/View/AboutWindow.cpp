@@ -73,16 +73,16 @@ void AboutWindow::addAuthors() {
 #endif
 
     QStringList author1;
-    author1 << trUtf8("<b>Maintener & Developer</b>") << "Cesar Albenes Zeferino" << "zeferino@univali.br";
+    author1 << tr("<b>Maintener & Developer</b>") << "Cesar Albenes Zeferino" << "zeferino@univali.br";
 
     QStringList author2;
-    author2 << trUtf8("<b>Main Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
+    author2 << tr("<b>Main Developer</b>") << "Eduardo Alves da Silva" << "eduardoalves@edu.univali.br";
 
     QStringList author3;
-    author3 << trUtf8("<b>Developer</b>") << "Daniel Menegasso" << "daniel.menegasso@hotmail.com";
+    author3 << tr("<b>Developer</b>") << "Daniel Menegasso" << "daniel.menegasso@hotmail.com";
 
     QStringList author4;
-    author4 << trUtf8("<b>Developer & Documentation</b>") << "Sérgio Vargas Júnior" << "sergiovargas@edu.univali.br";
+    author4 << tr("<b>Developer & Documentation</b>") << "Sérgio Vargas Júnior" << "sergiovargas@edu.univali.br";
 
     authors.insert(0,author1);
     authors.insert(1,author2);
