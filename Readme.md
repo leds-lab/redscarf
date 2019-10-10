@@ -41,6 +41,16 @@ For more information, please contact the professors:
 or
 * Eduardo Alves da Silva, MSc [Head of RedScarf](mailto:eas@univali.br)
 
+## Research - Related Work
+*Please, cite:*
+
+SILVA, Eduardo. A, KREUTZ, Marcio E., ZEFERINO, Cesar A. **RedScarf**: an open-source multi-platform simulation environment for performance evaluation of Networks-on-Chip. *Journal of Systems Architecture*, Volume 99, 2019, 101633, ISSN 1383-7621, https://doi.org/10.1016/j.sysarc.2019.101633.
+(http://www.sciencedirect.com/science/article/pii/S1383762119300815)
+
+SILVA, E.A., MENEGASSO, D., VARGAS, S., ZEFERINO, C.A. **RedScarf**: a user-friendly multi-platform Network-on-Chip simulator. In *VII Brazilian Symposium on Computing Systems Engineering (SBESC) (2017)*, 2017, pp. 71-78. (https://ieeexplore.ieee.org/document/8116562)
+
+SILVA, E. A., ZEFERINO, C. A. **Uma Análise sobre Ferramentas de Redes-em-Chip e seus Recursos para Uso no Ensino**. *International Journal of Computer Architecture Education (IJCAE)*, Volume 4, 2015, n. 1, pp. 29-32, ISSN: 2316-9915.(http://www2.sbc.org.br/ceacpad/ijcae/v4_n1_dec_2015/IJCAE_v4_n1_dez_2015_paper_8_vf.pdf)
+
 ## License
 This project is licensed under the GPLv3 License - see [LICENSE.md](LICENSE.md) file for details
 
