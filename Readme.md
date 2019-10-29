@@ -27,10 +27,16 @@ Version 1.0.0
 Date: 12/12/2014
 Author: Eduardo Alves da Silva
 ```
-Last major update
+Second release
 ```
 Version: 2.0.0
 Date: 15/07/2015
+By: Eduardo Alves da Silva
+```
+Last major update
+```
+Version: 2.5.0
+Date: 29/10/2019
 By: Eduardo Alves da Silva
 ```
 
@@ -44,7 +50,7 @@ or
 ## Research - Related Work
 *Please, cite:*
 
-E. Alves da Silva,  M.E. Kreutz, and C.A. Zeferino. **Experimental Data from theSimulation of On-Chip Communication Architectures using RedScarf Simulation Environment**, Data in Brief, 2019.  https://doi.org/10.1016/j.dib.2019.104725.
+E. Alves da Silva,  M.E. Kreutz, and C.A. Zeferino. **Experimental Data from the Simulation of On-Chip Communication Architectures using RedScarf Simulation Environment**, Data in Brief, 2019.  https://doi.org/10.1016/j.dib.2019.104725.
 
 SILVA, Eduardo. A, KREUTZ, Marcio E., ZEFERINO, Cesar A. **RedScarf Reference Dataset**. Mendeley Data, v. 1, 2019. http://dx.doi.org/10.17632/wy9y7npwyv.1.
 
