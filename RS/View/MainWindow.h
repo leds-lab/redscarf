@@ -119,6 +119,7 @@ signals:
     void loadSimulationResults();
     void saveSimulationResults();
     void generateCSVSimulationReport(AnalysisOptions* aop);
+    void loadSimulationDir();
 
     // System simulation
     void runSimulation();

@@ -93,7 +93,6 @@ private:
     // Dirs and legends of experiments performed
     QStringList simulationFolders;
     QStringList legends;
-    QString workDirSimulationLoaded;
 
     QElapsedTimer* timer;
 
@@ -107,6 +106,8 @@ private:
     bool saveConfiguration();
     bool saveAsConfiguration();
     bool loadConfiguration();
+
+    void saveSimulationSetupFiles(QString workDir);
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 
@@ -181,11 +182,11 @@ private slots:
     void editOptions();
     void changeLanguage(QString languageName);
     void exitApplication(QCloseEvent* event);
+
     void loadSimulationResults();
     void saveSimulationResults();
     void generateCSVSimulationReport(AnalysisOptions* aop);
-
-    void folderCompressorWorkCompleted(bool success,int opType);
+    void loadSimulationDir();
 
     // System and traffic configuration
     void generateTrafficConfigurationFile();
@@ -207,6 +208,10 @@ private slots:
 
     // Environment Options
     void applySettings(EnvironmentConfiguration*, QString languageName);
+
+public slots:
+    void folderCompressorWorkCompleted(bool success,int opType,QString workDest);
+
 };
 
 #endif // CONTROL_H

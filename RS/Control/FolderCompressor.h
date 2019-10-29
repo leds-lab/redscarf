@@ -68,8 +68,11 @@ public:
 
     void run();
 
+    inline QString getSource() const {return this->source;}
+    inline QString getDestination() const {return this->destination;}
+
 signals:
-    void completed(bool,int);
+    void completed(bool,int,QString);
 
 private:
     QFile file;
@@ -82,10 +85,10 @@ private:
     /*!
      * \brief compress Method in fact that compress files recursively
      * \param sourceFolder Folder to compress files
-     * \param prefex Folder prefix to compress
+     * \param prefix Folder prefix to compress
      * \return
      */
-    bool compress(QString sourceFolder, QString prefex);
+    bool compress(QString sourceFolder, QString prefix);
 
 };
 

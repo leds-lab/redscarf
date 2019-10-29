@@ -286,8 +286,11 @@ void TrafficModelGenerator::adjustParameters() {
         // Injection type different of constant
         if( injType != 0  ) {
             switch(tp->getProbabilityFunction()) {
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
                 case 0: // Normal
                     requiredBwStdev = tp->getRequiredBandwidthStdDeviation();
+//#pragma GCC diagnostic pop
                 case 1: // Exponential
                     numberRates = DefaultValuesTrafficGeneration::DEFAULT_NUMBER_RATES;
                     break;

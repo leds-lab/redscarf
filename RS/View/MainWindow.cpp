@@ -382,6 +382,7 @@ void MainWindow::establishConnections() {
     connect(ui->actionLoadSimulation,SIGNAL(triggered()),this,SIGNAL(loadSimulationResults()));
     connect(ui->actionSaveSimulation,SIGNAL(triggered()),this,SIGNAL(saveSimulationResults()));
     connect(ui->actionGenerateCSV,SIGNAL(triggered()),this,SLOT(generateCSVClicked()));
+    connect(ui->actionLoad_simulation_dir,SIGNAL(triggered(bool)),this,SIGNAL(loadSimulationDir()));
 
     connect(ui->toolButtonClearConsole,SIGNAL(clicked()),this,SLOT(initConsole()));
 
@@ -497,6 +498,7 @@ void MainWindow::setAnalysisOptionsEnabled(bool enabled) {
     ui->buttonRunSimulation->setEnabled(enabled);
 
     ui->actionLoadSimulation->setEnabled(enabled); // Here to reduce code
+    ui->actionLoad_simulation_dir->setEnabled(enabled);
 }
 
 void MainWindow::setActionSaveSimulationEnabled(bool enabled) {
@@ -522,7 +524,7 @@ void MainWindow::setOptionsSimulationEnabled(bool enabled) {
     ui->actionLoadSimulation->setEnabled(enabled);
     ui->actionSaveSimulation->setEnabled(enabled);
     ui->actionGenerateCSV->setEnabled(enabled);
-
+    ui->actionLoad_simulation_dir->setEnabled(enabled);
 }
 
 void MainWindow::insertComboItens() {

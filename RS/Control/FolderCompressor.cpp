@@ -72,7 +72,7 @@ void FolderCompressor::run() {
         }
     }
 
-    emit completed(result,op);
+    emit completed(result,op,destination);
 
 }
 
@@ -99,7 +99,7 @@ bool FolderCompressor::compressFolder() {
     return success;
 }
 
-bool FolderCompressor::compress(QString sourceFolder, QString prefex) {
+bool FolderCompressor::compress(QString sourceFolder, QString prefix) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/FolderCompressor::compress" << std::endl;
 #endif
@@ -117,9 +117,9 @@ bool FolderCompressor::compress(QString sourceFolder, QString prefex) {
     for(int i=0; i<foldersList.length(); i++) {
         QString folderName = foldersList.at(i).fileName();
         QString folderPath = dir.absolutePath()+"/"+folderName;
-        QString newPrefex = prefex+"/"+folderName;
+        QString newPrefix = prefix+"/"+folderName;
 
-        compress(folderPath, newPrefex);
+        compress(folderPath, newPrefix);
     }
 
     //3 - List all files inside the current folder
@@ -133,7 +133,7 @@ bool FolderCompressor::compress(QString sourceFolder, QString prefex) {
             return false;
         }
 
-        dataStream << QString(prefex+"/"+filesList.at(i).fileName());
+        dataStream << QString(prefix+"/"+filesList.at(i).fileName());
         dataStream << qCompress(file.readAll());
 
         file.close();

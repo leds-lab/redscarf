@@ -156,6 +156,7 @@ void Control::establishConnections() {
     connect(this->mainWindow,SIGNAL(loadSimulationResults()),this,SLOT(loadSimulationResults()));
     connect(this->mainWindow,SIGNAL(saveSimulationResults()),this,SLOT(saveSimulationResults()));
     connect(this->mainWindow,SIGNAL(generateCSVSimulationReport(AnalysisOptions*)),this,SLOT(generateCSVSimulationReport(AnalysisOptions*)));
+    connect(this->mainWindow,SIGNAL(loadSimulationDir()),this,SLOT(loadSimulationDir()));
 
     connect(this->mainWindow,&MainWindow::generateTCF,this,&Control::generateTrafficConfigurationFile);
 
@@ -1142,17 +1143,19 @@ void Control::loadSimulationResults() {
     // Get a string with date and time in ISO format
     QString dateTimeDir = dateTime.toString(Qt::ISODate);
     dateTimeDir.replace(':','-');
-    workDirSimulationLoaded = environmentConfiguration->getWorkFolder() + "/SimulationsLoaded/@" + dateTimeDir + "/";
+    QString workDirLoad= environmentConfiguration->getWorkFolder()
+            + "/SimulationsLoaded/@" + dateTimeDir + "/";
     FolderCompressor* fc = new FolderCompressor( FolderCompressor::Decompress,
-                        filename, workDirSimulationLoaded );
-    connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
+                        filename, workDirLoad );
+    connect(fc,SIGNAL(completed(bool,int,QString)),
+            this,SLOT(folderCompressorWorkCompleted(bool,int,QString)));
+    connect(fc,SIGNAL(completed(bool,int,QString)),fc,SLOT(deleteLater()));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     this->mainWindow->printConsole(tr("<b>Wait . . .</b>"));
     this->mainWindow->setAnalysisOptionsEnabled(false);
     this->mainWindow->setOptionsSimulationEnabled(false);
     QThreadPool::globalInstance()->start(fc);
-
 }
 
 void Control::saveSimulationResults() {
@@ -1175,6 +1178,8 @@ void Control::saveSimulationResults() {
         filename += ".redsim";
     }
 
+    // Passar para o "Archiver"
+
     QString dir0 = this->simulationFolders.at(0);
     // Up 3 level in directory tree
     dir0 = dir0.left( dir0.lastIndexOf("/") ); // Up from FClk simulation dir
@@ -1182,6 +1187,26 @@ void Control::saveSimulationResults() {
     dir0 = dir0.left( dir0.lastIndexOf("/") ); // Up from System Configuration simulation dir
 
     QString workDir = dir0 + "/";
+
+    this->saveSimulationSetupFiles(workDir);
+
+    FolderCompressor* fc = new FolderCompressor( FolderCompressor::Compress, workDir, filename);
+    connect(fc,SIGNAL(completed(bool,int,QString)),
+            this,SLOT(folderCompressorWorkCompleted(bool,int,QString)));
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    this->mainWindow->printConsole(tr("<b>Saving the experiment results."
+                                          "This can take some minutes. Do not close RedScarf!</b>"));
+    this->mainWindow->setAnalysisOptionsEnabled(false);
+    this->mainWindow->setOptionsSimulationEnabled(false);
+    QThreadPool::globalInstance()->start(fc);
+
+}
+
+void Control::saveSimulationSetupFiles(QString workDir) {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::saveSimulationSetupFiles" << std::endl;
+#endif
 
     QFile* tmp = configFile;
     configFile = new QFile( workDir + RESULT_SIMLATION_SETUP_FILENAME );
@@ -1216,19 +1241,9 @@ void Control::saveSimulationResults() {
     tmp->close();
     delete tmp;
 
-    FolderCompressor* fc = new FolderCompressor( FolderCompressor::Compress, workDir, filename);
-    connect(fc,SIGNAL(completed(bool,int)),this,SLOT(folderCompressorWorkCompleted(bool,int)));
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    this->mainWindow->printConsole(tr("<b>Saving the experiment results."
-                                          "This can take some minutes. Do not close RedScarf!</b>"));
-    this->mainWindow->setAnalysisOptionsEnabled(false);
-    this->mainWindow->setOptionsSimulationEnabled(false);
-    QThreadPool::globalInstance()->start(fc);
-
 }
 
-void Control::folderCompressorWorkCompleted(bool success,int opType) {
+void Control::folderCompressorWorkCompleted(bool success,int opType,QString workDest) {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Control/Control::folderCompressorWorkCompleted" << std::endl;
 #endif
@@ -1256,20 +1271,25 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
         if( configFile ) {
             delete configFile;
         }
-        configFile = new QFile( workDirSimulationLoaded + RESULT_SIMLATION_SETUP_FILENAME );
+        configFile = new QFile( workDest + RESULT_SIMLATION_SETUP_FILENAME );
 
         bool recoverFolders = true;
 
-        if( this->loadConfiguration() ) {
-            this->mainWindow->setWindowModified(false);
+        if(configFile->exists()) {
+            if( this->loadConfiguration() ) {
+                this->mainWindow->setWindowModified(false);
+            } else {
+                this->mainWindow->printConsole(tr("The parameters load failed."),errorColor);
+                recoverFolders = false;
+            }
         } else {
-            this->mainWindow->printConsole(tr("The parameters load failed."),errorColor);
-            recoverFolders = false;
+            // TODO Tratar diretórios simulados sem o arquivo de configuração
+            this->mainWindow->printConsole(tr("Without RedScarf config file. ATTENTION: It was not possible load the parameters to the user interface according with Simulation results loaded"));
         }
         delete configFile;
         configFile = NULL;
 
-        QFile* tmp = new QFile( workDirSimulationLoaded + RESULT_SIMULATION_DIRS_FILENAME );
+        QFile* tmp = new QFile( workDest + RESULT_SIMULATION_DIRS_FILENAME );
 
         if( !tmp->open(QIODevice::ReadOnly | QIODevice::Text) ) {
             this->mainWindow->printConsole(tr("It is not possible load results directories file."),errorColor);
@@ -1295,7 +1315,7 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
             simulationFolders.clear();
 
             for( int i = 0; i < dirs.size(); i++ ) {
-                QString dir = QString( workDirSimulationLoaded + dirs.at(i) );
+                QString dir = QString( workDest + dirs.at(i) );
                 simulationFolders.append( dir );
             }
         }
@@ -1307,6 +1327,39 @@ void Control::folderCompressorWorkCompleted(bool success,int opType) {
     this->mainWindow->setOptionsSimulationEnabled(true);
     this->mainWindow->setActionGenerateCSVEnabled(analysisOk);
     QApplication::restoreOverrideCursor();
+}
+
+void Control::loadSimulationDir() {
+#ifdef DEBUG_POINTS_METHODS
+    std::cout << "Control/Control::loadSimulationDir" << std::endl;
+#endif
+    if( this->mainWindow->isWindowModified() ) {
+        switch(this->mainWindow->saveChanges(APPLICATION_NAME,tr("The configuration has been modified.\nDo you want to save your changes?"))) {
+            case 0: // Save
+                if(!this->saveConfiguration()) {
+                    return;
+                }
+            case 1: // Discard
+                break;
+            case 2: // Cancel
+                return;
+        }
+    }
+
+    this->mainWindow->setWindowModified(false);
+
+    QString folder = this->mainWindow->selectSystemFolder(tr("Select a directory with data of simulation already done"));
+    if(folder.isEmpty()) {
+        return;
+    }
+
+    QString workDest = folder + '/';
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    this->mainWindow->printConsole(tr("<b>Wait . . .</b>"));
+    this->mainWindow->setAnalysisOptionsEnabled(false);
+    this->mainWindow->setOptionsSimulationEnabled(false);
+    this->folderCompressorWorkCompleted(true,2,workDest);
 }
 
 void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
@@ -1791,6 +1844,10 @@ void Control::runSimulations() {
             }
         } // End - Active Experiment - if(experiment->isActive())
     } // End - for( unsigned int i = 1; i <= 5; i++ )
+
+    this->analysisOk = true; // TEMP: Only with automated analysis after run
+    this->saveSimulationSetupFiles( (dirWork.absolutePath()+'/'));
+    this->analysisOk = false; // TEMP: Only with automated analysis after run
 
     unsigned int nExp = runCountPerExperiment*numberOfExperiments;
     this->mainWindow->setLimitsProgressBar( 0, nExp);
