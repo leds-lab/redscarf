@@ -72,7 +72,7 @@ public:
     inline QString getDestination() const {return this->destination;}
 
 signals:
-    void completed(bool,int);
+    void completed(bool,int,QString);
 
 private:
     QFile file;

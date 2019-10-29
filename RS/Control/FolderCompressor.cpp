@@ -72,7 +72,7 @@ void FolderCompressor::run() {
         }
     }
 
-    emit completed(result,op);
+    emit completed(result,op,destination);
 
 }
 

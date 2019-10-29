@@ -93,7 +93,6 @@ private:
     // Dirs and legends of experiments performed
     QStringList simulationFolders;
     QStringList legends;
-    QString workDirSimulationLoaded;
 
     QElapsedTimer* timer;
 
@@ -107,6 +106,8 @@ private:
     bool saveConfiguration();
     bool saveAsConfiguration();
     bool loadConfiguration();
+
+    void saveSimulationSetupFiles(QString workDir);
 
     QString dirSetup(QString selection, QString msgNotConfigured);
 
@@ -209,7 +210,7 @@ private slots:
     void applySettings(EnvironmentConfiguration*, QString languageName);
 
 public slots:
-    void folderCompressorWorkCompleted(bool success,int opType);
+    void folderCompressorWorkCompleted(bool success,int opType,QString workDest);
 
 };
 

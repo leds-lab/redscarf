@@ -64,7 +64,6 @@ OBJECTS_DIR = $$_PRO_FILE_PWD_/build/objs        # C++ object files (.o)
 
 # Application Sources files
 SOURCES +=  \
-    Control/Archiver.cpp \
     Model/Traffic/MathFunction.cpp \
     Model/Traffic/TrafficModelGenerator.cpp \
     Model/System/Defines.cpp \
@@ -113,7 +112,6 @@ SOURCES +=  \
 
 # Application Headers files
 HEADERS += \
-    Control/Archiver.h \
     Model/Traffic/MathFunction.h \
     Model/Traffic/TrafficModelGenerator.h \
     Model/System/Defines.h \

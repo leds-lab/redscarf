@@ -3197,10 +3197,10 @@ distribution</string>
      <normaloff>:/icons/icons/icon_open_simulation.png</normaloff>:/icons/icons/icon_open_simulation.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Load simulation</string>
+    <string>&amp;Load simulation file</string>
    </property>
    <property name="toolTip">
-    <string>Load previous simulation</string>
+    <string>Load previous simulation archived file</string>
    </property>
    <property name="statusTip">
     <string>Load previous generated simulation results</string>
@@ -3227,7 +3227,7 @@ distribution</string>
     <string>Load simulation directory</string>
    </property>
    <property name="toolTip">
-    <string>Load simulation directory</string>
+    <string>Load simulation directory from a previous experiment run</string>
    </property>
    <property name="statusTip">
     <string>Load a previous simulation runned based on directory</string>
