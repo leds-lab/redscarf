@@ -44,6 +44,8 @@ or
 ## Research - Related Work
 *Please, cite:*
 
+E. Alves da Silva,  M.E. Kreutz, and C.A. Zeferino. **Experimental Data from theSimulation of On-Chip Communication Architectures using RedScarf Simulation Environment**, Data in Brief, 2019.  https://doi.org/10.1016/j.dib.2019.104725.
+
 SILVA, Eduardo. A, KREUTZ, Marcio E., ZEFERINO, Cesar A. **RedScarf Reference Dataset**. Mendeley Data, v. 1, 2019. http://dx.doi.org/10.17632/wy9y7npwyv.1.
 
 SILVA, Eduardo. A, KREUTZ, Marcio E., ZEFERINO, Cesar A. **RedScarf**: an open-source multi-platform simulation environment for performance evaluation of Networks-on-Chip. *Journal of Systems Architecture*, Volume 99, 2019, 101633, ISSN 1383-7621, https://doi.org/10.1016/j.sysarc.2019.101633.
