@@ -427,14 +427,14 @@ void XmlConfigParser::loadXML(QFile *file) {
         // Verify if is the start of an element
         if(token == QXmlStreamReader::StartElement) {
             // If is the root element then jump to next
-            QStringRef name = xml->name();
+            QStringView name = xml->name();
             if( name == APPLICATION_NAME ) {
                 continue;
             }
 
             QXmlStreamAttributes attributes = xml->attributes();
             // System configuration
-            if( name == "SystemConfiguration" ) {
+            if( name == QStringView{u"SystemConfiguration"} ) {
                 SystemConfiguration sysConf;
                 SystemParameters sysParam;
                 SystemParameters::TopologyType topType = SystemParameters::getTopologyType( attributes.value("TopologyType").toString() );
@@ -454,19 +454,19 @@ void XmlConfigParser::loadXML(QFile *file) {
                 do {
                     token = xml->readNext();
                     attributes = xml->attributes();
-                    if(token == QXmlStreamReader::StartElement && xml->name() == "TrafficPattern") {
+                    if(token == QXmlStreamReader::StartElement && xml->name() == QStringView{u"TrafficPattern"}) {
                         TrafficParameters tp = this->parseTrafficPattern(xml);
                         sysConf.addTrafficConfiguration(tp);
                     }
 
-                } while( !(token == QXmlStreamReader::EndElement && xml->name() == "SystemConfiguration") );
+                } while( !(token == QXmlStreamReader::EndElement && xml->name() == QStringView{u"SystemConfiguration"}) );
 
                 sysConf.setSystemParameters(sysParam);
                 this->sysConfs.append(sysConf);
             }
 
             // Experiment
-            if( name == "Experiment" ) {
+            if( name == QStringView{u"Experiment"} ) {
                 Experiment experiment;
                 experiment.setActive( (attributes.value("active").toString() == "true" ? true : false) );
                 unsigned int option = def->getKeyArbiterPG(attributes.value("arbiterType").toString());
@@ -485,7 +485,7 @@ void XmlConfigParser::loadXML(QFile *file) {
             }
 
             // Stop option
-            if( name == "StopOption" ) {
+            if( name == QStringView{u"StopOption"} ) {
                 sysOp.stopOption = attributes.value("option").toString().toInt();
                 sysOp.stopTime_ns = attributes.value("stopTime_ns").toString().toInt();
                 sysOp.stopTime_cycles = attributes.value("stopTime_cycles").toString().toInt();
@@ -493,12 +493,12 @@ void XmlConfigParser::loadXML(QFile *file) {
             }
 
             // VCD Option
-            if( name == "VcdOption" ) {
+            if( name == QStringView{u"VcdOption"} ) {
                 sysOp.vcdOption = attributes.value("index").toString().toInt();
             }
 
             // FClk
-            if( name == "FClk" ) {
+            if( name == QStringView{u"FClk"} ) {
                 sysOp.fClkFirst = attributes.value("start").toString().toDouble();
                 sysOp.fClkLast = attributes.value("end").toString().toDouble();
                 sysOp.fClkStepType = attributes.value("stepTypeIndex").toString().toInt();

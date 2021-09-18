@@ -1020,7 +1020,8 @@ QVector<QList<DataReport* >* >* Control::getReportData(AnalysisOptions *aop) {
         QList<DataReport*>* data = NULL;
         if(dataReport != NULL) {
             // Converting C stl standard list to QList
-            data = new QList<DataReport *>( QList<DataReport *>::fromStdList(*dataReport) );
+//            data = new QList<DataReport *>( QList<DataReport *>::fromStdList(*dataReport) );
+            data = new QList<DataReport *>(dataReport->begin(),dataReport->end());
             delete dataReport; // TODO VERIFICAR
         }
 
@@ -1394,7 +1395,7 @@ void Control::generateCSVSimulationReport(AnalysisOptions *aop) {
             QTextStream ts(&csvText);
 
             QLocale local = QLocale::system();
-            QChar decPoint = local.decimalPoint();
+            QString decPoint = local.decimalPoint();
             char separator = ',';
             if( decPoint == ',' ) {
                 separator = ';';
@@ -1626,7 +1627,7 @@ void Control::runSimulations() {
                     // Build the directory of the current experiment
                     QString sysConfDir = sysParam.getFormattedString();
                     // ATTENTION: According the translation - this regex can cause inconsistency
-                    sysConfDir = sysConfDir.remove( QRegExp("-[a-zA-Z ]*: ") );
+                    sysConfDir = sysConfDir.remove( QRegularExpression("-[a-zA-Z ]*: ") );
                     sysConfDir = sysConfDir.replace(' ',"_");
                     sysConfDir = sysConfDir.replace("_-_","_");
                     QString dirGenerated = QString("%1/exp_%2_%3_%4_%5_VC%6_IN%7_OUT%8")

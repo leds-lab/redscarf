@@ -51,7 +51,6 @@
 #include <cmath>
 
 #include <QMessageBox>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QCloseEvent>
@@ -472,9 +471,10 @@ void MainWindow::centerWindow() {
     int screenHeight;
 
     // Obtém a largura da tela
-    QDesktopWidget *desktop = QApplication::desktop();
-    screenWidth = desktop->width();
-    screenHeight = desktop->height();
+//    QDesktopWidget *desktop = QApplication::desktop();
+    QScreen* desktop = this->screen();
+    screenWidth = desktop->geometry().width();
+    screenHeight = desktop->geometry().height();
 
     // Calcula o posicionamento na tela do canto superior esquerdo do local onde a janela deverá ficar
     x = (screenWidth - w) / 2;

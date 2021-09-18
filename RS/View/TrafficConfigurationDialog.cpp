@@ -142,7 +142,8 @@ void TrafficConfigurationDialog::zoomRestore() {
     std::cout << "View/TrafficConfigurationDialog::zoomRestore" << std::endl;
 #endif
 
-    ui->graphicsView->resetMatrix();
+//    ui->graphicsView->resetMatrix();
+    ui->graphicsView->resetTransform();
 }
 
 void TrafficConfigurationDialog::itemClicked(QListWidgetItem *item) {

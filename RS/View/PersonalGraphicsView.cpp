@@ -19,7 +19,7 @@ void PersonalGraphicsView::selectAllItems() {
 
 void PersonalGraphicsView::wheelEvent(QWheelEvent *event) {
     if(QApplication::keyboardModifiers() & Qt::ControlModifier) {
-        if( event->delta() > 0 ) {
+        if( !event->angleDelta().x() > 0 ) {
             this->zoomIn();
         } else {
             this->zoomOut();

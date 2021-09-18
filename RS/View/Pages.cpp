@@ -38,7 +38,7 @@
 #include "Control/EnvironmentConfiguration.h"
 
 #include <QCompleter>
-#include <QDirModel>
+#include <QFileSystemModel>
 #include <QFileDialog>
 
 #ifdef DEBUG_POINTS_METHODS
@@ -97,12 +97,12 @@ FoldersConfigurationPage::FoldersConfigurationPage(QString simulator,QString plu
     ui->setupUi(this);
 
     QCompleter* folderCompleter = new QCompleter(this);
-    QDirModel* dirModel = new QDirModel(this);
+    QFileSystemModel* dirModel = new QFileSystemModel(this);
     dirModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
     folderCompleter->setModel( dirModel );
 
     QCompleter* executableCompleter = new QCompleter(this);
-    QDirModel* exeModel = new QDirModel(this);
+    QFileSystemModel* exeModel = new QFileSystemModel(this);
     executableCompleter->setModel( exeModel );
 
     ui->inSimulator->setCompleter( executableCompleter );
