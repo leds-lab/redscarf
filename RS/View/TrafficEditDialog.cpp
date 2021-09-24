@@ -29,6 +29,7 @@ TrafficEditDialog::TrafficEditDialog(QWidget *parent,
     this->loadTypesInjection();
     this->loadSwitchingTechniques();
     this->loadFunctionProbability();
+    this->loadReferenceTopologies();
 
     // Source node string
     QString sourceNode = QString("( %1 )").arg( (source >= 0 ? QString::number(source) : tr("**Multiple**") ));
@@ -96,6 +97,11 @@ void TrafficEditDialog::loadFunctionProbability() {
     ui->comboInFunctionProbability->insertItems(0,probabilityFunction);
 }
 
+void TrafficEditDialog::loadReferenceTopologies() {
+    QStringList topologies = TrafficParameters::availableReferenceTopologies();
+    ui->comboReferenceTopology->insertItems(0,topologies);
+}
+
 void TrafficEditDialog::setConfiguration(TrafficParameters *tp) {
 
     ui->doubleSpinInParetoAlfaOff->setValue( tp->getAlfaOff() );
@@ -113,11 +119,33 @@ void TrafficEditDialog::setConfiguration(TrafficParameters *tp) {
     ui->comboInDestinationNode->setCurrentIndex( qint32(tp->getSpatialDistribution()) );
     ui->comboInSwitchingTechnique->setCurrentIndex( qint32(tp->getSwitchingTechnique()) );
     ui->comboInTrafficClass->setCurrentIndex( qint32(tp->getTrafficClass()) );
+    ui->comboReferenceTopology->setCurrentIndex( qint32(tp->getReferenceTopology()) );
 }
 
 //////// Atualizar a interface ///////////////
 void TrafficEditDialog::updateSpatialDistribution(int value) {
 
+    switch(value) {
+        case SpatialDistribution::Specific_Address:
+            ui->labelNodeAddress   ->setEnabled(true);
+            ui->spinInSpecificNodeAddress->setEnabled(true);
+            ui->labelReferenceTopology->setEnabled(false);
+            ui->comboReferenceTopology->setEnabled(false);
+            break;
+        case SpatialDistribution::Local:
+        case SpatialDistribution::Non_Uniform:
+            ui->labelNodeAddress   ->setEnabled(false);
+            ui->spinInSpecificNodeAddress->setEnabled(false);
+            ui->labelReferenceTopology->setEnabled(true);
+            ui->comboReferenceTopology->setEnabled(true);
+            break;
+        default:
+            ui->labelNodeAddress   ->setEnabled(false);
+            ui->spinInSpecificNodeAddress->setEnabled(false);
+            ui->labelReferenceTopology->setEnabled(false);
+            ui->comboReferenceTopology->setEnabled(false);
+    }
+/*
     if( value == 0 ){ // 0 == Specified Address
         ui->labelNodeAddress   ->setEnabled(true);
         ui->spinInSpecificNodeAddress->setEnabled(true);
@@ -125,6 +153,7 @@ void TrafficEditDialog::updateSpatialDistribution(int value) {
         ui->labelNodeAddress   ->setEnabled(false);
         ui->spinInSpecificNodeAddress->setEnabled(false);
     }
+*/
 }
 
 void TrafficEditDialog::updateTypeInjection(int value) {
@@ -294,9 +323,8 @@ bool TrafficEditDialog::inputsOk() {
     if(typeInj == 0 || typeInj == 1 || typeInj == 4 || typeInj == 5) {
         unsigned int msgSizeMin = this->dataWidth;
         if( quint32(ui->spinInMessageSize->value()) < msgSizeMin ) {
-            msg.setText(tr("Message size must\nhave at least %1 bits\n(i.e. %2 flit)")
-                         .arg(QString::number(msgSizeMin))
-                         .arg(QString::number(1)));
+            msg.setText(tr("Message size must\nhave at least %1 bits\n(i.e. 1 flit)")
+                         .arg(QString::number(msgSizeMin)) );
             msg.exec();
             return false;
         }
@@ -317,8 +345,9 @@ bool TrafficEditDialog::inputsOk() {
     }
 
     int distSpatial = ui->comboInDestinationNode->currentIndex();
+    // TODO Verificar relação do PARETO com LOCAL e NON_UNIFORM
     if( ui->comboInFunctionProbability->currentIndex() == 2 && // FunctionProb. == PARETO &&
-            (distSpatial >= 7 && distSpatial <= 9) ) { // DistSpatial == NON-UNIFORM 1 OR 2 OR LOCAL
+            (distSpatial == SpatialDistribution::Local || distSpatial == SpatialDistribution::Non_Uniform) ) { // DistSpatial == NON-UNIFORM 1 OR 2 OR LOCAL
         msg.setText(tr("Sorry!\nTraffic Generator not implemented for this function probability\nwith this spatial distribution (Non-Uniform 1,2 or Local)."));
         msg.exec();
         return false;
@@ -354,6 +383,7 @@ void TrafficEditDialog::applyClicked() {
     tp->setSpatialDistribution(  static_cast<SpatialDistribution::Distribution>( ui->comboInDestinationNode->currentIndex() ) );
     tp->setSwitchingTechnique( quint32(ui->comboInSwitchingTechnique->currentIndex()) );
     tp->setTrafficClass( quint32(ui->comboInTrafficClass->currentIndex()) );
+    tp->setReferenceTopology( quint32(ui->comboReferenceTopology->currentIndex()) );
 
     emit this->apply(tp);
     this->configuredTraffic = tp;
@@ -364,7 +394,8 @@ void TrafficEditDialog::disableDestinationMode() {
 
     ui->labelDestinationNode->setEnabled(false);
     ui->comboInDestinationNode->setEnabled(false);
-
+    ui->labelReferenceTopology->setEnabled(false);
+    ui->comboReferenceTopology->setEnabled(false);
 }
 
 void TrafficEditDialog::changeEvent(QEvent *event) {

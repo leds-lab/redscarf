@@ -48,6 +48,7 @@ private:
     unsigned short    trafficClass                 ;  // Traffic class: RT0, RT1, nRT0 or nRT1
     unsigned short    injectionType                ;  // Injection mode (e.g. Constant rate)
     unsigned short    switchingTechnique           ;  // Swithcing mode
+    unsigned short    referenceTopology            ;  // Reference topology for Local and Non-Uniform traffic
     unsigned int      packageToSend                ;  // Number of packets to be sent by the flow
     unsigned long int deadline                     ;  // Deadline to deliver the packet
     float             requiredBandwidth            ;  // Required bandwidth in Mbps
@@ -75,6 +76,7 @@ public:
     inline void setTrafficClass       (unsigned short trafficClass       ) { this->trafficClass       = trafficClass       ; }
     inline void setInjectionType      (unsigned short injectionType      ) { this->injectionType      = injectionType      ; }
     inline void setSwitchingTechnique (unsigned short switchingTechnique ) { this->switchingTechnique = switchingTechnique ; }
+    inline void setReferenceTopology  (unsigned short referenceTopology  ) { this->referenceTopology  = referenceTopology  ; }
     inline void setMessageSize        (unsigned int   messageSize        ) { this->messageSize        = messageSize        ; }
     inline void setPayloadLength      (unsigned int   payloadLength      ) { this->payloadLength      = payloadLength      ; }
     inline void setIdleTime           (unsigned int   idleTime           ) { this->idleTime           = idleTime           ; }
@@ -95,6 +97,7 @@ public:
     inline unsigned short    getTrafficClass       () const { return this->trafficClass       ; }
     inline unsigned short    getInjectionType      () const { return this->injectionType      ; }
     inline unsigned short    getSwitchingTechnique () const { return this->switchingTechnique ; }
+    inline unsigned short    getReferenceTopology  () const { return this->referenceTopology  ; }
     inline unsigned int      getMessageSize        () const { return this->messageSize        ; }
     inline unsigned int      getPayloadLength      () const { return this->payloadLength      ; }
     inline unsigned int      getIdleTime           () const { return this->idleTime           ; }
@@ -131,11 +134,17 @@ public:
     QString getProbabilityFunctionName(int index) const;
     QString getProbabilityFunctionName() const;
 
+    static QStringList availableReferenceTopologies();
+    QString getReferenceTopologyName(int index) const;
+    QString getReferenceTopologyName() const;
+
+
     int indexOfSpatialDistribution(QString distName) const;
     int indexOfTrafficClass(QString name) const;
     int indexOfInjectionType(QString name) const;
     int indexOfSwitchingTechnique(QString name) const;
     int indexOfProbabilityFunction(QString name) const;
+    int indexOfReferenceTopology(QString name) const;
 
     QString getFormattedString() const;
 

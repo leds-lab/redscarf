@@ -22,6 +22,7 @@ private:
     unsigned short numElements;
 
     void loadSpatialsDistributions();
+    void loadReferenceTopologies();
     void loadTrafficClasses();
     void loadTypesInjection();
     void loadSwitchingTechniques();

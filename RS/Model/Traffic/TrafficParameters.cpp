@@ -34,6 +34,7 @@
 #include "TrafficParameters.h"
 
 TrafficParameters::TrafficParameters() {
+    // Load default parameters
 
     this->alfaOff                       = 1.90f;
     this->alfaOn                        = 1.25f;
@@ -53,6 +54,7 @@ TrafficParameters::TrafficParameters() {
     this->distribution                  = SpatialDistribution::Specific_Address;
     this->switchingTechnique            = 0;
     this->trafficClass                  = 0;
+    this->referenceTopology             = SpatialDistribution::Mesh_2D;
 }
 
 
@@ -69,13 +71,15 @@ QString TrafficParameters::toString() const {
                    "Destination: %3\n"
                    "Traffic Class: %4\n"
                    "Injection Type: %5\n"
-                   "Switching Technique: %6\n")
+                   "Switching Technique: %6\n"
+                   "Reference Topology: %7\n")
             .arg(distribution)
             .arg(source)
             .arg(destination)
             .arg(trafficClass)
             .arg(injectionType)
-            .arg(switchingTechnique);
+            .arg(switchingTechnique)
+            .arg(referenceTopology);
 
     formatted += tr("Packages to Send: %1\n"
                     "Deadline: %2\n"
@@ -118,6 +122,7 @@ bool TrafficParameters::equals(TrafficParameters* obj) const {
     if(obj->source                  == this->source                &&
             obj->distribution       == this->distribution          &&
             obj->destination        == this->destination           &&
+            obj->referenceTopology  == this->referenceTopology     &&
             obj->trafficClass       == this->trafficClass          &&
             obj->injectionType      == this->injectionType         &&
             obj->switchingTechnique == this->switchingTechnique    &&
@@ -246,6 +251,20 @@ int TrafficParameters::indexOfProbabilityFunction(QString name) const {
     return functions.indexOf(name);
 }
 
+QString TrafficParameters::getReferenceTopologyName(int index) const {
+    QStringList topologies = availableReferenceTopologies();
+    return topologies.at(index);
+}
+
+QString TrafficParameters::getReferenceTopologyName() const {
+    return this->getReferenceTopologyName(this->referenceTopology);
+}
+
+int TrafficParameters::indexOfReferenceTopology(QString name) const {
+    QStringList topologies = availableReferenceTopologies();
+    return topologies.indexOf(name);
+}
+
 QStringList TrafficParameters::availableSpatialDistributions() {
     QStringList distributions;
 
@@ -260,6 +279,15 @@ QStringList TrafficParameters::availableSpatialDistributions() {
                   << "Local";
 
     return distributions;
+}
+
+QStringList TrafficParameters::availableReferenceTopologies() {
+    QStringList topologies;
+    topologies << "Ring"
+               << "Chordal Ring"
+               << "2D-Mesh"
+               << "3D-Mesh";
+    return topologies;
 }
 
 QStringList TrafficParameters::availableTrafficClasses() {

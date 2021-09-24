@@ -53,6 +53,12 @@ public:
                         Non_Uniform,
                         Local
                        };
+    enum Topology {
+       Ring = 0,
+       Chordal_Ring,
+       Mesh_2D,
+       Mesh_3D
+    };
 
     SpatialDistribution(unsigned short source,unsigned short numElements,unsigned short specificDestination=0);
 
