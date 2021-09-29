@@ -298,12 +298,18 @@ bool TrafficEditDialog::inputsOk() {
     msg.setStandardButtons( QMessageBox::Ok );
     msg.setWindowTitle(tr("Review Input(s)"));
 
-    if( ui->comboInDestinationNode->currentIndex() == 0 ) { // Specified address
+    if( ui->comboInDestinationNode->currentIndex() == SpatialDistribution::Specific_Address ) {
         if( ui->spinInSpecificNodeAddress->value() == source ) {
             msg.setText( tr("The source and destination are the same!") );
             msg.exec();
             return false;
         }
+    }
+
+    if( ui->comboInDestinationNode->currentIndex() == SpatialDistribution::Non_Uniform ) {
+        msg.setText( tr("Sorry, Non-Uniform traffic not implemented yet") );
+        msg.exec();
+        return false;
     }
 
     if( ui->spinInNumberPacketsFlow->value() <= 0 ) {
@@ -321,10 +327,9 @@ bool TrafficEditDialog::inputsOk() {
     int typeInj = this->ui->comboInTypeInjection->currentIndex();
 
     if(typeInj == 0 || typeInj == 1 || typeInj == 4 || typeInj == 5) {
-        unsigned int msgSizeMin = this->dataWidth;
-        if( quint32(ui->spinInMessageSize->value()) < msgSizeMin ) {
+        if( quint32(ui->spinInMessageSize->value()) < this->dataWidth ) {
             msg.setText(tr("Message size must\nhave at least %1 bits\n(i.e. 1 flit)")
-                         .arg(QString::number(msgSizeMin)) );
+                         .arg(QString::number(this->dataWidth)) );
             msg.exec();
             return false;
         }

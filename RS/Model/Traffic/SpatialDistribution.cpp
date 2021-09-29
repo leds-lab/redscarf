@@ -32,6 +32,7 @@
 */
 
 #include "SpatialDistribution.h"
+#include "Model/System/Defines.h"
 #include <cmath>
 #include <QString>
 
@@ -160,8 +161,100 @@ QList<int> SpatialDistribution::toUniform() {
     return destinations;
 }
 
-QList<int> SpatialDistribution::toLocal(int **topologyAdjacentyMatrix) {
+QList<int> SpatialDistribution::toLocal(Topology topology, int xSize, int ySize, int zSize) {
 
-    // TODO Implementar distribuição local de acordo com a topologia
-    return QList<int>();
+
+    QVector<int> destinations;
+    switch(topology) {
+        case Topology::Chordal_Ring: // Cross connection
+                if(this->source < this->numElements/2) {
+                    destinations.append( this->numElements/2 + this->source );
+                } else {
+                    destinations.append( this->source % (this->numElements/2) );
+                }
+        case Topology::Ring: // Side connections
+            if(this->source > 0 && this->source < this->numElements-1) {
+                destinations.append(this->source-1);
+                destinations.append(this->source+1);
+            } else {
+                if(this->source == 0) {
+                    destinations.append(1);
+                    destinations.append(this->numElements-1);
+                } else {
+                    destinations.append(0);
+                    destinations.append(this->source-1);
+                }
+            }
+            break;
+        case Topology::Torus_2D: { // Extremity connections only
+            int xSource = ID_TO_COORDINATE_2D_X(this->source,xSize);
+            int ySource = ID_TO_COORDINATE_2D_Y(this->source,xSize);
+
+            // Connecting X edges
+            if(xSource == 0) {
+                destinations.append( this->source + xSize-1 );
+            }
+            if(xSource == xSize-1) {
+                destinations.append( this->source - xSize+1 );
+            }
+
+            // Connecting y edges
+            if(ySource == 0) {
+                destinations.append( this->source + xSize*(ySize-1) );
+            }
+            if(ySource == ySize-1) {
+                destinations.append( this->source - xSize*(ySize-1) );
+            }
+        }
+        case Topology::Mesh_2D:{ // North,South, East and West connections
+            int xSource = ID_TO_COORDINATE_2D_X(this->source,xSize);
+            int ySource = ID_TO_COORDINATE_2D_Y(this->source,xSize);
+
+            // Connecting X neighbours
+            if(xSource > 0) {
+                destinations.append( COORDINATE_2D_TO_ID((xSource-1),ySource,xSize) );
+            }
+            if(xSource < xSize-1) {
+                destinations.append( COORDINATE_2D_TO_ID((xSource+1),ySource,xSize) );
+            }
+
+            // Connection Y neighbours
+            if(ySource > 0) {
+                destinations.append( COORDINATE_2D_TO_ID(xSource, (ySource-1), xSize) );
+            }
+            if(ySource < ySize-1) {
+                destinations.append( COORDINATE_2D_TO_ID(xSource, (ySource+1), xSize) );
+            }
+            break;
+        }
+        case Topology::Mesh_3D:
+
+            break;
+    }
+
+    return destinations;
+}
+
+
+bool SpatialDistribution::isTopologyTypeCompatible(Topology topology, SystemParameters::TopologyType type) {
+
+    switch(type) {
+        case SystemParameters::NonOrthogonal:
+            if(topology == Topology::Ring || topology == Topology::Chordal_Ring) {
+                return true;
+            }
+            break;
+        case SystemParameters::Orthogonal2D:
+            if(topology == Topology::Mesh_2D || topology == Topology::Torus_2D) {
+                return true;
+            }
+            break;
+        case SystemParameters::Orthogonal3D:
+            if(topology == Topology::Mesh_3D) {
+                return true;
+            }
+            break;
+    }
+
+    return false;
 }

@@ -36,6 +36,8 @@
 
 #include <QList>
 
+#include "Model/System/SystemParameters.h"
+
 class SpatialDistribution {
 private:
     unsigned short source;
@@ -57,6 +59,7 @@ public:
        Ring = 0,
        Chordal_Ring,
        Mesh_2D,
+       Torus_2D,
        Mesh_3D
     };
 
@@ -111,11 +114,16 @@ public:
     QList<int> toUniform();
 
     /**
-     * @brief toLocal Send to neighbours only
-     * @param topologyAdjacentyMatrix Ajdacency matrix of the topology to discover the neighbours
-     * @return A list with all neighbours addresses
+     * @brief toLocal Send to neighbours only according the reference topology
+     * @param topology Reference Topology to establish connection between neighbours
+     * @param xSize X-dimension for 2D and 3D topologies
+     * @param ySize Y-dimension for 2D and 3D topologies
+     * @param zSize Z-dimension for 3D topologies
+     * @return A list with all neighbours of source address
      */
-    QList<int> toLocal(int** topologyAdjacentyMatrix);
+    QList<int> toLocal(Topology topology, int xSize=-1, int ySize=-1, int zSize=-1);
+
+    bool isTopologyTypeCompatible(Topology topology, SystemParameters::TopologyType type);
 };
 
 #endif // __SPATIALDISTRIBUTION_H__

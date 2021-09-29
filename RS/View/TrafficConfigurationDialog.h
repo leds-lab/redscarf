@@ -63,8 +63,7 @@ private:
 
     QGraphicsScene* scene;
 
-    unsigned short currentNumberElements;
-    unsigned short currentDataWidth;
+    SystemParameters* currentSystemParameters;
 
 };
 

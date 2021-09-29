@@ -286,6 +286,7 @@ QStringList TrafficParameters::availableReferenceTopologies() {
     topologies << "Ring"
                << "Chordal Ring"
                << "2D-Mesh"
+               << "2D-Torus"
                << "3D-Mesh";
     return topologies;
 }

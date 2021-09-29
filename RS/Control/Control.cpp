@@ -63,7 +63,7 @@
 
 // View
 #include "View/MainWindow.h"
-#include "View/TrafficConfigurationDialog.h"
+//#include "View/TrafficConfigurationDialog.h"
 #include "View/AnalysisOptions.h"
 #include "View/ReportDialog.h"
 #include "View/GetSelectedItemsDialog.h"

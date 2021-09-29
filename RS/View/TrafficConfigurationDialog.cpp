@@ -4,7 +4,7 @@
 #include "TrafficEditDialog.h"
 
 #ifndef M_PI
-    #define M_PI       3.14159265358979323846
+    #define M_PI 3.14159265358979323846
 #endif
 
 #include <QWheelEvent>
@@ -30,8 +30,7 @@ TrafficConfigurationDialog::TrafficConfigurationDialog(QWidget *parent, QList<QL
     QDialog(parent),
     ui(new Ui::TrafficConfigurationDialog),
     systemConfItems(items),
-    currentNumberElements(0),
-    currentDataWidth(0)
+    currentSystemParameters(nullptr)
 {
 #ifdef DEBUG_POINTS_METHODS
     std::cout << "Constructor View/TrafficConfigurationDialog" << std::endl;
@@ -85,7 +84,7 @@ void TrafficConfigurationDialog::loadExistentConfigurations() {
 #endif
 
     int i;
-    QList<TrafficParameters> confs;
+    QVector<TrafficParameters> confs;
     for( i = 0; i < systemConfItems.size(); i++ ) {
         QListWidgetItem* item = systemConfItems.at(i);
         QList<QVariant> trafficConfs = item->data(Qt::UserRole+1).toList();
@@ -153,8 +152,10 @@ void TrafficConfigurationDialog::itemClicked(QListWidgetItem *item) {
 
     QVariant data = item->data(Qt::UserRole);
     SystemParameters sp = data.value<SystemParameters>();
-    currentDataWidth = sp.getDataWidth();
-    currentNumberElements = sp.getNumberElements();
+    if(this->currentSystemParameters != nullptr) {
+        delete this->currentSystemParameters;
+    }
+    this->currentSystemParameters = new SystemParameters(sp);
 
     this->configureGraphics(&sp);
 }
@@ -165,6 +166,7 @@ TrafficConfigurationDialog::~TrafficConfigurationDialog() {
 #endif
 
     this->clearScene();
+    delete this->currentSystemParameters;
     delete ui;
 }
 
@@ -375,7 +377,9 @@ void TrafficConfigurationDialog::addTrafficConfiguration() {
         }
     }
 
-    TrafficEditDialog* ted = new TrafficEditDialog(this,sourceAddr,currentNumberElements,currentDataWidth);;
+    TrafficEditDialog* ted = new TrafficEditDialog(this,sourceAddr,
+                                                   currentSystemParameters->getNumberElements(),
+                                                   currentSystemParameters->getDataWidth());
 
     ted->setLocale( locale() );
 
@@ -403,7 +407,7 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
         } else {
             trafficConf.setSource(source->getId());
         }
-        SpatialDistribution sp(trafficConf.getSource(),currentNumberElements,trafficConf.getDestination());
+        SpatialDistribution sp(trafficConf.getSource(),currentSystemParameters->getNumberElements(),trafficConf.getDestination());
 
         // Get destination
         switch (trafficConf.getSpatialDistribution()) {
@@ -422,7 +426,42 @@ void TrafficConfigurationDialog::applyTrafficParameters(TrafficParameters *tp) {
                 break;
             }
             case SpatialDistribution::Local: {
-                // TODO verificar como fazer para cada topologia!
+                // Under test
+                SpatialDistribution::Topology refTopology = static_cast<SpatialDistribution::Topology>( trafficConf.getReferenceTopology() );
+
+                if(!sp.isTopologyTypeCompatible(refTopology,currentSystemParameters->getTopologyType())) {
+                    QMessageBox::critical(this,tr("Invalid configuration"),tr("The current reference topology is not"
+                                                                                 "\ncompatible with the selected system"
+                                                                                 "\nconfiguration."
+                                                                                 "\n\nNot added!"));
+                    delete tp;
+                    return;
+                }
+
+                QList<int> destinations;
+                switch(refTopology) {
+                    case SpatialDistribution::Topology::Ring:
+                    case SpatialDistribution::Topology::Chordal_Ring:
+                        destinations = sp.toLocal(refTopology);
+                        break;
+                    case SpatialDistribution::Topology::Mesh_2D:
+                    case SpatialDistribution::Topology::Torus_2D:
+                        destinations = sp.toLocal(refTopology,currentSystemParameters->getXSize(),currentSystemParameters->getYSize());
+                        break;
+                    case SpatialDistribution::Topology::Mesh_3D:
+                        destinations = sp.toLocal(refTopology,currentSystemParameters->getXSize(), currentSystemParameters->getYSize(),currentSystemParameters->getZSize() );
+                        break;
+                }
+
+                for(int x = 0; x < destinations.size(); x++) {
+                    unsigned short dest = destinations.at(x);
+                    trafficConf.setDestination(dest);
+                    // Add to list widget
+                    QListWidgetItem* newItem = new QListWidgetItem(trafficConf.getFormattedString(),ui->listTraffic);
+                    QVariant parameters;
+                    parameters.setValue(trafficConf);
+                    newItem->setData(Qt::UserRole,parameters);
+                }
                 break;
             }
             default: {
@@ -558,17 +597,20 @@ void TrafficConfigurationDialog::trafficItemDoubleClick(QModelIndex modelIndex) 
     std::cout << "View/TrafficConfigurationDialog::trafficItemDoubleClick" << std::endl;
 #endif
 
-    if( currentNumberElements == 0 ) {
+    if( currentSystemParameters == nullptr || currentSystemParameters->getNumberElements() == 0 ) {
         QMessageBox::information(this,tr("Select a configuration"),tr("Select a topology configuration to edit"
                                                                       "\nthe traffic configuration"));
         return;
     }
 
+
     QVariant trafficParameterVar = modelIndex.data(Qt::UserRole);
 
     TrafficParameters tp = trafficParameterVar.value<TrafficParameters>();
 
-    TrafficEditDialog* ted = new TrafficEditDialog(this,tp.getSource(),currentNumberElements,currentDataWidth);;
+    TrafficEditDialog* ted = new TrafficEditDialog(this,tp.getSource(),
+                                                   currentSystemParameters->getNumberElements(),
+                                                   currentSystemParameters->getDataWidth());
     ted->disableDestinationMode(); // Only for edit this conf, don't change de destination mode
     ted->setConfiguration(&tp);
     ted->setLocale( locale() );
