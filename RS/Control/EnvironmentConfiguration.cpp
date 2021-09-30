@@ -39,6 +39,7 @@
 
 #include <QSettings>
 #include <QDir>
+#include <QPair>
 
 #ifdef DEBUG_POINTS_METHODS
     #include <iostream>
@@ -81,7 +82,7 @@ void EnvironmentConfiguration::readSetup() {
     }
     settings.endArray();
     if( availableLanguages.isEmpty() ) {
-        QPair<QString,QStringList> englishDefault = QPair<QString,QStringList>(tr("English"),"RedScarf_en");
+        QPair<QString,QStringList> englishDefault = QPair<QString,QStringList>(tr("English"),QStringList("RedScarf_en"));
         this->availableLanguages.insert( englishDefault.first, englishDefault.second );
     }
 

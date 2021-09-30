@@ -60,7 +60,7 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QSettings>
-
+#include <QScreen>
 
 #define MAX_EXPERIMENTS 5
 

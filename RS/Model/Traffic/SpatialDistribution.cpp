@@ -164,7 +164,7 @@ QList<int> SpatialDistribution::toUniform() {
 QList<int> SpatialDistribution::toLocal(Topology topology, int xSize, int ySize, int zSize) {
 
 
-    QVector<int> destinations;
+    QList<int> destinations;
     switch(topology) {
         case Topology::Chordal_Ring: // Cross connection
                 if(this->source < this->numElements/2) {
