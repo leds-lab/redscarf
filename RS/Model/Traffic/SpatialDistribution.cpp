@@ -212,24 +212,53 @@ QList<int> SpatialDistribution::toLocal(Topology topology, int xSize, int ySize,
 
             // Connecting X neighbours
             if(xSource > 0) {
-                destinations.append( COORDINATE_2D_TO_ID((xSource-1),ySource,xSize) );
+                destinations.append( COORDINATE_2D_TO_ID(xSource-1,ySource,xSize) );
             }
             if(xSource < xSize-1) {
-                destinations.append( COORDINATE_2D_TO_ID((xSource+1),ySource,xSize) );
+                destinations.append( COORDINATE_2D_TO_ID(xSource+1,ySource,xSize) );
             }
 
             // Connection Y neighbours
             if(ySource > 0) {
-                destinations.append( COORDINATE_2D_TO_ID(xSource, (ySource-1), xSize) );
+                destinations.append( COORDINATE_2D_TO_ID(xSource, ySource-1, xSize) );
             }
             if(ySource < ySize-1) {
-                destinations.append( COORDINATE_2D_TO_ID(xSource, (ySource+1), xSize) );
+                destinations.append( COORDINATE_2D_TO_ID(xSource, ySource+1, xSize) );
             }
             break;
         }
-        case Topology::Mesh_3D:
+        case Topology::Mesh_3D:{
+            int xSource = ID_TO_COORDINATE_3D_X(this->source,xSize,ySize);
+            int ySource = ID_TO_COORDINATE_3D_Y(this->source,xSize,ySize);
+            int zSource = ID_TO_COORDINATE_3D_Z(this->source,xSize,ySize);
+
+            // Connecting X neighbours
+            if(xSource > 0) {
+                destinations.append( COORDINATE_3D_TO_ID((xSource-1),(ySource),(zSource),(xSize),(ySize)) );
+            }
+
+            if(xSource < xSize-1) {
+                destinations.append( COORDINATE_3D_TO_ID((xSource+1),ySource,zSource,xSize,ySize) );
+            }
+
+            // Connecting Y neighbours
+            if(ySource > 0) {
+                destinations.append( COORDINATE_3D_TO_ID(xSource,(ySource-1),zSource,xSize,ySize) );
+            }
+            if(ySource < ySize-1) {
+                destinations.append( COORDINATE_3D_TO_ID(xSource,(ySource+1),zSource,xSize,ySize) );
+            }
+
+            // Connecting Z neighbours
+            if(zSource > 0) {
+                destinations.append( COORDINATE_3D_TO_ID(xSource,ySource,(zSource-1),xSize,ySize) );
+            }
+            if(zSource < zSize-1) {
+                destinations.append( COORDINATE_3D_TO_ID(xSource,ySource,(zSource+1),xSize,ySize) );
+            }
 
             break;
+        }
     }
 
     return destinations;
