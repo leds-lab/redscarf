@@ -99,6 +99,8 @@ private:
     QColor informationColor;
     QColor warningColor;
     QColor errorColor;
+    QColor successColor;
+    QColor emphasisColor;
 
     // Control( (this) with view signals)
     void establishConnections();

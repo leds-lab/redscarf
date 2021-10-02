@@ -632,7 +632,7 @@ void MainWindow::initConsole() {
     QTextBlockFormat headFormat = cursor.blockFormat();
     headFormat.setAlignment(Qt::AlignHCenter);
     cursor.insertHtml(tr("<b><font size=4>__/_/_/_/<font color=red> RedScarf </font>\\_\\_\\_\\__</font></b>"));
-    cursor.insertHtml(tr("<br /><font color=black>The <i>bagual</i> NoC Simulator</font>"));
+    cursor.insertHtml(tr("<br /><font color=gray>The <i>bagual</i> NoC Simulator</font>"));
     cursor.insertHtml(tr("<br /><img src=\":/icons/icons/apresentacao.png\" />"));
     cursor.insertHtml(tr("<br />All rights reserved &#169; 2014 - 2017 LEDS - University of Vale do Itajaí<br/>- Laboratory of Embedded and Distributed Systems"));
     cursor.setBlockFormat(headFormat);
@@ -1341,7 +1341,7 @@ void MainWindow::printConsole(QString msg, QColor color, Qt::Alignment alignment
     QTextBlockFormat blockFormat = cursor.blockFormat();
     blockFormat.setAlignment(alignment);
     cursor.setBlockFormat(blockFormat);
-    cursor.insertHtml( QString("<font color=%1>%2</font>").arg(color.name()).arg(msg) );
+    cursor.insertHtml( QString("<font color=%1>%2</font>").arg(color.name(),msg) );
     cursor.insertBlock();
 
     cursor.movePosition( QTextCursor::End );
